@@ -20,9 +20,13 @@ export interface Car {
   deposit?: number; // руб
   mileageLimit?: number; // км/сутки, 0 = без лимита
   fuelPolicy?: string;
+  vin?: string;
+  plate?: string;
 }
 
 export type BookingStatus = "paid" | "pending" | "active" | "completed";
+export type BookingTariff = "city" | "region" | "outside";
+export type PaymentMethod = "card" | "sbp";
 
 export interface Booking {
   id: string;
@@ -32,6 +36,22 @@ export interface Booking {
   endDate: string;
   totalPrice: number;
   status: BookingStatus;
+}
+
+export interface BookingDraft {
+  id: string;
+  carId: string;
+  startDate?: string; // ISO date (yyyy-mm-dd)
+  endDate?: string;
+  startTime: string; // HH:mm
+  endTime: string;
+  pickupPointId?: string;
+  delivery: boolean;
+  deliveryAddress?: string;
+  tariff: BookingTariff;
+  paymentMethod?: PaymentMethod;
+  signed?: boolean;
+  phone: string;
 }
 
 export interface Client {
