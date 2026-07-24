@@ -43,7 +43,8 @@ export const Route = createFileRoute("/_public/cars/$carId")({
   ),
 });
 
-const classLabel = { econom: "Эконом", sport: "Спорт", premium: "Премиум" } as const;
+import type { CarClass } from "@/types/domain";
+const classLabel: Record<CarClass, string> = { econom: "Эконом", sport: "Спорт", premium: "Премиум" };
 
 function CarPage() {
   const { car } = Route.useLoaderData();
