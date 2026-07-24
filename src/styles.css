@@ -295,3 +295,26 @@
 
 .no-scrollbar::-webkit-scrollbar { display: none; }
 .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* PWA / notch-safe insets — apply on the mobile header + fixed bottom nav */
+.safe-top { padding-top: max(env(safe-area-inset-top), 0px); }
+.safe-bottom { padding-bottom: max(env(safe-area-inset-bottom), 0px); }
+
+/* Attention pulse for the mobile menu trigger on the dark hero */
+@keyframes menu-pulse {
+  0%, 100% {
+    box-shadow:
+      0 0 0 0 color-mix(in oklab, var(--neon-blue) 55%, transparent),
+      0 0 18px color-mix(in oklab, var(--neon-blue) 45%, transparent);
+    transform: scale(1);
+  }
+  50% {
+    box-shadow:
+      0 0 0 6px color-mix(in oklab, var(--neon-blue) 0%, transparent),
+      0 0 28px color-mix(in oklab, var(--neon-blue) 70%, transparent);
+    transform: scale(1.04);
+  }
+}
+.menu-pulse { animation: menu-pulse 2.4s ease-in-out infinite; }
+.menu-pulse:hover, .menu-pulse:active { animation: none; }
+
