@@ -22,7 +22,7 @@ export function PublicLayout() {
   return (
     <div className="public-dark min-h-screen bg-background text-foreground">
       <header className="safe-top sticky top-0 z-40 border-b border-border/60 bg-background/85 backdrop-blur">
-        <div className="mx-auto grid max-w-7xl grid-cols-[minmax(0,1fr)_auto] items-center gap-4 px-4 py-4 md:flex md:justify-between md:px-6">
+        <div className="mx-auto grid max-w-7xl grid-cols-[minmax(0,1fr)_auto] items-center gap-4 px-4 pb-4 pt-5 md:flex md:justify-between md:px-6 md:py-4">
           <Link to="/" className="flex min-w-0 items-center gap-2">
             <span className="font-display text-xl font-black tracking-widest md:neon-text md:text-2xl">
               RENTSIB
@@ -64,9 +64,9 @@ export function PublicLayout() {
               <button
                 type="button"
                 aria-label="Открыть меню"
-                className="menu-pulse relative z-50 inline-flex h-12 w-12 items-center justify-center rounded-xl border border-accent/50 bg-background/70 text-foreground backdrop-blur transition hover:border-accent md:hidden"
+                className="menu-pulse relative z-50 inline-flex h-14 w-14 items-center justify-center rounded-2xl border-2 border-accent/70 bg-background/90 text-foreground shadow-[0_0_24px_color-mix(in_oklab,var(--neon-blue)_55%,transparent)] backdrop-blur transition hover:border-accent hover:scale-105 active:scale-95 md:hidden"
               >
-                <Menu className="h-6 w-6 text-accent" />
+                <Menu className="h-7 w-7 text-accent" />
               </button>
             </SheetTrigger>
 
