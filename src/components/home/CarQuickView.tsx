@@ -20,17 +20,47 @@ interface Props {
 }
 
 export function CarQuickView({ car, onClose }: Props) {
-  const { from, to, tariff } = useHomeBooking();
-  const open = !!car;
+  const { from, to, tariff, location } = useHomeBooking();
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const open = !!car && !confirmOpen;
+
+  const locationLabels: Record<string, string> = {
+    airport: "Аэропорт Толмачёво",
+    center: "Центр, ул. Ленина 1",
+    "left-bank": "Левый берег, пл. Маркса",
+  };
 
   return (
-    <Dialog open={open} onOpenChange={(v) => !v && onClose()}>
-      <DialogContent className="max-w-2xl overflow-hidden p-0 sm:rounded-2xl">
-        {car && <QuickBody car={car} from={from} to={to} tariff={tariff} />}
-      </DialogContent>
-    </Dialog>
+    <>
+      <Dialog open={open} onOpenChange={(v) => !v && !confirmOpen && onClose()}>
+        <DialogContent className="max-w-2xl overflow-hidden p-0 sm:rounded-2xl">
+          {car && (
+            <QuickBody
+              car={car}
+              from={from}
+              to={to}
+              tariff={tariff}
+              onOrder={() => setConfirmOpen(true)}
+            />
+          )}
+        </DialogContent>
+      </Dialog>
+      <BookingConfirmDialog
+        open={confirmOpen}
+        car={car}
+        from={from}
+        to={to}
+        tariff={tariff}
+        locationLabel={locationLabels[location]}
+        onClose={() => {
+          setConfirmOpen(false);
+          onClose();
+        }}
+      />
+    </>
   );
 }
+
 
 function QuickBody({
   car,
