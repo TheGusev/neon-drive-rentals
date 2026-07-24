@@ -181,11 +181,15 @@ function QuickBody({
               Все характеристики
             </Link>
           </Button>
-          <Button asChild disabled={!available} className="gap-2 font-bold uppercase tracking-wider">
-            <Link to="/booking/$carId" params={{ carId: car.id }}>
-              Заказать аренду <ArrowRight className="h-4 w-4" />
-            </Link>
+          <Button
+            type="button"
+            disabled={!available}
+            onClick={onOrder}
+            className="gap-2 font-bold uppercase tracking-wider"
+          >
+            Заказать аренду <ArrowRight className="h-4 w-4" />
           </Button>
+
         </div>
       </div>
     </div>
