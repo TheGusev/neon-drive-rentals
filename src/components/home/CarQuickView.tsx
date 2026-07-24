@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { ArrowRight, Fuel, Gauge, Info, Shield, Users, Zap } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -10,6 +11,8 @@ import { calcPrice, daysBetween, formatRub } from "@/lib/bookingDraft";
 import { isCarAvailable, nextBusyUntil } from "@/lib/availability";
 import { format } from "date-fns";
 import { ru } from "date-fns/locale";
+import { BookingConfirmDialog } from "./BookingConfirmDialog";
+
 
 interface Props {
   car: Car | null;
