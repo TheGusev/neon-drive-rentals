@@ -10,9 +10,9 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarProvider,
-  SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { LayoutDashboard, Car, CalendarCheck, Users, Wallet, Settings } from "lucide-react";
+import { AdminHeader } from "@/components/admin/AdminHeader";
 
 const items = [
   { to: "/admin", label: "Дашборд", icon: LayoutDashboard, exact: true },
@@ -72,11 +72,8 @@ export function AdminLayout() {
       <SidebarProvider>
         <div className="flex min-h-screen w-full">
           <AdminSidebar />
-          <div className="flex flex-1 flex-col">
-            <header className="flex h-14 items-center gap-3 border-b bg-background px-4">
-              <SidebarTrigger />
-              <div className="text-sm font-semibold">Админ-панель</div>
-            </header>
+          <div className="flex flex-1 flex-col min-w-0">
+            <AdminHeader />
             <main className="flex-1 bg-muted/30 p-4 md:p-6">
               <Outlet />
             </main>

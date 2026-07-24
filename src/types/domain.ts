@@ -22,7 +22,10 @@ export interface Car {
   fuelPolicy?: string;
   vin?: string;
   plate?: string;
+  status?: CarFleetStatus;
 }
+
+export type CarFleetStatus = "free" | "busy" | "washing" | "maintenance";
 
 export type BookingStatus = "paid" | "pending" | "active" | "completed" | "cancelled";
 export type BookingTariff = "city" | "region" | "outside";
@@ -90,8 +93,31 @@ export interface Client {
   id: string;
   name: string;
   phone: string;
+  email?: string;
   ordersCount: number;
   rating: number;
+  blacklisted?: boolean;
+  createdAt?: string;
+  lastBookingAt?: string;
+}
+
+export interface Payment {
+  id: string;
+  date: string;
+  bookingId: string;
+  clientId: string;
+  carId: string;
+  amount: number;
+  method: PaymentMethod;
+  status: "success" | "pending" | "refunded" | "failed";
+}
+
+export interface NotificationItem {
+  id: string;
+  title: string;
+  description: string;
+  time: string;
+  unread?: boolean;
 }
 
 export interface DashboardStats {
