@@ -1,12 +1,13 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { format } from "date-fns";
 import { ru } from "date-fns/locale";
-import { ArrowRight, CalendarIcon, Clock, Fuel, MapPin, Search, Sparkles, Wallet, Wrench } from "lucide-react";
+import { ArrowRight, CalendarIcon, ChevronLeft, ChevronRight, Clock, Fuel, MapPin, Search, Sparkles, Wallet, Wrench } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
 import { cars } from "@/mocks/cars";
 
@@ -26,18 +27,18 @@ const benefits = [
 const popular = cars.slice(0, 6);
 
 export function HomeDesktop({ heroImage }: { heroImage: string }) {
+  const stripRef = useRef<HTMLDivElement>(null);
+  const scrollBy = (delta: number) => stripRef.current?.scrollBy({ left: delta, behavior: "smooth" });
+
   return (
     <div className="relative -mx-4 -my-8 h-[calc(100svh-4.5rem)] overflow-hidden md:-mx-6 md:-my-12 md:h-[calc(100svh-5rem)]">
-      {/* Background layer */}
+      {/* Background — full brightness, no dimming */}
       <div className="absolute inset-0">
         <img
           src={heroImage}
           alt="Ночной драйв кей-кара по неоновому туннелю"
-          className="ken-burns h-full w-full object-cover opacity-70"
+          className="ken-burns h-full w-full object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/70 to-background/30" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom,transparent_0%,var(--background)_85%)]" />
-
         {/* Neon streamers */}
         <div className="pointer-events-none absolute inset-0 overflow-hidden">
           {[
@@ -61,76 +62,123 @@ export function HomeDesktop({ heroImage }: { heroImage: string }) {
         </div>
       </div>
 
-      {/* Grid overlay content */}
-      <div className="relative z-10 mx-auto grid h-full max-w-7xl grid-rows-[minmax(0,3fr)_auto_minmax(0,2.2fr)] gap-4 px-6 py-6 md:grid-cols-[1.35fr_minmax(360px,0.9fr)] md:grid-rows-[minmax(0,1.6fr)_auto_minmax(0,1fr)]">
-        {/* HERO title (col 1, row 1) */}
-        <div className="flex flex-col justify-center md:col-start-1 md:row-start-1">
+      {/* Content */}
+      <div className="relative z-10 flex h-full flex-col">
+        {/* HERO block */}
+        <div className="mx-auto flex w-full max-w-7xl flex-1 flex-col justify-center px-6 pt-6">
           <p className="rise-in text-[10px] uppercase tracking-[0.5em] text-accent md:text-xs" style={{ animationDelay: "50ms" }}>
             速度を感じる · Nsk · JDM
           </p>
           <h1
-            className="rise-in mt-3 font-display text-[13vw] font-black leading-[0.85] tracking-tight md:text-[8.5vw] xl:text-[130px]"
+            className="rise-in mt-3 font-display text-[13vw] font-black leading-[0.85] tracking-tight md:text-[9vw] xl:text-[150px]"
             style={{ animationDelay: "150ms" }}
           >
             <span className="text-shimmer neon-flicker">NSK-RENT</span>
           </h1>
-          <p
-            className="rise-in mt-4 max-w-lg text-base text-foreground/85 md:text-lg"
-            style={{ animationDelay: "280ms" }}
-          >
+          <p className="rise-in mt-4 max-w-xl text-base text-foreground/90 drop-shadow md:text-lg" style={{ animationDelay: "280ms" }}>
             Аренда японских кей-каров в Новосибирске. Правый руль, честные цены, ключи за 3 минуты.
           </p>
-          <div className="rise-in mt-5 flex flex-wrap items-center gap-4 text-xs text-muted-foreground" style={{ animationDelay: "380ms" }}>
+
+          <div className="rise-in mt-5 flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-foreground/80" style={{ animationDelay: "380ms" }}>
             <span className="inline-flex items-center gap-1.5">
               <span className="h-2 w-2 rounded-full bg-[color:var(--neon-blue)] shadow-[0_0_10px_var(--neon-blue)]" />
               12 авто свободно сейчас
             </span>
-            <span>·</span>
+            <span className="opacity-40">·</span>
             <span>от 2 100 ₽ / сутки</span>
+          </div>
+
+          {/* CTAs */}
+          <div className="rise-in mt-6 flex flex-wrap gap-3" style={{ animationDelay: "460ms" }}>
+            <Button asChild size="lg" className="gap-2 font-bold uppercase tracking-wider md:pulse-glow">
+              <Link to="/cars">
+                <Search className="h-4 w-4" />
+                Найти авто
+                <ArrowRight className="ml-1 h-4 w-4" />
+              </Link>
+            </Button>
+
+            <Sheet>
+              <SheetTrigger asChild>
+                <Button
+                  size="lg"
+                  variant="outline"
+                  className="gap-2 border-accent/60 bg-background/40 font-bold uppercase tracking-wider backdrop-blur hover:border-accent hover:bg-background/60"
+                >
+                  <CalendarIcon className="h-4 w-4 text-accent" />
+                  Быстрое бронирование
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="right" className="w-full overflow-y-auto sm:max-w-md">
+                <div className="pt-6">
+                  <QuickBookingCompact />
+                </div>
+              </SheetContent>
+            </Sheet>
+          </div>
+
+          {/* Benefits */}
+          <div className="rise-in mt-8 grid max-w-3xl grid-cols-2 gap-3 md:grid-cols-4" style={{ animationDelay: "560ms" }}>
+            {benefits.map((b) => (
+              <div
+                key={b.title}
+                className="group flex items-center gap-3 rounded-xl border border-border/60 bg-card/60 p-3 backdrop-blur transition hover:border-accent/60 hover:neon-glow"
+              >
+                <b.icon className="h-5 w-5 shrink-0 text-[color:var(--neon-orange)] transition-transform group-hover:scale-110" />
+                <div className="min-w-0">
+                  <p className="truncate font-display text-xs font-bold md:text-sm">{b.title}</p>
+                  <p className="truncate text-[10px] text-muted-foreground md:text-xs">{b.text}</p>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
 
-        {/* Booking widget (col 2, spans rows) */}
-        <div className="rise-in md:col-start-2 md:row-span-3 md:row-start-1 md:self-center" style={{ animationDelay: "220ms" }}>
-          <QuickBookingCompact />
-        </div>
-
-        {/* Benefits row (col 1, row 2) */}
-        <div className="rise-in grid grid-cols-4 gap-3 md:col-start-1 md:row-start-2" style={{ animationDelay: "450ms" }}>
-          {benefits.map((b, i) => (
-            <div
-              key={b.title}
-              className="group relative overflow-hidden rounded-xl border border-border/60 bg-card/70 p-3 backdrop-blur transition hover:border-accent/60 hover:neon-glow"
-              style={{ animationDelay: `${500 + i * 80}ms` }}
-            >
-              <b.icon className="h-4 w-4 text-[color:var(--neon-orange)] transition-transform group-hover:scale-110 md:h-5 md:w-5" />
-              <p className="mt-2 font-display text-xs font-bold leading-tight md:text-sm">{b.title}</p>
-              <p className="text-[10px] text-muted-foreground md:text-xs">{b.text}</p>
-            </div>
-          ))}
-        </div>
-
-        {/* Popular models strip (col 1, row 3) */}
-        <div className="rise-in min-h-0 overflow-hidden md:col-start-1 md:row-start-3" style={{ animationDelay: "560ms" }}>
-          <div className="mb-2 flex items-end justify-between">
+        {/* Popular strip — extends to right edge */}
+        <div className="rise-in shrink-0 pb-4 pt-2" style={{ animationDelay: "700ms" }}>
+          <div className="mx-auto mb-3 flex max-w-7xl items-end justify-between gap-4 px-6">
             <div>
               <p className="text-[10px] uppercase tracking-[0.35em] text-muted-foreground">Каталог</p>
-              <p className="font-display text-base font-black md:text-xl">
+              <p className="font-display text-lg font-black md:text-2xl">
                 Популярные <span className="text-[color:var(--neon-blue)]">модели</span>
               </p>
             </div>
-            <Button asChild variant="ghost" size="sm" className="gap-1 text-accent hover:text-accent">
-              <Link to="/cars">Все <ArrowRight className="h-3.5 w-3.5" /></Link>
-            </Button>
+            <div className="flex items-center gap-2">
+              <Button
+                size="icon"
+                variant="outline"
+                onClick={() => scrollBy(-320)}
+                aria-label="Прокрутить влево"
+                className="h-9 w-9 border-border/70 bg-card/60 backdrop-blur hover:border-accent"
+              >
+                <ChevronLeft className="h-4 w-4" />
+              </Button>
+              <Button
+                size="icon"
+                variant="outline"
+                onClick={() => scrollBy(320)}
+                aria-label="Прокрутить вправо"
+                className="h-9 w-9 border-border/70 bg-card/60 backdrop-blur hover:border-accent"
+              >
+                <ChevronRight className="h-4 w-4" />
+              </Button>
+              <Button asChild variant="ghost" size="sm" className="ml-2 gap-1 text-accent hover:text-accent">
+                <Link to="/cars">Все <ArrowRight className="h-3.5 w-3.5" /></Link>
+              </Button>
+            </div>
           </div>
-          <div className="no-scrollbar flex h-[calc(100%-2.5rem)] gap-3 overflow-x-auto pb-1 [mask-image:linear-gradient(to_right,black_92%,transparent)]">
-            {popular.map((car, i) => (
+
+          <div
+            ref={stripRef}
+            className="no-scrollbar flex snap-x gap-4 overflow-x-auto pb-2 pr-6"
+            style={{ paddingLeft: "max(1.5rem, calc((100vw - 80rem) / 2 + 1.5rem))" }}
+          >
+            {popular.map((car) => (
               <Link
                 key={car.id}
                 to="/cars/$carId"
                 params={{ carId: car.id }}
-                className="group relative flex h-full w-[220px] shrink-0 flex-col overflow-hidden rounded-xl border border-border/60 bg-card/70 backdrop-blur transition hover:-translate-y-1 hover:border-accent hover:neon-glow"
-                style={{ animationDelay: `${600 + i * 60}ms` }}
+                className="group relative flex h-[220px] w-[300px] shrink-0 snap-start flex-col overflow-hidden rounded-xl border border-border/60 bg-card/70 backdrop-blur transition hover:-translate-y-1 hover:border-accent hover:neon-glow"
               >
                 <div className="relative flex-1 overflow-hidden bg-muted">
                   <img
@@ -139,19 +187,19 @@ export function HomeDesktop({ heroImage }: { heroImage: string }) {
                     loading="lazy"
                     className="h-full w-full object-cover transition duration-700 group-hover:scale-110"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/20 to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-background/85 via-background/10 to-transparent" />
                   <span className="absolute left-2 top-2 rounded-md bg-background/70 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-widest backdrop-blur">
                     {car.class === "sport" ? "Sport" : "Econom"}
                   </span>
                 </div>
-                <div className="flex items-center justify-between gap-2 px-3 py-2">
+                <div className="flex items-center justify-between gap-2 px-3 py-2.5">
                   <div className="min-w-0">
-                    <p className="truncate font-display text-xs font-bold">{car.brand} {car.model}</p>
+                    <p className="truncate font-display text-sm font-bold">{car.brand} {car.model}</p>
                     <p className="text-[10px] text-muted-foreground">
                       <Fuel className="mr-0.5 inline h-2.5 w-2.5" />{car.consumption}л · {car.transmission}
                     </p>
                   </div>
-                  <span className="font-display text-sm font-black text-[color:var(--neon-orange)]">
+                  <span className="font-display text-base font-black text-[color:var(--neon-orange)]">
                     {car.pricePerDay.toLocaleString("ru-RU")}₽
                   </span>
                 </div>
@@ -266,15 +314,11 @@ function QuickBookingCompact() {
           <DateField label="Возврат" value={ret} onChange={setRet} />
         </div>
 
-        <Button
-          asChild
-          size="lg"
-          className="mt-1 w-full gap-2 font-bold uppercase tracking-wider md:pulse-glow"
-        >
+        <Button asChild size="lg" className="mt-1 w-full gap-2 font-bold uppercase tracking-wider md:pulse-glow">
           <Link to="/cars">
             <Search className="h-4 w-4" />
             Найти авто
-            <ArrowRight className="ml-auto h-4 w-4 transition-transform group-hover:translate-x-1" />
+            <ArrowRight className="ml-auto h-4 w-4" />
           </Link>
         </Button>
       </div>
