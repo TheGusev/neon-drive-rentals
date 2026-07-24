@@ -1,4 +1,4 @@
-import { Car, Clock, Headset, MapPin, ShieldCheck, Zap } from "lucide-react";
+import { Car, Clock, MapPin, ShieldCheck, Zap } from "lucide-react";
 
 const items = [
   { icon: Car, title: "8 JDM кей-каров", sub: "весь парк из Японии" },
@@ -6,7 +6,6 @@ const items = [
   { icon: Zap, title: "От 1 800 ₽ / сутки", sub: "город · без переплат" },
   { icon: MapPin, title: "Доставка авто", sub: "Новосибирск и НСО" },
   { icon: Clock, title: "Договор за 3 мин", sub: "онлайн + СМС-подпись" },
-  { icon: Headset, title: "Поддержка 24/7", sub: "всегда на связи" },
 ];
 
 export function NfsSideMenu() {
