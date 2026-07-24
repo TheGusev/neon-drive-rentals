@@ -70,15 +70,14 @@ function BookingPage() {
   const [draft, setDraft] = useState<BookingDraft | null>(null);
 
   useEffect(() => {
-    setDraft(
-      createDraft(car.id, {
-        startDate: search.from ?? undefined,
-        endDate: search.to ?? undefined,
-        tariff: search.tariff ?? "city",
-      }),
-    );
+    const overrides: Partial<BookingDraft> = {};
+    if (search.from) overrides.startDate = search.from;
+    if (search.to) overrides.endDate = search.to;
+    if (search.tariff) overrides.tariff = search.tariff;
+    setDraft(createDraft(car.id, overrides));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [car.id]);
+
 
 
   const patch = (p: Partial<BookingDraft>) => {
