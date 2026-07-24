@@ -9,38 +9,216 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as PublicRouteImport } from './routes/_public'
+import { Route as AdminRouteImport } from './routes/_admin'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as PublicProfileRouteImport } from './routes/_public.profile'
+import { Route as PublicCarsIndexRouteImport } from './routes/_public.cars.index'
+import { Route as AdminAdminIndexRouteImport } from './routes/_admin.admin.index'
+import { Route as PublicPaymentBookingIdRouteImport } from './routes/_public.payment.$bookingId'
+import { Route as PublicContractBookingIdRouteImport } from './routes/_public.contract.$bookingId'
+import { Route as PublicCarsCarIdRouteImport } from './routes/_public.cars.$carId'
+import { Route as PublicBookingCarIdRouteImport } from './routes/_public.booking.$carId'
+import { Route as AdminAdminSettingsRouteImport } from './routes/_admin.admin.settings'
+import { Route as AdminAdminFinanceRouteImport } from './routes/_admin.admin.finance'
+import { Route as AdminAdminClientsRouteImport } from './routes/_admin.admin.clients'
+import { Route as AdminAdminCarsRouteImport } from './routes/_admin.admin.cars'
+import { Route as AdminAdminBookingsRouteImport } from './routes/_admin.admin.bookings'
 
+const PublicRoute = PublicRouteImport.update({
+  id: '/_public',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/_admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PublicProfileRoute = PublicProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => PublicRoute,
+} as any)
+const PublicCarsIndexRoute = PublicCarsIndexRouteImport.update({
+  id: '/cars/',
+  path: '/cars/',
+  getParentRoute: () => PublicRoute,
+} as any)
+const AdminAdminIndexRoute = AdminAdminIndexRouteImport.update({
+  id: '/admin/',
+  path: '/admin/',
+  getParentRoute: () => AdminRoute,
+} as any)
+const PublicPaymentBookingIdRoute = PublicPaymentBookingIdRouteImport.update({
+  id: '/payment/$bookingId',
+  path: '/payment/$bookingId',
+  getParentRoute: () => PublicRoute,
+} as any)
+const PublicContractBookingIdRoute = PublicContractBookingIdRouteImport.update({
+  id: '/contract/$bookingId',
+  path: '/contract/$bookingId',
+  getParentRoute: () => PublicRoute,
+} as any)
+const PublicCarsCarIdRoute = PublicCarsCarIdRouteImport.update({
+  id: '/cars/$carId',
+  path: '/cars/$carId',
+  getParentRoute: () => PublicRoute,
+} as any)
+const PublicBookingCarIdRoute = PublicBookingCarIdRouteImport.update({
+  id: '/booking/$carId',
+  path: '/booking/$carId',
+  getParentRoute: () => PublicRoute,
+} as any)
+const AdminAdminSettingsRoute = AdminAdminSettingsRouteImport.update({
+  id: '/admin/settings',
+  path: '/admin/settings',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminAdminFinanceRoute = AdminAdminFinanceRouteImport.update({
+  id: '/admin/finance',
+  path: '/admin/finance',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminAdminClientsRoute = AdminAdminClientsRouteImport.update({
+  id: '/admin/clients',
+  path: '/admin/clients',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminAdminCarsRoute = AdminAdminCarsRouteImport.update({
+  id: '/admin/cars',
+  path: '/admin/cars',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminAdminBookingsRoute = AdminAdminBookingsRouteImport.update({
+  id: '/admin/bookings',
+  path: '/admin/bookings',
+  getParentRoute: () => AdminRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/profile': typeof PublicProfileRoute
+  '/admin/bookings': typeof AdminAdminBookingsRoute
+  '/admin/cars': typeof AdminAdminCarsRoute
+  '/admin/clients': typeof AdminAdminClientsRoute
+  '/admin/finance': typeof AdminAdminFinanceRoute
+  '/admin/settings': typeof AdminAdminSettingsRoute
+  '/booking/$carId': typeof PublicBookingCarIdRoute
+  '/cars/$carId': typeof PublicCarsCarIdRoute
+  '/contract/$bookingId': typeof PublicContractBookingIdRoute
+  '/payment/$bookingId': typeof PublicPaymentBookingIdRoute
+  '/admin/': typeof AdminAdminIndexRoute
+  '/cars/': typeof PublicCarsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/profile': typeof PublicProfileRoute
+  '/admin/bookings': typeof AdminAdminBookingsRoute
+  '/admin/cars': typeof AdminAdminCarsRoute
+  '/admin/clients': typeof AdminAdminClientsRoute
+  '/admin/finance': typeof AdminAdminFinanceRoute
+  '/admin/settings': typeof AdminAdminSettingsRoute
+  '/booking/$carId': typeof PublicBookingCarIdRoute
+  '/cars/$carId': typeof PublicCarsCarIdRoute
+  '/contract/$bookingId': typeof PublicContractBookingIdRoute
+  '/payment/$bookingId': typeof PublicPaymentBookingIdRoute
+  '/admin': typeof AdminAdminIndexRoute
+  '/cars': typeof PublicCarsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_admin': typeof AdminRouteWithChildren
+  '/_public': typeof PublicRouteWithChildren
+  '/_public/profile': typeof PublicProfileRoute
+  '/_admin/admin/bookings': typeof AdminAdminBookingsRoute
+  '/_admin/admin/cars': typeof AdminAdminCarsRoute
+  '/_admin/admin/clients': typeof AdminAdminClientsRoute
+  '/_admin/admin/finance': typeof AdminAdminFinanceRoute
+  '/_admin/admin/settings': typeof AdminAdminSettingsRoute
+  '/_public/booking/$carId': typeof PublicBookingCarIdRoute
+  '/_public/cars/$carId': typeof PublicCarsCarIdRoute
+  '/_public/contract/$bookingId': typeof PublicContractBookingIdRoute
+  '/_public/payment/$bookingId': typeof PublicPaymentBookingIdRoute
+  '/_admin/admin/': typeof AdminAdminIndexRoute
+  '/_public/cars/': typeof PublicCarsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/profile'
+    | '/admin/bookings'
+    | '/admin/cars'
+    | '/admin/clients'
+    | '/admin/finance'
+    | '/admin/settings'
+    | '/booking/$carId'
+    | '/cars/$carId'
+    | '/contract/$bookingId'
+    | '/payment/$bookingId'
+    | '/admin/'
+    | '/cars/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/profile'
+    | '/admin/bookings'
+    | '/admin/cars'
+    | '/admin/clients'
+    | '/admin/finance'
+    | '/admin/settings'
+    | '/booking/$carId'
+    | '/cars/$carId'
+    | '/contract/$bookingId'
+    | '/payment/$bookingId'
+    | '/admin'
+    | '/cars'
+  id:
+    | '__root__'
+    | '/'
+    | '/_admin'
+    | '/_public'
+    | '/_public/profile'
+    | '/_admin/admin/bookings'
+    | '/_admin/admin/cars'
+    | '/_admin/admin/clients'
+    | '/_admin/admin/finance'
+    | '/_admin/admin/settings'
+    | '/_public/booking/$carId'
+    | '/_public/cars/$carId'
+    | '/_public/contract/$bookingId'
+    | '/_public/payment/$bookingId'
+    | '/_admin/admin/'
+    | '/_public/cars/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AdminRoute: typeof AdminRouteWithChildren
+  PublicRoute: typeof PublicRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/_public': {
+      id: '/_public'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof PublicRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_admin': {
+      id: '/_admin'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,22 +226,139 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_public/profile': {
+      id: '/_public/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof PublicProfileRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/cars/': {
+      id: '/_public/cars/'
+      path: '/cars'
+      fullPath: '/cars/'
+      preLoaderRoute: typeof PublicCarsIndexRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_admin/admin/': {
+      id: '/_admin/admin/'
+      path: '/admin'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminAdminIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/_public/payment/$bookingId': {
+      id: '/_public/payment/$bookingId'
+      path: '/payment/$bookingId'
+      fullPath: '/payment/$bookingId'
+      preLoaderRoute: typeof PublicPaymentBookingIdRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/contract/$bookingId': {
+      id: '/_public/contract/$bookingId'
+      path: '/contract/$bookingId'
+      fullPath: '/contract/$bookingId'
+      preLoaderRoute: typeof PublicContractBookingIdRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/cars/$carId': {
+      id: '/_public/cars/$carId'
+      path: '/cars/$carId'
+      fullPath: '/cars/$carId'
+      preLoaderRoute: typeof PublicCarsCarIdRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/booking/$carId': {
+      id: '/_public/booking/$carId'
+      path: '/booking/$carId'
+      fullPath: '/booking/$carId'
+      preLoaderRoute: typeof PublicBookingCarIdRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_admin/admin/settings': {
+      id: '/_admin/admin/settings'
+      path: '/admin/settings'
+      fullPath: '/admin/settings'
+      preLoaderRoute: typeof AdminAdminSettingsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/_admin/admin/finance': {
+      id: '/_admin/admin/finance'
+      path: '/admin/finance'
+      fullPath: '/admin/finance'
+      preLoaderRoute: typeof AdminAdminFinanceRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/_admin/admin/clients': {
+      id: '/_admin/admin/clients'
+      path: '/admin/clients'
+      fullPath: '/admin/clients'
+      preLoaderRoute: typeof AdminAdminClientsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/_admin/admin/cars': {
+      id: '/_admin/admin/cars'
+      path: '/admin/cars'
+      fullPath: '/admin/cars'
+      preLoaderRoute: typeof AdminAdminCarsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/_admin/admin/bookings': {
+      id: '/_admin/admin/bookings'
+      path: '/admin/bookings'
+      fullPath: '/admin/bookings'
+      preLoaderRoute: typeof AdminAdminBookingsRouteImport
+      parentRoute: typeof AdminRoute
+    }
   }
 }
 
+interface AdminRouteChildren {
+  AdminAdminBookingsRoute: typeof AdminAdminBookingsRoute
+  AdminAdminCarsRoute: typeof AdminAdminCarsRoute
+  AdminAdminClientsRoute: typeof AdminAdminClientsRoute
+  AdminAdminFinanceRoute: typeof AdminAdminFinanceRoute
+  AdminAdminSettingsRoute: typeof AdminAdminSettingsRoute
+  AdminAdminIndexRoute: typeof AdminAdminIndexRoute
+}
+
+const AdminRouteChildren: AdminRouteChildren = {
+  AdminAdminBookingsRoute: AdminAdminBookingsRoute,
+  AdminAdminCarsRoute: AdminAdminCarsRoute,
+  AdminAdminClientsRoute: AdminAdminClientsRoute,
+  AdminAdminFinanceRoute: AdminAdminFinanceRoute,
+  AdminAdminSettingsRoute: AdminAdminSettingsRoute,
+  AdminAdminIndexRoute: AdminAdminIndexRoute,
+}
+
+const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
+
+interface PublicRouteChildren {
+  PublicProfileRoute: typeof PublicProfileRoute
+  PublicBookingCarIdRoute: typeof PublicBookingCarIdRoute
+  PublicCarsCarIdRoute: typeof PublicCarsCarIdRoute
+  PublicContractBookingIdRoute: typeof PublicContractBookingIdRoute
+  PublicPaymentBookingIdRoute: typeof PublicPaymentBookingIdRoute
+  PublicCarsIndexRoute: typeof PublicCarsIndexRoute
+}
+
+const PublicRouteChildren: PublicRouteChildren = {
+  PublicProfileRoute: PublicProfileRoute,
+  PublicBookingCarIdRoute: PublicBookingCarIdRoute,
+  PublicCarsCarIdRoute: PublicCarsCarIdRoute,
+  PublicContractBookingIdRoute: PublicContractBookingIdRoute,
+  PublicPaymentBookingIdRoute: PublicPaymentBookingIdRoute,
+  PublicCarsIndexRoute: PublicCarsIndexRoute,
+}
+
+const PublicRouteWithChildren =
+  PublicRoute._addFileChildren(PublicRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AdminRoute: AdminRouteWithChildren,
+  PublicRoute: PublicRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
