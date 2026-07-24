@@ -7,6 +7,7 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 const nav = [
   { to: "/", label: "Главная" },
   { to: "/cars", label: "Автомобили" },
+  { to: "/blog", label: "Блог" },
   { to: "/profile", label: "Кабинет" },
 ];
 

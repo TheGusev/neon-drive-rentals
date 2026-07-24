@@ -1,30 +1,30 @@
 import { Link } from "@tanstack/react-router";
-import { ArrowUpRight, Building2, Plane, Wallet, Car } from "lucide-react";
+import { ArrowUpRight, BookOpen, Plane, Wallet, Car } from "lucide-react";
 
 const tiles = [
   {
     icon: Car,
     h: "Аренда авто в Новосибирске",
     p: "Прокат японских кей-каров с доставкой по городу и области.",
-    to: "/cars" as const,
-  },
-  {
-    icon: Building2,
-    h: "Кей-кары из Японии",
-    p: "Правый руль, оригинал. Honda N-BOX, Suzuki Wagon R, Nissan Dayz.",
-    to: "/cars" as const,
+    to: "/rent/novosibirsk" as const,
   },
   {
     icon: Wallet,
-    h: "Без залога от 1 800 ₽",
-    p: "Честные тарифы: город, НСО и за пределы области.",
-    to: "/cars" as const,
+    h: "Аренда без залога",
+    p: "Страховой депозит от 5 000 ₽, для проверенных клиентов — 0 ₽.",
+    to: "/rent/bez-zaloga" as const,
   },
   {
     icon: Plane,
-    h: "Доставка в Толмачёво",
-    p: "Встреча в аэропорту, ключи сразу после посадки.",
-    to: "/cars" as const,
+    h: "Кей-кары из Японии",
+    p: "Правый руль, оригинал. Honda N-BOX, Suzuki Wagon R, Nissan Dayz.",
+    to: "/kei-cars" as const,
+  },
+  {
+    icon: BookOpen,
+    h: "Блог и гайды",
+    p: "Как арендовать, куда съездить, чем кей-кары лучше седана.",
+    to: "/blog" as const,
   },
 ];
 
