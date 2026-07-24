@@ -1,86 +1,39 @@
-## Цель этапа 1
+## Prompt 2 — Home page (Desktop NFS-neon + Mobile clean-light)
 
-Собрать пустой каркас проекта на текущем стеке (TanStack Start + React + Tailwind v4): все роуты, две темы, два layout-а (публичный и админский), мок-данные. Без наполнения экранов — заглушки с заголовком страницы. Наполнение и логика — следующими промтами.
+Build the `/` route content matching the reference screenshots: a full-screen neon hero with a fast-booking widget on desktop, and a compact light layout on mobile — via responsive CSS only (single route, no duplicate components).
 
-## Дизайн-темы (Tailwind v4, `src/styles.css`)
+### 1. Hero image asset
+- Generate `src/assets/hero-car.jpg` — a Japanese kei-car (Suzuki Wagon R / Daihatsu Move-style) in a neon garage, cyan + orange rim lighting, dark background, cinematic NFS Underground aesthetic.
 
-Одна тема выбирается по media query (breakpoint) на публичных роутах, админка всегда светлая деловая.
+### 2. Home route (`src/routes/index.tsx`)
+Replace the current stub with three sections composed as small local subcomponents inside one route file (or split into `src/components/home/` if it grows):
 
-- **public-dark** (десктоп, публичная часть, ≥ `md`):
-  - `--background: #0a0e1a`, `--card: #131826`
-  - акценты `--neon-blue: #2f80ed`, `--neon-orange: #ff6b00`
-  - крупные заголовки с letter-spacing, мягкое свечение (box-shadow blur), скошенные углы у кнопок, тонкие неоновые разделители
-  - шрифты: Inter/Montserrat через `<link>` в `__root.tsx`
-- **clean-light** (мобилка публичной части < `md`, вся админка):
-  - `--background: #ffffff`, `--card: #f5f7fb`
-  - акценты синий `#2f80ed`, зелёный `#22c55e` для статусов
-  - скругления 20–24px, Inter, без эффектов
+**a. Hero**
+- Desktop (`md:` and up): full-viewport (`min-h-[100svh]`) with hero image as background, dark neon overlay, huge `NSK-RENT` wordmark using `neon-text` utility (font-display, tracking-wide), subtitle "Аренда японских кей-каров в Новосибирске", and a right-side **QuickBookingWidget** card floated to the right.
+- Mobile (< md): hero image collapses to a shorter banner (`h-[60vh]`), no neon glow, dark→transparent gradient over image, plain white heading below on light background, vertical booking widget stacked under hero.
 
-Реализация: класс `public-dark` навешивается через CSS-переменные внутри `@media (min-width: 768px)` на `<html>` только для публичных страниц; на роутах `/admin/*` всегда `clean-light`. Токены регистрируются в `@theme inline`, чтобы работали утилиты `bg-card`, `text-neon-blue` и т.п.
+**b. QuickBookingWidget** (`src/components/home/QuickBookingWidget.tsx`)
+- Fields: pickup date, return date, pickup location (select of 2–3 Nsk points), "Найти авто" CTA linking to `/cars`.
+- Desktop: dark glass card with cyan neon border (`clip-notch`, `neon-glow`), horizontal-ish stacked inputs.
+- Mobile: full-width white card, neutral border, vertical inputs, primary button.
+- Uses shadcn `Input`, `Select`, `Button`, `Popover + Calendar` for dates. Purely presentational — CTA navigates via `Link`.
 
-## Структура роутов (`src/routes/`)
+**c. Benefits section**
+- 4 cards: Честные цены, Поддержка 24/7, Простое бронирование, Японское качество.
+- Desktop: 4-column neon-outlined dark cards with `lucide-react` icons in neon-orange.
+- Mobile: 1–2 column light cards with muted borders.
 
-Публичные (PublicLayout — Header + Footer):
-- `index.tsx` → `/`
-- `cars.index.tsx` → `/cars`
-- `cars.$carId.tsx` → `/cars/:carId`
-- `booking.$carId.tsx` → `/booking/:carId`
-- `payment.$bookingId.tsx` → `/payment/:bookingId`
-- `contract.$bookingId.tsx` → `/contract/:bookingId`
-- `profile.tsx` → `/profile`
+**d. Popular models carousel**
+- Uses shadcn `Carousel` (embla) with first 6 entries from `src/mocks/cars.ts`.
+- Card shows image, model, price/day, "Подробнее" link to `/cars/$carId`.
+- Desktop: 3 visible slides, neon card style. Mobile: 1 slide per view, clean-light card style.
 
-Админские (AdminLayout — сайдбар, светлая тема):
-- `admin.tsx` — layout с `<Outlet />` и sidebar (shadcn Sidebar)
-- `admin.index.tsx` → `/admin` (Дашборд)
-- `admin.cars.tsx` → `/admin/cars`
-- `admin.bookings.tsx` → `/admin/bookings`
-- `admin.clients.tsx` → `/admin/clients`
-- `admin.finance.tsx` → `/admin/finance`
-- `admin.settings.tsx` → `/admin/settings`
+### 3. Responsive theming approach
+- The `_public` layout already toggles `.public-dark` on `md:` and `.clean-light` on mobile via classes on the wrapper. Verify in `src/components/layout/PublicLayout.tsx` that the wrapper uses `clean-light md:public-dark`; adjust if not.
+- All neon-only effects (glow, neon-text, dark backgrounds) are gated with `md:` prefixes so mobile stays neutral. No dark-mode class toggle needed — theme is purely breakpoint-driven, as already set up in `src/styles.css`.
 
-Каждая страница — заглушка: `<h1>Название</h1>` + короткая подсказка «наполнение в следующем промте». У каждого роута отдельный `head()` с уникальными title/description/og.
+### 4. SEO
+- Update `head()` in `src/routes/index.tsx`: title "NSK-RENT — Аренда японских кей-каров в Новосибирске", matching description, og:title/description, og:type=website, twitter:card=summary_large_image. No og:image until the hero URL is hosted absolutely.
 
-## Layouts и общие компоненты
-
-- `src/components/layout/PublicLayout.tsx` — Header (лого RentSib, навигация: Главная, Автомобили, Услуги, О нас, Контакты, телефон, Логин), Footer
-- `src/components/layout/AdminLayout.tsx` — sidebar (shadcn `Sidebar` с `collapsible="icon"`), верхний бар с `SidebarTrigger`
-- Header/Sidebar подсвечивают активный роут через `useRouterState`
-- Респонсив-правила: `grid-cols-[minmax(0,1fr)_auto]` в шапках, `min-w-0`/`truncate`/`shrink-0`
-
-## Мок-данные (`src/mocks/`)
-
-Плоские TypeScript-модули (не БД, не серверные функции):
-- `cars.ts` — 8 машин (Honda N-BOX, Suzuki Alto Works, Daihatsu Move Custom, Nissan Dayz, Mazda Flair Wagon, Mitsubishi eK Sport, Subaru Stella, Suzuki Wagon R): id, марка, модель, год, класс, мощность, крутящий момент, расход, КПП, цена/сутки, изображение-заглушка
-- `bookings.ts` — 3 активные брони (клиент, авто, даты, статус оплаты)
-- `clients.ts` — 4 клиента (имя, телефон, кол-во заказов, рейтинг)
-- `dashboardStats.ts` — брони сегодня, выручка, статус автопарка
-
-Типы в `src/types/domain.ts`. Никаких fetch/react-query — заглушки импортируют напрямую.
-
-## Изображения
-
-На этапе каркаса — плейсхолдеры (`bg-muted` блок с иконкой машины). Реальные изображения авто генерируем на следующем этапе, когда наполняем каталог.
-
-## Индекс
-
-`src/routes/index.tsx` полностью переписываем (убираем blank-page placeholder) — простая заглушка hero-секции с заголовком «RentSib — Drive the Night» и подсказкой, что содержимое придёт следующим промтом.
-
-## Что НЕ делаем на этом этапе
-
-- Не подключаем Lovable Cloud / БД / auth
-- Не реализуем формы бронирования, оплату, подписание, ЮKassa
-- Не наполняем экраны — только заголовки-заглушки
-- Не подключаем реальные картинки авто
-- Не делаем GitHub/Beget/CI — это последующие этапы
-
-## Технические детали
-
-- Стек уже готов: TanStack Start + React 19 + Tailwind v4 + shadcn. React Router / Vite-only из промта пользователя не применяем — используем текущий шаблон.
-- Роуты именуются в flat-стиле (`cars.$carId.tsx`), `createFileRoute("/cars/$carId")`.
-- Шрифты подключаем `<link>` в `__root.tsx` head (Tailwind v4 запрещает `@import` URL в CSS).
-- Токены цветов — `@theme inline` в `src/styles.css`, поверх существующих shadcn-переменных добавляем `--neon-blue`, `--neon-orange`, тёмные фоны для `.public-dark`.
-- Переключение темы: в `PublicLayout` навешиваем класс `public-dark md:public-dark` на корневой div; в CSS `.public-dark { --background: ...; ... }` активируется только при `min-width: 768px` через `@media` вложение.
-
-## Итог этапа
-
-Прокликиваемый каркас со всеми роутами, двумя темами, публичным и админским layout-ом, мок-данными в модулях. Готово к следующему промту — наполнению главной и каталога контентом.
+### Out of scope
+- No real booking logic, no form validation beyond required fields, no admin changes, no route changes. Catalog page stays a stub — handled in the next prompt.
