@@ -9,8 +9,8 @@ export interface TariffInfo {
 
 export const tariffs: TariffInfo[] = [
   { id: "city", title: "Город", description: "В пределах Новосибирска", multiplier: 1 },
-  { id: "region", title: "НСО", description: "Новосибирская область", multiplier: 1.15 },
-  { id: "outside", title: "За пределы", description: "Другие регионы", multiplier: 1.35 },
+  { id: "region", title: "НСО", description: "Новосибирская область", multiplier: 1.12 },
+  { id: "outside", title: "За пределы", description: "Другие регионы", multiplier: 1.25 },
 ];
 
 export const DELIVERY_PRICE = 1500;
