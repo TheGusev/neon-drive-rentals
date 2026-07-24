@@ -396,42 +396,6 @@ function HomeMobileInner({ heroImage: _heroImage }: { heroImage: string }) {
   );
 }
 
-function MobileStripCard({ car, onOpen }: { car: Car; onOpen: () => void }) {
-  const { from, to, tariff } = useHomeBooking();
-  const available = isCarAvailable(car, from, to);
-  const busyUntil = !available ? nextBusyUntil(car) : null;
-  const t = getTariff(tariff);
-  const priceInTariff = Math.round(car.pricePerDay * t.multiplier);
-
-  return (
-    <button
-      type="button"
-      onClick={onOpen}
-      className={cn(
-        "snap-start w-[180px] shrink-0 overflow-hidden rounded-2xl border border-border bg-card text-left shadow-sm transition active:scale-[0.98]",
-        !available && "opacity-60",
-      )}
-    >
-      <div className="relative aspect-[4/3] overflow-hidden bg-muted">
-        <img src={car.image} alt={`${car.brand} ${car.model}`} loading="lazy" className="h-full w-full object-cover" />
-        <span className="absolute left-2 top-2 rounded bg-white/90 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide text-slate-900">
-          {car.class === "sport" ? "Sport" : "Econom"}
-        </span>
-        {!available && (
-          <span className="absolute right-2 top-2 rounded bg-red-500/90 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide text-white">
-            Занято{busyUntil ? ` ${format(busyUntil, "d.MM")}` : ""}
-          </span>
-        )}
-      </div>
-      <div className="p-2.5">
-        <p className="truncate text-xs font-bold">{car.brand} {car.model}</p>
-        <p className="mt-0.5 text-[11px] font-bold text-primary">
-          {priceInTariff.toLocaleString("ru-RU")} ₽<span className="font-normal text-muted-foreground">/сутки</span>
-        </p>
-      </div>
-    </button>
-  );
-}
 
 // -------- Booking form with live recalculation --------
 
