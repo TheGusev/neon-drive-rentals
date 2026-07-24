@@ -24,9 +24,39 @@ export interface Car {
   plate?: string;
 }
 
-export type BookingStatus = "paid" | "pending" | "active" | "completed";
+export type BookingStatus = "paid" | "pending" | "active" | "completed" | "cancelled";
 export type BookingTariff = "city" | "region" | "outside";
 export type PaymentMethod = "card" | "sbp";
+export type ContractStatus = "signed" | "pending" | "none";
+
+export type DocumentType = "passport" | "license";
+export type DocumentStatus = "pending" | "verified" | "rejected";
+
+export interface ClientDocument {
+  id: string;
+  type: DocumentType;
+  number: string;
+  status: DocumentStatus;
+  uploadedAt: string;
+}
+
+export interface ClientReview {
+  id: string;
+  author: string;
+  rating: number;
+  text: string;
+  date: string;
+}
+
+export interface ClientProfile {
+  id: string;
+  name: string;
+  phone: string;
+  email: string;
+  avatarUrl?: string;
+  rating: number;
+  reviewsCount: number;
+}
 
 export interface Booking {
   id: string;
@@ -35,6 +65,8 @@ export interface Booking {
   startDate: string;
   endDate: string;
   totalPrice: number;
+  pickupAddress?: string;
+  contractStatus?: ContractStatus;
   status: BookingStatus;
 }
 
