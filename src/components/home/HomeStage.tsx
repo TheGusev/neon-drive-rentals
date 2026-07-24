@@ -28,6 +28,9 @@ import { HomeBookingProvider, useHomeBooking } from "./HomeBookingContext";
 import { isCarAvailable, nextBusyUntil, splitAvailability } from "@/lib/availability";
 import { daysBetween, formatRub } from "@/lib/bookingDraft";
 import { CarQuickView } from "./CarQuickView";
+import { HeroBackdrop } from "./HeroBackdrop";
+import { NfsSideMenu } from "./NfsSideMenu";
+import { SeoTiles } from "./SeoTiles";
 
 const locations = [
   { value: "airport", label: "Аэропорт Толмачёво" },
@@ -54,7 +57,7 @@ export function HomeDesktop({ heroImage }: { heroImage: string }) {
   );
 }
 
-function HomeDesktopInner({ heroImage }: { heroImage: string }) {
+function HomeDesktopInner({ heroImage: _heroImage }: { heroImage: string }) {
   const stripRef = useRef<HTMLDivElement>(null);
   const [quickCar, setQuickCar] = useState<Car | null>(null);
   const { from, to } = useHomeBooking();
@@ -65,120 +68,86 @@ function HomeDesktopInner({ heroImage }: { heroImage: string }) {
 
   return (
     <div className="relative -mx-4 -my-8 h-[calc(100svh-4.5rem)] overflow-hidden md:-mx-6 md:-my-12 md:h-[calc(100svh-5rem)]">
-      {/* Background — full brightness */}
-      <div className="absolute inset-0">
-        <img
-          src={heroImage}
-          alt="Ночной драйв кей-кара по неоновому туннелю"
-          className="ken-burns h-full w-full object-cover"
-        />
-        <div className="pointer-events-none absolute inset-0 overflow-hidden">
-          {[
-            { top: "18%", dur: "6s", delay: "0s", color: "var(--neon-blue)" },
-            { top: "42%", dur: "9s", delay: "2s", color: "var(--neon-orange)" },
-            { top: "68%", dur: "7s", delay: "1s", color: "var(--neon-blue)" },
-            { top: "88%", dur: "11s", delay: "3s", color: "var(--neon-orange)" },
-          ].map((s, i) => (
-            <span
-              key={i}
-              className="stream-line absolute left-0 h-px w-[35vw]"
-              style={{
-                top: s.top,
-                background: `linear-gradient(90deg, transparent, ${s.color}, transparent)`,
-                boxShadow: `0 0 12px ${s.color}, 0 0 24px ${s.color}`,
-                animationDuration: s.dur,
-                animationDelay: s.delay,
-              }}
-            />
-          ))}
-        </div>
-      </div>
+      <HeroBackdrop />
 
       {/* Content */}
       <div className="relative z-10 flex h-full flex-col">
-        <div className="mx-auto flex w-full max-w-7xl flex-1 flex-col justify-center px-6 pt-6">
-          <p className="rise-in text-[10px] uppercase tracking-[0.5em] text-accent md:text-xs" style={{ animationDelay: "50ms" }}>
-            速度を感じる · Nsk · JDM
-          </p>
-          <h1
-            className="rise-in mt-3 font-display text-[13vw] font-black leading-[0.85] tracking-tight md:text-[9vw] xl:text-[150px]"
-            style={{ animationDelay: "150ms" }}
-          >
-            <span className="text-shimmer neon-flicker">NSK-RENT</span>
-          </h1>
-          <p className="rise-in mt-4 max-w-xl text-base text-foreground/90 drop-shadow md:text-lg" style={{ animationDelay: "280ms" }}>
-            Аренда японских кей-каров в Новосибирске. Правый руль, честные цены, ключи за 3 минуты.
-          </p>
+        <div className="mx-auto grid w-full max-w-7xl flex-1 grid-cols-[280px_1fr] items-center gap-8 px-6 pt-4">
+          {/* Left: NFS-style menu */}
+          <NfsSideMenu />
 
-          <div className="rise-in mt-5 flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-foreground/80" style={{ animationDelay: "380ms" }}>
-            <span className="inline-flex items-center gap-1.5">
-              <span className="h-2 w-2 rounded-full bg-[color:var(--neon-blue)] shadow-[0_0_10px_var(--neon-blue)]" />
-              {available.length} авто свободно на выбранные даты
-            </span>
-            <span className="opacity-40">·</span>
-            <span>от <b className="text-foreground">1 800 ₽</b> / сутки · за город от <b className="text-foreground">2 000 ₽</b></span>
-          </div>
+          {/* Middle: title + copy + CTAs */}
+          <div className="max-w-2xl">
+            <p className="rise-in text-[10px] uppercase tracking-[0.5em] text-[color:var(--neon-blue)] drop-shadow" style={{ animationDelay: "50ms" }}>
+              速度を感じる · Nsk · JDM
+            </p>
 
-          {/* CTAs */}
-          <div className="rise-in mt-6 flex flex-wrap gap-3" style={{ animationDelay: "460ms" }}>
-            <Button asChild size="lg" className="gap-2 font-bold uppercase tracking-wider md:pulse-glow">
-              <Link to="/cars">
-                <Search className="h-4 w-4" />
-                Найти авто
-                <ArrowRight className="ml-1 h-4 w-4" />
-              </Link>
-            </Button>
+            <div className="rise-in mt-2" style={{ animationDelay: "150ms" }}>
+              <p className="font-display text-[72px] font-black leading-[0.9] tracking-tight md:text-[84px] xl:text-[104px]">
+                <span className="logo-neon">NSK-RENT</span>
+              </p>
+              <h1 className="mt-2 font-display text-xl font-bold leading-tight text-foreground drop-shadow-lg md:text-2xl">
+                Аренда японских кей-каров в&nbsp;Новосибирске
+              </h1>
+            </div>
 
-            <Sheet>
-              <SheetTrigger asChild>
-                <Button
-                  size="lg"
-                  variant="outline"
-                  className="gap-2 border-accent/60 bg-background/40 font-bold uppercase tracking-wider backdrop-blur hover:border-accent hover:bg-background/60"
-                >
-                  <CalendarIcon className="h-4 w-4 text-accent" />
-                  Быстрое бронирование
-                </Button>
-              </SheetTrigger>
-              <SheetContent side="right" className="w-full overflow-y-auto sm:max-w-md">
-                <div className="pt-6">
-                  <QuickBookingForm />
-                </div>
-              </SheetContent>
-            </Sheet>
-          </div>
+            <p className="rise-in mt-3 max-w-xl text-base text-foreground/95 drop-shadow-md md:text-lg" style={{ animationDelay: "280ms" }}>
+              Правый руль, честные цены, ключи за 3 минуты. Доставка авто по городу и области.
+            </p>
 
-          {/* Benefits */}
-          <div className="rise-in mt-8 grid max-w-3xl grid-cols-2 gap-3 md:grid-cols-4" style={{ animationDelay: "560ms" }}>
-            {benefits.map((b) => (
-              <div
-                key={b.title}
-                className="group flex items-center gap-3 rounded-xl border border-border/60 bg-card/60 p-3 backdrop-blur transition hover:border-accent/60 hover:neon-glow"
-              >
-                <b.icon className="h-5 w-5 shrink-0 text-[color:var(--neon-orange)] transition-transform group-hover:scale-110" />
-                <div className="min-w-0">
-                  <p className="truncate font-display text-xs font-bold md:text-sm">{b.title}</p>
-                  <p className="truncate text-[10px] text-muted-foreground md:text-xs">{b.text}</p>
-                </div>
-              </div>
-            ))}
+            <div className="rise-in mt-4 inline-flex flex-wrap items-center gap-x-4 gap-y-2 rounded-lg bg-background/60 px-3 py-2 text-xs text-foreground backdrop-blur-md" style={{ animationDelay: "380ms" }}>
+              <span className="inline-flex items-center gap-1.5">
+                <span className="h-2 w-2 rounded-full bg-[color:var(--neon-blue)] shadow-[0_0_10px_var(--neon-blue)]" />
+                {available.length} авто свободно
+              </span>
+              <span className="opacity-40">·</span>
+              <span>от <b className="text-[color:var(--neon-orange)]">1 800 ₽</b>/сутки · за город от <b className="text-[color:var(--neon-orange)]">2 000 ₽</b></span>
+            </div>
+
+            <div className="rise-in mt-5 flex flex-wrap gap-3" style={{ animationDelay: "460ms" }}>
+              <Button asChild size="lg" className="gap-2 font-bold uppercase tracking-wider md:pulse-glow">
+                <Link to="/cars">
+                  <Search className="h-4 w-4" />
+                  Найти авто
+                  <ArrowRight className="ml-1 h-4 w-4" />
+                </Link>
+              </Button>
+
+              <Sheet>
+                <SheetTrigger asChild>
+                  <Button
+                    size="lg"
+                    variant="outline"
+                    className="gap-2 border-accent/60 bg-background/60 font-bold uppercase tracking-wider text-foreground backdrop-blur hover:border-accent hover:bg-background/80"
+                  >
+                    <CalendarIcon className="h-4 w-4 text-accent" />
+                    Быстрое бронирование
+                  </Button>
+                </SheetTrigger>
+                <SheetContent side="right" className="w-full overflow-y-auto sm:max-w-md">
+                  <div className="pt-6">
+                    <QuickBookingForm />
+                  </div>
+                </SheetContent>
+              </Sheet>
+            </div>
           </div>
         </div>
 
         {/* Popular strip */}
-        <div className="rise-in shrink-0 pb-4 pt-2" style={{ animationDelay: "700ms" }}>
-          <div className="mx-auto mb-3 flex max-w-7xl items-end justify-between gap-4 px-6">
+        <div className="rise-in shrink-0 pt-1" style={{ animationDelay: "700ms" }}>
+          <div className="mx-auto mb-2 flex max-w-7xl items-end justify-between gap-4 px-6">
             <div>
-              <p className="text-[10px] uppercase tracking-[0.35em] text-muted-foreground">Каталог</p>
-              <p className="font-display text-lg font-black md:text-2xl">
+              <p className="text-[10px] uppercase tracking-[0.35em] text-foreground/70">Каталог</p>
+              <p className="font-display text-lg font-black text-foreground md:text-xl">
                 Популярные <span className="text-[color:var(--neon-blue)]">модели</span>
               </p>
             </div>
             <div className="flex items-center gap-2">
-              <Button size="icon" variant="outline" onClick={() => scrollBy(-320)} aria-label="Влево" className="h-9 w-9 border-border/70 bg-card/60 backdrop-blur hover:border-accent">
+              <Button size="icon" variant="outline" onClick={() => scrollBy(-320)} aria-label="Влево" className="h-8 w-8 border-border/70 bg-background/60 backdrop-blur hover:border-accent">
                 <ChevronLeft className="h-4 w-4" />
               </Button>
-              <Button size="icon" variant="outline" onClick={() => scrollBy(320)} aria-label="Вправо" className="h-9 w-9 border-border/70 bg-card/60 backdrop-blur hover:border-accent">
+              <Button size="icon" variant="outline" onClick={() => scrollBy(320)} aria-label="Вправо" className="h-8 w-8 border-border/70 bg-background/60 backdrop-blur hover:border-accent">
                 <ChevronRight className="h-4 w-4" />
               </Button>
               <Button asChild variant="ghost" size="sm" className="ml-2 gap-1 text-accent hover:text-accent">
@@ -189,7 +158,7 @@ function HomeDesktopInner({ heroImage }: { heroImage: string }) {
 
           <div
             ref={stripRef}
-            className="no-scrollbar flex snap-x gap-4 overflow-x-auto pb-2 pr-6"
+            className="no-scrollbar flex snap-x gap-3 overflow-x-auto pb-2 pr-6"
             style={{ paddingLeft: "max(1.5rem, calc((100vw - 80rem) / 2 + 1.5rem))" }}
           >
             {popular.map((car) => (
@@ -197,12 +166,18 @@ function HomeDesktopInner({ heroImage }: { heroImage: string }) {
             ))}
           </div>
         </div>
+
+        {/* SEO tiles */}
+        <div className="shrink-0 pb-3 pt-2">
+          <SeoTiles />
+        </div>
       </div>
 
       <CarQuickView car={quickCar} onClose={() => setQuickCar(null)} />
     </div>
   );
 }
+
 
 function StripCard({ car, onOpen }: { car: Car; onOpen: () => void }) {
   const { from, to, tariff } = useHomeBooking();
