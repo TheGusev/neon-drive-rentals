@@ -16,7 +16,7 @@ function generateId(): string {
   return "dr-" + Math.random().toString(36).slice(2, 8) + Date.now().toString(36).slice(-4);
 }
 
-export function createDraft(carId: string): BookingDraft {
+export function createDraft(carId: string, overrides: Partial<BookingDraft> = {}): BookingDraft {
   const id = generateId();
   const now = new Date();
   const tomorrow = new Date(now);
@@ -35,10 +35,12 @@ export function createDraft(carId: string): BookingDraft {
     delivery: false,
     tariff: "city",
     phone: "+7 999 123 45 67",
+    ...overrides,
   };
   saveDraft(draft);
   return draft;
 }
+
 
 export function saveDraft(draft: BookingDraft): void {
   const s = safeSession();
