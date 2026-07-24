@@ -67,12 +67,15 @@ function QuickBody({
   from,
   to,
   tariff,
+  onOrder,
 }: {
   car: Car;
   from: string | undefined;
   to: string | undefined;
   tariff: ReturnType<typeof useHomeBooking>["tariff"];
+  onOrder: () => void;
 }) {
+
   const available = isCarAvailable(car, from, to);
   const busyUntil = !available ? nextBusyUntil(car) : null;
   const tariffInfo = getTariff(tariff);
