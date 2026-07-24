@@ -21,7 +21,7 @@ export function PublicLayout() {
 
   return (
     <div className="public-dark min-h-screen bg-background text-foreground">
-      <header className="sticky top-0 z-40 border-b border-border/60 bg-background/85 backdrop-blur">
+      <header className="safe-top sticky top-0 z-40 border-b border-border/60 bg-background/85 backdrop-blur">
         <div className="mx-auto grid max-w-7xl grid-cols-[minmax(0,1fr)_auto] items-center gap-4 px-4 py-4 md:flex md:justify-between md:px-6">
           <Link to="/" className="flex min-w-0 items-center gap-2">
             <span className="font-display text-xl font-black tracking-widest md:neon-text md:text-2xl">
@@ -63,12 +63,13 @@ export function PublicLayout() {
             <SheetTrigger asChild>
               <button
                 type="button"
-                aria-label="Меню"
-                className="inline-flex h-10 w-10 items-center justify-center rounded-md border border-border md:hidden"
+                aria-label="Открыть меню"
+                className="menu-pulse relative z-50 inline-flex h-12 w-12 items-center justify-center rounded-xl border border-accent/50 bg-background/70 text-foreground backdrop-blur transition hover:border-accent md:hidden"
               >
-                <Menu className="h-5 w-5" />
+                <Menu className="h-6 w-6 text-accent" />
               </button>
             </SheetTrigger>
+
             <SheetContent side="right" className="w-[82vw] max-w-sm p-5">
               <p className="text-[10px] uppercase tracking-[0.5em] text-muted-foreground">Меню</p>
               <p className="mt-1 font-display text-2xl font-black tracking-widest">RENTSIB</p>

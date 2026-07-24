@@ -1,5 +1,6 @@
-import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import { ArrowRight, Fuel, Gauge, Star, Users, Wrench, Car as CarIcon, Coins, Route as RouteIcon, Droplet } from "lucide-react";
+import { createFileRoute, Link, notFound, useRouter } from "@tanstack/react-router";
+import { ArrowLeft, ArrowRight, Fuel, Gauge, Star, Users, Wrench, Car as CarIcon, Coins, Route as RouteIcon, Droplet } from "lucide-react";
+
 import { getCarById } from "@/mocks/cars";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -48,6 +49,15 @@ const classLabel: Record<CarClass, string> = { econom: "Эконом", sport: "�
 
 function CarPage() {
   const { car } = Route.useLoaderData();
+  const router = useRouter();
+
+  const handleBack = () => {
+    if (typeof window !== "undefined" && window.history.length > 1) {
+      router.history.back();
+    } else {
+      router.navigate({ to: "/cars" });
+    }
+  };
 
   const specs = [
     { icon: CarIcon, label: "Двигатель", value: `${car.engineVolume.toFixed(2)} л` },
@@ -68,8 +78,18 @@ function CarPage() {
   ];
 
   return (
-    <div className="space-y-10">
+    <div className="space-y-6">
+      <button
+        type="button"
+        onClick={handleBack}
+        aria-label="Назад"
+        className="inline-flex items-center gap-2 rounded-lg border border-border bg-card px-3 py-2 text-sm font-semibold uppercase tracking-wider text-foreground transition hover:border-accent hover:text-accent"
+      >
+        <ArrowLeft className="h-4 w-4" /> Назад
+      </button>
+
       <div className="grid gap-8 lg:grid-cols-[1.1fr_1fr]">
+
         <CarGallery alt={`${car.brand} ${car.model}`} />
 
         <div className="space-y-6">
