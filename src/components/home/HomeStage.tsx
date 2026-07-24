@@ -28,6 +28,9 @@ import { HomeBookingProvider, useHomeBooking } from "./HomeBookingContext";
 import { isCarAvailable, nextBusyUntil, splitAvailability } from "@/lib/availability";
 import { daysBetween, formatRub } from "@/lib/bookingDraft";
 import { CarQuickView } from "./CarQuickView";
+import { HeroBackdrop } from "./HeroBackdrop";
+import { NfsSideMenu } from "./NfsSideMenu";
+import { SeoTiles } from "./SeoTiles";
 
 const locations = [
   { value: "airport", label: "Аэропорт Толмачёво" },
