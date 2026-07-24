@@ -13,8 +13,11 @@ import { Route as PublicRouteImport } from './routes/_public'
 import { Route as AdminRouteImport } from './routes/_admin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as PublicProfileRouteImport } from './routes/_public.profile'
+import { Route as PublicKeiCarsRouteImport } from './routes/_public.kei-cars'
 import { Route as PublicCarsIndexRouteImport } from './routes/_public.cars.index'
 import { Route as AdminAdminIndexRouteImport } from './routes/_admin.admin.index'
+import { Route as PublicRentNovosibirskRouteImport } from './routes/_public.rent.novosibirsk'
+import { Route as PublicRentBezZalogaRouteImport } from './routes/_public.rent.bez-zaloga'
 import { Route as PublicPaymentBookingIdRouteImport } from './routes/_public.payment.$bookingId'
 import { Route as PublicContractBookingIdRouteImport } from './routes/_public.contract.$bookingId'
 import { Route as PublicCarsCarIdRouteImport } from './routes/_public.cars.$carId'
@@ -43,6 +46,11 @@ const PublicProfileRoute = PublicProfileRouteImport.update({
   path: '/profile',
   getParentRoute: () => PublicRoute,
 } as any)
+const PublicKeiCarsRoute = PublicKeiCarsRouteImport.update({
+  id: '/kei-cars',
+  path: '/kei-cars',
+  getParentRoute: () => PublicRoute,
+} as any)
 const PublicCarsIndexRoute = PublicCarsIndexRouteImport.update({
   id: '/cars/',
   path: '/cars/',
@@ -52,6 +60,16 @@ const AdminAdminIndexRoute = AdminAdminIndexRouteImport.update({
   id: '/admin/',
   path: '/admin/',
   getParentRoute: () => AdminRoute,
+} as any)
+const PublicRentNovosibirskRoute = PublicRentNovosibirskRouteImport.update({
+  id: '/rent/novosibirsk',
+  path: '/rent/novosibirsk',
+  getParentRoute: () => PublicRoute,
+} as any)
+const PublicRentBezZalogaRoute = PublicRentBezZalogaRouteImport.update({
+  id: '/rent/bez-zaloga',
+  path: '/rent/bez-zaloga',
+  getParentRoute: () => PublicRoute,
 } as any)
 const PublicPaymentBookingIdRoute = PublicPaymentBookingIdRouteImport.update({
   id: '/payment/$bookingId',
@@ -101,6 +119,7 @@ const AdminAdminBookingsRoute = AdminAdminBookingsRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/kei-cars': typeof PublicKeiCarsRoute
   '/profile': typeof PublicProfileRoute
   '/admin/bookings': typeof AdminAdminBookingsRoute
   '/admin/cars': typeof AdminAdminCarsRoute
@@ -111,11 +130,14 @@ export interface FileRoutesByFullPath {
   '/cars/$carId': typeof PublicCarsCarIdRoute
   '/contract/$bookingId': typeof PublicContractBookingIdRoute
   '/payment/$bookingId': typeof PublicPaymentBookingIdRoute
+  '/rent/bez-zaloga': typeof PublicRentBezZalogaRoute
+  '/rent/novosibirsk': typeof PublicRentNovosibirskRoute
   '/admin/': typeof AdminAdminIndexRoute
   '/cars/': typeof PublicCarsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/kei-cars': typeof PublicKeiCarsRoute
   '/profile': typeof PublicProfileRoute
   '/admin/bookings': typeof AdminAdminBookingsRoute
   '/admin/cars': typeof AdminAdminCarsRoute
@@ -126,6 +148,8 @@ export interface FileRoutesByTo {
   '/cars/$carId': typeof PublicCarsCarIdRoute
   '/contract/$bookingId': typeof PublicContractBookingIdRoute
   '/payment/$bookingId': typeof PublicPaymentBookingIdRoute
+  '/rent/bez-zaloga': typeof PublicRentBezZalogaRoute
+  '/rent/novosibirsk': typeof PublicRentNovosibirskRoute
   '/admin': typeof AdminAdminIndexRoute
   '/cars': typeof PublicCarsIndexRoute
 }
@@ -134,6 +158,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_admin': typeof AdminRouteWithChildren
   '/_public': typeof PublicRouteWithChildren
+  '/_public/kei-cars': typeof PublicKeiCarsRoute
   '/_public/profile': typeof PublicProfileRoute
   '/_admin/admin/bookings': typeof AdminAdminBookingsRoute
   '/_admin/admin/cars': typeof AdminAdminCarsRoute
@@ -144,6 +169,8 @@ export interface FileRoutesById {
   '/_public/cars/$carId': typeof PublicCarsCarIdRoute
   '/_public/contract/$bookingId': typeof PublicContractBookingIdRoute
   '/_public/payment/$bookingId': typeof PublicPaymentBookingIdRoute
+  '/_public/rent/bez-zaloga': typeof PublicRentBezZalogaRoute
+  '/_public/rent/novosibirsk': typeof PublicRentNovosibirskRoute
   '/_admin/admin/': typeof AdminAdminIndexRoute
   '/_public/cars/': typeof PublicCarsIndexRoute
 }
@@ -151,6 +178,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/kei-cars'
     | '/profile'
     | '/admin/bookings'
     | '/admin/cars'
@@ -161,11 +189,14 @@ export interface FileRouteTypes {
     | '/cars/$carId'
     | '/contract/$bookingId'
     | '/payment/$bookingId'
+    | '/rent/bez-zaloga'
+    | '/rent/novosibirsk'
     | '/admin/'
     | '/cars/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/kei-cars'
     | '/profile'
     | '/admin/bookings'
     | '/admin/cars'
@@ -176,6 +207,8 @@ export interface FileRouteTypes {
     | '/cars/$carId'
     | '/contract/$bookingId'
     | '/payment/$bookingId'
+    | '/rent/bez-zaloga'
+    | '/rent/novosibirsk'
     | '/admin'
     | '/cars'
   id:
@@ -183,6 +216,7 @@ export interface FileRouteTypes {
     | '/'
     | '/_admin'
     | '/_public'
+    | '/_public/kei-cars'
     | '/_public/profile'
     | '/_admin/admin/bookings'
     | '/_admin/admin/cars'
@@ -193,6 +227,8 @@ export interface FileRouteTypes {
     | '/_public/cars/$carId'
     | '/_public/contract/$bookingId'
     | '/_public/payment/$bookingId'
+    | '/_public/rent/bez-zaloga'
+    | '/_public/rent/novosibirsk'
     | '/_admin/admin/'
     | '/_public/cars/'
   fileRoutesById: FileRoutesById
@@ -233,6 +269,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PublicProfileRouteImport
       parentRoute: typeof PublicRoute
     }
+    '/_public/kei-cars': {
+      id: '/_public/kei-cars'
+      path: '/kei-cars'
+      fullPath: '/kei-cars'
+      preLoaderRoute: typeof PublicKeiCarsRouteImport
+      parentRoute: typeof PublicRoute
+    }
     '/_public/cars/': {
       id: '/_public/cars/'
       path: '/cars'
@@ -246,6 +289,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin/'
       preLoaderRoute: typeof AdminAdminIndexRouteImport
       parentRoute: typeof AdminRoute
+    }
+    '/_public/rent/novosibirsk': {
+      id: '/_public/rent/novosibirsk'
+      path: '/rent/novosibirsk'
+      fullPath: '/rent/novosibirsk'
+      preLoaderRoute: typeof PublicRentNovosibirskRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/rent/bez-zaloga': {
+      id: '/_public/rent/bez-zaloga'
+      path: '/rent/bez-zaloga'
+      fullPath: '/rent/bez-zaloga'
+      preLoaderRoute: typeof PublicRentBezZalogaRouteImport
+      parentRoute: typeof PublicRoute
     }
     '/_public/payment/$bookingId': {
       id: '/_public/payment/$bookingId'
@@ -334,20 +391,26 @@ const AdminRouteChildren: AdminRouteChildren = {
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
 interface PublicRouteChildren {
+  PublicKeiCarsRoute: typeof PublicKeiCarsRoute
   PublicProfileRoute: typeof PublicProfileRoute
   PublicBookingCarIdRoute: typeof PublicBookingCarIdRoute
   PublicCarsCarIdRoute: typeof PublicCarsCarIdRoute
   PublicContractBookingIdRoute: typeof PublicContractBookingIdRoute
   PublicPaymentBookingIdRoute: typeof PublicPaymentBookingIdRoute
+  PublicRentBezZalogaRoute: typeof PublicRentBezZalogaRoute
+  PublicRentNovosibirskRoute: typeof PublicRentNovosibirskRoute
   PublicCarsIndexRoute: typeof PublicCarsIndexRoute
 }
 
 const PublicRouteChildren: PublicRouteChildren = {
+  PublicKeiCarsRoute: PublicKeiCarsRoute,
   PublicProfileRoute: PublicProfileRoute,
   PublicBookingCarIdRoute: PublicBookingCarIdRoute,
   PublicCarsCarIdRoute: PublicCarsCarIdRoute,
   PublicContractBookingIdRoute: PublicContractBookingIdRoute,
   PublicPaymentBookingIdRoute: PublicPaymentBookingIdRoute,
+  PublicRentBezZalogaRoute: PublicRentBezZalogaRoute,
+  PublicRentNovosibirskRoute: PublicRentNovosibirskRoute,
   PublicCarsIndexRoute: PublicCarsIndexRoute,
 }
 
