@@ -163,3 +163,62 @@
 @utility clip-notch {
   clip-path: polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px);
 }
+
+@utility text-shimmer {
+  background: linear-gradient(100deg, var(--neon-blue) 0%, #ffffff 45%, var(--neon-orange) 60%, var(--neon-blue) 100%);
+  background-size: 250% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: shimmer 6s linear infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 250% 50%; }
+}
+
+@keyframes neon-flicker {
+  0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
+    text-shadow: 0 0 8px color-mix(in oklab, var(--neon-blue) 70%, transparent), 0 0 20px color-mix(in oklab, var(--neon-blue) 50%, transparent), 0 0 40px color-mix(in oklab, var(--neon-blue) 25%, transparent);
+    opacity: 1;
+  }
+  20%, 24%, 55% { text-shadow: none; opacity: 0.82; }
+}
+.neon-flicker { animation: neon-flicker 5s infinite; }
+
+@keyframes stream {
+  0% { transform: translateX(-120%); opacity: 0; }
+  20% { opacity: 1; }
+  80% { opacity: 1; }
+  100% { transform: translateX(120vw); opacity: 0; }
+}
+.stream-line { animation: stream linear infinite; }
+
+@keyframes ken-burns {
+  0% { transform: scale(1) translate(0, 0); }
+  50% { transform: scale(1.08) translate(-1.5%, -1%); }
+  100% { transform: scale(1) translate(0, 0); }
+}
+.ken-burns { animation: ken-burns 24s ease-in-out infinite; }
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 0 0 color-mix(in oklab, var(--neon-orange) 55%, transparent), 0 0 24px color-mix(in oklab, var(--neon-orange) 40%, transparent); }
+  50% { box-shadow: 0 0 0 8px color-mix(in oklab, var(--neon-orange) 0%, transparent), 0 0 48px color-mix(in oklab, var(--neon-orange) 60%, transparent); }
+}
+.pulse-glow { animation: pulse-glow 2.4s ease-in-out infinite; }
+
+@keyframes float-slow {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+.float-slow { animation: float-slow 5s ease-in-out infinite; }
+
+@keyframes rise-in {
+  0% { opacity: 0; transform: translateY(24px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+.rise-in { animation: rise-in 0.7s cubic-bezier(0.16, 1, 0.3, 1) both; }
+
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
