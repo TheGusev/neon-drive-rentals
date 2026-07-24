@@ -100,28 +100,54 @@
   --neon-orange: oklch(0.72 0.2 45);
 }
 
-/* NFS-neon dark theme — only active on tablet/desktop widths. */
-@media (min-width: 768px) {
-  .public-dark {
-    --background: oklch(0.14 0.03 265);
-    --foreground: oklch(0.97 0.01 250);
-    --card: oklch(0.19 0.035 265);
-    --card-foreground: oklch(0.97 0.01 250);
-    --popover: oklch(0.19 0.035 265);
-    --popover-foreground: oklch(0.97 0.01 250);
-    --primary: oklch(0.72 0.2 45); /* neon orange as CTA */
-    --primary-foreground: oklch(0.14 0.03 265);
-    --secondary: oklch(0.24 0.04 265);
-    --secondary-foreground: oklch(0.97 0.01 250);
-    --muted: oklch(0.22 0.03 265);
-    --muted-foreground: oklch(0.72 0.03 258);
-    --accent: oklch(0.68 0.19 258); /* neon blue */
-    --accent-foreground: oklch(0.14 0.03 265);
-    --border: oklch(0.35 0.05 258 / 45%);
-    --input: oklch(0.28 0.04 265);
-    --ring: oklch(0.68 0.19 258);
-    --neon-blue: oklch(0.72 0.2 258);
-    --neon-orange: oklch(0.75 0.2 45);
+/* NFS-neon dark theme — active on .public-dark (desktop) and unconditionally
+   on any element with .nfs-theme (used for the mobile home hero). */
+.nfs-theme,
+.public-dark {
+  --background: oklch(0.14 0.03 265);
+  --foreground: oklch(0.97 0.01 250);
+  --card: oklch(0.19 0.035 265);
+  --card-foreground: oklch(0.97 0.01 250);
+  --popover: oklch(0.19 0.035 265);
+  --popover-foreground: oklch(0.97 0.01 250);
+  --primary: oklch(0.72 0.2 45);
+  --primary-foreground: oklch(0.14 0.03 265);
+  --secondary: oklch(0.24 0.04 265);
+  --secondary-foreground: oklch(0.97 0.01 250);
+  --muted: oklch(0.22 0.03 265);
+  --muted-foreground: oklch(0.72 0.03 258);
+  --accent: oklch(0.68 0.19 258);
+  --accent-foreground: oklch(0.14 0.03 265);
+  --border: oklch(0.35 0.05 258 / 45%);
+  --input: oklch(0.28 0.04 265);
+  --ring: oklch(0.68 0.19 258);
+  --neon-blue: oklch(0.72 0.2 258);
+  --neon-orange: oklch(0.75 0.2 45);
+}
+
+/* On mobile keep other public pages (catalog, profile, checkout) light —
+   only elements marked .nfs-theme use the dark neon palette. */
+@media (max-width: 767px) {
+  .public-dark:not(.nfs-theme) {
+    --background: oklch(1 0 0);
+    --foreground: oklch(0.129 0.042 264.695);
+    --card: oklch(0.985 0.005 250);
+    --card-foreground: oklch(0.129 0.042 264.695);
+    --popover: oklch(1 0 0);
+    --popover-foreground: oklch(0.129 0.042 264.695);
+    --primary: oklch(0.58 0.19 258);
+    --primary-foreground: oklch(0.99 0 0);
+    --secondary: oklch(0.968 0.007 247.896);
+    --secondary-foreground: oklch(0.208 0.042 265.755);
+    --muted: oklch(0.968 0.007 247.896);
+    --muted-foreground: oklch(0.554 0.046 257.417);
+    --accent: oklch(0.968 0.007 247.896);
+    --accent-foreground: oklch(0.208 0.042 265.755);
+    --border: oklch(0.929 0.013 255.508);
+    --input: oklch(0.929 0.013 255.508);
+    --ring: oklch(0.704 0.04 256.788);
+    --neon-blue: oklch(0.68 0.19 258);
+    --neon-orange: oklch(0.72 0.2 45);
   }
 }
 

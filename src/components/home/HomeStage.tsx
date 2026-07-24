@@ -10,6 +10,7 @@ import {
   Clock,
   Fuel,
   MapPin,
+  Menu,
   Search,
   Sparkles,
   Wallet,
@@ -237,47 +238,156 @@ export function HomeMobile({ heroImage }: { heroImage: string }) {
   );
 }
 
-function HomeMobileInner({ heroImage }: { heroImage: string }) {
+function HomeMobileInner({ heroImage: _heroImage }: { heroImage: string }) {
+  const stripRef = useRef<HTMLDivElement>(null);
   const [quickCar, setQuickCar] = useState<Car | null>(null);
+  const { from, to } = useHomeBooking();
+  const { available } = useMemo(() => splitAvailability(cars, from, to), [from, to]);
+
+  const scrollBy = (delta: number) => stripRef.current?.scrollBy({ left: delta, behavior: "smooth" });
 
   return (
-    <div className="-mx-4 -mt-8 flex min-h-[calc(100svh-4rem)] flex-col gap-4 px-4 pb-4 pt-6">
-      <div className="rise-in relative h-[42svh] min-h-[280px] overflow-hidden rounded-3xl shadow-lg">
-        <img src={heroImage} alt="Ночной драйв" className="ken-burns h-full w-full object-cover" />
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-950/30 to-slate-950/50" />
-        <div className="absolute inset-x-0 bottom-0 p-5 text-white">
-          <p className="text-[10px] uppercase tracking-[0.4em] text-white/70">Nsk · JDM</p>
-          <h1 className="mt-1 font-display text-5xl font-black leading-none tracking-tight">
-            <span className="bg-gradient-to-r from-white via-sky-200 to-white bg-clip-text text-transparent">
-              NSK-RENT
-            </span>
-          </h1>
-          <p className="mt-2 text-sm text-white/85">Японские кей-кары · от 1800 ₽ / сутки</p>
-        </div>
+    <div className="nfs-theme relative -mx-4 -my-8 min-h-[calc(100svh-4rem)] overflow-hidden bg-background text-foreground">
+      <HeroBackdrop />
+
+      {/* Top overlay bar: hamburger menu (does not shift layout) */}
+      <div className="pointer-events-none absolute inset-x-0 top-0 z-20 flex items-center justify-end px-3 pt-3">
+        <Sheet>
+          <SheetTrigger asChild>
+            <Button
+              size="icon"
+              variant="outline"
+              aria-label="Меню"
+              className="pointer-events-auto h-10 w-10 border-border/70 bg-background/60 backdrop-blur hover:border-accent"
+            >
+              <Menu className="h-5 w-5" />
+            </Button>
+          </SheetTrigger>
+          <SheetContent side="left" className="nfs-theme w-[86vw] max-w-sm overflow-y-auto bg-background p-5 text-foreground">
+            <p className="text-[10px] uppercase tracking-[0.5em] text-[color:var(--neon-blue)]">Nsk · JDM</p>
+            <p className="mt-1 font-display text-3xl font-black">
+              <span className="logo-neon">NSK-RENT</span>
+            </p>
+            <div className="mt-5">
+              <NfsSideMenu />
+            </div>
+            <nav className="mt-6 flex flex-col gap-1 border-t border-border/60 pt-4">
+              {[
+                { to: "/", label: "Главная" },
+                { to: "/cars", label: "Автопарк" },
+                { to: "/profile", label: "Личный кабинет" },
+              ].map((n) => (
+                <Link
+                  key={n.to}
+                  to={n.to}
+                  className="rounded-md px-3 py-2.5 text-sm font-semibold uppercase tracking-wider text-foreground hover:bg-muted"
+                >
+                  {n.label}
+                </Link>
+              ))}
+            </nav>
+          </SheetContent>
+        </Sheet>
       </div>
 
-      <div className="rise-in" style={{ animationDelay: "120ms" }}>
-        <QuickBookingForm />
-      </div>
-
-      <div className="no-scrollbar rise-in -mx-4 flex gap-2 overflow-x-auto px-4" style={{ animationDelay: "220ms" }}>
-        {benefits.map((b) => (
-          <div key={b.title} className="flex shrink-0 items-center gap-2 rounded-full border border-border bg-card px-3 py-2 shadow-sm">
-            <b.icon className="h-4 w-4 text-primary" />
-            <span className="text-xs font-semibold">{b.title}</span>
+      <div className="relative z-10 flex min-h-[calc(100svh-4rem)] flex-col px-4 pb-6 pt-14">
+        {/* Hero copy */}
+        <div className="max-w-full">
+          <p className="rise-in text-[10px] uppercase tracking-[0.5em] text-[color:var(--neon-blue)] drop-shadow" style={{ animationDelay: "50ms" }}>
+            速度を感じる · Nsk · JDM
+          </p>
+          <div className="rise-in mt-2" style={{ animationDelay: "150ms" }}>
+            <p className="font-display text-[56px] font-black leading-[0.9] tracking-tight">
+              <span className="logo-neon">NSK-RENT</span>
+            </p>
+            <h1 className="mt-2 font-display text-lg font-bold leading-tight text-foreground drop-shadow-lg">
+              Аренда японских кей-каров в&nbsp;Новосибирске
+            </h1>
           </div>
-        ))}
-      </div>
 
-      <div className="rise-in" style={{ animationDelay: "320ms" }}>
-        <div className="mb-2 flex items-end justify-between">
-          <p className="font-display text-base font-black">Популярные модели</p>
-          <Link to="/cars" className="text-xs font-semibold text-primary">Все →</Link>
+          <p className="rise-in mt-3 text-sm text-foreground/95 drop-shadow-md" style={{ animationDelay: "280ms" }}>
+            Правый руль, честные цены, ключи за 3 минуты.
+          </p>
+
+          <div className="rise-in mt-3 inline-flex flex-wrap items-center gap-x-3 gap-y-1.5 rounded-lg bg-background/60 px-3 py-2 text-[11px] text-foreground backdrop-blur-md" style={{ animationDelay: "380ms" }}>
+            <span className="inline-flex items-center gap-1.5">
+              <span className="h-2 w-2 rounded-full bg-[color:var(--neon-blue)] shadow-[0_0_10px_var(--neon-blue)]" />
+              {available.length} авто свободно
+            </span>
+            <span className="opacity-40">·</span>
+            <span>от <b className="text-[color:var(--neon-orange)]">1 800 ₽</b>/сутки</span>
+          </div>
+
+          <div className="rise-in mt-4 flex flex-col gap-2" style={{ animationDelay: "460ms" }}>
+            <Button asChild size="lg" className="w-full gap-2 font-bold uppercase tracking-wider pulse-glow">
+              <Link to="/cars">
+                <Search className="h-4 w-4" />
+                Найти авто
+                <ArrowRight className="ml-auto h-4 w-4" />
+              </Link>
+            </Button>
+
+            <Sheet>
+              <SheetTrigger asChild>
+                <Button
+                  size="lg"
+                  variant="outline"
+                  className="w-full gap-2 border-accent/60 bg-background/60 font-bold uppercase tracking-wider text-foreground backdrop-blur hover:border-accent hover:bg-background/80"
+                >
+                  <CalendarIcon className="h-4 w-4 text-accent" />
+                  Быстрое бронирование
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="bottom" className="nfs-theme max-h-[92svh] overflow-y-auto rounded-t-2xl bg-background p-5 text-foreground">
+                <div className="pt-2">
+                  <QuickBookingForm />
+                </div>
+              </SheetContent>
+            </Sheet>
+          </div>
         </div>
-        <div className="no-scrollbar -mx-4 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-2">
-          {popular.map((car) => (
-            <MobileStripCard key={car.id} car={car} onOpen={() => setQuickCar(car)} />
+
+        {/* Benefits pills strip */}
+        <div className="no-scrollbar rise-in -mx-4 mt-5 flex gap-2 overflow-x-auto px-4" style={{ animationDelay: "560ms" }}>
+          {benefits.map((b) => (
+            <div key={b.title} className="flex shrink-0 items-center gap-2 rounded-full border border-border/60 bg-background/60 px-3 py-1.5 text-[11px] font-semibold text-foreground backdrop-blur">
+              <b.icon className="h-3.5 w-3.5 text-[color:var(--neon-blue)]" />
+              {b.title}
+            </div>
           ))}
+        </div>
+
+        {/* Popular strip */}
+        <div className="rise-in mt-5" style={{ animationDelay: "680ms" }}>
+          <div className="mb-2 flex items-end justify-between gap-3">
+            <div>
+              <p className="text-[10px] uppercase tracking-[0.35em] text-foreground/70">Каталог</p>
+              <p className="font-display text-base font-black text-foreground">
+                Популярные <span className="text-[color:var(--neon-blue)]">модели</span>
+              </p>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <Button size="icon" variant="outline" onClick={() => scrollBy(-240)} aria-label="Влево" className="h-8 w-8 border-border/70 bg-background/60 backdrop-blur">
+                <ChevronLeft className="h-4 w-4" />
+              </Button>
+              <Button size="icon" variant="outline" onClick={() => scrollBy(240)} aria-label="Вправо" className="h-8 w-8 border-border/70 bg-background/60 backdrop-blur">
+                <ChevronRight className="h-4 w-4" />
+              </Button>
+            </div>
+          </div>
+          <div
+            ref={stripRef}
+            className="no-scrollbar -mx-4 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-2"
+          >
+            {popular.map((car) => (
+              <StripCard key={car.id} car={car} onOpen={() => setQuickCar(car)} />
+            ))}
+          </div>
+        </div>
+
+        {/* SEO tiles — full-bleed 2-cols */}
+        <div className="rise-in mt-5" style={{ animationDelay: "820ms" }}>
+          <SeoTiles />
         </div>
       </div>
 
@@ -286,42 +396,6 @@ function HomeMobileInner({ heroImage }: { heroImage: string }) {
   );
 }
 
-function MobileStripCard({ car, onOpen }: { car: Car; onOpen: () => void }) {
-  const { from, to, tariff } = useHomeBooking();
-  const available = isCarAvailable(car, from, to);
-  const busyUntil = !available ? nextBusyUntil(car) : null;
-  const t = getTariff(tariff);
-  const priceInTariff = Math.round(car.pricePerDay * t.multiplier);
-
-  return (
-    <button
-      type="button"
-      onClick={onOpen}
-      className={cn(
-        "snap-start w-[180px] shrink-0 overflow-hidden rounded-2xl border border-border bg-card text-left shadow-sm transition active:scale-[0.98]",
-        !available && "opacity-60",
-      )}
-    >
-      <div className="relative aspect-[4/3] overflow-hidden bg-muted">
-        <img src={car.image} alt={`${car.brand} ${car.model}`} loading="lazy" className="h-full w-full object-cover" />
-        <span className="absolute left-2 top-2 rounded bg-white/90 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide text-slate-900">
-          {car.class === "sport" ? "Sport" : "Econom"}
-        </span>
-        {!available && (
-          <span className="absolute right-2 top-2 rounded bg-red-500/90 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide text-white">
-            Занято{busyUntil ? ` ${format(busyUntil, "d.MM")}` : ""}
-          </span>
-        )}
-      </div>
-      <div className="p-2.5">
-        <p className="truncate text-xs font-bold">{car.brand} {car.model}</p>
-        <p className="mt-0.5 text-[11px] font-bold text-primary">
-          {priceInTariff.toLocaleString("ru-RU")} ₽<span className="font-normal text-muted-foreground">/сутки</span>
-        </p>
-      </div>
-    </button>
-  );
-}
 
 // -------- Booking form with live recalculation --------
 

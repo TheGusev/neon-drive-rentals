@@ -1,7 +1,8 @@
 import { Link, Outlet, useRouterState } from "@tanstack/react-router";
 import { Menu, Phone, User } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
 const nav = [
   { to: "/", label: "Главная" },
@@ -12,6 +13,11 @@ const nav = [
 export function PublicLayout() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const [open, setOpen] = useState(false);
+
+  // Close the mobile menu on route change so it never persists across pages.
+  useEffect(() => {
+    setOpen(false);
+  }, [pathname]);
 
   return (
     <div className="public-dark min-h-screen bg-background text-foreground">
@@ -53,32 +59,44 @@ export function PublicLayout() {
             </Button>
           </div>
 
-          <button
-            type="button"
-            aria-label="Меню"
-            className="inline-flex h-10 w-10 items-center justify-center rounded-md border border-border md:hidden"
-            onClick={() => setOpen((v) => !v)}
-          >
-            <Menu className="h-5 w-5" />
-          </button>
+          <Sheet open={open} onOpenChange={setOpen}>
+            <SheetTrigger asChild>
+              <button
+                type="button"
+                aria-label="Меню"
+                className="inline-flex h-10 w-10 items-center justify-center rounded-md border border-border md:hidden"
+              >
+                <Menu className="h-5 w-5" />
+              </button>
+            </SheetTrigger>
+            <SheetContent side="right" className="w-[82vw] max-w-sm p-5">
+              <p className="text-[10px] uppercase tracking-[0.5em] text-muted-foreground">Меню</p>
+              <p className="mt-1 font-display text-2xl font-black tracking-widest">RENTSIB</p>
+              <nav className="mt-6 flex flex-col gap-1">
+                {nav.map((n) => {
+                  const active = n.to === "/" ? pathname === "/" : pathname.startsWith(n.to);
+                  return (
+                    <Link
+                      key={n.to}
+                      to={n.to}
+                      className={`rounded-md px-3 py-2.5 text-sm font-semibold uppercase tracking-wider transition-colors ${
+                        active ? "bg-muted text-primary" : "text-foreground hover:bg-muted"
+                      }`}
+                    >
+                      {n.label}
+                    </Link>
+                  );
+                })}
+              </nav>
+              <div className="mt-6 border-t border-border pt-4">
+                <a href="tel:+78005557213" className="flex items-center gap-2 text-sm text-foreground">
+                  <Phone className="h-4 w-4 text-primary" />
+                  <span className="font-semibold">+7 (800) 555-72-13</span>
+                </a>
+              </div>
+            </SheetContent>
+          </Sheet>
         </div>
-
-        {open && (
-          <div className="border-t border-border/60 md:hidden">
-            <nav className="mx-auto flex max-w-7xl flex-col gap-1 px-4 py-3">
-              {nav.map((n) => (
-                <Link
-                  key={n.to}
-                  to={n.to}
-                  onClick={() => setOpen(false)}
-                  className="rounded-md px-3 py-2 text-sm font-medium hover:bg-muted"
-                >
-                  {n.label}
-                </Link>
-              ))}
-            </nav>
-          </div>
-        )}
       </header>
 
       <main className="mx-auto max-w-7xl px-4 py-8 md:px-6 md:py-12">
