@@ -75,7 +75,7 @@ function CarPage() {
         <div className="space-y-6">
           <div>
             <div className="flex items-center gap-3">
-              <Badge className="uppercase tracking-wider">{classLabel[car.class]}</Badge>
+              <Badge className="uppercase tracking-wider">{classLabel[car.class as CarClass]}</Badge>
               <div className="inline-flex items-center gap-1 text-sm">
                 <Star className="h-4 w-4 fill-current text-[color:var(--neon-orange)]" />
                 <span className="font-semibold">{car.rating.toFixed(1)}</span>
