@@ -26,6 +26,14 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/_public/booking/$carId")({
+  validateSearch: (search: Record<string, unknown>) => ({
+    from: typeof search.from === "string" ? search.from : undefined,
+    to: typeof search.to === "string" ? search.to : undefined,
+    tariff:
+      search.tariff === "city" || search.tariff === "region" || search.tariff === "outside"
+        ? (search.tariff as BookingTariff)
+        : undefined,
+  }),
   loader: ({ params }) => {
     const car = getCarById(params.carId);
     if (!car) throw notFound();
@@ -54,14 +62,23 @@ export const Route = createFileRoute("/_public/booking/$carId")({
   ),
 });
 
+
 function BookingPage() {
   const { car } = Route.useLoaderData();
+  const search = Route.useSearch();
   const navigate = useNavigate();
   const [draft, setDraft] = useState<BookingDraft | null>(null);
 
   useEffect(() => {
-    setDraft(createDraft(car.id));
+    const overrides: Partial<BookingDraft> = {};
+    if (search.from) overrides.startDate = search.from;
+    if (search.to) overrides.endDate = search.to;
+    if (search.tariff) overrides.tariff = search.tariff;
+    setDraft(createDraft(car.id, overrides));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [car.id]);
+
+
 
   const patch = (p: Partial<BookingDraft>) => {
     setDraft((d) => {

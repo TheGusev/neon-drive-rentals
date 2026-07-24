@@ -243,20 +243,29 @@
 .nfs-tile { animation: nfs-slide-in 0.6s cubic-bezier(0.16, 1, 0.3, 1) both; }
 .nfs-tile:hover { transform: translateX(4px); box-shadow: -3px 0 0 0 var(--neon-orange); }
 
-/* Headlight beam sweeping across the hero */
-@keyframes headlight-sweep {
-  0% { transform: translateX(120vw) rotate(12deg); opacity: 0; }
-  10% { opacity: 0.55; }
-  50% { opacity: 0.75; }
-  90% { opacity: 0.35; }
-  100% { transform: translateX(-40vw) rotate(12deg); opacity: 0; }
+/* Localized headlight scan across the text region only.
+   The parent element clips the beam to the logo/H1 zone,
+   so the sweep highlights those letters and never washes the whole hero. */
+@keyframes headlight-scan {
+  0%   { transform: translateX(0)      skewX(-14deg); opacity: 0; }
+  15%  { opacity: 0.9; }
+  60%  { opacity: 0.75; }
+  100% { transform: translateX(520%)   skewX(-14deg); opacity: 0; }
 }
-.headlight-beam {
-  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.05) 30%, rgba(255,245,220,0.28) 50%, rgba(255,255,255,0.05) 70%, transparent 100%);
+.headlight-scan {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 248, 220, 0.05) 20%,
+    rgba(255, 245, 210, 0.55) 50%,
+    rgba(255, 248, 220, 0.05) 80%,
+    transparent 100%
+  );
   mix-blend-mode: screen;
-  filter: blur(24px);
-  animation: headlight-sweep 8s linear infinite;
+  filter: blur(28px);
+  animation: headlight-scan 2.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
+
 
 .no-scrollbar::-webkit-scrollbar { display: none; }
 .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }

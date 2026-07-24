@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { ArrowRight, Fuel, Gauge, Info, Shield, Users, Zap } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -10,6 +11,8 @@ import { calcPrice, daysBetween, formatRub } from "@/lib/bookingDraft";
 import { isCarAvailable, nextBusyUntil } from "@/lib/availability";
 import { format } from "date-fns";
 import { ru } from "date-fns/locale";
+import { BookingConfirmDialog } from "./BookingConfirmDialog";
+
 
 interface Props {
   car: Car | null;
@@ -17,29 +20,62 @@ interface Props {
 }
 
 export function CarQuickView({ car, onClose }: Props) {
-  const { from, to, tariff } = useHomeBooking();
-  const open = !!car;
+  const { from, to, tariff, location } = useHomeBooking();
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const open = !!car && !confirmOpen;
+
+  const locationLabels: Record<string, string> = {
+    airport: "Аэропорт Толмачёво",
+    center: "Центр, ул. Ленина 1",
+    "left-bank": "Левый берег, пл. Маркса",
+  };
 
   return (
-    <Dialog open={open} onOpenChange={(v) => !v && onClose()}>
-      <DialogContent className="max-w-2xl overflow-hidden p-0 sm:rounded-2xl">
-        {car && <QuickBody car={car} from={from} to={to} tariff={tariff} />}
-      </DialogContent>
-    </Dialog>
+    <>
+      <Dialog open={open} onOpenChange={(v) => !v && !confirmOpen && onClose()}>
+        <DialogContent className="max-w-2xl overflow-hidden p-0 sm:rounded-2xl">
+          {car && (
+            <QuickBody
+              car={car}
+              from={from}
+              to={to}
+              tariff={tariff}
+              onOrder={() => setConfirmOpen(true)}
+            />
+          )}
+        </DialogContent>
+      </Dialog>
+      <BookingConfirmDialog
+        open={confirmOpen}
+        car={car}
+        from={from}
+        to={to}
+        tariff={tariff}
+        locationLabel={locationLabels[location]}
+        onClose={() => {
+          setConfirmOpen(false);
+          onClose();
+        }}
+      />
+    </>
   );
 }
+
 
 function QuickBody({
   car,
   from,
   to,
   tariff,
+  onOrder,
 }: {
   car: Car;
   from: string | undefined;
   to: string | undefined;
   tariff: ReturnType<typeof useHomeBooking>["tariff"];
+  onOrder: () => void;
 }) {
+
   const available = isCarAvailable(car, from, to);
   const busyUntil = !available ? nextBusyUntil(car) : null;
   const tariffInfo = getTariff(tariff);
@@ -145,11 +181,15 @@ function QuickBody({
               Все характеристики
             </Link>
           </Button>
-          <Button asChild disabled={!available} className="gap-2 font-bold uppercase tracking-wider">
-            <Link to="/booking/$carId" params={{ carId: car.id }}>
-              Заказать аренду <ArrowRight className="h-4 w-4" />
-            </Link>
+          <Button
+            type="button"
+            disabled={!available}
+            onClick={onOrder}
+            className="gap-2 font-bold uppercase tracking-wider"
+          >
+            Заказать аренду <ArrowRight className="h-4 w-4" />
           </Button>
+
         </div>
       </div>
     </div>

@@ -27,14 +27,20 @@ export function HeroBackdrop() {
       ))}
 
       {/* Left-side readability gradient — keeps text always legible */}
-      <div className="pointer-events-none absolute inset-y-0 left-0 w-[62%] bg-gradient-to-r from-background/90 via-background/55 to-transparent" />
+      <div className="pointer-events-none absolute inset-y-0 left-0 w-[62%] bg-gradient-to-r from-background/85 via-background/50 to-transparent" />
 
-      {/* Headlight sweep beams */}
-      <div className="headlight-beam pointer-events-none absolute -top-1/4 left-[-40%] h-[150%] w-[45%] rotate-12" />
+      {/*
+        Localized headlight scan — clipped to the text region on the left.
+        Re-mounted on every frame change so the beam runs exactly once per swap,
+        crossing only the logo + H1 area. Text opacity stays 100%.
+      */}
       <div
-        className="headlight-beam pointer-events-none absolute -top-1/4 left-[-40%] h-[150%] w-[35%] rotate-12"
-        style={{ animationDelay: "-4s", opacity: 0.6 }}
-      />
+        key={idx}
+        aria-hidden
+        className="pointer-events-none absolute left-0 top-[14%] h-[46%] w-[58%] overflow-hidden"
+      >
+        <span className="headlight-scan absolute inset-y-0 -left-1/3 w-1/3" />
+      </div>
 
       {/* Neon streamers */}
       <div className="pointer-events-none absolute inset-0">

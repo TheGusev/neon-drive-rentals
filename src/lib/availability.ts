@@ -1,6 +1,32 @@
 import type { Booking, Car } from "@/types/domain";
 import { bookings } from "@/mocks/bookings";
 
+/** Booking statuses that block a car for overlapping dates. */
+const BLOCKING_STATUSES: Booking["status"][] = ["paid", "pending", "active"];
+
+/** Returns bookings that overlap the requested [from, to) window for a given car. */
+export function getConflictingBookings(
+  carId: string,
+  from: string | undefined,
+  to: string | undefined,
+  bookingList: Booking[] = bookings,
+): Booking[] {
+  if (!from || !to) return [];
+  const start = new Date(from);
+  const end = new Date(to);
+  if (Number.isNaN(start.getTime()) || Number.isNaN(end.getTime())) return [];
+  return bookingList
+    .filter(
+      (b) =>
+        b.carId === carId &&
+        BLOCKING_STATUSES.includes(b.status) &&
+        overlaps(start, end, new Date(b.startDate), new Date(b.endDate)),
+    )
+    .sort((a, b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime());
+}
+
+
+
 /** True if [aStart,aEnd) intersects [bStart,bEnd). */
 function overlaps(aStart: Date, aEnd: Date, bStart: Date, bEnd: Date): boolean {
   return aStart < bEnd && bStart < aEnd;
