@@ -83,10 +83,10 @@ function HomeDesktopInner({ heroImage: _heroImage }: { heroImage: string }) {
             </p>
 
             <div className="rise-in mt-2" style={{ animationDelay: "150ms" }}>
-              <p className="font-display text-[9vw] font-black leading-[0.85] tracking-tight xl:text-[128px]">
+              <p className="font-display text-[72px] font-black leading-[0.9] tracking-tight md:text-[84px] xl:text-[104px]">
                 <span className="logo-neon">NSK-RENT</span>
               </p>
-              <h1 className="mt-3 font-display text-2xl font-bold leading-tight text-foreground drop-shadow-lg md:text-3xl">
+              <h1 className="mt-2 font-display text-xl font-bold leading-tight text-foreground drop-shadow-lg md:text-2xl">
                 Аренда японских кей-каров в&nbsp;Новосибирске
               </h1>
             </div>
