@@ -13,6 +13,13 @@ export interface Car {
   transmission: Transmission;
   pricePerDay: number; // руб
   image?: string;
+  rating: number; // 0..5
+  engineVolume: number; // литры
+  bodyType?: string;
+  seats?: number;
+  deposit?: number; // руб
+  mileageLimit?: number; // км/сутки, 0 = без лимита
+  fuelPolicy?: string;
 }
 
 export type BookingStatus = "paid" | "pending" | "active" | "completed";
@@ -21,7 +28,7 @@ export interface Booking {
   id: string;
   carId: string;
   clientId: string;
-  startDate: string; // ISO
+  startDate: string;
   endDate: string;
   totalPrice: number;
   status: BookingStatus;
