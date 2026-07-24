@@ -26,6 +26,14 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/_public/booking/$carId")({
+  validateSearch: (search: Record<string, unknown>) => ({
+    from: typeof search.from === "string" ? search.from : undefined,
+    to: typeof search.to === "string" ? search.to : undefined,
+    tariff:
+      search.tariff === "city" || search.tariff === "region" || search.tariff === "outside"
+        ? (search.tariff as BookingTariff)
+        : undefined,
+  }),
   loader: ({ params }) => {
     const car = getCarById(params.carId);
     if (!car) throw notFound();
@@ -53,6 +61,7 @@ export const Route = createFileRoute("/_public/booking/$carId")({
     </div>
   ),
 });
+
 
 function BookingPage() {
   const { car } = Route.useLoaderData();
