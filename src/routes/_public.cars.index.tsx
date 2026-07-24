@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { StubPage } from "@/components/layout/StubPage";
 
-export const Route = createFileRoute("/_public/cars")({
+export const Route = createFileRoute("/_public/cars/")({
   head: () => ({
     meta: [
       { title: "Каталог автомобилей — RentSib" },
