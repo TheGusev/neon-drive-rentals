@@ -10,9 +10,9 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarProvider,
-  SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { LayoutDashboard, Car, CalendarCheck, Users, Wallet, Settings } from "lucide-react";
+import { AdminHeader } from "@/components/admin/AdminHeader";
 
 const items = [
   { to: "/admin", label: "Дашборд", icon: LayoutDashboard, exact: true },
