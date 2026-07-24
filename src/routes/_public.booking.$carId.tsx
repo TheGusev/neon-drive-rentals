@@ -65,12 +65,21 @@ export const Route = createFileRoute("/_public/booking/$carId")({
 
 function BookingPage() {
   const { car } = Route.useLoaderData();
+  const search = Route.useSearch();
   const navigate = useNavigate();
   const [draft, setDraft] = useState<BookingDraft | null>(null);
 
   useEffect(() => {
-    setDraft(createDraft(car.id));
+    setDraft(
+      createDraft(car.id, {
+        startDate: search.from ?? undefined,
+        endDate: search.to ?? undefined,
+        tariff: search.tariff ?? "city",
+      }),
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [car.id]);
+
 
   const patch = (p: Partial<BookingDraft>) => {
     setDraft((d) => {
