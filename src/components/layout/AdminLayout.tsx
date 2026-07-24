@@ -1,0 +1,88 @@
+import { Link, Outlet, useRouterState } from "@tanstack/react-router";
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupLabel,
+  SidebarHeader,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarProvider,
+  SidebarTrigger,
+} from "@/components/ui/sidebar";
+import { LayoutDashboard, Car, CalendarCheck, Users, Wallet, Settings } from "lucide-react";
+
+const items = [
+  { to: "/admin", label: "Дашборд", icon: LayoutDashboard, exact: true },
+  { to: "/admin/cars", label: "Автомобили", icon: Car },
+  { to: "/admin/bookings", label: "Бронирования", icon: CalendarCheck },
+  { to: "/admin/clients", label: "Клиенты", icon: Users },
+  { to: "/admin/finance", label: "Финансы", icon: Wallet },
+  { to: "/admin/settings", label: "Настройки", icon: Settings },
+];
+
+function AdminSidebar() {
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const isActive = (to: string, exact?: boolean) =>
+    exact ? pathname === to : pathname === to || pathname.startsWith(to + "/");
+
+  return (
+    <Sidebar collapsible="icon">
+      <SidebarHeader className="px-3 py-4">
+        <Link to="/admin" className="flex items-center gap-2">
+          <div className="grid h-8 w-8 shrink-0 place-items-center rounded-md bg-primary text-primary-foreground">
+            <Car className="h-4 w-4" />
+          </div>
+          <div className="min-w-0">
+            <div className="truncate text-sm font-bold">prokatsib.ru</div>
+            <div className="truncate text-[10px] uppercase tracking-widest text-muted-foreground">
+              Панель управления
+            </div>
+          </div>
+        </Link>
+      </SidebarHeader>
+      <SidebarContent>
+        <SidebarGroup>
+          <SidebarGroupLabel>Основное</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {items.map((it) => (
+                <SidebarMenuItem key={it.to}>
+                  <SidebarMenuButton asChild isActive={isActive(it.to, it.exact)}>
+                    <Link to={it.to} className="flex items-center gap-2">
+                      <it.icon className="h-4 w-4" />
+                      <span>{it.label}</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+      </SidebarContent>
+    </Sidebar>
+  );
+}
+
+export function AdminLayout() {
+  return (
+    <div className="clean-light min-h-screen bg-background text-foreground">
+      <SidebarProvider>
+        <div className="flex min-h-screen w-full">
+          <AdminSidebar />
+          <div className="flex flex-1 flex-col">
+            <header className="flex h-14 items-center gap-3 border-b bg-background px-4">
+              <SidebarTrigger />
+              <div className="text-sm font-semibold">Админ-панель</div>
+            </header>
+            <main className="flex-1 bg-muted/30 p-4 md:p-6">
+              <Outlet />
+            </main>
+          </div>
+        </div>
+      </SidebarProvider>
+    </div>
+  );
+}
