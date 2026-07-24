@@ -6,6 +6,7 @@ const base = {
   deposit: 5000,
   mileageLimit: 250,
   fuelPolicy: "полный → полный",
+  status: "free" as const,
 };
 
 export const cars: Car[] = [
