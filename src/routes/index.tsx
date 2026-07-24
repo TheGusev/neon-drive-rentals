@@ -1,27 +1,28 @@
 import { createFileRoute } from "@tanstack/react-router";
 import heroDrive from "@/assets/cars/hero-drive.jpg";
 import { HomeDesktop, HomeMobile } from "@/components/home/HomeStage";
+import { FaqBlock } from "@/components/home/FaqBlock";
+import { HomeIntro } from "@/components/home/HomeIntro";
+import { SITE_URL, faqJsonLd, jsonLdScript, localBusinessJsonLd } from "@/lib/seo";
+
+const TITLE = "Аренда авто в Новосибирске от 1 800 ₽/сутки — японские кей-кары | RentSib";
+const DESC =
+  "Прокат японских кей-каров в Новосибирске от 1 800 ₽/сутки. Доставка в Толмачёво, договор онлайн за 3 минуты, без крупного залога, поддержка 24/7.";
 
 export const Route = createFileRoute("/")({
   component: Home,
   head: () => ({
     meta: [
-      { title: "NSK-RENT — Аренда японских кей-каров в Новосибирске" },
-      {
-        name: "description",
-        content:
-          "Прокат японских кей-каров в Новосибирске. Онлайн-бронирование за 3 минуты, честные цены, поддержка 24/7.",
-      },
-      { property: "og:title", content: "NSK-RENT — Аренда японских кей-каров в Новосибирске" },
-      {
-        property: "og:description",
-        content: "Кей-кары в аренду в Новосибирске. Быстрое бронирование онлайн.",
-      },
+      { title: TITLE },
+      { name: "description", content: DESC },
+      { property: "og:title", content: TITLE },
+      { property: "og:description", content: DESC },
       { property: "og:type", content: "website" },
-      { property: "og:url", content: "/" },
+      { property: "og:url", content: SITE_URL },
       { name: "twitter:card", content: "summary_large_image" },
     ],
-    links: [{ rel: "canonical", href: "/" }],
+    links: [{ rel: "canonical", href: SITE_URL }],
+    scripts: [jsonLdScript(localBusinessJsonLd()), jsonLdScript(faqJsonLd())],
   }),
 });
 
@@ -33,6 +34,12 @@ function Home() {
       </div>
       <div className="md:hidden">
         <HomeMobile heroImage={heroDrive} />
+      </div>
+
+      {/* SEO content below hero (both viewports scroll to reach it) */}
+      <div className="clean-light bg-background text-foreground">
+        <HomeIntro />
+        <FaqBlock />
       </div>
     </>
   );

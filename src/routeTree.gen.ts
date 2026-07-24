@@ -9,22 +9,33 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as PublicRouteImport } from './routes/_public'
 import { Route as AdminRouteImport } from './routes/_admin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as PublicProfileRouteImport } from './routes/_public.profile'
+import { Route as PublicKeiCarsRouteImport } from './routes/_public.kei-cars'
 import { Route as PublicCarsIndexRouteImport } from './routes/_public.cars.index'
+import { Route as PublicBlogIndexRouteImport } from './routes/_public.blog.index'
 import { Route as AdminAdminIndexRouteImport } from './routes/_admin.admin.index'
+import { Route as PublicRentNovosibirskRouteImport } from './routes/_public.rent.novosibirsk'
+import { Route as PublicRentBezZalogaRouteImport } from './routes/_public.rent.bez-zaloga'
 import { Route as PublicPaymentBookingIdRouteImport } from './routes/_public.payment.$bookingId'
 import { Route as PublicContractBookingIdRouteImport } from './routes/_public.contract.$bookingId'
 import { Route as PublicCarsCarIdRouteImport } from './routes/_public.cars.$carId'
 import { Route as PublicBookingCarIdRouteImport } from './routes/_public.booking.$carId'
+import { Route as PublicBlogSlugRouteImport } from './routes/_public.blog.$slug'
 import { Route as AdminAdminSettingsRouteImport } from './routes/_admin.admin.settings'
 import { Route as AdminAdminFinanceRouteImport } from './routes/_admin.admin.finance'
 import { Route as AdminAdminClientsRouteImport } from './routes/_admin.admin.clients'
 import { Route as AdminAdminCarsRouteImport } from './routes/_admin.admin.cars'
 import { Route as AdminAdminBookingsRouteImport } from './routes/_admin.admin.bookings'
 
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PublicRoute = PublicRouteImport.update({
   id: '/_public',
   getParentRoute: () => rootRouteImport,
@@ -43,15 +54,35 @@ const PublicProfileRoute = PublicProfileRouteImport.update({
   path: '/profile',
   getParentRoute: () => PublicRoute,
 } as any)
+const PublicKeiCarsRoute = PublicKeiCarsRouteImport.update({
+  id: '/kei-cars',
+  path: '/kei-cars',
+  getParentRoute: () => PublicRoute,
+} as any)
 const PublicCarsIndexRoute = PublicCarsIndexRouteImport.update({
   id: '/cars/',
   path: '/cars/',
+  getParentRoute: () => PublicRoute,
+} as any)
+const PublicBlogIndexRoute = PublicBlogIndexRouteImport.update({
+  id: '/blog/',
+  path: '/blog/',
   getParentRoute: () => PublicRoute,
 } as any)
 const AdminAdminIndexRoute = AdminAdminIndexRouteImport.update({
   id: '/admin/',
   path: '/admin/',
   getParentRoute: () => AdminRoute,
+} as any)
+const PublicRentNovosibirskRoute = PublicRentNovosibirskRouteImport.update({
+  id: '/rent/novosibirsk',
+  path: '/rent/novosibirsk',
+  getParentRoute: () => PublicRoute,
+} as any)
+const PublicRentBezZalogaRoute = PublicRentBezZalogaRouteImport.update({
+  id: '/rent/bez-zaloga',
+  path: '/rent/bez-zaloga',
+  getParentRoute: () => PublicRoute,
 } as any)
 const PublicPaymentBookingIdRoute = PublicPaymentBookingIdRouteImport.update({
   id: '/payment/$bookingId',
@@ -71,6 +102,11 @@ const PublicCarsCarIdRoute = PublicCarsCarIdRouteImport.update({
 const PublicBookingCarIdRoute = PublicBookingCarIdRouteImport.update({
   id: '/booking/$carId',
   path: '/booking/$carId',
+  getParentRoute: () => PublicRoute,
+} as any)
+const PublicBlogSlugRoute = PublicBlogSlugRouteImport.update({
+  id: '/blog/$slug',
+  path: '/blog/$slug',
   getParentRoute: () => PublicRoute,
 } as any)
 const AdminAdminSettingsRoute = AdminAdminSettingsRouteImport.update({
@@ -101,32 +137,44 @@ const AdminAdminBookingsRoute = AdminAdminBookingsRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/kei-cars': typeof PublicKeiCarsRoute
   '/profile': typeof PublicProfileRoute
   '/admin/bookings': typeof AdminAdminBookingsRoute
   '/admin/cars': typeof AdminAdminCarsRoute
   '/admin/clients': typeof AdminAdminClientsRoute
   '/admin/finance': typeof AdminAdminFinanceRoute
   '/admin/settings': typeof AdminAdminSettingsRoute
+  '/blog/$slug': typeof PublicBlogSlugRoute
   '/booking/$carId': typeof PublicBookingCarIdRoute
   '/cars/$carId': typeof PublicCarsCarIdRoute
   '/contract/$bookingId': typeof PublicContractBookingIdRoute
   '/payment/$bookingId': typeof PublicPaymentBookingIdRoute
+  '/rent/bez-zaloga': typeof PublicRentBezZalogaRoute
+  '/rent/novosibirsk': typeof PublicRentNovosibirskRoute
   '/admin/': typeof AdminAdminIndexRoute
+  '/blog/': typeof PublicBlogIndexRoute
   '/cars/': typeof PublicCarsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/kei-cars': typeof PublicKeiCarsRoute
   '/profile': typeof PublicProfileRoute
   '/admin/bookings': typeof AdminAdminBookingsRoute
   '/admin/cars': typeof AdminAdminCarsRoute
   '/admin/clients': typeof AdminAdminClientsRoute
   '/admin/finance': typeof AdminAdminFinanceRoute
   '/admin/settings': typeof AdminAdminSettingsRoute
+  '/blog/$slug': typeof PublicBlogSlugRoute
   '/booking/$carId': typeof PublicBookingCarIdRoute
   '/cars/$carId': typeof PublicCarsCarIdRoute
   '/contract/$bookingId': typeof PublicContractBookingIdRoute
   '/payment/$bookingId': typeof PublicPaymentBookingIdRoute
+  '/rent/bez-zaloga': typeof PublicRentBezZalogaRoute
+  '/rent/novosibirsk': typeof PublicRentNovosibirskRoute
   '/admin': typeof AdminAdminIndexRoute
+  '/blog': typeof PublicBlogIndexRoute
   '/cars': typeof PublicCarsIndexRoute
 }
 export interface FileRoutesById {
@@ -134,66 +182,90 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_admin': typeof AdminRouteWithChildren
   '/_public': typeof PublicRouteWithChildren
+  '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/_public/kei-cars': typeof PublicKeiCarsRoute
   '/_public/profile': typeof PublicProfileRoute
   '/_admin/admin/bookings': typeof AdminAdminBookingsRoute
   '/_admin/admin/cars': typeof AdminAdminCarsRoute
   '/_admin/admin/clients': typeof AdminAdminClientsRoute
   '/_admin/admin/finance': typeof AdminAdminFinanceRoute
   '/_admin/admin/settings': typeof AdminAdminSettingsRoute
+  '/_public/blog/$slug': typeof PublicBlogSlugRoute
   '/_public/booking/$carId': typeof PublicBookingCarIdRoute
   '/_public/cars/$carId': typeof PublicCarsCarIdRoute
   '/_public/contract/$bookingId': typeof PublicContractBookingIdRoute
   '/_public/payment/$bookingId': typeof PublicPaymentBookingIdRoute
+  '/_public/rent/bez-zaloga': typeof PublicRentBezZalogaRoute
+  '/_public/rent/novosibirsk': typeof PublicRentNovosibirskRoute
   '/_admin/admin/': typeof AdminAdminIndexRoute
+  '/_public/blog/': typeof PublicBlogIndexRoute
   '/_public/cars/': typeof PublicCarsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/sitemap.xml'
+    | '/kei-cars'
     | '/profile'
     | '/admin/bookings'
     | '/admin/cars'
     | '/admin/clients'
     | '/admin/finance'
     | '/admin/settings'
+    | '/blog/$slug'
     | '/booking/$carId'
     | '/cars/$carId'
     | '/contract/$bookingId'
     | '/payment/$bookingId'
+    | '/rent/bez-zaloga'
+    | '/rent/novosibirsk'
     | '/admin/'
+    | '/blog/'
     | '/cars/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/sitemap.xml'
+    | '/kei-cars'
     | '/profile'
     | '/admin/bookings'
     | '/admin/cars'
     | '/admin/clients'
     | '/admin/finance'
     | '/admin/settings'
+    | '/blog/$slug'
     | '/booking/$carId'
     | '/cars/$carId'
     | '/contract/$bookingId'
     | '/payment/$bookingId'
+    | '/rent/bez-zaloga'
+    | '/rent/novosibirsk'
     | '/admin'
+    | '/blog'
     | '/cars'
   id:
     | '__root__'
     | '/'
     | '/_admin'
     | '/_public'
+    | '/sitemap.xml'
+    | '/_public/kei-cars'
     | '/_public/profile'
     | '/_admin/admin/bookings'
     | '/_admin/admin/cars'
     | '/_admin/admin/clients'
     | '/_admin/admin/finance'
     | '/_admin/admin/settings'
+    | '/_public/blog/$slug'
     | '/_public/booking/$carId'
     | '/_public/cars/$carId'
     | '/_public/contract/$bookingId'
     | '/_public/payment/$bookingId'
+    | '/_public/rent/bez-zaloga'
+    | '/_public/rent/novosibirsk'
     | '/_admin/admin/'
+    | '/_public/blog/'
     | '/_public/cars/'
   fileRoutesById: FileRoutesById
 }
@@ -201,10 +273,18 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRouteWithChildren
   PublicRoute: typeof PublicRouteWithChildren
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_public': {
       id: '/_public'
       path: ''
@@ -233,11 +313,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PublicProfileRouteImport
       parentRoute: typeof PublicRoute
     }
+    '/_public/kei-cars': {
+      id: '/_public/kei-cars'
+      path: '/kei-cars'
+      fullPath: '/kei-cars'
+      preLoaderRoute: typeof PublicKeiCarsRouteImport
+      parentRoute: typeof PublicRoute
+    }
     '/_public/cars/': {
       id: '/_public/cars/'
       path: '/cars'
       fullPath: '/cars/'
       preLoaderRoute: typeof PublicCarsIndexRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/blog/': {
+      id: '/_public/blog/'
+      path: '/blog'
+      fullPath: '/blog/'
+      preLoaderRoute: typeof PublicBlogIndexRouteImport
       parentRoute: typeof PublicRoute
     }
     '/_admin/admin/': {
@@ -246,6 +340,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin/'
       preLoaderRoute: typeof AdminAdminIndexRouteImport
       parentRoute: typeof AdminRoute
+    }
+    '/_public/rent/novosibirsk': {
+      id: '/_public/rent/novosibirsk'
+      path: '/rent/novosibirsk'
+      fullPath: '/rent/novosibirsk'
+      preLoaderRoute: typeof PublicRentNovosibirskRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/rent/bez-zaloga': {
+      id: '/_public/rent/bez-zaloga'
+      path: '/rent/bez-zaloga'
+      fullPath: '/rent/bez-zaloga'
+      preLoaderRoute: typeof PublicRentBezZalogaRouteImport
+      parentRoute: typeof PublicRoute
     }
     '/_public/payment/$bookingId': {
       id: '/_public/payment/$bookingId'
@@ -273,6 +381,13 @@ declare module '@tanstack/react-router' {
       path: '/booking/$carId'
       fullPath: '/booking/$carId'
       preLoaderRoute: typeof PublicBookingCarIdRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/blog/$slug': {
+      id: '/_public/blog/$slug'
+      path: '/blog/$slug'
+      fullPath: '/blog/$slug'
+      preLoaderRoute: typeof PublicBlogSlugRouteImport
       parentRoute: typeof PublicRoute
     }
     '/_admin/admin/settings': {
@@ -334,20 +449,30 @@ const AdminRouteChildren: AdminRouteChildren = {
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
 interface PublicRouteChildren {
+  PublicKeiCarsRoute: typeof PublicKeiCarsRoute
   PublicProfileRoute: typeof PublicProfileRoute
+  PublicBlogSlugRoute: typeof PublicBlogSlugRoute
   PublicBookingCarIdRoute: typeof PublicBookingCarIdRoute
   PublicCarsCarIdRoute: typeof PublicCarsCarIdRoute
   PublicContractBookingIdRoute: typeof PublicContractBookingIdRoute
   PublicPaymentBookingIdRoute: typeof PublicPaymentBookingIdRoute
+  PublicRentBezZalogaRoute: typeof PublicRentBezZalogaRoute
+  PublicRentNovosibirskRoute: typeof PublicRentNovosibirskRoute
+  PublicBlogIndexRoute: typeof PublicBlogIndexRoute
   PublicCarsIndexRoute: typeof PublicCarsIndexRoute
 }
 
 const PublicRouteChildren: PublicRouteChildren = {
+  PublicKeiCarsRoute: PublicKeiCarsRoute,
   PublicProfileRoute: PublicProfileRoute,
+  PublicBlogSlugRoute: PublicBlogSlugRoute,
   PublicBookingCarIdRoute: PublicBookingCarIdRoute,
   PublicCarsCarIdRoute: PublicCarsCarIdRoute,
   PublicContractBookingIdRoute: PublicContractBookingIdRoute,
   PublicPaymentBookingIdRoute: PublicPaymentBookingIdRoute,
+  PublicRentBezZalogaRoute: PublicRentBezZalogaRoute,
+  PublicRentNovosibirskRoute: PublicRentNovosibirskRoute,
+  PublicBlogIndexRoute: PublicBlogIndexRoute,
   PublicCarsIndexRoute: PublicCarsIndexRoute,
 }
 
@@ -358,6 +483,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRouteWithChildren,
   PublicRoute: PublicRouteWithChildren,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
