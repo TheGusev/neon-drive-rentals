@@ -23,7 +23,8 @@ export function PublicLayout() {
   return (
     <div className="public-dark min-h-screen bg-background text-foreground">
       <header className="safe-top sticky top-0 z-40 border-b border-border/60 bg-background/85 backdrop-blur">
-        <div className="mx-auto grid max-w-7xl grid-cols-[minmax(0,1fr)_auto] items-center gap-4 px-4 pb-4 pt-5 md:flex md:justify-between md:px-6 md:py-4">
+        <div className="mx-auto grid max-w-7xl grid-cols-[minmax(0,1fr)_auto] items-center gap-4 px-4 pb-4 pt-[calc(env(safe-area-inset-top)+2.75rem)] md:flex md:justify-between md:px-6 md:py-4 md:pt-4">
+
           <Link to="/" className="flex min-w-0 items-center gap-2">
             <span className="font-display text-xl font-black tracking-widest md:neon-text md:text-2xl">
               RENTSIB

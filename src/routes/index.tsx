@@ -37,10 +37,11 @@ function Home() {
       </div>
 
       {/* SEO content below hero (both viewports scroll to reach it) */}
-      <div className="clean-light bg-background text-foreground">
+      <div className="nfs-theme bg-background text-foreground">
         <HomeIntro />
         <FaqBlock />
       </div>
+
     </>
   );
 }
