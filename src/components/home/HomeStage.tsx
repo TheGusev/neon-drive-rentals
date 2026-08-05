@@ -68,7 +68,7 @@ function HomeDesktopInner({ heroImage: _heroImage }: { heroImage: string }) {
   const { available } = useMemo(() => splitAvailability(cars, from, to), [from, to]);
 
   return (
-    <div className="relative -mx-4 -my-8 min-h-[calc(100svh-4.5rem)] overflow-x-hidden md:-mx-6 md:-my-12 md:min-h-[calc(100svh-5rem)]">
+    <div className="relative min-h-[100svh] overflow-x-hidden">
       <HeroBackdrop />
 
       {/* Content */}
