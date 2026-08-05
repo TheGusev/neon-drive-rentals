@@ -72,7 +72,7 @@ function HomeDesktopInner({ heroImage: _heroImage }: { heroImage: string }) {
       <HeroBackdrop />
 
       {/* Content */}
-      <div className="relative z-10 flex min-h-[calc(100svh-5rem)] flex-col">
+      <div className="relative z-10 flex min-h-[100svh] flex-col">
         <div className="mx-auto grid w-full max-w-7xl flex-1 grid-cols-1 items-center gap-5 px-6 pt-4 xl:grid-cols-[280px_1fr] xl:gap-8">
           {/* Left: NFS-style menu — column on xl, chip row below */}
           <NfsSideMenu className="hidden xl:flex" />
