@@ -293,7 +293,7 @@ function HomeMobileInner({ heroImage: _heroImage }: { heroImage: string }) {
         </Sheet>
       </div>
 
-      <div className="relative z-10 flex min-h-[calc(100svh-4rem)] flex-col px-4 pb-6 pt-14">
+      <div className="relative z-10 flex min-h-[100svh] flex-col px-4 pb-6 pt-[calc(max(env(safe-area-inset-top),0.5rem)+7rem)]">
         {/* Hero copy */}
         <div className="max-w-full">
           <p className="rise-in text-[10px] uppercase tracking-[0.5em] text-[color:var(--neon-blue)] drop-shadow" style={{ animationDelay: "50ms" }}>
