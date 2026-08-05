@@ -68,14 +68,15 @@ function HomeDesktopInner({ heroImage: _heroImage }: { heroImage: string }) {
   const { available } = useMemo(() => splitAvailability(cars, from, to), [from, to]);
 
   return (
-    <div className="relative -mx-4 -my-8 h-[calc(100svh-4.5rem)] overflow-hidden md:-mx-6 md:-my-12 md:h-[calc(100svh-5rem)]">
+    <div className="relative -mx-4 -my-8 min-h-[calc(100svh-4.5rem)] overflow-x-hidden md:-mx-6 md:-my-12 md:min-h-[calc(100svh-5rem)]">
       <HeroBackdrop />
 
       {/* Content */}
-      <div className="relative z-10 flex h-full flex-col">
-        <div className="mx-auto grid w-full max-w-7xl flex-1 grid-cols-[280px_1fr] items-center gap-8 px-6 pt-4">
-          {/* Left: NFS-style menu */}
-          <NfsSideMenu />
+      <div className="relative z-10 flex min-h-[calc(100svh-5rem)] flex-col">
+        <div className="mx-auto grid w-full max-w-7xl flex-1 grid-cols-1 items-center gap-5 px-6 pt-4 xl:grid-cols-[280px_1fr] xl:gap-8">
+          {/* Left: NFS-style menu — column on xl, chip row below */}
+          <NfsSideMenu className="hidden xl:flex" />
+          <NfsSideMenu orientation="horizontal" className="-mx-6 px-6 xl:hidden" />
 
           {/* Middle: title + copy + CTAs */}
           <div className="max-w-2xl">
@@ -84,9 +85,10 @@ function HomeDesktopInner({ heroImage: _heroImage }: { heroImage: string }) {
             </p>
 
             <div className="rise-in mt-2" style={{ animationDelay: "150ms" }}>
-              <p className="font-display text-[72px] font-black leading-[0.9] tracking-tight md:text-[84px] xl:text-[104px]">
+              <p className="font-display text-[clamp(2.75rem,6vw,6.5rem)] font-black leading-[0.9] tracking-tight">
                 <span className="logo-neon">NSK-RENT</span>
               </p>
+
               <h1 className="mt-2 font-display text-xl font-bold leading-tight text-foreground drop-shadow-lg md:text-2xl">
                 Аренда японских кей-каров в&nbsp;Новосибирске
               </h1>
