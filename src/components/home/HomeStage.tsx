@@ -249,21 +249,22 @@ function HomeMobileInner({ heroImage: _heroImage }: { heroImage: string }) {
   const scrollBy = (delta: number) => stripRef.current?.scrollBy({ left: delta, behavior: "smooth" });
 
   return (
-    <div className="nfs-theme relative -mx-4 -my-8 min-h-[calc(100svh-4rem)] overflow-hidden bg-background text-foreground">
+    <div className="nfs-theme relative min-h-[100svh] overflow-hidden bg-background text-foreground">
       <HeroBackdrop />
 
       {/* Top overlay bar: hamburger menu (does not shift layout) */}
-      <div className="pointer-events-none absolute inset-x-0 top-0 z-20 flex items-center justify-end px-3 pt-3">
+      <div className="pointer-events-none absolute inset-x-0 top-0 z-20 flex items-center justify-end px-3 pt-[calc(max(env(safe-area-inset-top),0.5rem)+2.5rem)]">
         <Sheet>
           <SheetTrigger asChild>
             <Button
               size="icon"
               variant="outline"
               aria-label="Меню"
-              className="pointer-events-auto h-10 w-10 border-border/70 bg-background/60 backdrop-blur hover:border-accent"
+              className="menu-pulse pointer-events-auto h-14 w-14 rounded-2xl border-2 border-accent/70 bg-background/85 shadow-[0_0_24px_color-mix(in_oklab,var(--neon-blue)_55%,transparent)] backdrop-blur hover:border-accent"
             >
-              <Menu className="h-5 w-5" />
+              <Menu className="h-7 w-7 text-accent" />
             </Button>
+
           </SheetTrigger>
           <SheetContent side="left" className="nfs-theme w-[86vw] max-w-sm overflow-y-auto bg-background p-5 text-foreground">
             <p className="text-[10px] uppercase tracking-[0.5em] text-[color:var(--neon-blue)]">Nsk · JDM</p>
