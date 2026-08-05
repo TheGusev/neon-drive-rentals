@@ -194,7 +194,7 @@ function StripCard({ car, onOpen }: { car: Car; onOpen: () => void }) {
       type="button"
       onClick={onOpen}
       className={cn(
-        "group relative flex h-[220px] w-[300px] shrink-0 snap-start flex-col overflow-hidden rounded-xl border border-border/60 bg-card/70 text-left backdrop-blur transition hover:-translate-y-1 hover:border-accent hover:neon-glow",
+        "group relative flex h-[180px] w-[240px] shrink-0 snap-start flex-col overflow-hidden rounded-xl border border-border/60 bg-card/70 text-left backdrop-blur transition hover:-translate-y-1 hover:border-accent hover:neon-glow sm:h-[200px] sm:w-[270px] xl:h-[220px] xl:w-[300px]",
         !available && "opacity-60 grayscale-[0.3] hover:opacity-90",
       )}
     >
