@@ -68,14 +68,15 @@ function HomeDesktopInner({ heroImage: _heroImage }: { heroImage: string }) {
   const { available } = useMemo(() => splitAvailability(cars, from, to), [from, to]);
 
   return (
-    <div className="relative -mx-4 -my-8 h-[calc(100svh-4.5rem)] overflow-hidden md:-mx-6 md:-my-12 md:h-[calc(100svh-5rem)]">
+    <div className="relative min-h-[100svh] overflow-x-hidden">
       <HeroBackdrop />
 
       {/* Content */}
-      <div className="relative z-10 flex h-full flex-col">
-        <div className="mx-auto grid w-full max-w-7xl flex-1 grid-cols-[280px_1fr] items-center gap-8 px-6 pt-4">
-          {/* Left: NFS-style menu */}
-          <NfsSideMenu />
+      <div className="relative z-10 flex min-h-[100svh] flex-col">
+        <div className="mx-auto grid w-full max-w-7xl flex-1 grid-cols-1 items-center gap-5 px-6 pt-4 xl:grid-cols-[280px_1fr] xl:gap-8">
+          {/* Left: NFS-style menu — column on xl, chip row below */}
+          <NfsSideMenu className="hidden xl:flex" />
+          <NfsSideMenu orientation="horizontal" className="-mx-6 px-6 xl:hidden" />
 
           {/* Middle: title + copy + CTAs */}
           <div className="max-w-2xl">
@@ -84,9 +85,10 @@ function HomeDesktopInner({ heroImage: _heroImage }: { heroImage: string }) {
             </p>
 
             <div className="rise-in mt-2" style={{ animationDelay: "150ms" }}>
-              <p className="font-display text-[72px] font-black leading-[0.9] tracking-tight md:text-[84px] xl:text-[104px]">
+              <p className="font-display text-[clamp(2.75rem,6vw,6.5rem)] font-black leading-[0.9] tracking-tight">
                 <span className="logo-neon">NSK-RENT</span>
               </p>
+
               <h1 className="mt-2 font-display text-xl font-bold leading-tight text-foreground drop-shadow-lg md:text-2xl">
                 Аренда японских кей-каров в&nbsp;Новосибирске
               </h1>
@@ -192,7 +194,7 @@ function StripCard({ car, onOpen }: { car: Car; onOpen: () => void }) {
       type="button"
       onClick={onOpen}
       className={cn(
-        "group relative flex h-[220px] w-[300px] shrink-0 snap-start flex-col overflow-hidden rounded-xl border border-border/60 bg-card/70 text-left backdrop-blur transition hover:-translate-y-1 hover:border-accent hover:neon-glow",
+        "group relative flex h-[180px] w-[240px] shrink-0 snap-start flex-col overflow-hidden rounded-xl border border-border/60 bg-card/70 text-left backdrop-blur transition hover:-translate-y-1 hover:border-accent hover:neon-glow sm:h-[200px] sm:w-[270px] xl:h-[220px] xl:w-[300px]",
         !available && "opacity-60 grayscale-[0.3] hover:opacity-90",
       )}
     >
@@ -247,21 +249,22 @@ function HomeMobileInner({ heroImage: _heroImage }: { heroImage: string }) {
   const scrollBy = (delta: number) => stripRef.current?.scrollBy({ left: delta, behavior: "smooth" });
 
   return (
-    <div className="nfs-theme relative -mx-4 -my-8 min-h-[calc(100svh-4rem)] overflow-hidden bg-background text-foreground">
+    <div className="nfs-theme relative min-h-[100svh] overflow-hidden bg-background text-foreground">
       <HeroBackdrop />
 
       {/* Top overlay bar: hamburger menu (does not shift layout) */}
-      <div className="pointer-events-none absolute inset-x-0 top-0 z-20 flex items-center justify-end px-3 pt-3">
+      <div className="pointer-events-none absolute inset-x-0 top-0 z-20 flex items-center justify-end px-3 pt-[calc(max(env(safe-area-inset-top),0.5rem)+2.5rem)]">
         <Sheet>
           <SheetTrigger asChild>
             <Button
               size="icon"
               variant="outline"
               aria-label="Меню"
-              className="pointer-events-auto h-10 w-10 border-border/70 bg-background/60 backdrop-blur hover:border-accent"
+              className="menu-pulse pointer-events-auto h-14 w-14 rounded-2xl border-2 border-accent/70 bg-background/85 shadow-[0_0_24px_color-mix(in_oklab,var(--neon-blue)_55%,transparent)] backdrop-blur hover:border-accent"
             >
-              <Menu className="h-5 w-5" />
+              <Menu className="h-7 w-7 text-accent" />
             </Button>
+
           </SheetTrigger>
           <SheetContent side="left" className="nfs-theme w-[86vw] max-w-sm overflow-y-auto bg-background p-5 text-foreground">
             <p className="text-[10px] uppercase tracking-[0.5em] text-[color:var(--neon-blue)]">Nsk · JDM</p>
@@ -290,7 +293,7 @@ function HomeMobileInner({ heroImage: _heroImage }: { heroImage: string }) {
         </Sheet>
       </div>
 
-      <div className="relative z-10 flex min-h-[calc(100svh-4rem)] flex-col px-4 pb-6 pt-14">
+      <div className="relative z-10 flex min-h-[100svh] flex-col px-4 pb-6 pt-[calc(max(env(safe-area-inset-top),0.5rem)+7rem)]">
         {/* Hero copy */}
         <div className="max-w-full">
           <p className="rise-in text-[10px] uppercase tracking-[0.5em] text-[color:var(--neon-blue)] drop-shadow" style={{ animationDelay: "50ms" }}>

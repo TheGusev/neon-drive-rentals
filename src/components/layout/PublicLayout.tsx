@@ -23,7 +23,7 @@ export function PublicLayout() {
   return (
     <div className="public-dark min-h-screen bg-background text-foreground">
       <header className="safe-top sticky top-0 z-40 border-b border-border/60 bg-background/85 backdrop-blur">
-        <div className="mx-auto grid max-w-7xl grid-cols-[minmax(0,1fr)_auto] items-center gap-4 px-4 pb-4 pt-[calc(env(safe-area-inset-top)+2.75rem)] md:flex md:justify-between md:px-6 md:py-4 md:pt-4">
+        <div className="mx-auto grid max-w-7xl grid-cols-[minmax(0,1fr)_auto] items-center gap-3 px-4 pb-3 pt-[max(env(safe-area-inset-top),0.75rem)] md:flex md:justify-between md:gap-4 md:px-6 md:py-4 md:pt-4">
 
           <Link to="/" className="flex min-w-0 items-center gap-2">
             <span className="font-display text-xl font-black tracking-widest md:neon-text md:text-2xl">
@@ -66,9 +66,9 @@ export function PublicLayout() {
               <button
                 type="button"
                 aria-label="Открыть меню"
-                className="menu-pulse relative z-50 inline-flex h-14 w-14 items-center justify-center rounded-2xl border-2 border-accent/70 bg-background/90 text-foreground shadow-[0_0_24px_color-mix(in_oklab,var(--neon-blue)_55%,transparent)] backdrop-blur transition hover:border-accent hover:scale-105 active:scale-95 md:hidden"
+                className="menu-pulse relative z-50 inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border-2 border-accent/70 bg-background/90 text-foreground shadow-[0_0_24px_color-mix(in_oklab,var(--neon-blue)_55%,transparent)] backdrop-blur transition hover:border-accent hover:scale-105 active:scale-95 min-[380px]:h-14 min-[380px]:w-14 md:hidden"
               >
-                <Menu className="h-7 w-7 text-accent" />
+                <Menu className="h-6 w-6 text-accent min-[380px]:h-7 min-[380px]:w-7" />
               </button>
             </SheetTrigger>
 

@@ -117,7 +117,7 @@ function CarPage() {
               <span className="text-sm text-muted-foreground">/ сутки</span>
             </div>
             <Button asChild size="lg" className="mt-5 w-full gap-2 font-bold uppercase tracking-wider">
-              <Link to="/booking/$carId" params={{ carId: car.id }}>
+              <Link to="/booking/$carId" params={{ carId: car.id }} search={{ from: undefined, to: undefined, tariff: undefined }}>
                 Забронировать <ArrowRight className="h-4 w-4" />
               </Link>
             </Button>
