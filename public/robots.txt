@@ -1,6 +1,0 @@
-User-agent: *
-Allow: /
-Disallow: /admin
-Disallow: /lovable/
-
-Sitemap: https://neon-drive-rental.lovable.app/sitemap.xml

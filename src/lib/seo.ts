@@ -1,6 +1,6 @@
 import { faqItems } from "@/mocks/faq";
 
-export const SITE_URL = "https://neon-drive-rental.lovable.app";
+export const SITE_URL = "https://rentsib.ru";
 export const SITE_NAME = "RentSib";
 export const SITE_PHONE = "+7 (800) 555-72-13";
 
