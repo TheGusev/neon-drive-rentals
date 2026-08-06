@@ -101,8 +101,7 @@
   --neon-orange: oklch(0.72 0.2 45);
 }
 
-/* NFS-neon dark theme — active on .public-dark (desktop) and unconditionally
-   on any element with .nfs-theme (used for the mobile home hero). */
+/* NFS-neon dark theme — default site theme (all pages, all viewports). */
 .nfs-theme,
 .public-dark {
   --background: oklch(0.14 0.03 265);
@@ -116,41 +115,59 @@
   --secondary: oklch(0.24 0.04 265);
   --secondary-foreground: oklch(0.97 0.01 250);
   --muted: oklch(0.22 0.03 265);
-  --muted-foreground: oklch(0.72 0.03 258);
+  --muted-foreground: oklch(0.78 0.03 258);
   --accent: oklch(0.68 0.19 258);
   --accent-foreground: oklch(0.14 0.03 265);
-  --border: oklch(0.35 0.05 258 / 45%);
+  --border: oklch(0.45 0.06 258 / 45%);
   --input: oklch(0.28 0.04 265);
   --ring: oklch(0.68 0.19 258);
   --neon-blue: oklch(0.72 0.2 258);
   --neon-orange: oklch(0.75 0.2 45);
 }
 
-/* On mobile keep other public pages (catalog, profile, checkout) light —
-   only elements marked .nfs-theme use the dark neon palette. */
-@media (max-width: 767px) {
-  .public-dark:not(.nfs-theme) {
-    --background: oklch(1 0 0);
-    --foreground: oklch(0.129 0.042 264.695);
-    --card: oklch(0.985 0.005 250);
-    --card-foreground: oklch(0.129 0.042 264.695);
-    --popover: oklch(1 0 0);
-    --popover-foreground: oklch(0.129 0.042 264.695);
-    --primary: oklch(0.58 0.19 258);
-    --primary-foreground: oklch(0.99 0 0);
-    --secondary: oklch(0.968 0.007 247.896);
-    --secondary-foreground: oklch(0.208 0.042 265.755);
-    --muted: oklch(0.968 0.007 247.896);
-    --muted-foreground: oklch(0.554 0.046 257.417);
-    --accent: oklch(0.968 0.007 247.896);
-    --accent-foreground: oklch(0.208 0.042 265.755);
-    --border: oklch(0.929 0.013 255.508);
-    --input: oklch(0.929 0.013 255.508);
-    --ring: oklch(0.704 0.04 256.788);
-    --neon-blue: oklch(0.68 0.19 258);
-    --neon-orange: oklch(0.72 0.2 45);
-  }
+/* Light theme (user-selectable) + admin panel. */
+.clean-light {
+  --background: oklch(0.995 0.003 250);
+  --foreground: oklch(0.16 0.03 264);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.16 0.03 264);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.16 0.03 264);
+  --primary: oklch(0.58 0.19 258);
+  --primary-foreground: oklch(0.99 0 0);
+  --secondary: oklch(0.968 0.007 247.896);
+  --secondary-foreground: oklch(0.208 0.042 265.755);
+  --muted: oklch(0.968 0.007 247.896);
+  --muted-foreground: oklch(0.48 0.04 257);
+  --accent: oklch(0.62 0.18 45);
+  --accent-foreground: oklch(0.99 0 0);
+  --border: oklch(0.9 0.015 255);
+  --input: oklch(0.9 0.015 255);
+  --ring: oklch(0.58 0.19 258);
+  --neon-blue: oklch(0.55 0.19 258);
+  --neon-orange: oklch(0.62 0.19 45);
 }
+
+/* Typography (blog) bound to theme tokens so text stays readable in both themes. */
+.prose-theme {
+  --tw-prose-body: var(--foreground);
+  --tw-prose-headings: var(--foreground);
+  --tw-prose-lead: var(--muted-foreground);
+  --tw-prose-links: var(--primary);
+  --tw-prose-bold: var(--foreground);
+  --tw-prose-counters: var(--muted-foreground);
+  --tw-prose-bullets: var(--accent);
+  --tw-prose-hr: var(--border);
+  --tw-prose-quotes: var(--foreground);
+  --tw-prose-quote-borders: var(--accent);
+  --tw-prose-captions: var(--muted-foreground);
+  --tw-prose-code: var(--foreground);
+  --tw-prose-pre-code: var(--foreground);
+  --tw-prose-pre-bg: var(--card);
+  --tw-prose-th-borders: var(--border);
+  --tw-prose-td-borders: var(--border);
+}
+
 
 @layer base {
   * {
