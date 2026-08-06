@@ -67,12 +67,12 @@ function PaymentPage() {
   };
 
   if (draft === undefined) {
-    return <div className="clean-light"><div className="min-h-screen bg-white" /></div>;
+    return <div className="min-h-screen bg-background" />;
   }
 
   if (!draft || !car || !breakdown) {
     return (
-      <div className="clean-light">
+      <div>
         <div className="min-h-screen bg-white p-8 text-center text-slate-900">
           <h1 className="text-xl font-bold">Бронирование не найдено</h1>
           <p className="mt-2 text-sm text-slate-500">Возможно, сессия истекла. Начните оформление заново.</p>
@@ -88,7 +88,7 @@ function PaymentPage() {
   const endLabel = draft.endDate ? format(parseISO(draft.endDate), "d MMM", { locale: ru }) : "—";
 
   return (
-    <div className="clean-light">
+    <div>
       <div className="min-h-screen bg-white text-slate-900">
         <div className="mx-auto max-w-xl px-4 py-5 pb-4 space-y-4">
           <div>

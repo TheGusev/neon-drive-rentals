@@ -17,7 +17,7 @@ interface LandingPageProps {
 
 export function LandingPage({ h1, lead, breadcrumb, sections, bullets, cars, faq }: LandingPageProps) {
   return (
-    <article className="clean-light -mx-4 -my-8 bg-background text-foreground md:-mx-6 md:-my-12">
+    <article className="bg-background text-foreground">
       <div className="mx-auto w-full max-w-4xl px-4 py-10 md:px-6 md:py-16">
         <nav aria-label="breadcrumbs" className="mb-4 text-xs text-muted-foreground">
           <Link to="/" className="hover:text-foreground">

@@ -109,7 +109,7 @@ function BookingPage() {
   };
 
   return (
-    <div className="clean-light">
+    <div>
       <div className="min-h-screen bg-white text-slate-900">
         <div className="mx-auto max-w-xl px-4 py-5 pb-4 space-y-4">
           <div>

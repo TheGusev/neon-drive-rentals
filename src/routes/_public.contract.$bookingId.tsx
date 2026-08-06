@@ -58,12 +58,12 @@ function ContractPage() {
   }, [draft, car, tariff]);
 
   if (draft === undefined) {
-    return <div className="clean-light"><div className="min-h-screen bg-white" /></div>;
+    return <div className="min-h-screen bg-background" />;
   }
 
   if (!draft || !car || !breakdown) {
     return (
-      <div className="clean-light">
+      <div>
         <div className="min-h-screen bg-white p-8 text-center text-slate-900">
           <h1 className="text-xl font-bold">Бронирование не найдено</h1>
           <Button asChild className="mt-4 bg-[#2f80ed] hover:bg-[#256bd0]">
@@ -87,7 +87,7 @@ function ContractPage() {
   const endLabel = draft.endDate ? format(parseISO(draft.endDate), "d MMM yyyy", { locale: ru }) : "—";
 
   return (
-    <div className="clean-light">
+    <div>
       <div className="min-h-screen bg-white text-slate-900">
         <div className="mx-auto max-w-xl px-4 py-5 pb-4 space-y-4">
           <div>

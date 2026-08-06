@@ -27,7 +27,7 @@ function ProfilePage() {
   const car = active ? getCarById(active.carId) : undefined;
 
   return (
-    <div className="clean-light min-h-screen bg-white text-slate-900">
+    <div className="min-h-screen bg-background text-foreground">
       <div className="mx-auto max-w-md px-4 pb-28 pt-6 md:max-w-2xl md:pb-10">
         <ProfileHeader />
 
