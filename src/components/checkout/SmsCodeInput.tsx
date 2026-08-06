@@ -68,9 +68,9 @@ export function SmsCodeInput({ value, onChange, length = 6 }: SmsCodeInputProps)
           onKeyDown={(e) => handleKey(i, e)}
           onFocus={(e) => e.currentTarget.select()}
           className={cn(
-            "h-14 w-full min-w-0 rounded-2xl border text-center text-2xl font-bold text-slate-900",
-            "border-slate-200 bg-white outline-none transition",
-            "focus:border-[#2f80ed] focus:ring-2 focus:ring-[#2f80ed]/20",
+            "h-14 w-full min-w-0 rounded-2xl border text-center text-2xl font-bold text-foreground",
+            "border-border bg-card outline-none transition",
+            "focus:border-accent focus:ring-2 focus:ring-accent/20",
           )}
         />
       ))}

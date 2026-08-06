@@ -35,8 +35,8 @@ function ProfilePage() {
           {active && car ? (
             <CurrentRentalCard booking={active} car={car} />
           ) : (
-            <SectionCard title="Текущая аренда" className="bg-white ring-1 ring-slate-100">
-              <p className="text-sm text-slate-500">Нет активных аренд. Загляните в каталог и выберите автомобиль.</p>
+            <SectionCard title="Текущая аренда" className="bg-card ring-1 ring-border">
+              <p className="text-sm text-muted-foreground">Нет активных аренд. Загляните в каталог и выберите автомобиль.</p>
             </SectionCard>
           )}
 

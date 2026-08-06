@@ -26,28 +26,28 @@ export function PaymentMethodRadio({ value, onChange }: PaymentMethodRadioProps)
             aria-checked={active}
             onClick={() => onChange(opt.id)}
             className={cn(
-              "flex w-full items-center gap-3 rounded-2xl border bg-white p-4 text-left transition",
+              "flex w-full items-center gap-3 rounded-2xl border bg-card p-4 text-left transition",
               active
-                ? "border-[#2f80ed] ring-2 ring-[#2f80ed]/20"
-                : "border-slate-200 hover:border-slate-300",
+                ? "border-accent ring-2 ring-accent/20"
+                : "border-border hover:border-border",
             )}
           >
             <span
               className={cn(
                 "grid h-11 w-11 shrink-0 place-items-center rounded-xl",
-                active ? "bg-[#2f80ed] text-white" : "bg-slate-100 text-slate-600",
+                active ? "bg-accent text-primary-foreground" : "bg-muted text-muted-foreground",
               )}
             >
               <Icon className="h-5 w-5" />
             </span>
             <span className="min-w-0 flex-1">
-              <span className="block text-sm font-semibold text-slate-900">{opt.label}</span>
-              <span className="block text-xs text-slate-500">{opt.hint}</span>
+              <span className="block text-sm font-semibold text-foreground">{opt.label}</span>
+              <span className="block text-xs text-muted-foreground">{opt.hint}</span>
             </span>
             <span
               className={cn(
                 "grid h-5 w-5 shrink-0 place-items-center rounded-full border",
-                active ? "border-[#2f80ed] bg-[#2f80ed] text-white" : "border-slate-300 bg-white",
+                active ? "border-accent bg-accent text-primary-foreground" : "border-border bg-card",
               )}
             >
               {active && <Check className="h-3 w-3" />}

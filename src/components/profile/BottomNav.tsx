@@ -23,11 +23,11 @@ export function BottomNav() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
 
   return (
-    <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-slate-200 bg-white/95 pb-[env(safe-area-inset-bottom)] backdrop-blur md:hidden">
+    <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-card/95 pb-[env(safe-area-inset-bottom)] backdrop-blur md:hidden">
       <ul className="mx-auto grid max-w-md grid-cols-5">
         {items.map((it) => {
           const active = it.match?.(pathname) ?? false;
-          const cls = `flex flex-col items-center gap-1 py-2.5 text-[11px] ${active ? "text-[#2f80ed]" : "text-slate-500"}`;
+          const cls = `flex flex-col items-center gap-1 py-2.5 text-[11px] ${active ? "text-accent" : "text-muted-foreground"}`;
           const inner = (
             <>
               <it.Icon className="h-5 w-5" />
