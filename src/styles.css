@@ -336,3 +336,31 @@
 .menu-pulse { animation: menu-pulse 2.4s ease-in-out infinite; }
 .menu-pulse:hover, .menu-pulse:active { animation: none; }
 
+
+/* Scroll reveal (used with IntersectionObserver via .reveal / .reveal-in) */
+.reveal { opacity: 0; transform: translateY(18px); }
+.reveal-in { animation: rise-in 0.7s cubic-bezier(0.16, 1, 0.3, 1) both; }
+
+/* Soft neon lift for cards/tiles across the site */
+@utility lift {
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease, border-color 0.25s ease;
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 30px -12px color-mix(in oklab, var(--neon-blue) 55%, transparent);
+  }
+}
+
+/* Thin road-marking accent used as a section decoration */
+@utility road-line {
+  height: 2px;
+  background: repeating-linear-gradient(
+    90deg,
+    color-mix(in oklab, var(--neon-orange) 80%, transparent) 0 22px,
+    transparent 22px 44px
+  );
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal { opacity: 1; transform: none; }
+  .reveal-in, .nfs-tile, .ken-burns, .float-slow, .pulse-glow, .menu-pulse, .neon-flicker { animation: none !important; }
+}
