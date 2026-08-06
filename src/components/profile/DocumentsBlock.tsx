@@ -41,12 +41,13 @@ export function DocumentsBlock() {
                 <Icon className="h-5 w-5" />
               </div>
               <div className="min-w-0 flex-1">
-                <div className="text-sm font-medium text-foreground">{typeLabel[doc.type]}</div>
-                <div className="text-xs text-muted-foreground">№ {doc.number}</div>
+                <div className="truncate text-sm font-medium text-foreground">{typeLabel[doc.type]}</div>
+                <div className="truncate text-xs text-muted-foreground">№ {doc.number}</div>
               </div>
-              <span className={`flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-medium ${s.tone}`}>
-                <s.Icon className="h-3.5 w-3.5" /> {s.label}
+              <span className={`flex shrink-0 items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-medium ${s.tone}`}>
+                <s.Icon className="h-3.5 w-3.5 shrink-0" /> {s.label}
               </span>
+
             </li>
           );
         })}
