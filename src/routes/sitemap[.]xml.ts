@@ -2,8 +2,9 @@ import { createFileRoute } from "@tanstack/react-router";
 import type {} from "@tanstack/react-start";
 import { cars } from "@/mocks/cars";
 import { blogPosts } from "@/mocks/blog";
+import { SITE_URL } from "@/lib/seo";
 
-const BASE_URL = "https://neon-drive-rental.lovable.app";
+const BASE_URL = SITE_URL;
 
 interface SitemapEntry {
   path: string;
