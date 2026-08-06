@@ -67,16 +67,16 @@ function PaymentPage() {
   };
 
   if (draft === undefined) {
-    return <div className="clean-light"><div className="min-h-screen bg-white" /></div>;
+    return <div className="min-h-screen bg-background" />;
   }
 
   if (!draft || !car || !breakdown) {
     return (
-      <div className="clean-light">
-        <div className="min-h-screen bg-white p-8 text-center text-slate-900">
+      <div>
+        <div className="min-h-screen bg-card p-8 text-center text-foreground">
           <h1 className="text-xl font-bold">Бронирование не найдено</h1>
-          <p className="mt-2 text-sm text-slate-500">Возможно, сессия истекла. Начните оформление заново.</p>
-          <Button asChild className="mt-4 bg-[#2f80ed] hover:bg-[#256bd0]">
+          <p className="mt-2 text-sm text-muted-foreground">Возможно, сессия истекла. Начните оформление заново.</p>
+          <Button asChild className="mt-4 bg-accent hover:bg-accent">
             <Link to="/cars">К каталогу</Link>
           </Button>
         </div>
@@ -88,15 +88,15 @@ function PaymentPage() {
   const endLabel = draft.endDate ? format(parseISO(draft.endDate), "d MMM", { locale: ru }) : "—";
 
   return (
-    <div className="clean-light">
-      <div className="min-h-screen bg-white text-slate-900">
+    <div>
+      <div className="min-h-screen bg-card text-foreground">
         <div className="mx-auto max-w-xl px-4 py-5 pb-4 space-y-4">
           <div>
             <Link
               to="/booking/$carId"
               params={{ carId: car.id }}
               search={{ from: undefined, to: undefined, tariff: undefined }}
-              className="text-xs text-slate-500 hover:text-slate-900"
+              className="text-xs text-muted-foreground hover:text-foreground"
             >
               ← Изменить бронь
             </Link>
@@ -105,16 +105,16 @@ function PaymentPage() {
 
           <SectionCard>
             <div className="flex items-center gap-3">
-              <div className="grid h-16 w-16 shrink-0 place-items-center rounded-2xl bg-slate-200 text-xs text-slate-500">
+              <div className="grid h-16 w-16 shrink-0 place-items-center rounded-2xl bg-muted text-xs text-muted-foreground">
                 {car.brand.slice(0, 3).toUpperCase()}
               </div>
               <div className="min-w-0 flex-1">
                 <div className="truncate text-sm font-semibold">{car.brand} {car.model}</div>
-                <div className="text-xs text-slate-500">
+                <div className="text-xs text-muted-foreground">
                   {startLabel} {draft.startTime} — {endLabel} {draft.endTime}
                 </div>
                 {pickup && (
-                  <div className="mt-1 flex items-center gap-1 text-[11px] text-slate-500">
+                  <div className="mt-1 flex items-center gap-1 text-[11px] text-muted-foreground">
                     <MapPin className="h-3 w-3" />{pickup.title}
                   </div>
                 )}
@@ -133,30 +133,30 @@ function PaymentPage() {
           <SectionCard title="Вы получите">
             <ul className="space-y-3 text-sm">
               <li className="flex items-start gap-3">
-                <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-[#2f80ed]/10 text-[#2f80ed]">
+                <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-accent/10 text-accent">
                   <Mail className="h-4 w-4" />
                 </span>
                 <span>
-                  <span className="block font-medium text-slate-900">Чек на email</span>
-                  <span className="block text-xs text-slate-500">Фискальный документ придёт сразу после оплаты</span>
+                  <span className="block font-medium text-foreground">Чек на email</span>
+                  <span className="block text-xs text-muted-foreground">Фискальный документ придёт сразу после оплаты</span>
                 </span>
               </li>
               <li className="flex items-start gap-3">
-                <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-[#2f80ed]/10 text-[#2f80ed]">
+                <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-accent/10 text-accent">
                   <FileText className="h-4 w-4" />
                 </span>
                 <span>
-                  <span className="block font-medium text-slate-900">Договор аренды</span>
-                  <span className="block text-xs text-slate-500">Подпишете электронно на следующем шаге</span>
+                  <span className="block font-medium text-foreground">Договор аренды</span>
+                  <span className="block text-xs text-muted-foreground">Подпишете электронно на следующем шаге</span>
                 </span>
               </li>
               <li className="flex items-start gap-3">
-                <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-[#2f80ed]/10 text-[#2f80ed]">
+                <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-accent/10 text-accent">
                   <MapPin className="h-4 w-4" />
                 </span>
                 <span>
-                  <span className="block font-medium text-slate-900">Инструкцию по получению</span>
-                  <span className="block text-xs text-slate-500">Адрес, контакты менеджера и время подачи</span>
+                  <span className="block font-medium text-foreground">Инструкцию по получению</span>
+                  <span className="block text-xs text-muted-foreground">Адрес, контакты менеджера и время подачи</span>
                 </span>
               </li>
             </ul>
@@ -168,7 +168,7 @@ function PaymentPage() {
         <StickyBottomBar>
           <Button
             onClick={proceed}
-            className="h-12 w-full rounded-2xl bg-[#2f80ed] text-base font-semibold text-white hover:bg-[#256bd0]"
+            className="h-12 w-full rounded-2xl bg-accent text-base font-semibold text-primary-foreground hover:bg-accent"
           >
             Оплатить {formatRub(breakdown.total)}
           </Button>

@@ -109,11 +109,11 @@ function BookingPage() {
   };
 
   return (
-    <div className="clean-light">
-      <div className="min-h-screen bg-white text-slate-900">
+    <div>
+      <div className="min-h-screen bg-card text-foreground">
         <div className="mx-auto max-w-xl px-4 py-5 pb-4 space-y-4">
           <div>
-            <Link to="/cars/$carId" params={{ carId: car.id }} className="text-xs text-slate-500 hover:text-slate-900">
+            <Link to="/cars/$carId" params={{ carId: car.id }} className="text-xs text-muted-foreground hover:text-foreground">
               ← Назад к авто
             </Link>
             <h1 className="mt-2 text-2xl font-bold tracking-tight">Оформление аренды</h1>
@@ -121,15 +121,15 @@ function BookingPage() {
 
           <SectionCard>
             <div className="flex items-center gap-3">
-              <div className="grid h-16 w-16 shrink-0 place-items-center rounded-2xl bg-slate-200 text-xs text-slate-500">
+              <div className="grid h-16 w-16 shrink-0 place-items-center rounded-2xl bg-muted text-xs text-muted-foreground">
                 {car.brand.slice(0, 3).toUpperCase()}
               </div>
               <div className="min-w-0 flex-1">
                 <div className="truncate text-sm font-semibold">{car.brand} {car.model}</div>
-                <div className="text-xs text-slate-500">{car.year} · {car.transmission} · {car.engineVolume.toFixed(2)} л</div>
+                <div className="text-xs text-muted-foreground">{car.year} · {car.transmission} · {car.engineVolume.toFixed(2)} л</div>
               </div>
-              <div className="text-right text-sm font-bold text-[#2f80ed]">
-                {formatRub(car.pricePerDay)}<span className="block text-[10px] font-normal text-slate-400">/ сутки</span>
+              <div className="text-right text-sm font-bold text-accent">
+                {formatRub(car.pricePerDay)}<span className="block text-[10px] font-normal text-muted-foreground">/ сутки</span>
               </div>
             </div>
           </SectionCard>
@@ -171,15 +171,15 @@ function BookingPage() {
                         type="button"
                         onClick={() => patch({ pickupPointId: p.id })}
                         className={cn(
-                          "flex w-full items-start gap-3 rounded-2xl border bg-white p-3 text-left transition",
-                          active ? "border-[#2f80ed] ring-2 ring-[#2f80ed]/20" : "border-slate-200",
+                          "flex w-full items-start gap-3 rounded-2xl border bg-card p-3 text-left transition",
+                          active ? "border-accent ring-2 ring-accent/20" : "border-border",
                         )}
                       >
-                        <MapPin className={cn("mt-0.5 h-5 w-5 shrink-0", active ? "text-[#2f80ed]" : "text-slate-400")} />
+                        <MapPin className={cn("mt-0.5 h-5 w-5 shrink-0", active ? "text-accent" : "text-muted-foreground")} />
                         <div className="min-w-0 flex-1">
                           <div className="text-sm font-semibold">{p.title}</div>
-                          <div className="text-xs text-slate-500">{p.address}</div>
-                          <div className="text-[11px] text-slate-400">{p.hours}</div>
+                          <div className="text-xs text-muted-foreground">{p.address}</div>
+                          <div className="text-[11px] text-muted-foreground">{p.hours}</div>
                         </div>
                       </button>
                     );
@@ -190,10 +190,10 @@ function BookingPage() {
               <SectionCard>
                 <div className="flex items-center justify-between gap-3">
                   <div className="flex items-center gap-3">
-                    <Truck className="h-5 w-5 text-slate-500" />
+                    <Truck className="h-5 w-5 text-muted-foreground" />
                     <div>
                       <div className="text-sm font-semibold">Доставка по адресу</div>
-                      <div className="text-xs text-slate-500">+{formatRub(DELIVERY_PRICE)} к заказу</div>
+                      <div className="text-xs text-muted-foreground">+{formatRub(DELIVERY_PRICE)} к заказу</div>
                     </div>
                   </div>
                   <Switch
@@ -206,7 +206,7 @@ function BookingPage() {
                     placeholder="Улица, дом, подъезд"
                     value={draft.deliveryAddress ?? ""}
                     onChange={(e) => patch({ deliveryAddress: e.target.value })}
-                    className="mt-3 h-11 rounded-xl border-slate-200 bg-white"
+                    className="mt-3 h-11 rounded-xl border-border bg-card"
                   />
                 )}
               </SectionCard>
@@ -223,16 +223,16 @@ function BookingPage() {
                         className={cn(
                           "rounded-xl border p-2.5 text-left transition",
                           active
-                            ? "border-[#2f80ed] bg-[#2f80ed]/5"
-                            : "border-slate-200 bg-white",
+                            ? "border-accent bg-accent/5"
+                            : "border-border bg-card",
                         )}
                       >
-                        <div className={cn("text-xs font-semibold", active ? "text-[#2f80ed]" : "text-slate-900")}>
+                        <div className={cn("text-xs font-semibold", active ? "text-accent" : "text-foreground")}>
                           {t.title}
                         </div>
-                        <div className="mt-0.5 text-[10px] leading-tight text-slate-500">{t.description}</div>
+                        <div className="mt-0.5 text-[10px] leading-tight text-muted-foreground">{t.description}</div>
                         {t.multiplier !== 1 && (
-                          <div className="mt-1 text-[10px] font-medium text-slate-400">×{t.multiplier}</div>
+                          <div className="mt-1 text-[10px] font-medium text-muted-foreground">×{t.multiplier}</div>
                         )}
                       </button>
                     );
@@ -252,7 +252,7 @@ function BookingPage() {
           <Button
             onClick={goPay}
             disabled={!valid}
-            className="h-12 w-full rounded-2xl bg-[#2f80ed] text-base font-semibold text-white hover:bg-[#256bd0] disabled:opacity-50"
+            className="h-12 w-full rounded-2xl bg-accent text-base font-semibold text-primary-foreground hover:bg-accent disabled:opacity-50"
           >
             Перейти к оплате
           </Button>
@@ -274,14 +274,14 @@ function DateField({
   const date = value ? parseISO(value) : undefined;
   return (
     <div>
-      <label className="mb-1.5 block text-xs font-medium text-slate-500">{label}</label>
+      <label className="mb-1.5 block text-xs font-medium text-muted-foreground">{label}</label>
       <Popover>
         <PopoverTrigger asChild>
           <button
             type="button"
-            className="flex h-11 w-full items-center gap-2 rounded-xl border border-slate-200 bg-white px-3 text-left text-sm text-slate-900"
+            className="flex h-11 w-full items-center gap-2 rounded-xl border border-border bg-card px-3 text-left text-sm text-foreground"
           >
-            <CalendarIcon className="h-4 w-4 shrink-0 text-slate-400" />
+            <CalendarIcon className="h-4 w-4 shrink-0 text-muted-foreground" />
             <span className="truncate">
               {date ? format(date, "d MMM yyyy", { locale: ru }) : "Дата"}
             </span>
@@ -312,12 +312,12 @@ function TimeField({
 }) {
   return (
     <div>
-      <label className="mb-1.5 block text-xs font-medium text-slate-500">{label}</label>
+      <label className="mb-1.5 block text-xs font-medium text-muted-foreground">{label}</label>
       <input
         type="time"
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="h-11 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm text-slate-900 outline-none focus:border-[#2f80ed]"
+        className="h-11 w-full rounded-xl border border-border bg-card px-3 text-sm text-foreground outline-none focus:border-accent"
       />
     </div>
   );

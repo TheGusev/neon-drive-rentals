@@ -1,3 +1,10 @@
+import coverRentGuide from "@/assets/blog/rent-guide.jpg";
+import coverVs from "@/assets/blog/rent-vs-carsharing.jpg";
+import coverKei from "@/assets/blog/kei-cars.jpg";
+import coverAirport from "@/assets/blog/airport.jpg";
+import coverNoDeposit from "@/assets/blog/no-deposit.jpg";
+import coverRoutes from "@/assets/blog/routes-nso.jpg";
+
 export interface BlogPost {
   slug: string;
   title: string;
@@ -9,8 +16,6 @@ export interface BlogPost {
   body: string; // markdown
 }
 
-const cover1 = "/icon-512.png";
-
 export const blogPosts: BlogPost[] = [
   {
     slug: "kak-arendovat-avto-v-novosibirske",
@@ -20,7 +25,7 @@ export const blogPosts: BlogPost[] = [
     date: "2026-05-12",
     readMinutes: 6,
     keywords: ["аренда авто новосибирск", "прокат авто новосибирск", "аренда на сутки"],
-    cover: cover1,
+    cover: coverRentGuide,
     body: `## Шаг 1. Выбор автомобиля
 
 Начните с каталога: определите класс (эконом, спорт), тип КПП, вместимость. Для города Новосибирска оптимальны компактные кей-кары — они дешевле в аренде (от 1 800 ₽/сутки) и в разы легче паркуются.
@@ -62,7 +67,7 @@ export const blogPosts: BlogPost[] = [
     date: "2026-04-28",
     readMinutes: 5,
     keywords: ["аренда авто новосибирск", "каршеринг новосибирск", "прокат"],
-    cover: cover1,
+    cover: coverVs,
     body: `## Каршеринг: коротко и по городу
 
 Каршеринг удобен для поездок на 1–2 часа внутри Новосибирска. Средняя цена — 8–12 ₽/минута, или ~500–800 ₽/час. Пакет на день выходит 2 500–4 000 ₽.
@@ -96,7 +101,7 @@ export const blogPosts: BlogPost[] = [
     date: "2026-04-15",
     readMinutes: 7,
     keywords: ["кей кар", "японские авто", "jdm", "аренда"],
-    cover: cover1,
+    cover: coverKei,
     body: `## Что такое кей-кар
 
 Кей-кар (kei car, 軽自動車) — уникальный японский класс сверхкомпактных авто. Правила:
@@ -140,7 +145,7 @@ export const blogPosts: BlogPost[] = [
     date: "2026-04-02",
     readMinutes: 4,
     keywords: ["толмачево аренда", "аэропорт новосибирск", "трансфер"],
-    cover: cover1,
+    cover: coverAirport,
     body: `## Заказ доставки
 
 При бронировании укажите точку выдачи «Аэропорт Толмачёво» и дату/время прилёта (с учётом получения багажа). Доставка — 800 ₽, круглосуточно.
@@ -168,7 +173,7 @@ export const blogPosts: BlogPost[] = [
     date: "2026-03-18",
     readMinutes: 5,
     keywords: ["без залога", "аренда", "депозит"],
-    cover: cover1,
+    cover: coverNoDeposit,
     body: `## Классическая схема и наши условия
 
 Крупные прокаты требуют 30 000–50 000 ₽ залога, который блокируется на карте на весь срок аренды. Это неудобно: сумма выпадает из оборота.
@@ -199,7 +204,7 @@ export const blogPosts: BlogPost[] = [
     date: "2026-03-05",
     readMinutes: 6,
     keywords: ["маршруты нсо", "путешествие", "аренда авто"],
-    cover: cover1,
+    cover: coverRoutes,
     body: `## Тариф «За город»
 
 Для поездок за пределы Новосибирска нужен тариф **«За город»** — от 2 000 ₽/сутки. Он включает:

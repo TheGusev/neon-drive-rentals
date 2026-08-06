@@ -12,14 +12,14 @@ export function SectionCard({ title, action, children, className }: SectionCardP
   return (
     <section
       className={cn(
-        "rounded-3xl bg-[#f5f7fb] p-5 shadow-[0_1px_2px_rgba(15,23,42,0.04)]",
+        "rounded-3xl bg-muted p-5 shadow-[0_1px_2px_rgba(15,23,42,0.04)]",
         className,
       )}
     >
       {(title || action) && (
         <header className="mb-4 flex items-center justify-between gap-2">
           {title ? (
-            <h2 className="text-base font-semibold tracking-tight text-slate-900">{title}</h2>
+            <h2 className="text-base font-semibold tracking-tight text-foreground">{title}</h2>
           ) : (
             <span />
           )}

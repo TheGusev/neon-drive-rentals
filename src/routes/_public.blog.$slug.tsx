@@ -59,7 +59,7 @@ export const Route = createFileRoute("/_public/blog/$slug")({
 
 function PostNotFound() {
   return (
-    <div className="clean-light -mx-4 -my-8 min-h-[60vh] bg-background px-4 py-16 text-center text-foreground md:-mx-6 md:-my-12">
+    <div className="min-h-[60vh] bg-background px-4 py-16 text-center text-foreground">
       <h1 className="font-display text-3xl font-black">Статья не найдена</h1>
       <p className="mt-3 text-muted-foreground">Возможно, она была перемещена или удалена.</p>
       <Button asChild className="mt-6">
@@ -74,8 +74,8 @@ function Page() {
   const related = blogPosts.filter((p) => p.slug !== post.slug).slice(0, 3);
 
   return (
-    <div className="clean-light -mx-4 -my-8 bg-background text-foreground md:-mx-6 md:-my-12">
-      <article className="mx-auto w-full max-w-3xl px-4 py-10 md:px-6 md:py-16">
+    <div className="bg-background text-foreground">
+      <article className="mx-auto w-full max-w-3xl py-4 md:py-8">
         <nav aria-label="breadcrumbs" className="mb-4 text-xs text-muted-foreground">
           <Link to="/" className="hover:text-foreground">
             Главная
@@ -84,7 +84,7 @@ function Page() {
           <Link to="/blog" className="hover:text-foreground">
             Блог
           </Link>{" "}
-          / <span className="text-foreground">{post.title}</span>
+          / <span className="line-clamp-1 inline text-foreground">{post.title}</span>
         </nav>
 
         <Button asChild variant="ghost" size="sm" className="mb-4 gap-2">
@@ -93,7 +93,19 @@ function Page() {
           </Link>
         </Button>
 
-        <h1 className="font-display text-3xl font-black leading-tight md:text-5xl">{post.title}</h1>
+        <div className="relative overflow-hidden rounded-2xl border border-border">
+          <img
+            src={post.cover}
+            alt={post.title}
+            width={1200}
+            height={675}
+            className="ken-burns h-full w-full object-cover"
+          />
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-background via-background/30 to-transparent" />
+        </div>
+
+        <h1 className="mt-6 font-display text-3xl font-black leading-tight md:text-5xl">{post.title}</h1>
+        <div className="road-line mt-4 w-24" />
 
         <div className="mt-4 flex items-center gap-4 text-sm text-muted-foreground">
           <span className="inline-flex items-center gap-1">
@@ -108,11 +120,11 @@ function Page() {
 
         <p className="mt-6 text-lg leading-relaxed text-muted-foreground">{post.description}</p>
 
-        <div className="prose prose-neutral mt-8 max-w-none prose-headings:font-display prose-headings:font-bold prose-h2:mt-8 prose-h2:text-2xl prose-h3:text-xl prose-a:text-primary prose-strong:text-foreground prose-table:text-sm">
+        <div className="prose prose-theme mt-8 max-w-none prose-headings:font-display prose-headings:font-bold prose-h2:mt-8 prose-h2:text-2xl prose-h3:text-xl prose-table:text-sm">
           <ReactMarkdown remarkPlugins={[remarkGfm]}>{post.body}</ReactMarkdown>
         </div>
 
-        <div className="mt-12 rounded-2xl border border-primary/30 bg-primary/5 p-6 text-center md:p-8">
+        <div className="mt-12 rounded-2xl border border-accent/40 bg-accent/10 p-6 text-center md:p-8">
           <p className="font-display text-lg font-bold md:text-xl">Готовы забронировать авто?</p>
           <p className="mt-1 text-sm text-muted-foreground">От 1 800 ₽/сутки в Новосибирске</p>
           <Button asChild className="mt-4">
@@ -122,7 +134,7 @@ function Page() {
       </article>
 
       {related.length > 0 && (
-        <div className="mx-auto w-full max-w-5xl px-4 pb-16 md:px-6">
+        <div className="mx-auto w-full max-w-5xl pb-8">
           <h2 className="font-display text-xl font-bold md:text-2xl">Другие статьи</h2>
           <div className="mt-4 grid gap-4 md:grid-cols-3">
             {related.map((p) => (
@@ -130,10 +142,20 @@ function Page() {
                 key={p.slug}
                 to="/blog/$slug"
                 params={{ slug: p.slug }}
-                className="group rounded-xl border border-border bg-card p-4 transition hover:border-primary"
+                className="lift group overflow-hidden rounded-xl border border-border bg-card transition hover:border-accent"
               >
-                <p className="font-display text-sm font-bold group-hover:text-primary">{p.title}</p>
-                <p className="mt-2 line-clamp-2 text-xs text-muted-foreground">{p.description}</p>
+                <img
+                  src={p.cover}
+                  alt={p.title}
+                  loading="lazy"
+                  width={1200}
+                  height={675}
+                  className="aspect-[16/9] w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                />
+                <div className="p-4">
+                  <p className="font-display text-sm font-bold group-hover:text-accent">{p.title}</p>
+                  <p className="mt-2 line-clamp-2 text-xs text-muted-foreground">{p.description}</p>
+                </div>
               </Link>
             ))}
           </div>
@@ -142,3 +164,4 @@ function Page() {
     </div>
   );
 }
+

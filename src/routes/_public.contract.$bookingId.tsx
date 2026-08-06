@@ -58,15 +58,15 @@ function ContractPage() {
   }, [draft, car, tariff]);
 
   if (draft === undefined) {
-    return <div className="clean-light"><div className="min-h-screen bg-white" /></div>;
+    return <div className="min-h-screen bg-background" />;
   }
 
   if (!draft || !car || !breakdown) {
     return (
-      <div className="clean-light">
-        <div className="min-h-screen bg-white p-8 text-center text-slate-900">
+      <div>
+        <div className="min-h-screen bg-card p-8 text-center text-foreground">
           <h1 className="text-xl font-bold">Бронирование не найдено</h1>
-          <Button asChild className="mt-4 bg-[#2f80ed] hover:bg-[#256bd0]">
+          <Button asChild className="mt-4 bg-accent hover:bg-accent">
             <Link to="/cars">К каталогу</Link>
           </Button>
         </div>
@@ -87,14 +87,14 @@ function ContractPage() {
   const endLabel = draft.endDate ? format(parseISO(draft.endDate), "d MMM yyyy", { locale: ru }) : "—";
 
   return (
-    <div className="clean-light">
-      <div className="min-h-screen bg-white text-slate-900">
+    <div>
+      <div className="min-h-screen bg-card text-foreground">
         <div className="mx-auto max-w-xl px-4 py-5 pb-4 space-y-4">
           <div>
             <Link
               to="/payment/$bookingId"
               params={{ bookingId: draft.id }}
-              className="text-xs text-slate-500 hover:text-slate-900"
+              className="text-xs text-muted-foreground hover:text-foreground"
             >
               ← Назад к оплате
             </Link>
@@ -141,13 +141,13 @@ function ContractPage() {
           </SectionCard>
 
           <SectionCard title="Код из SMS">
-            <p className="mb-3 text-xs text-slate-500">
+            <p className="mb-3 text-xs text-muted-foreground">
               Код отправлен на {maskPhone(draft.phone)}
             </p>
             <SmsCodeInput value={code} onChange={setCode} />
             <button
               type="button"
-              className="mt-3 text-xs font-medium text-[#2f80ed] hover:underline"
+              className="mt-3 text-xs font-medium text-accent hover:underline"
               onClick={() => toast("Код отправлен повторно")}
             >
               Отправить код ещё раз
@@ -157,9 +157,9 @@ function ContractPage() {
           <a
             href="#"
             onClick={(e) => { e.preventDefault(); toast("Договор скачивается…"); }}
-            className="flex items-center justify-center gap-2 rounded-2xl border border-slate-200 bg-white p-4 text-sm font-medium text-slate-700 hover:border-slate-300"
+            className="flex items-center justify-center gap-2 rounded-2xl border border-border bg-card p-4 text-sm font-medium text-foreground/80 hover:border-border"
           >
-            <FileText className="h-4 w-4 text-[#2f80ed]" />
+            <FileText className="h-4 w-4 text-accent" />
             Скачать договор PDF
           </a>
 
@@ -170,7 +170,7 @@ function ContractPage() {
           <Button
             onClick={sign}
             disabled={!canSign}
-            className="h-12 w-full rounded-2xl bg-[#2f80ed] text-base font-semibold text-white hover:bg-[#256bd0] disabled:opacity-50"
+            className="h-12 w-full rounded-2xl bg-accent text-base font-semibold text-primary-foreground hover:bg-accent disabled:opacity-50"
           >
             Подписать договор
           </Button>
@@ -183,10 +183,10 @@ function ContractPage() {
 function Row({ label, value, strong, mono }: { label: string; value: string; strong?: boolean; mono?: boolean }) {
   return (
     <div className="flex items-baseline justify-between gap-4">
-      <dt className="text-xs text-slate-500">{label}</dt>
+      <dt className="text-xs text-muted-foreground">{label}</dt>
       <dd
         className={
-          (strong ? "text-base font-bold text-slate-900" : "text-sm font-medium text-slate-900") +
+          (strong ? "text-base font-bold text-foreground" : "text-sm font-medium text-foreground") +
           (mono ? " font-mono tracking-tight" : "")
         }
       >
@@ -210,9 +210,9 @@ function AgreeRow({
       <Checkbox
         checked={checked}
         onCheckedChange={(v) => onChange(v === true)}
-        className="mt-0.5 h-5 w-5 rounded-md border-slate-300 data-[state=checked]:border-[#2f80ed] data-[state=checked]:bg-[#2f80ed]"
+        className="mt-0.5 h-5 w-5 rounded-md border-border data-[state=checked]:border-accent data-[state=checked]:bg-accent"
       />
-      <span className="text-sm leading-snug text-slate-700">{text}</span>
+      <span className="text-sm leading-snug text-foreground/80">{text}</span>
     </label>
   );
 }

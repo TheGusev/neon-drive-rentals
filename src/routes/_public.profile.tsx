@@ -27,7 +27,7 @@ function ProfilePage() {
   const car = active ? getCarById(active.carId) : undefined;
 
   return (
-    <div className="clean-light min-h-screen bg-white text-slate-900">
+    <div className="min-h-screen bg-background text-foreground">
       <div className="mx-auto max-w-md px-4 pb-28 pt-6 md:max-w-2xl md:pb-10">
         <ProfileHeader />
 
@@ -35,8 +35,8 @@ function ProfilePage() {
           {active && car ? (
             <CurrentRentalCard booking={active} car={car} />
           ) : (
-            <SectionCard title="Текущая аренда" className="bg-white ring-1 ring-slate-100">
-              <p className="text-sm text-slate-500">Нет активных аренд. Загляните в каталог и выберите автомобиль.</p>
+            <SectionCard title="Текущая аренда" className="bg-card ring-1 ring-border">
+              <p className="text-sm text-muted-foreground">Нет активных аренд. Загляните в каталог и выберите автомобиль.</p>
             </SectionCard>
           )}
 
