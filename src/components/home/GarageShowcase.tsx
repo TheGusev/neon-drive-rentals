@@ -209,6 +209,13 @@ function GarageCard({
     `${car.mileageLimit} км/сутки`,
   ];
 
+  const { prefetch, cancel } = usePrefetchCar();
+
+  // On touch devices the centered card is the likely target — warm it early.
+  useEffect(() => {
+    if (coarse && active) prefetch(car, true);
+  }, [coarse, active, car, prefetch]);
+
   const card = (
     <Link
       to="/cars/$carId"
@@ -217,6 +224,10 @@ function GarageCard({
       aria-label={`${car.brand} ${car.model} — подробнее`}
       data-active={active ? "true" : "false"}
       style={{ "--i": index } as React.CSSProperties}
+      onMouseEnter={() => prefetch(car)}
+      onMouseLeave={cancel}
+      onFocus={() => prefetch(car, true)}
+      onTouchStart={() => prefetch(car, true)}
       className={cn(
         "garage-card group relative flex h-[200px] w-[240px] shrink-0 snap-center flex-col overflow-hidden rounded-2xl border text-left backdrop-blur sm:h-[220px] sm:w-[280px] xl:h-[250px] xl:w-[320px]",
         entered && "garage-in",
@@ -226,6 +237,7 @@ function GarageCard({
         !free && "grayscale-[0.35]",
       )}
     >
+
       <div className="relative flex-1 overflow-hidden bg-muted">
         <img
           src={car.image}
