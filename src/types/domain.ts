@@ -89,8 +89,6 @@ export interface BookingDraft {
   startTime: string; // HH:mm
   endTime: string;
   pickupPointId?: string;
-  delivery: boolean;
-  deliveryAddress?: string;
   tariff: BookingTariff;
   paymentMethod?: PaymentMethod;
   signed?: boolean;
