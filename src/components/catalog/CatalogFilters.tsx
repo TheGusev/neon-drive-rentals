@@ -1,7 +1,8 @@
 import { CalendarIcon, RotateCcw } from "lucide-react";
 import { format } from "date-fns";
 import { ru } from "date-fns/locale";
-import type { CarClass, Transmission } from "@/types/domain";
+import type { CarFleetStatus, Transmission } from "@/types/domain";
+import { carBrands, carColors, carYears, mockCars } from "@/data/mockCars";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Slider } from "@/components/ui/slider";
@@ -10,8 +11,12 @@ import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
 
 export interface CatalogFiltersState {
-  classes: CarClass[];
+  brands: string[];
+  models: string[];
+  colors: string[];
+  years: number[];
   transmissions: Transmission[];
+  statuses: CarFleetStatus[];
   price: [number, number];
   pickup?: Date;
   ret?: Date;
@@ -24,42 +29,64 @@ export interface CatalogFiltersProps {
   onReset: () => void;
 }
 
-const classOptions: { value: CarClass; label: string }[] = [
-  { value: "econom", label: "Эконом" },
-  { value: "sport", label: "Спорт" },
-  { value: "premium", label: "Премиум" },
+const transmissionOptions: { value: Transmission; label: string }[] = [
+  { value: "AT", label: "Автомат" },
+  { value: "CVT", label: "Вариатор" },
+  { value: "MT", label: "Механика" },
 ];
 
-const transmissionOptions: { value: Transmission; label: string }[] = [
-  { value: "AT", label: "AT" },
-  { value: "CVT", label: "CVT" },
-  { value: "MT", label: "MT" },
+const statusOptions: { value: CarFleetStatus; label: string }[] = [
+  { value: "free", label: "Свободен" },
+  { value: "busy", label: "В аренде" },
+  { value: "washing", label: "На мойке" },
+  { value: "maintenance", label: "На ТО" },
 ];
 
 export function CatalogFilters({ value, onChange, priceBounds, onReset }: CatalogFiltersProps) {
-  const toggle = <T extends string>(arr: T[], v: T): T[] =>
-    arr.includes(v) ? arr.filter((x) => x !== v) : [...arr, v];
+  const toggle = <T,>(arr: T[], v: T): T[] => (arr.includes(v) ? arr.filter((x) => x !== v) : [...arr, v]);
+
+  const models = Array.from(
+    new Set(
+      mockCars
+        .filter((c) => (value.brands.length ? value.brands.includes(c.brand) : true))
+        .map((c) => c.model),
+    ),
+  ).sort();
 
   return (
     <div className="space-y-6">
-      <Group label="Класс авто">
-        <div className="flex flex-wrap gap-3">
-          {classOptions.map((o) => (
-            <label key={o.value} className="inline-flex cursor-pointer items-center gap-2 rounded-md border border-border bg-background px-3 py-2 text-sm">
-              <Checkbox
-                checked={value.classes.includes(o.value)}
-                onCheckedChange={() => onChange({ ...value, classes: toggle(value.classes, o.value) })}
-              />
-              {o.label}
-            </label>
-          ))}
-        </div>
+      <Group label="Марка">
+        <ChipList
+          items={carBrands.map((b) => ({ key: b, label: b, active: value.brands.includes(b) }))}
+          onToggle={(key) => onChange({ ...value, brands: toggle(value.brands, key), models: [] })}
+        />
+      </Group>
+
+      <Group label="Модель">
+        <ChipList
+          items={models.map((m) => ({ key: m, label: m, active: value.models.includes(m) }))}
+          onToggle={(key) => onChange({ ...value, models: toggle(value.models, key) })}
+        />
+      </Group>
+
+      <Group label="Цвет">
+        <ChipList
+          items={carColors.map((c) => ({ key: c, label: c, active: value.colors.includes(c) }))}
+          onToggle={(key) => onChange({ ...value, colors: toggle(value.colors, key) })}
+        />
+      </Group>
+
+      <Group label="Год выпуска">
+        <ChipList
+          items={carYears.map((y) => ({ key: String(y), label: String(y), active: value.years.includes(y) }))}
+          onToggle={(key) => onChange({ ...value, years: toggle(value.years, Number(key)) })}
+        />
       </Group>
 
       <Group label="Коробка передач">
         <div className="flex flex-wrap gap-3">
           {transmissionOptions.map((o) => (
-            <label key={o.value} className="inline-flex cursor-pointer items-center gap-2 rounded-md border border-border bg-background px-3 py-2 text-sm">
+            <label key={o.value} className="inline-flex cursor-pointer items-center gap-2 rounded-xl border border-border bg-background px-3 py-2 text-sm">
               <Checkbox
                 checked={value.transmissions.includes(o.value)}
                 onCheckedChange={() => onChange({ ...value, transmissions: toggle(value.transmissions, o.value) })}
@@ -68,6 +95,13 @@ export function CatalogFilters({ value, onChange, priceBounds, onReset }: Catalo
             </label>
           ))}
         </div>
+      </Group>
+
+      <Group label="Статус">
+        <ChipList
+          items={statusOptions.map((s) => ({ key: s.value, label: s.label, active: value.statuses.includes(s.value) }))}
+          onToggle={(key) => onChange({ ...value, statuses: toggle(value.statuses, key as CarFleetStatus) })}
+        />
       </Group>
 
       <Group
@@ -98,6 +132,34 @@ export function CatalogFilters({ value, onChange, priceBounds, onReset }: Catalo
         <RotateCcw className="h-4 w-4" />
         Сбросить фильтры
       </Button>
+    </div>
+  );
+}
+
+function ChipList({
+  items,
+  onToggle,
+}: {
+  items: Array<{ key: string; label: string; active: boolean }>;
+  onToggle: (key: string) => void;
+}) {
+  return (
+    <div className="flex flex-wrap gap-2">
+      {items.map((it) => (
+        <button
+          key={it.key}
+          type="button"
+          onClick={() => onToggle(it.key)}
+          className={cn(
+            "rounded-full border px-3 py-1.5 text-xs font-semibold transition",
+            it.active
+              ? "border-accent bg-accent text-accent-foreground"
+              : "border-border bg-background text-muted-foreground hover:border-accent hover:text-foreground",
+          )}
+        >
+          {it.label}
+        </button>
+      ))}
     </div>
   );
 }
