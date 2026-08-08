@@ -27,6 +27,7 @@ export const localBusinessJsonLd = () => ({
   },
   address: {
     "@type": "PostalAddress",
+    streetAddress: "ул. Доватора, 11",
     addressLocality: "Новосибирск",
     addressRegion: "Новосибирская область",
     addressCountry: "RU",
