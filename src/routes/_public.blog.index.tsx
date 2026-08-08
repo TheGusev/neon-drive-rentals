@@ -49,7 +49,7 @@ function Page() {
   return (
     <div className="bg-background text-foreground">
       <div className="mx-auto w-full max-w-5xl py-4 md:py-8">
-        <nav aria-label="breadcrumbs" className="mb-4 text-xs text-muted-foreground">
+        <nav aria-label="breadcrumbs" className="text-soft mb-4 text-xs">
           <Link to="/" className="hover:text-foreground">
             Главная
           </Link>{" "}
@@ -58,7 +58,7 @@ function Page() {
 
         <h1 className="font-display text-3xl font-black md:text-5xl">Блог NSK-RENT</h1>
         <div className="road-line mt-4 w-28" />
-        <p className="mt-3 max-w-2xl text-base text-muted-foreground md:text-lg">
+        <p className="text-soft mt-3 max-w-2xl text-base md:text-lg">
           Гайды и советы по аренде авто в Новосибирске: как выбрать машину, куда съездить, что нужно для
           аренды без залога.
         </p>
@@ -84,7 +84,7 @@ function Page() {
                 <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-card via-card/20 to-transparent" />
               </div>
               <article className="flex flex-1 flex-col p-5 md:p-6">
-                <div className="flex items-center gap-3 text-xs text-muted-foreground">
+                <div className="text-soft flex items-center gap-3 text-xs">
                   <span className="inline-flex items-center gap-1">
                     <Calendar className="h-3 w-3" />
                     {new Date(post.date).toLocaleDateString("ru-RU", { day: "numeric", month: "long", year: "numeric" })}
@@ -95,7 +95,7 @@ function Page() {
                   </span>
                 </div>
                 <h2 className="mt-3 font-display text-xl font-bold group-hover:text-accent">{post.title}</h2>
-                <p className="mt-2 flex-1 text-sm text-muted-foreground">{post.description}</p>
+                <p className="text-soft mt-2 flex-1 text-sm">{post.description}</p>
                 <span className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-accent">
                   Читать <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
                 </span>
