@@ -181,6 +181,13 @@
   --prose-rule: oklch(0.52 0.05 258);
 }
 
+/* Light theme: darker link colour so it clears WCAG AA on white. */
+.clean-light .prose-theme,
+.clean-light.prose-theme {
+  --prose-link: oklch(0.52 0.16 45);
+}
+
+
 .prose-theme :where(code):not(:where(pre code)) {
   background-color: var(--secondary);
   border: 1px solid var(--prose-rule);
