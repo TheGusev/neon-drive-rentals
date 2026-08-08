@@ -13,6 +13,5 @@ export const tariffs: TariffInfo[] = [
   { id: "outside", title: "За пределы", description: "Другие регионы", multiplier: 1.25 },
 ];
 
-export const DELIVERY_PRICE = 1500;
 
 export const getTariff = (id: BookingTariff) => tariffs.find((t) => t.id === id) ?? tariffs[0];
