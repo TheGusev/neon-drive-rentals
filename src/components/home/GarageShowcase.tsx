@@ -95,8 +95,9 @@ export function GarageShowcase({ compact = false }: { compact?: boolean }) {
     const el = stripRef.current;
     if (!el) return;
     const step = (el.firstElementChild as HTMLElement | null)?.offsetWidth ?? 280;
-    el.scrollBy({ left: dir * (step + 12), behavior: "smooth" });
+    el.scrollBy({ left: dir * (step + 12), behavior: reducedMotion ? "auto" : "smooth" });
   };
+
 
   return (
     <TooltipProvider delayDuration={150}>
