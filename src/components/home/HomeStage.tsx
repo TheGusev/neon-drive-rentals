@@ -33,6 +33,8 @@ import { HeroBackdrop } from "./HeroBackdrop";
 import { PICKUP_POINT } from "@/mocks/pickupPoints";
 import { NfsSideMenu } from "./NfsSideMenu";
 import { SeoTiles } from "./SeoTiles";
+import { GarageShowcase } from "./GarageShowcase";
+
 
 const benefits = [
   { icon: Wallet, title: "Честные цены", text: "без переплат" },
