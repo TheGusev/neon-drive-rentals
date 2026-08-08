@@ -1,16 +1,12 @@
-import { useMemo, useRef, useState } from "react";
+import { useMemo } from "react";
 import { Link } from "@tanstack/react-router";
 import { format, parseISO } from "date-fns";
 import { ru } from "date-fns/locale";
 import {
   ArrowRight,
   CalendarIcon,
-  ChevronLeft,
-  ChevronRight,
   Clock,
-  Fuel,
   MapPin,
-  Menu,
   Search,
   Sparkles,
   Wallet,
@@ -24,14 +20,12 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
 import { cars } from "@/mocks/cars";
 import { tariffs, getTariff } from "@/mocks/tariffs";
-import type { BookingTariff, Car } from "@/types/domain";
+import type { BookingTariff } from "@/types/domain";
 import { HomeBookingProvider, useHomeBooking } from "./HomeBookingContext";
-import { isCarAvailable, nextBusyUntil, splitAvailability } from "@/lib/availability";
+import { splitAvailability } from "@/lib/availability";
 import { daysBetween, formatRub } from "@/lib/bookingDraft";
-import { CarQuickView } from "./CarQuickView";
 import { HeroBackdrop } from "./HeroBackdrop";
 import { PICKUP_POINT } from "@/mocks/pickupPoints";
-import { NfsSideMenu } from "./NfsSideMenu";
 import { SeoTiles } from "./SeoTiles";
 import { GarageShowcase } from "./GarageShowcase";
 
