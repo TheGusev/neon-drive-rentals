@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { format } from "date-fns";
-import { ArrowRight, ChevronLeft, ChevronRight, Fuel } from "lucide-react";
+import { ArrowRight, ChevronLeft, ChevronRight, Eye, Fuel } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { cars } from "@/mocks/cars";
