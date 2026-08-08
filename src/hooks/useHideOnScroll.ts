@@ -1,5 +1,7 @@
 import { useEffect, type RefObject } from "react";
 
+import { prefersReducedMotion } from "./useReducedMotion";
+
 type Options = {
   /** Always visible while scroll position is above this offset. */
   topOffset?: number;
