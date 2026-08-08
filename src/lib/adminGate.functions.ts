@@ -9,7 +9,12 @@ function sessionConfig() {
     password: process.env["SESSION_SECRET"]!,
     name: "nsk-admin",
     maxAge: 60 * 60 * 24 * 7,
-    cookie: { httpOnly: true, secure: true, sameSite: "lax" as const, path: "/" },
+    cookie: {
+      httpOnly: true,
+      secure: process.env["NODE_ENV"] === "production",
+      sameSite: "lax" as const,
+      path: "/",
+    },
   };
 }
 
