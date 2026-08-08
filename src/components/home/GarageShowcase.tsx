@@ -262,6 +262,8 @@ function GarageCard({
         <button
           type="button"
           aria-label={`Быстрый просмотр: ${car.brand} ${car.model}`}
+          onMouseEnter={() => prefetch(car, true)}
+          onFocus={() => prefetch(car, true)}
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
@@ -269,6 +271,7 @@ function GarageCard({
           }}
           className="absolute right-2 top-2 grid h-7 w-7 place-items-center rounded-md border border-border/60 bg-background/75 text-foreground backdrop-blur transition hover:border-accent hover:text-[color:var(--neon-blue)]"
         >
+
           <Eye className="h-3.5 w-3.5" />
         </button>
       </div>
