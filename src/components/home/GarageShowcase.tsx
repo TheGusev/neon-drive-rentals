@@ -310,7 +310,9 @@ function GarageCard({
             </span>
           )}
         </p>
-        <p className="mt-1 text-[10px] text-muted-foreground">Нажмите, чтобы посмотреть и забронировать</p>
+        <p className="mt-1 text-[10px] text-muted-foreground">
+          Клик — страница авто · иконка «глаз» — быстрый просмотр
+        </p>
       </TooltipContent>
     </Tooltip>
   );
