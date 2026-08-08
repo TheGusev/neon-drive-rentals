@@ -29,10 +29,12 @@ export function useHideOnScroll(
       if (el.dataset["hidden"] !== next) el.dataset["hidden"] = next;
     };
 
-    if (locked) {
+    // Reduced motion: keep the control permanently visible — no fly-out.
+    if (locked || prefersReducedMotion()) {
       set(false);
       return;
     }
+
 
     let lastY = window.scrollY;
     let down = 0;
