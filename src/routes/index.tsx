@@ -5,7 +5,7 @@ import { FaqBlock } from "@/components/home/FaqBlock";
 import { HomeIntro } from "@/components/home/HomeIntro";
 import { SITE_URL, faqJsonLd, jsonLdScript, localBusinessJsonLd } from "@/lib/seo";
 import { ThemeProvider, useTheme } from "@/components/layout/ThemeProvider";
-import { ThemeToggle } from "@/components/layout/ThemeToggle";
+import { HomeControls } from "@/components/home/HomeControls";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { FavoritesProvider } from "@/state/FavoritesContext";
 
