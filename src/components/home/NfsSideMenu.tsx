@@ -2,6 +2,7 @@ import type React from "react";
 import { Car, Clock, MapPin, ShieldCheck, Zap } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { useCoarsePointer } from "@/hooks/useCoarsePointer";
 
 const items = [
   {
