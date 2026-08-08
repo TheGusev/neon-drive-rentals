@@ -4,6 +4,10 @@ import { HomeDesktop, HomeMobile } from "@/components/home/HomeStage";
 import { FaqBlock } from "@/components/home/FaqBlock";
 import { HomeIntro } from "@/components/home/HomeIntro";
 import { SITE_URL, faqJsonLd, jsonLdScript, localBusinessJsonLd } from "@/lib/seo";
+import { ThemeProvider, useTheme } from "@/components/layout/ThemeProvider";
+import { ThemeToggle } from "@/components/layout/ThemeToggle";
+import { SiteFooter } from "@/components/layout/SiteFooter";
+import { FavoritesProvider } from "@/state/FavoritesContext";
 
 const TITLE = "Аренда авто в Новосибирске от 1 800 ₽/сутки — японские кей-кары | NSK-RENT";
 const DESC =
@@ -28,7 +32,25 @@ export const Route = createFileRoute("/")({
 
 function Home() {
   return (
-    <>
+    <ThemeProvider>
+      <FavoritesProvider>
+        <HomeShell />
+      </FavoritesProvider>
+    </ThemeProvider>
+  );
+}
+
+function HomeShell() {
+  const { themeClass } = useTheme();
+
+  return (
+    <div className={`${themeClass} min-h-screen bg-background text-foreground transition-colors duration-300`}>
+      <div className="pointer-events-none fixed right-3 top-[max(env(safe-area-inset-top),0.75rem)] z-30 md:right-6 md:top-6">
+        <div className="pointer-events-auto rounded-full bg-background/70 p-0.5 backdrop-blur">
+          <ThemeToggle />
+        </div>
+      </div>
+
       <div className="hidden md:block">
         <HomeDesktop heroImage={heroDrive} />
       </div>
@@ -42,6 +64,8 @@ function Home() {
         <FaqBlock />
       </div>
 
-    </>
+      <SiteFooter />
+    </div>
   );
+
 }
