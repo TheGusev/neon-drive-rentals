@@ -87,7 +87,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "apple-mobile-web-app-status-bar-style", content: "black-translucent" },
       { name: "apple-mobile-web-app-title", content: "NSK-RENT" },
       { property: "og:title", content: "NSK-RENT — Drive the Night" },
-      { property: "og:description", content: "Аренда авто в Новосибирске: онлайн-бронирование, электронный договор, доставка по городу." },
+      { property: "og:description", content: "Аренда авто в Новосибирске: онлайн-бронирование, электронный договор, выдача на Доватора, 11." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],

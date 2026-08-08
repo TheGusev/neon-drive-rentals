@@ -103,7 +103,7 @@ export function LandingPage({ h1, lead, breadcrumb, sections, bullets, cars, faq
         <div className="rounded-2xl border border-primary/30 bg-primary/5 p-6 text-center md:p-10">
           <h2 className="font-display text-xl font-bold md:text-2xl">Готовы забронировать?</h2>
           <p className="mt-2 text-sm text-muted-foreground md:text-base">
-            Онлайн-договор за 3 минуты, доставка авто по Новосибирску и области.
+            Онлайн-договор за 3 минуты, выдача на ул. Доватора, 11.
           </p>
           <Button asChild size="lg" className="mt-4 gap-2">
             <Link to="/cars">

@@ -5,7 +5,7 @@ const items = [
   { icon: Car, title: "8 JDM кей-каров", sub: "весь парк из Японии" },
   { icon: ShieldCheck, title: "Правый руль", sub: "оригинал, не распил" },
   { icon: Zap, title: "От 1 800 ₽ / сутки", sub: "город · без переплат" },
-  { icon: MapPin, title: "Доставка авто", sub: "Новосибирск и НСО" },
+  { icon: MapPin, title: "Пункт выдачи", sub: "Доватора, 11" },
   { icon: Clock, title: "Договор за 3 мин", sub: "онлайн + СМС-подпись" },
 ];
 

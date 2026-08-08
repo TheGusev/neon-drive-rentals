@@ -14,7 +14,7 @@ interface FaqBlockProps {
 export function FaqBlock({
   items = faqItems,
   title = "Ответы на частые вопросы",
-  subtitle = "Всё про аренду авто в Новосибирске — залог, документы, страховка, доставка",
+  subtitle = "Всё про аренду авто в Новосибирске — залог, документы, страховка, выдача",
 }: FaqBlockProps) {
   const isMobile = useIsMobile();
   const [open, setOpen] = useState<boolean | undefined>(undefined);
