@@ -30,14 +30,9 @@ import { isCarAvailable, nextBusyUntil, splitAvailability } from "@/lib/availabi
 import { daysBetween, formatRub } from "@/lib/bookingDraft";
 import { CarQuickView } from "./CarQuickView";
 import { HeroBackdrop } from "./HeroBackdrop";
+import { PICKUP_POINT } from "@/mocks/pickupPoints";
 import { NfsSideMenu } from "./NfsSideMenu";
 import { SeoTiles } from "./SeoTiles";
-
-const locations = [
-  { value: "airport", label: "Аэропорт Толмачёво" },
-  { value: "center", label: "Центр, ул. Ленина 1" },
-  { value: "left-bank", label: "Левый берег, пл. Маркса" },
-];
 
 const benefits = [
   { icon: Wallet, title: "Честные цены", text: "без переплат" },
@@ -95,7 +90,7 @@ function HomeDesktopInner({ heroImage: _heroImage }: { heroImage: string }) {
             </div>
 
             <p className="rise-in mt-3 max-w-xl text-base text-foreground/95 drop-shadow-md md:text-lg" style={{ animationDelay: "280ms" }}>
-              Правый руль, честные цены, ключи за 3 минуты. Доставка авто по городу и области.
+              Правый руль, честные цены, ключи за 3 минуты. Выдача авто на ул. Доватора, 11.
             </p>
 
             <div className="rise-in mt-4 inline-flex flex-wrap items-center gap-x-4 gap-y-2 rounded-lg bg-background/60 px-3 py-2 text-xs text-foreground backdrop-blur-md" style={{ animationDelay: "380ms" }}>
@@ -407,7 +402,7 @@ function HomeMobileInner({ heroImage: _heroImage }: { heroImage: string }) {
 // -------- Booking form with live recalculation --------
 
 function QuickBookingForm() {
-  const { from, to, tariff, location, setFrom, setTo, setTariff, setLocation } = useHomeBooking();
+  const { from, to, tariff, setFrom, setTo, setTariff } = useHomeBooking();
 
   const tariffInfo = getTariff(tariff);
   const days = daysBetween(from, to);
@@ -437,17 +432,13 @@ function QuickBookingForm() {
           <label className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
             Место получения
           </label>
-          <Select value={location} onValueChange={setLocation}>
-            <SelectTrigger className="w-full">
-              <MapPin className="mr-1 h-4 w-4 text-accent" />
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              {locations.map((l) => (
-                <SelectItem key={l.value} value={l.value}>{l.label}</SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          <div className="flex items-start gap-2 rounded-md border border-border bg-muted/40 px-3 py-2">
+            <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-accent" />
+            <div className="min-w-0">
+              <p className="text-xs font-semibold leading-tight">{PICKUP_POINT.address}</p>
+              <p className="text-[10px] text-muted-foreground">Единственный пункт выдачи · {PICKUP_POINT.hours}</p>
+            </div>
+          </div>
         </div>
 
         <div className="grid grid-cols-2 gap-2">

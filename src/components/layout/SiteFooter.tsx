@@ -19,11 +19,11 @@ export function SiteFooter() {
         <div>
           <p className="font-display text-xl font-black tracking-widest">NSK-RENT</p>
           <p className="mt-2 text-sm text-muted-foreground">
-            Прокат японских кей-каров в Новосибирске. Доставка по городу и области, договор онлайн.
+            Прокат японских кей-каров в Новосибирске. Пункт выдачи — ул. Доватора, 11, договор онлайн.
           </p>
           <p className="mt-4 inline-flex items-start gap-2 text-sm text-muted-foreground">
             <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-accent" />
-            <span>{CONTACTS.city}</span>
+            <span>{CONTACTS.address} · {CONTACTS.city}</span>
           </p>
           <p className="mt-2 inline-flex items-start gap-2 text-sm text-muted-foreground">
             <Clock className="mt-0.5 h-4 w-4 shrink-0 text-accent" />

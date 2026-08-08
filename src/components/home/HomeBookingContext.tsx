@@ -1,5 +1,6 @@
 import { createContext, useContext, useMemo, useState, type ReactNode } from "react";
 import type { BookingTariff } from "@/types/domain";
+import { PICKUP_POINT } from "@/mocks/pickupPoints";
 
 interface HomeBookingState {
   from: string | undefined;
@@ -24,7 +25,7 @@ export function HomeBookingProvider({ children }: { children: ReactNode }) {
   const [from, setFrom] = useState<string | undefined>(() => isoInDays(1));
   const [to, setTo] = useState<string | undefined>(() => isoInDays(3));
   const [tariff, setTariff] = useState<BookingTariff>("city");
-  const [location, setLocation] = useState("airport");
+  const [location, setLocation] = useState(PICKUP_POINT.id);
 
   const value = useMemo(
     () => ({ from, to, tariff, location, setFrom, setTo, setTariff, setLocation }),

@@ -7,7 +7,7 @@ import { toast } from "sonner";
 
 import { getCarById } from "@/mocks/cars";
 import { getPickupPoint } from "@/mocks/pickupPoints";
-import { getTariff, DELIVERY_PRICE } from "@/mocks/tariffs";
+import { getTariff } from "@/mocks/tariffs";
 import { calcPrice, formatRub, getDraft, saveDraft } from "@/lib/bookingDraft";
 import type { BookingDraft } from "@/types/domain";
 
@@ -52,7 +52,6 @@ function ContractPage() {
       pricePerDay: car.pricePerDay,
       deposit: car.deposit ?? 5000,
       draft,
-      deliveryPrice: DELIVERY_PRICE,
       tariffMultiplier: tariff.multiplier,
     });
   }, [draft, car, tariff]);
@@ -83,7 +82,7 @@ function ContractPage() {
       `Автомобиль: ${car.brand} ${car.model}, ${car.year}, ${car.color}`,
       `Период: ${startLabel} ${draft.startTime} — ${endLabel} ${draft.endTime}`,
       `Тариф: ${tariff?.title ?? "—"}`,
-      pickup ? `Точка выдачи: ${pickup.title}` : `Доставка: ${draft.deliveryAddress ?? "—"}`,
+      `Пункт выдачи: ${pickup?.address ?? "Новосибирск, ул. Доватора, 11"}`,
       `Залог: ${formatRub(car.deposit ?? 0)}`,
       `Итого к оплате: ${formatRub(breakdown.total)}`,
       `Телефон арендатора: ${draft.phone}`,
@@ -133,7 +132,7 @@ function ContractPage() {
             <dl className="space-y-2 text-sm">
               <Row label="Автомобиль" value={`${car.brand} ${car.model}, ${car.year}`} />
               <Row label="Период" value={`${startLabel} ${draft.startTime} — ${endLabel} ${draft.endTime}`} />
-              {pickup && <Row label="Точка выдачи" value={pickup.title} />}
+              {pickup && <Row label="Пункт выдачи" value={pickup.address} />}
               <Row label="Тариф" value={tariff!.title} />
               <Row label="Итого" value={formatRub(breakdown.total)} strong />
             </dl>

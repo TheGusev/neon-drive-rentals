@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import type { Car } from "@/types/domain";
 import { getTariff, tariffs } from "@/mocks/tariffs";
+import { PICKUP_POINT } from "@/mocks/pickupPoints";
 import { useHomeBooking } from "./HomeBookingContext";
 import { calcPrice, daysBetween, formatRub } from "@/lib/bookingDraft";
 import { isCarAvailable, nextBusyUntil } from "@/lib/availability";
@@ -20,15 +21,9 @@ interface Props {
 }
 
 export function CarQuickView({ car, onClose }: Props) {
-  const { from, to, tariff, location } = useHomeBooking();
+  const { from, to, tariff } = useHomeBooking();
   const [confirmOpen, setConfirmOpen] = useState(false);
   const open = !!car && !confirmOpen;
-
-  const locationLabels: Record<string, string> = {
-    airport: "Аэропорт Толмачёво",
-    center: "Центр, ул. Ленина 1",
-    "left-bank": "Левый берег, пл. Маркса",
-  };
 
   return (
     <>
@@ -51,7 +46,7 @@ export function CarQuickView({ car, onClose }: Props) {
         from={from}
         to={to}
         tariff={tariff}
-        locationLabel={locationLabels[location]}
+        locationLabel={PICKUP_POINT.address}
         onClose={() => {
           setConfirmOpen(false);
           onClose();
@@ -83,8 +78,7 @@ function QuickBody({
   const price = calcPrice({
     pricePerDay: car.pricePerDay,
     deposit: car.deposit ?? 0,
-    draft: { startDate: from, endDate: to, tariff, delivery: false },
-    deliveryPrice: 0,
+    draft: { startDate: from, endDate: to, tariff },
     tariffMultiplier: tariffInfo.multiplier,
   });
   const pricePerDayInTariff = Math.round(car.pricePerDay * tariffInfo.multiplier);

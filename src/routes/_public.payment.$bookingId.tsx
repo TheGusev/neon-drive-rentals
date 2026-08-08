@@ -6,7 +6,7 @@ import { ru } from "date-fns/locale";
 
 import { getCarById } from "@/mocks/cars";
 import { getPickupPoint } from "@/mocks/pickupPoints";
-import { getTariff, DELIVERY_PRICE } from "@/mocks/tariffs";
+import { getTariff } from "@/mocks/tariffs";
 import {
   calcPrice,
   formatRub,
@@ -55,7 +55,6 @@ function PaymentPage() {
       pricePerDay: car.pricePerDay,
       deposit: car.deposit ?? 5000,
       draft,
-      deliveryPrice: DELIVERY_PRICE,
       tariffMultiplier: tariff.multiplier,
     });
   }, [draft, car, tariff]);
@@ -115,7 +114,7 @@ function PaymentPage() {
                 </div>
                 {pickup && (
                   <div className="mt-1 flex items-center gap-1 text-[11px] text-muted-foreground">
-                    <MapPin className="h-3 w-3" />{pickup.title}
+                    <MapPin className="h-3 w-3" />{pickup.address}
                   </div>
                 )}
               </div>
@@ -156,7 +155,7 @@ function PaymentPage() {
                 </span>
                 <span>
                   <span className="block font-medium text-foreground">Инструкцию по получению</span>
-                  <span className="block text-xs text-muted-foreground">Адрес, контакты менеджера и время подачи</span>
+                  <span className="block text-xs text-muted-foreground">Адрес пункта выдачи, контакты менеджера и время получения</span>
                 </span>
               </li>
             </ul>

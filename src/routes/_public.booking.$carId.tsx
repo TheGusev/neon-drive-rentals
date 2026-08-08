@@ -1,12 +1,12 @@
 import { createFileRoute, Link, notFound, useNavigate } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
-import { CalendarIcon, MapPin, Truck } from "lucide-react";
+import { CalendarIcon, MapPin } from "lucide-react";
 import { format, parseISO } from "date-fns";
 import { ru } from "date-fns/locale";
 
 import { getCarById } from "@/mocks/cars";
-import { pickupPoints } from "@/mocks/pickupPoints";
-import { tariffs, DELIVERY_PRICE, getTariff } from "@/mocks/tariffs";
+import { PICKUP_POINT } from "@/mocks/pickupPoints";
+import { tariffs, getTariff } from "@/mocks/tariffs";
 import {
   calcPrice,
   createDraft,
@@ -19,14 +19,14 @@ import type { BookingDraft, BookingTariff } from "@/types/domain";
 import { SectionCard } from "@/components/checkout/SectionCard";
 import { StickyBottomBar } from "@/components/checkout/StickyBottomBar";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Switch } from "@/components/ui/switch";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/_public/booking/$carId")({
-  validateSearch: (search: Record<string, unknown>) => ({
+  validateSearch: (
+    search: Record<string, unknown>,
+  ): { from?: string; to?: string; tariff?: BookingTariff } => ({
     from: typeof search.from === "string" ? search.from : undefined,
     to: typeof search.to === "string" ? search.to : undefined,
     tariff:
@@ -47,9 +47,9 @@ export const Route = createFileRoute("/_public/booking/$carId")({
     return {
       meta: [
         { title },
-        { name: "description", content: "Выберите даты, точку выдачи и тариф — расчёт стоимости в реальном времени." },
+        { name: "description", content: "Выберите даты и тариф — расчёт стоимости в реальном времени. Выдача на ул. Доватора, 11." },
         { property: "og:title", content: title },
-        { property: "og:description", content: "Онлайн-бронирование авто в Новосибирске: даты, тариф, доставка." },
+        { property: "og:description", content: "Онлайн-бронирование авто в Новосибирске: даты, тариф, выдача на Доватора, 11." },
       ],
     };
   },
@@ -96,7 +96,6 @@ function BookingPage() {
       pricePerDay: car.pricePerDay,
       deposit: car.deposit ?? 5000,
       draft,
-      deliveryPrice: DELIVERY_PRICE,
       tariffMultiplier: tariff.multiplier,
     });
   }, [draft, car.pricePerDay, car.deposit, tariff.multiplier]);
@@ -125,22 +124,6 @@ function BookingPage() {
       anchor: "section-dates",
       label: "Даты аренды",
       message: "Возврат должен быть позже получения — минимум 1 сутки",
-    });
-  }
-  if (!draft?.pickupPointId) {
-    errors.push({
-      key: "pickup",
-      anchor: "section-pickup",
-      label: "Точка выдачи",
-      message: "Выберите, где забрать автомобиль",
-    });
-  }
-  if (draft?.delivery && !draft.deliveryAddress?.trim()) {
-    errors.push({
-      key: "delivery",
-      anchor: "section-delivery",
-      label: "Адрес доставки",
-      message: "Укажите адрес: улица, дом, подъезд",
     });
   }
   const valid = errors.length === 0;
@@ -219,55 +202,27 @@ function BookingPage() {
                 </div>
               </SectionCard>
 
-              <SectionCard id="section-pickup" title="Точка выдачи" error={errorFor("pickup")}>
-                <div className="space-y-2">
-                  {pickupPoints.map((p) => {
-                    const active = draft.pickupPointId === p.id;
-                    return (
-                      <button
-                        key={p.id}
-                        type="button"
-                        onClick={() => patch({ pickupPointId: p.id })}
-                        className={cn(
-                          "flex w-full items-start gap-3 rounded-2xl border bg-card p-3 text-left transition",
-                          active ? "border-accent ring-2 ring-accent/20" : "border-border",
-                        )}
-                      >
-                        <MapPin className={cn("mt-0.5 h-5 w-5 shrink-0", active ? "text-accent" : "text-muted-foreground")} />
-                        <div className="min-w-0 flex-1">
-                          <div className="text-sm font-semibold">{p.title}</div>
-                          <div className="text-xs text-muted-foreground">{p.address}</div>
-                          <div className="text-[11px] text-muted-foreground">{p.hours}</div>
-                        </div>
-                      </button>
-                    );
-                  })}
+              <SectionCard id="section-pickup" title="Выдача автомобиля">
+                <div className="flex items-start gap-3 rounded-2xl border border-accent/40 bg-accent/5 p-3">
+                  <MapPin className="mt-0.5 h-5 w-5 shrink-0 text-accent" />
+                  <div className="min-w-0 flex-1">
+                    <div className="text-sm font-semibold">{PICKUP_POINT.address}</div>
+                    <div className="text-xs text-muted-foreground">{PICKUP_POINT.hours}</div>
+                    <a
+                      href={PICKUP_POINT.mapUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="mt-1 inline-block text-xs font-medium text-accent underline underline-offset-2"
+                    >
+                      Показать на карте
+                    </a>
+                    <p className="mt-2 text-[11px] leading-tight text-muted-foreground">
+                      Это наш единственный пункт выдачи. Доставка автомобиля не осуществляется — забрать и вернуть авто можно только здесь.
+                    </p>
+                  </div>
                 </div>
               </SectionCard>
 
-              <SectionCard id="section-delivery" error={errorFor("delivery")}>
-                <div className="flex items-center justify-between gap-3">
-                  <div className="flex items-center gap-3">
-                    <Truck className="h-5 w-5 text-muted-foreground" />
-                    <div>
-                      <div className="text-sm font-semibold">Доставка по адресу</div>
-                      <div className="text-xs text-muted-foreground">+{formatRub(DELIVERY_PRICE)} к заказу</div>
-                    </div>
-                  </div>
-                  <Switch
-                    checked={draft.delivery}
-                    onCheckedChange={(v) => patch({ delivery: v })}
-                  />
-                </div>
-                {draft.delivery && (
-                  <Input
-                    placeholder="Улица, дом, подъезд"
-                    value={draft.deliveryAddress ?? ""}
-                    onChange={(e) => patch({ deliveryAddress: e.target.value })}
-                    className="mt-3 h-11 rounded-xl border-border bg-card"
-                  />
-                )}
-              </SectionCard>
 
               <SectionCard title="Тариф">
                 <div className="grid grid-cols-3 gap-2">
