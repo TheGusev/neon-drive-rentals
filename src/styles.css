@@ -155,7 +155,9 @@
   --tw-prose-body: var(--foreground);
   --tw-prose-headings: var(--foreground);
   --tw-prose-lead: var(--prose-soft);
-  --tw-prose-links: var(--accent);
+  --prose-link: var(--accent);
+  --tw-prose-links: var(--prose-link);
+
   --tw-prose-bold: var(--foreground);
   --tw-prose-counters: var(--prose-soft);
   --tw-prose-bullets: var(--accent);
