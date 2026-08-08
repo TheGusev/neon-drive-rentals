@@ -129,22 +129,6 @@ function BookingPage() {
       message: "Возврат должен быть позже получения — минимум 1 сутки",
     });
   }
-  if (!draft?.pickupPointId) {
-    errors.push({
-      key: "pickup",
-      anchor: "section-pickup",
-      label: "Точка выдачи",
-      message: "Выберите, где забрать автомобиль",
-    });
-  }
-  if (draft?.delivery && !draft.deliveryAddress?.trim()) {
-    errors.push({
-      key: "delivery",
-      anchor: "section-delivery",
-      label: "Адрес доставки",
-      message: "Укажите адрес: улица, дом, подъезд",
-    });
-  }
   const valid = errors.length === 0;
   const errorFor = (key: string) =>
     showErrors ? (errors.find((e) => e.key === key)?.message ?? null) : null;
@@ -221,55 +205,27 @@ function BookingPage() {
                 </div>
               </SectionCard>
 
-              <SectionCard id="section-pickup" title="Точка выдачи" error={errorFor("pickup")}>
-                <div className="space-y-2">
-                  {pickupPoints.map((p) => {
-                    const active = draft.pickupPointId === p.id;
-                    return (
-                      <button
-                        key={p.id}
-                        type="button"
-                        onClick={() => patch({ pickupPointId: p.id })}
-                        className={cn(
-                          "flex w-full items-start gap-3 rounded-2xl border bg-card p-3 text-left transition",
-                          active ? "border-accent ring-2 ring-accent/20" : "border-border",
-                        )}
-                      >
-                        <MapPin className={cn("mt-0.5 h-5 w-5 shrink-0", active ? "text-accent" : "text-muted-foreground")} />
-                        <div className="min-w-0 flex-1">
-                          <div className="text-sm font-semibold">{p.title}</div>
-                          <div className="text-xs text-muted-foreground">{p.address}</div>
-                          <div className="text-[11px] text-muted-foreground">{p.hours}</div>
-                        </div>
-                      </button>
-                    );
-                  })}
+              <SectionCard id="section-pickup" title="Выдача автомобиля">
+                <div className="flex items-start gap-3 rounded-2xl border border-accent/40 bg-accent/5 p-3">
+                  <MapPin className="mt-0.5 h-5 w-5 shrink-0 text-accent" />
+                  <div className="min-w-0 flex-1">
+                    <div className="text-sm font-semibold">{PICKUP_POINT.address}</div>
+                    <div className="text-xs text-muted-foreground">{PICKUP_POINT.hours}</div>
+                    <a
+                      href={PICKUP_POINT.mapUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="mt-1 inline-block text-xs font-medium text-accent underline underline-offset-2"
+                    >
+                      Показать на карте
+                    </a>
+                    <p className="mt-2 text-[11px] leading-tight text-muted-foreground">
+                      Это наш единственный пункт выдачи. Доставка автомобиля не осуществляется — забрать и вернуть авто можно только здесь.
+                    </p>
+                  </div>
                 </div>
               </SectionCard>
 
-              <SectionCard id="section-delivery" error={errorFor("delivery")}>
-                <div className="flex items-center justify-between gap-3">
-                  <div className="flex items-center gap-3">
-                    <Truck className="h-5 w-5 text-muted-foreground" />
-                    <div>
-                      <div className="text-sm font-semibold">Доставка по адресу</div>
-                      <div className="text-xs text-muted-foreground">+{formatRub(DELIVERY_PRICE)} к заказу</div>
-                    </div>
-                  </div>
-                  <Switch
-                    checked={draft.delivery}
-                    onCheckedChange={(v) => patch({ delivery: v })}
-                  />
-                </div>
-                {draft.delivery && (
-                  <Input
-                    placeholder="Улица, дом, подъезд"
-                    value={draft.deliveryAddress ?? ""}
-                    onChange={(e) => patch({ deliveryAddress: e.target.value })}
-                    className="mt-3 h-11 rounded-xl border-border bg-card"
-                  />
-                )}
-              </SectionCard>
 
               <SectionCard title="Тариф">
                 <div className="grid grid-cols-3 gap-2">
