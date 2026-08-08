@@ -249,7 +249,7 @@ function HomeMobileInner({ heroImage: _heroImage }: { heroImage: string }) {
   const scrollBy = (delta: number) => stripRef.current?.scrollBy({ left: delta, behavior: "smooth" });
 
   return (
-    <div className="nfs-theme relative min-h-[100svh] overflow-hidden bg-background text-foreground">
+    <div className="relative min-h-[100svh] overflow-hidden bg-background text-foreground">
       <HeroBackdrop />
 
       {/* Top overlay bar: hamburger menu (does not shift layout) */}
@@ -266,7 +266,7 @@ function HomeMobileInner({ heroImage: _heroImage }: { heroImage: string }) {
             </Button>
 
           </SheetTrigger>
-          <SheetContent side="left" className="nfs-theme w-[86vw] max-w-sm overflow-y-auto bg-background p-5 text-foreground">
+          <SheetContent side="left" className="w-[86vw] max-w-sm overflow-y-auto bg-background p-5 text-foreground">
             <p className="text-[10px] uppercase tracking-[0.5em] text-[color:var(--neon-blue)]">Nsk · JDM</p>
             <p className="mt-1 font-display text-3xl font-black">
               <span className="logo-neon">NSK-RENT</span>
@@ -278,6 +278,10 @@ function HomeMobileInner({ heroImage: _heroImage }: { heroImage: string }) {
               {[
                 { to: "/", label: "Главная" },
                 { to: "/cars", label: "Автопарк" },
+                { to: "/rent/novosibirsk", label: "Аренда в Новосибирске" },
+                { to: "/rent/bez-zaloga", label: "Аренда без залога" },
+                { to: "/kei-cars", label: "Кей-кары из Японии" },
+                { to: "/blog", label: "Блог" },
                 { to: "/profile", label: "Личный кабинет" },
               ].map((n) => (
                 <Link
@@ -341,7 +345,7 @@ function HomeMobileInner({ heroImage: _heroImage }: { heroImage: string }) {
                   Быстрое бронирование
                 </Button>
               </SheetTrigger>
-              <SheetContent side="bottom" className="nfs-theme max-h-[92svh] overflow-y-auto rounded-t-2xl bg-background p-5 text-foreground">
+              <SheetContent side="bottom" className="max-h-[92svh] overflow-y-auto rounded-t-2xl bg-background p-5 text-foreground">
                 <div className="pt-2">
                   <QuickBookingForm />
                 </div>
@@ -507,9 +511,9 @@ function QuickBookingForm() {
         </div>
 
         <Button asChild size="lg" className="mt-1 w-full gap-2 font-bold uppercase tracking-wider md:pulse-glow">
-          <Link to="/cars">
+          <Link to="/cars" search={{ from, to }}>
             <Search className="h-4 w-4" />
-            Найти авто
+            Найти автомобиль
             <ArrowRight className="ml-auto h-4 w-4" />
           </Link>
         </Button>
