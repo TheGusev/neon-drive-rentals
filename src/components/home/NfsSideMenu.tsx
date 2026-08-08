@@ -1,3 +1,4 @@
+import type React from "react";
 import { Car, Clock, MapPin, ShieldCheck, Zap } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -11,9 +12,11 @@ const items = [
 
 export function NfsSideMenu({
   orientation = "vertical",
+  animate = true,
   className,
 }: {
   orientation?: "vertical" | "horizontal";
+  animate?: boolean;
   className?: string;
 }) {
   const horizontal = orientation === "horizontal";
@@ -32,10 +35,11 @@ export function NfsSideMenu({
         <div
           key={it.title}
           className={cn(
-            "nfs-tile group flex items-center gap-3 rounded-r-xl border border-l-2 border-border/50 border-l-[color:var(--neon-blue)]/70 bg-background/55 py-2.5 pl-3 pr-4 backdrop-blur-md transition",
+            "group flex items-center gap-3 rounded-r-xl border border-l-2 border-border/50 border-l-[color:var(--neon-blue)]/70 bg-background/55 py-2.5 pl-3 pr-4 backdrop-blur-md transition",
             horizontal && "shrink-0 rounded-xl py-2 pr-3",
+            animate && "garage-in",
           )}
-          style={{ animationDelay: `${100 + i * 80}ms` }}
+          style={{ "--i": i } as React.CSSProperties}
         >
           <span className="grid h-9 w-9 shrink-0 place-items-center rounded-md bg-[color:var(--neon-blue)]/15 text-[color:var(--neon-blue)] transition group-hover:bg-[color:var(--neon-orange)]/20 group-hover:text-[color:var(--neon-orange)]">
             <it.icon className="h-4 w-4" />

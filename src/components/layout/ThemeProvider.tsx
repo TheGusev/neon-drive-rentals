@@ -32,7 +32,15 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 
 
   useEffect(() => {
-    document.documentElement.style.colorScheme = theme;
+    const root = document.documentElement;
+    root.style.colorScheme = theme;
+    // Заглушаем переходы/анимации на момент смены темы — без «моргания».
+    root.classList.add("theme-switching");
+    const id = window.setTimeout(() => root.classList.remove("theme-switching"), 200);
+    return () => {
+      window.clearTimeout(id);
+      root.classList.remove("theme-switching");
+    };
   }, [theme]);
 
   const toggle = useCallback(() => {
