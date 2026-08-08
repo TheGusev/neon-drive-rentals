@@ -15,13 +15,13 @@ export const Route = createFileRoute("/_public/blog/$slug")({
   component: Page,
   head: ({ loaderData, params }) => {
     if (!loaderData) {
-      return { meta: [{ title: "Статья не найдена — RentSib" }, { name: "robots", content: "noindex" }] };
+      return { meta: [{ title: "Статья не найдена — NSK-RENT" }, { name: "robots", content: "noindex" }] };
     }
     const { post } = loaderData;
     const url = `${SITE_URL}/blog/${params.slug}`;
     return {
       meta: [
-        { title: `${post.title} | RentSib` },
+        { title: `${post.title} | NSK-RENT` },
         { name: "description", content: post.description },
         { name: "keywords", content: post.keywords.join(", ") },
         { property: "og:title", content: post.title },
@@ -46,8 +46,8 @@ export const Route = createFileRoute("/_public/blog/$slug")({
           headline: post.title,
           description: post.description,
           datePublished: post.date,
-          author: { "@type": "Organization", name: "RentSib" },
-          publisher: { "@type": "Organization", name: "RentSib", url: SITE_URL },
+          author: { "@type": "Organization", name: "NSK-RENT" },
+          publisher: { "@type": "Organization", name: "NSK-RENT", url: SITE_URL },
           mainEntityOfPage: url,
           keywords: post.keywords.join(", "),
         }),

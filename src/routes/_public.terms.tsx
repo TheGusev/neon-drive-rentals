@@ -3,9 +3,9 @@ import { CONTACTS, LEGAL } from "@/lib/contacts";
 import { SITE_URL, breadcrumbJsonLd, jsonLdScript } from "@/lib/seo";
 
 const URL = `${SITE_URL}/terms`;
-const TITLE = "Пользовательское соглашение — RentSib";
+const TITLE = "Пользовательское соглашение — NSK-RENT";
 const DESC =
-  "Условия пользования сайтом rentsib.ru и правила аренды автомобиля: требования к арендатору, оплата, депозит, отмена брони.";
+  "Условия пользования сайтом nsk-rent.ru и правила аренды автомобиля: требования к арендатору, оплата, депозит, отмена брони.";
 
 export const Route = createFileRoute("/_public/terms")({
   component: Page,
@@ -46,7 +46,7 @@ function Page() {
 
       <div className="prose prose-theme mt-6 max-w-none prose-headings:font-display">
         <p>
-          Соглашение регулирует использование сайта rentsib.ru, принадлежащего {LEGAL.entity} (
+          Соглашение регулирует использование сайта nsk-rent.ru, принадлежащего {LEGAL.entity} (
           {LEGAL.ogrnip}, {LEGAL.inn}). Начиная пользоваться сайтом, вы принимаете его условия.
         </p>
 

@@ -36,7 +36,7 @@ function AdminSidebar() {
             <Car className="h-4 w-4" />
           </div>
           <div className="min-w-0">
-            <div className="truncate text-sm font-bold">prokatsib.ru</div>
+            <div className="truncate text-sm font-bold">nsk-rent.ru</div>
             <div className="truncate text-[10px] uppercase tracking-widest text-muted-foreground">
               Панель управления
             </div>

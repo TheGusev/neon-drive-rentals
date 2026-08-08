@@ -5,7 +5,7 @@ import { faqItems } from "@/mocks/faq";
 import { SITE_URL, breadcrumbJsonLd, jsonLdScript } from "@/lib/seo";
 
 const URL = `${SITE_URL}/kei-cars`;
-const TITLE = "Кей-кары из Японии в аренду — JDM автопарк | RentSib";
+const TITLE = "Кей-кары из Японии в аренду — JDM автопарк | NSK-RENT";
 const DESC =
   "Аренда японских кей-каров в Новосибирске: Honda N-BOX, Suzuki Wagon R, Nissan Dayz. Правый руль, оригинал из Японии, расход 3–4 л/100 км.";
 

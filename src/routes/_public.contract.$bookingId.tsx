@@ -20,9 +20,9 @@ import { Checkbox } from "@/components/ui/checkbox";
 export const Route = createFileRoute("/_public/contract/$bookingId")({
   head: () => ({
     meta: [
-      { title: "Подписание договора — RentSib" },
+      { title: "Подписание договора — NSK-RENT" },
       { name: "description", content: "Электронная подпись договора аренды авто по SMS." },
-      { property: "og:title", content: "Подписание договора — RentSib" },
+      { property: "og:title", content: "Подписание договора — NSK-RENT" },
       { property: "og:description", content: "ПЭП по SMS, скачивание PDF." },
     ],
   }),

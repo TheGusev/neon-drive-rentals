@@ -3,9 +3,9 @@ import { CONTACTS, LEGAL } from "@/lib/contacts";
 import { SITE_URL, breadcrumbJsonLd, jsonLdScript } from "@/lib/seo";
 
 const URL = `${SITE_URL}/privacy`;
-const TITLE = "Политика конфиденциальности — RentSib";
+const TITLE = "Политика конфиденциальности — NSK-RENT";
 const DESC =
-  "Политика обработки персональных данных RentSib: какие данные собираем при аренде авто, зачем и как их защищаем (152-ФЗ).";
+  "Политика обработки персональных данных NSK-RENT: какие данные собираем при аренде авто, зачем и как их защищаем (152-ФЗ).";
 
 export const Route = createFileRoute("/_public/privacy")({
   component: Page,
@@ -47,7 +47,7 @@ function Page() {
       <div className="prose prose-theme mt-6 max-w-none prose-headings:font-display">
         <p>
           Настоящая Политика описывает порядок обработки персональных данных пользователей сайта
-          rentsib.ru оператором — {LEGAL.entity} ({LEGAL.ogrnip}, {LEGAL.inn}, {LEGAL.address}) — в
+          nsk-rent.ru оператором — {LEGAL.entity} ({LEGAL.ogrnip}, {LEGAL.inn}, {LEGAL.address}) — в
           соответствии с Федеральным законом № 152-ФЗ «О персональных данных».
         </p>
 

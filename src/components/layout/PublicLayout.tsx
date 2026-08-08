@@ -39,7 +39,7 @@ function PublicShell() {
         <div className="mx-auto grid max-w-7xl grid-cols-[minmax(0,1fr)_auto] items-center gap-3 px-4 pb-3 pt-[max(env(safe-area-inset-top),0.75rem)] md:flex md:justify-between md:gap-4 md:px-6 md:py-4 md:pt-4">
           <Link to="/" className="flex min-w-0 items-center gap-2">
             <span className="font-display text-xl font-black tracking-widest md:neon-text md:text-2xl">
-              RENTSIB
+              NSK-RENT
             </span>
             <span className="hidden text-xs tracking-[0.3em] text-muted-foreground md:inline">
               DRIVE THE NIGHT
@@ -89,7 +89,7 @@ function PublicShell() {
 
               <SheetContent side="right" className={`${themeClass} w-[86vw] max-w-sm overflow-y-auto bg-background p-5 text-foreground`}>
                 <p className="text-[10px] uppercase tracking-[0.5em] text-muted-foreground">Меню</p>
-                <p className="mt-1 font-display text-2xl font-black tracking-widest">RENTSIB</p>
+                <p className="mt-1 font-display text-2xl font-black tracking-widest">NSK-RENT</p>
 
                 <nav className="mt-6 flex flex-col gap-1">
                   {nav.map((n) => {

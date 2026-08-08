@@ -5,7 +5,7 @@ import { faqItems } from "@/mocks/faq";
 import { SITE_URL, breadcrumbJsonLd, jsonLdScript } from "@/lib/seo";
 
 const URL = `${SITE_URL}/rent/bez-zaloga`;
-const TITLE = "Аренда авто без залога в Новосибирске | RentSib";
+const TITLE = "Аренда авто без залога в Новосибирске | NSK-RENT";
 const DESC =
   "Аренда авто без крупного залога в Новосибирске. Страховой депозит от 5 000 ₽, для проверенных клиентов — без депозита. От 1 800 ₽/сутки.";
 

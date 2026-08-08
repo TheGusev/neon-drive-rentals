@@ -5,7 +5,7 @@ import { FaqBlock } from "@/components/home/FaqBlock";
 import { HomeIntro } from "@/components/home/HomeIntro";
 import { SITE_URL, faqJsonLd, jsonLdScript, localBusinessJsonLd } from "@/lib/seo";
 
-const TITLE = "Аренда авто в Новосибирске от 1 800 ₽/сутки — японские кей-кары | RentSib";
+const TITLE = "Аренда авто в Новосибирске от 1 800 ₽/сутки — японские кей-кары | NSK-RENT";
 const DESC =
   "Прокат японских кей-каров в Новосибирске от 1 800 ₽/сутки. Доставка в Толмачёво, договор онлайн за 3 минуты, без крупного залога, поддержка 24/7.";
 

@@ -17,7 +17,7 @@ export function SiteFooter() {
       <div className="road-line w-full opacity-60" />
       <div className="mx-auto grid w-full max-w-7xl gap-8 px-4 py-10 md:grid-cols-4 md:px-6 md:py-12">
         <div>
-          <p className="font-display text-xl font-black tracking-widest">RENTSIB</p>
+          <p className="font-display text-xl font-black tracking-widest">NSK-RENT</p>
           <p className="mt-2 text-sm text-muted-foreground">
             Прокат японских кей-каров в Новосибирске. Доставка по городу и области, договор онлайн.
           </p>
@@ -102,7 +102,7 @@ export function SiteFooter() {
         <div className="mx-auto flex w-full max-w-7xl flex-col gap-2 px-4 py-6 text-xs text-muted-foreground md:px-6">
           <p>{LEGAL.offerNote}</p>
           <p>{LEGAL.ageNote}</p>
-          <p>© {new Date().getFullYear()} RentSib — аренда авто в Новосибирске. Все права защищены.</p>
+          <p>© {new Date().getFullYear()} NSK-RENT — аренда авто в Новосибирске. Все права защищены.</p>
         </div>
       </div>
     </footer>

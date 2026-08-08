@@ -2,7 +2,7 @@ import { createContext, useCallback, useContext, useEffect, useState, type React
 
 export type Theme = "dark" | "light";
 
-const STORAGE_KEY = "rentsib-theme";
+const STORAGE_KEY = "nsk-rent-theme";
 
 interface ThemeCtx {
   theme: Theme;
