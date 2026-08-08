@@ -293,9 +293,13 @@ function GarageCard({
   );
 
 
+  // На сенсорных устройствах подсказки не показываем — они перекрывали контент при скролле.
+  if (coarse) return card;
+
   return (
-    <Tooltip {...(coarse ? { open: active } : {})}>
+    <Tooltip>
       <TooltipTrigger asChild>{card}</TooltipTrigger>
+
       <TooltipContent
         side="top"
         sideOffset={10}
