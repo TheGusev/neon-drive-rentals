@@ -58,13 +58,12 @@ export function GarageShowcase({ compact = false }: { compact?: boolean }) {
   };
 
   return (
-    <section aria-labelledby="garage-title" className="relative">
+    <section aria-label="Гараж — выбор автомобиля" className="relative">
       <div className={cn("mx-auto w-full max-w-7xl px-4 md:px-6", compact && "px-4")}>
         <div className="flex items-end justify-between gap-3">
           <div className="min-w-0">
             <p className="text-[10px] uppercase tracking-[0.5em] text-[color:var(--neon-blue)]">Garage · 車庫</p>
             <h2
-              id="garage-title"
               className="mt-0.5 font-display text-xl font-black uppercase tracking-widest text-foreground md:text-3xl"
             >
               Гараж <span className="text-[color:var(--neon-blue)]">выбора</span>
