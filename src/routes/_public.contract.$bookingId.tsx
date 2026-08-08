@@ -82,7 +82,7 @@ function ContractPage() {
       `Автомобиль: ${car.brand} ${car.model}, ${car.year}, ${car.color}`,
       `Период: ${startLabel} ${draft.startTime} — ${endLabel} ${draft.endTime}`,
       `Тариф: ${tariff?.title ?? "—"}`,
-      pickup ? `Точка выдачи: ${pickup.title}` : `Доставка: ${draft.deliveryAddress ?? "—"}`,
+      `Пункт выдачи: ${pickup?.address ?? "Новосибирск, ул. Доватора, 11"}`,
       `Залог: ${formatRub(car.deposit ?? 0)}`,
       `Итого к оплате: ${formatRub(breakdown.total)}`,
       `Телефон арендатора: ${draft.phone}`,
