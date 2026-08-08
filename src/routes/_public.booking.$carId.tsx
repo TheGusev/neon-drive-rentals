@@ -1,12 +1,12 @@
 import { createFileRoute, Link, notFound, useNavigate } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
-import { CalendarIcon, MapPin, Truck } from "lucide-react";
+import { CalendarIcon, MapPin } from "lucide-react";
 import { format, parseISO } from "date-fns";
 import { ru } from "date-fns/locale";
 
 import { getCarById } from "@/mocks/cars";
-import { pickupPoints } from "@/mocks/pickupPoints";
-import { tariffs, DELIVERY_PRICE, getTariff } from "@/mocks/tariffs";
+import { PICKUP_POINT } from "@/mocks/pickupPoints";
+import { tariffs, getTariff } from "@/mocks/tariffs";
 import {
   calcPrice,
   createDraft,
@@ -19,8 +19,6 @@ import type { BookingDraft, BookingTariff } from "@/types/domain";
 import { SectionCard } from "@/components/checkout/SectionCard";
 import { StickyBottomBar } from "@/components/checkout/StickyBottomBar";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Switch } from "@/components/ui/switch";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
@@ -49,9 +47,9 @@ export const Route = createFileRoute("/_public/booking/$carId")({
     return {
       meta: [
         { title },
-        { name: "description", content: "Выберите даты, точку выдачи и тариф — расчёт стоимости в реальном времени." },
+        { name: "description", content: "Выберите даты и тариф — расчёт стоимости в реальном времени. Выдача на ул. Доватора, 11." },
         { property: "og:title", content: title },
-        { property: "og:description", content: "Онлайн-бронирование авто в Новосибирске: даты, тариф, доставка." },
+        { property: "og:description", content: "Онлайн-бронирование авто в Новосибирске: даты, тариф, выдача на Доватора, 11." },
       ],
     };
   },
@@ -98,7 +96,6 @@ function BookingPage() {
       pricePerDay: car.pricePerDay,
       deposit: car.deposit ?? 5000,
       draft,
-      deliveryPrice: DELIVERY_PRICE,
       tariffMultiplier: tariff.multiplier,
     });
   }, [draft, car.pricePerDay, car.deposit, tariff.multiplier]);
