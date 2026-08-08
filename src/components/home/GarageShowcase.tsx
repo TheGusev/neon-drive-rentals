@@ -11,6 +11,9 @@ import { isCarAvailable, nextBusyUntil, splitAvailability } from "@/lib/availabi
 import { useHomeBooking } from "./HomeBookingContext";
 import { CarQuickView } from "./CarQuickView";
 import { NfsSideMenu } from "./NfsSideMenu";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { useCoarsePointer } from "@/hooks/useCoarsePointer";
+
 
 const garageCars = cars.slice(0, 10);
 
