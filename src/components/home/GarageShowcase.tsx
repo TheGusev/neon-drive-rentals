@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { format } from "date-fns";
 import { ArrowRight, ChevronLeft, ChevronRight, Fuel } from "lucide-react";
@@ -20,13 +20,16 @@ const garageCars = cars.slice(0, 10);
  */
 export function GarageShowcase({ compact = false }: { compact?: boolean }) {
   const stripRef = useRef<HTMLDivElement>(null);
+  const sectionRef = useRef<HTMLElement>(null);
+  const rafRef = useRef<number | null>(null);
+  const [entered, setEntered] = useState(false);
   const [quickCar, setQuickCar] = useState<Car | null>(null);
   const [active, setActive] = useState(0);
   const [progress, setProgress] = useState(0);
   const { from, to } = useHomeBooking();
   const { available } = useMemo(() => splitAvailability(cars, from, to), [from, to]);
 
-  const sync = useCallback(() => {
+  const measure = useCallback(() => {
     const el = stripRef.current;
     if (!el) return;
     const max = el.scrollWidth - el.clientWidth;
@@ -46,9 +49,42 @@ export function GarageShowcase({ compact = false }: { compact?: boolean }) {
     setActive(best);
   }, []);
 
+  // rAF-throttled scroll sync — no layout thrash, no jitter.
+  const sync = useCallback(() => {
+    if (rafRef.current !== null) return;
+    rafRef.current = requestAnimationFrame(() => {
+      rafRef.current = null;
+      measure();
+    });
+  }, [measure]);
+
   useEffect(() => {
-    sync();
-  }, [sync]);
+    measure();
+    return () => {
+      if (rafRef.current !== null) cancelAnimationFrame(rafRef.current);
+    };
+  }, [measure]);
+
+  // Play the entrance once, when the block first scrolls into view.
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el) return;
+    if (typeof IntersectionObserver === "undefined") {
+      setEntered(true);
+      return;
+    }
+    const io = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((e) => e.isIntersecting)) {
+          setEntered(true);
+          io.disconnect();
+        }
+      },
+      { threshold: 0.15 },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
 
   const scrollByCards = (dir: 1 | -1) => {
     const el = stripRef.current;
@@ -58,7 +94,7 @@ export function GarageShowcase({ compact = false }: { compact?: boolean }) {
   };
 
   return (
-    <section aria-label="Гараж — выбор автомобиля" className="relative">
+    <section ref={sectionRef} aria-label="Гараж — выбор автомобиля" className="relative">
       <div className={cn("mx-auto w-full max-w-7xl px-4 md:px-6", compact && "px-4")}>
         <div className="flex items-end justify-between gap-3">
           <div className="min-w-0">
@@ -103,19 +139,21 @@ export function GarageShowcase({ compact = false }: { compact?: boolean }) {
       </div>
 
       <div className="mx-auto mt-4 grid w-full max-w-7xl gap-4 px-4 md:px-6 xl:grid-cols-[280px_minmax(0,1fr)] xl:gap-6">
-        <NfsSideMenu className="hidden xl:flex" />
-        <NfsSideMenu orientation="horizontal" className="-mx-4 px-4 xl:hidden" />
+        <NfsSideMenu animate={entered} className="hidden xl:flex" />
+        <NfsSideMenu animate={entered} orientation="horizontal" className="-mx-4 px-4 xl:hidden" />
 
         <div className="min-w-0">
           <div
             ref={stripRef}
             onScroll={sync}
-            className="no-scrollbar -mx-4 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-3 pt-1 md:-mx-6 md:px-6"
+            className="garage-strip no-scrollbar -mx-4 flex gap-3 overflow-x-auto px-4 pb-3 pt-1 md:-mx-6 md:px-6"
           >
             {garageCars.map((car, i) => (
               <GarageCard
                 key={car.id}
                 car={car}
+                index={i}
+                entered={entered}
                 active={i === active}
                 onOpen={() => setQuickCar(car)}
               />
@@ -125,8 +163,8 @@ export function GarageShowcase({ compact = false }: { compact?: boolean }) {
           {/* Dashboard-like position indicator */}
           <div className="mt-1 h-[3px] w-full overflow-hidden rounded-full bg-border/60">
             <div
-              className="h-full rounded-full bg-[color:var(--neon-blue)] shadow-[0_0_12px_var(--neon-blue)] transition-[width,margin] duration-200"
-              style={{ width: "28%", marginLeft: `${progress * 72}%` }}
+              className="h-full w-[28%] origin-left rounded-full bg-[color:var(--neon-blue)] shadow-[0_0_12px_var(--neon-blue)] transition-transform duration-300 ease-out will-change-transform"
+              style={{ transform: `translateX(${(progress * 72 * 100) / 28}%)` }}
             />
           </div>
         </div>
@@ -137,7 +175,19 @@ export function GarageShowcase({ compact = false }: { compact?: boolean }) {
   );
 }
 
-function GarageCard({ car, active, onOpen }: { car: Car; active: boolean; onOpen: () => void }) {
+function GarageCard({
+  car,
+  active,
+  index,
+  entered,
+  onOpen,
+}: {
+  car: Car;
+  active: boolean;
+  index: number;
+  entered: boolean;
+  onOpen: () => void;
+}) {
   const { from, to, tariff } = useHomeBooking();
   const free = isCarAvailable(car, from, to);
   const busyUntil = !free ? nextBusyUntil(car) : null;
@@ -148,11 +198,14 @@ function GarageCard({ car, active, onOpen }: { car: Car; active: boolean; onOpen
       type="button"
       onClick={onOpen}
       aria-label={`${car.brand} ${car.model} — подробнее`}
+      data-active={active ? "true" : "false"}
+      style={{ "--i": index } as React.CSSProperties}
       className={cn(
         "garage-card group relative flex h-[200px] w-[240px] shrink-0 snap-center flex-col overflow-hidden rounded-2xl border text-left backdrop-blur sm:h-[220px] sm:w-[280px] xl:h-[250px] xl:w-[320px]",
+        entered && "garage-in",
         active
-          ? "border-accent bg-card/85 opacity-100 shadow-[0_18px_40px_-18px_color-mix(in_oklab,var(--neon-blue)_75%,transparent)]"
-          : "border-border/60 bg-card/60 opacity-70",
+          ? "border-accent bg-card/85 shadow-[0_18px_40px_-18px_color-mix(in_oklab,var(--neon-blue)_75%,transparent)]"
+          : "border-border/60 bg-card/60",
         !free && "grayscale-[0.35]",
       )}
     >

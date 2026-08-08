@@ -477,12 +477,46 @@
   }
 }
 
-/* Garage carousel card: soft scale + headlight sweep on hover/active */
-.garage-card {
-  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.35s ease,
-    border-color 0.3s ease, box-shadow 0.35s ease;
+/* Garage: staggered entrance */
+@keyframes garage-in {
+  from { opacity: 0; transform: translateY(18px) scale(0.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
 }
-.garage-card:hover { transform: translateY(-6px); opacity: 1; }
+.garage-in {
+  opacity: 0;
+  animation: garage-in 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation-delay: calc(var(--i, 0) * 60ms);
+}
+
+/* Horizontal strip behaviour */
+.garage-strip {
+  scroll-behavior: smooth;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Garage carousel card: soft scale + headlight sweep */
+.garage-card {
+  will-change: transform, opacity;
+  transition:
+    transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+    filter 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.garage-card[data-active="false"] {
+  transform: scale(0.965);
+  opacity: 0.62;
+  filter: blur(0.6px);
+}
+.garage-card[data-active="true"] {
+  transform: scale(1.025);
+  opacity: 1;
+  filter: none;
+}
+.garage-card:hover { transform: scale(1.035) translateY(-6px); opacity: 1; filter: none; }
 
 .garage-sweep {
   background: linear-gradient(
@@ -495,20 +529,38 @@
   opacity: 0;
   mix-blend-mode: screen;
 }
+.garage-card[data-active="true"] .garage-sweep {
+  animation: garage-sweep 3.6s cubic-bezier(0.22, 1, 0.36, 1) 0.2s infinite;
+}
 .garage-card:hover .garage-sweep {
   animation: garage-sweep 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 @keyframes garage-sweep {
   0% { transform: translateX(-120%); opacity: 0; }
-  30% { opacity: 0.7; }
+  10% { opacity: 0.55; }
+  40% { transform: translateX(120%); opacity: 0; }
   100% { transform: translateX(120%); opacity: 0; }
+}
+
+/* Freeze motion while the theme class swaps to avoid flicker */
+html.theme-switching *,
+html.theme-switching *::before,
+html.theme-switching *::after {
+  transition: none !important;
+  animation-play-state: paused !important;
 }
 
 @media (prefers-reduced-motion: reduce) {
   .reveal { opacity: 1; transform: none; }
   .reveal-in, .nfs-tile, .ken-burns, .float-slow, .pulse-glow, .menu-pulse, .neon-flicker,
   .road-line-run { animation: none !important; }
-  .garage-card, .garage-card:hover { transform: none; }
+  .garage-in { opacity: 1; animation: none !important; }
+  .garage-card,
+  .garage-card:hover,
+  .garage-card[data-active="true"],
+  .garage-card[data-active="false"] { transform: none; filter: none; }
+  .garage-card[data-active="true"] .garage-sweep,
   .garage-card:hover .garage-sweep { animation: none; }
+  .garage-strip { scroll-behavior: auto; }
 }
 
