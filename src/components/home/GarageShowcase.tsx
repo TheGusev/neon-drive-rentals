@@ -187,13 +187,13 @@ function GarageCard({
   active,
   index,
   entered,
-  onOpen,
+  onQuickView,
 }: {
   car: Car;
   active: boolean;
   index: number;
   entered: boolean;
-  onOpen: () => void;
+  onQuickView: () => void;
 }) {
   const { from, to, tariff } = useHomeBooking();
   const free = isCarAvailable(car, from, to);
