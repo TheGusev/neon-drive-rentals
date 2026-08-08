@@ -1,7 +1,7 @@
 import { faqItems } from "@/mocks/faq";
 
-export const SITE_URL = "https://rentsib.ru";
-export const SITE_NAME = "RentSib";
+export const SITE_URL = "https://nsk-rent.ru";
+export const SITE_NAME = "NSK-RENT";
 export const SITE_PHONE = "+7 (800) 555-72-13";
 
 export const faqJsonLd = () => ({
@@ -17,7 +17,7 @@ export const faqJsonLd = () => ({
 export const localBusinessJsonLd = () => ({
   "@context": "https://schema.org",
   "@type": "AutoRental",
-  name: "RentSib — Аренда авто в Новосибирске",
+  name: "NSK-RENT — Аренда авто в Новосибирске",
   url: SITE_URL,
   telephone: SITE_PHONE,
   priceRange: "₽₽",

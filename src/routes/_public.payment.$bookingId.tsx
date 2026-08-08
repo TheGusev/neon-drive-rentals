@@ -24,9 +24,9 @@ import { Button } from "@/components/ui/button";
 export const Route = createFileRoute("/_public/payment/$bookingId")({
   head: () => ({
     meta: [
-      { title: "Оплата бронирования — RentSib" },
+      { title: "Оплата бронирования — NSK-RENT" },
       { name: "description", content: "Оплата аренды авто картой или через СБП. Безопасно и мгновенно." },
-      { property: "og:title", content: "Оплата бронирования — RentSib" },
+      { property: "og:title", content: "Оплата бронирования — NSK-RENT" },
       { property: "og:description", content: "Оплата аренды авто картой или через СБП." },
     ],
   }),

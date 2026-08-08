@@ -4,7 +4,7 @@ import { blogPosts } from "@/mocks/blog";
 import { SITE_URL, breadcrumbJsonLd, jsonLdScript } from "@/lib/seo";
 
 const URL = `${SITE_URL}/blog`;
-const TITLE = "Блог RentSib — гайды и советы по аренде авто в Новосибирске";
+const TITLE = "Блог NSK-RENT — гайды и советы по аренде авто в Новосибирске";
 const DESC =
   "Полезные статьи про аренду авто в Новосибирске: как выбрать машину, что нужно для аренды без залога, маршруты по НСО, обзоры японских кей-каров.";
 
@@ -56,7 +56,7 @@ function Page() {
           / <span className="text-foreground">Блог</span>
         </nav>
 
-        <h1 className="font-display text-3xl font-black md:text-5xl">Блог RentSib</h1>
+        <h1 className="font-display text-3xl font-black md:text-5xl">Блог NSK-RENT</h1>
         <div className="road-line mt-4 w-28" />
         <p className="mt-3 max-w-2xl text-base text-muted-foreground md:text-lg">
           Гайды и советы по аренде авто в Новосибирске: как выбрать машину, куда съездить, что нужно для

@@ -6,19 +6,32 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { ThemeProvider, useTheme } from "./ThemeProvider";
 import { ThemeToggle } from "./ThemeToggle";
 import { SiteFooter } from "./SiteFooter";
-import { CONTACTS } from "@/lib/contacts";
+import { CONTACTS, LEGAL } from "@/lib/contacts";
+import { FavoritesProvider } from "@/state/FavoritesContext";
 
 const nav = [
   { to: "/", label: "Главная" },
-  { to: "/cars", label: "Автомобили" },
+  { to: "/cars", label: "Автопарк" },
   { to: "/blog", label: "Блог" },
   { to: "/profile", label: "Кабинет" },
+] as const;
+
+const mobileNav = [
+  { to: "/", label: "Главная" },
+  { to: "/cars", label: "Автопарк" },
+  { to: "/rent/novosibirsk", label: "Аренда в Новосибирске" },
+  { to: "/rent/bez-zaloga", label: "Аренда без залога" },
+  { to: "/kei-cars", label: "Кей-кары из Японии" },
+  { to: "/blog", label: "Блог" },
+  { to: "/profile", label: "Личный кабинет" },
 ] as const;
 
 export function PublicLayout() {
   return (
     <ThemeProvider>
-      <PublicShell />
+      <FavoritesProvider>
+        <PublicShell />
+      </FavoritesProvider>
     </ThemeProvider>
   );
 }
@@ -39,7 +52,7 @@ function PublicShell() {
         <div className="mx-auto grid max-w-7xl grid-cols-[minmax(0,1fr)_auto] items-center gap-3 px-4 pb-3 pt-[max(env(safe-area-inset-top),0.75rem)] md:flex md:justify-between md:gap-4 md:px-6 md:py-4 md:pt-4">
           <Link to="/" className="flex min-w-0 items-center gap-2">
             <span className="font-display text-xl font-black tracking-widest md:neon-text md:text-2xl">
-              RENTSIB
+              NSK-RENT
             </span>
             <span className="hidden text-xs tracking-[0.3em] text-muted-foreground md:inline">
               DRIVE THE NIGHT
@@ -89,10 +102,10 @@ function PublicShell() {
 
               <SheetContent side="right" className={`${themeClass} w-[86vw] max-w-sm overflow-y-auto bg-background p-5 text-foreground`}>
                 <p className="text-[10px] uppercase tracking-[0.5em] text-muted-foreground">Меню</p>
-                <p className="mt-1 font-display text-2xl font-black tracking-widest">RENTSIB</p>
+                <p className="mt-1 font-display text-2xl font-black tracking-widest">NSK-RENT</p>
 
                 <nav className="mt-6 flex flex-col gap-1">
-                  {nav.map((n) => {
+                  {mobileNav.map((n) => {
                     const active = n.to === "/" ? pathname === "/" : pathname.startsWith(n.to);
                     return (
                       <Link
@@ -126,8 +139,13 @@ function PublicShell() {
                     <MessageCircle className="h-4 w-4 text-accent" /> WhatsApp
                   </a>
                   <a href={CONTACTS.max} target="_blank" rel="noreferrer" className="flex items-center gap-2">
-                    <MessageCircle className="h-4 w-4 text-accent" /> MAX
+                    <MessageCircle className="h-4 w-4 text-accent" /> {CONTACTS.maxLabel}
                   </a>
+                  <div className="space-y-1 border-t border-border pt-4 text-xs text-muted-foreground">
+                    <p>{LEGAL.entity}</p>
+                    <p>{CONTACTS.city}</p>
+                    <p>{CONTACTS.hours}</p>
+                  </div>
                 </div>
               </SheetContent>
             </Sheet>

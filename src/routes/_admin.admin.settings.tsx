@@ -4,9 +4,9 @@ import { StubPage } from "@/components/layout/StubPage";
 export const Route = createFileRoute("/_admin/admin/settings")({
   head: () => ({
     meta: [
-      { title: "Настройки — Админ RentSib" },
+      { title: "Настройки — Админ NSK-RENT" },
       { name: "description", content: "Тарифы, шаблон договора, интеграции." },
-      { property: "og:title", content: "Настройки — Админ RentSib" },
+      { property: "og:title", content: "Настройки — Админ NSK-RENT" },
       { property: "og:description", content: "Тарифы, договор, интеграции." },
     ],
   }),

@@ -3,17 +3,23 @@ export type Transmission = "AT" | "MT" | "CVT";
 
 export interface Car {
   id: string;
+  slug?: string;
   brand: string;
   model: string;
+  displayName?: string;
+  color: string;
   year: number;
   class: CarClass;
   power: number; // л.с.
   torque: number; // Н·м
   consumption: number; // л/100км
   transmission: Transmission;
+  drive?: string;
   pricePerDay: number; // руб
   image?: string;
+  gallery?: string[];
   rating: number; // 0..5
+  reviewsCount?: number;
   engineVolume: number; // литры
   bodyType?: string;
   seats?: number;
@@ -23,7 +29,9 @@ export interface Car {
   vin?: string;
   plate?: string;
   status?: CarFleetStatus;
+  bookedDates?: string[]; // ISO yyyy-mm-dd
 }
+
 
 export type CarFleetStatus = "free" | "busy" | "washing" | "maintenance";
 

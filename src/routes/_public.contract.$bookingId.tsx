@@ -20,9 +20,9 @@ import { Checkbox } from "@/components/ui/checkbox";
 export const Route = createFileRoute("/_public/contract/$bookingId")({
   head: () => ({
     meta: [
-      { title: "Подписание договора — RentSib" },
+      { title: "Подписание договора — NSK-RENT" },
       { name: "description", content: "Электронная подпись договора аренды авто по SMS." },
-      { property: "og:title", content: "Подписание договора — RentSib" },
+      { property: "og:title", content: "Подписание договора — NSK-RENT" },
       { property: "og:description", content: "ПЭП по SMS, скачивание PDF." },
     ],
   }),
@@ -76,8 +76,36 @@ function ContractPage() {
 
   const canSign = terms && dataOk && pep && code.length === 6;
 
+  const downloadContract = () => {
+    const lines = [
+      "ДОГОВОР АРЕНДЫ ТРАНСПОРТНОГО СРЕДСТВА (демо-версия)",
+      `Номер брони: ${draft.id}`,
+      `Автомобиль: ${car.brand} ${car.model}, ${car.year}, ${car.color}`,
+      `Период: ${startLabel} ${draft.startTime} — ${endLabel} ${draft.endTime}`,
+      `Тариф: ${tariff?.title ?? "—"}`,
+      pickup ? `Точка выдачи: ${pickup.title}` : `Доставка: ${draft.deliveryAddress ?? "—"}`,
+      `Залог: ${formatRub(car.deposit ?? 0)}`,
+      `Итого к оплате: ${formatRub(breakdown.total)}`,
+      `Телефон арендатора: ${draft.phone}`,
+      "",
+      "Документ сформирован на сайте nsk-rent.ru и носит демонстрационный характер.",
+    ];
+    const blob = new Blob([lines.join("\n")], { type: "text/plain;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `dogovor-${draft.id}.txt`;
+    a.click();
+    URL.revokeObjectURL(url);
+    toast.success("Договор скачан");
+  };
+
   const sign = () => {
     if (!canSign) return;
+    if (code !== "123456") {
+      toast.error("Неверный код из SMS", { description: "Демо-код: 123456" });
+      return;
+    }
     saveDraft({ ...draft, signed: true });
     toast.success("Договор подписан", { description: "Копия отправлена на email" });
     navigate({ to: "/profile" });
@@ -113,8 +141,8 @@ function ContractPage() {
 
           <SectionCard title="Данные автомобиля">
             <dl className="space-y-2 text-sm">
-              <Row label="VIN" value={car.vin ?? "—"} mono />
-              <Row label="Госномер" value={car.plate ?? "—"} mono />
+              <Row label="Модель" value={`${car.brand} ${car.model}`} />
+              <Row label="Цвет" value={car.color} />
               <Row label="Пробег" value={car.mileageLimit ? `${car.mileageLimit} км/сутки` : "Без лимита"} />
               <Row label="Залог" value={formatRub(car.deposit ?? 0)} />
             </dl>
@@ -156,11 +184,11 @@ function ContractPage() {
 
           <a
             href="#"
-            onClick={(e) => { e.preventDefault(); toast("Договор скачивается…"); }}
+            onClick={(e) => { e.preventDefault(); downloadContract(); }}
             className="flex items-center justify-center gap-2 rounded-2xl border border-border bg-card p-4 text-sm font-medium text-foreground/80 hover:border-border"
           >
             <FileText className="h-4 w-4 text-accent" />
-            Скачать договор PDF
+            Скачать договор
           </a>
 
           <div className="h-2" />

@@ -42,8 +42,8 @@ export const Route = createFileRoute("/_public/booking/$carId")({
   head: ({ loaderData }) => {
     const c = loaderData?.car;
     const title = c
-      ? `Бронирование ${c.brand} ${c.model} — RentSib`
-      : "Бронирование — RentSib";
+      ? `Бронирование ${c.brand} ${c.model} — NSK-RENT`
+      : "Бронирование — NSK-RENT";
     return {
       meta: [
         { title },

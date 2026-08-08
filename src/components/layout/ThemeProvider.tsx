@@ -2,7 +2,7 @@ import { createContext, useCallback, useContext, useEffect, useState, type React
 
 export type Theme = "dark" | "light";
 
-const STORAGE_KEY = "rentsib-theme";
+const STORAGE_KEY = "nsk-rent-theme";
 
 interface ThemeCtx {
   theme: Theme;
@@ -21,8 +21,15 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const stored = window.localStorage.getItem(STORAGE_KEY);
-    if (stored === "light" || stored === "dark") setTheme(stored);
+    if (stored === "light" || stored === "dark") {
+      setTheme(stored);
+      return;
+    }
+    // По умолчанию: мобильный — светлая тема, десктоп — тёмный «гараж».
+    const isMobile = window.matchMedia("(max-width: 767px)").matches;
+    setTheme(isMobile ? "light" : "dark");
   }, []);
+
 
   useEffect(() => {
     document.documentElement.style.colorScheme = theme;
