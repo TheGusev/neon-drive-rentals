@@ -83,8 +83,7 @@ function QuickBody({
   const price = calcPrice({
     pricePerDay: car.pricePerDay,
     deposit: car.deposit ?? 0,
-    draft: { startDate: from, endDate: to, tariff, delivery: false },
-    deliveryPrice: 0,
+    draft: { startDate: from, endDate: to, tariff },
     tariffMultiplier: tariffInfo.multiplier,
   });
   const pricePerDayInTariff = Math.round(car.pricePerDay * tariffInfo.multiplier);

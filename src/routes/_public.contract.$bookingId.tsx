@@ -7,7 +7,7 @@ import { toast } from "sonner";
 
 import { getCarById } from "@/mocks/cars";
 import { getPickupPoint } from "@/mocks/pickupPoints";
-import { getTariff, DELIVERY_PRICE } from "@/mocks/tariffs";
+import { getTariff } from "@/mocks/tariffs";
 import { calcPrice, formatRub, getDraft, saveDraft } from "@/lib/bookingDraft";
 import type { BookingDraft } from "@/types/domain";
 
@@ -52,7 +52,6 @@ function ContractPage() {
       pricePerDay: car.pricePerDay,
       deposit: car.deposit ?? 5000,
       draft,
-      deliveryPrice: DELIVERY_PRICE,
       tariffMultiplier: tariff.multiplier,
     });
   }, [draft, car, tariff]);

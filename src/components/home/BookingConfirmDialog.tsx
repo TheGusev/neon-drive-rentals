@@ -34,8 +34,7 @@ export function BookingConfirmDialog({ open, car, from, to, tariff, locationLabe
     return calcPrice({
       pricePerDay: car.pricePerDay,
       deposit: car.deposit ?? 0,
-      draft: { startDate: from, endDate: to, tariff, delivery: false },
-      deliveryPrice: 0,
+      draft: { startDate: from, endDate: to, tariff },
       tariffMultiplier: tariffInfo.multiplier,
     });
   }, [car, tariffInfo, from, to, tariff]);

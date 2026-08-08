@@ -6,7 +6,7 @@ import { ru } from "date-fns/locale";
 
 import { getCarById } from "@/mocks/cars";
 import { getPickupPoint } from "@/mocks/pickupPoints";
-import { getTariff, DELIVERY_PRICE } from "@/mocks/tariffs";
+import { getTariff } from "@/mocks/tariffs";
 import {
   calcPrice,
   formatRub,
@@ -55,7 +55,6 @@ function PaymentPage() {
       pricePerDay: car.pricePerDay,
       deposit: car.deposit ?? 5000,
       draft,
-      deliveryPrice: DELIVERY_PRICE,
       tariffMultiplier: tariff.multiplier,
     });
   }, [draft, car, tariff]);
