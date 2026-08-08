@@ -97,7 +97,9 @@ export function GarageShowcase({ compact = false }: { compact?: boolean }) {
   };
 
   return (
+    <TooltipProvider delayDuration={150}>
     <section ref={sectionRef} aria-label="Гараж — выбор автомобиля" className="relative">
+
       <div className={cn("mx-auto w-full max-w-7xl px-4 md:px-6", compact && "px-4")}>
         <div className="flex items-end justify-between gap-3">
           <div className="min-w-0">
