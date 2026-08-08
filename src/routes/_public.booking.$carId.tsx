@@ -101,7 +101,11 @@ function BookingPage() {
     });
   }, [draft, car.pricePerDay, car.deposit, tariff.multiplier]);
 
-  const valid = !!(draft?.startDate && draft?.endDate && draft?.pickupPointId && (!draft.delivery || draft.deliveryAddress?.trim()));
+  const missing: string[] = [];
+  if (!draft?.startDate || !draft?.endDate) missing.push("даты аренды");
+  if (!draft?.pickupPointId) missing.push("точку выдачи");
+  if (draft?.delivery && !draft.deliveryAddress?.trim()) missing.push("адрес доставки");
+  const valid = missing.length === 0;
 
   const goPay = () => {
     if (!draft || !valid) return;
