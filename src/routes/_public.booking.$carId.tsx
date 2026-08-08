@@ -194,7 +194,7 @@ function BookingPage() {
 
           {draft && (
             <>
-              <SectionCard title="Даты и время">
+              <SectionCard id="section-dates" title="Даты и время" error={errorFor("dates")}>
                 <div className="grid grid-cols-2 gap-3">
                   <DateField
                     label="Получение"
@@ -219,7 +219,7 @@ function BookingPage() {
                 </div>
               </SectionCard>
 
-              <SectionCard title="Точка выдачи">
+              <SectionCard id="section-pickup" title="Точка выдачи" error={errorFor("pickup")}>
                 <div className="space-y-2">
                   {pickupPoints.map((p) => {
                     const active = draft.pickupPointId === p.id;
@@ -245,7 +245,7 @@ function BookingPage() {
                 </div>
               </SectionCard>
 
-              <SectionCard>
+              <SectionCard id="section-delivery" error={errorFor("delivery")}>
                 <div className="flex items-center justify-between gap-3">
                   <div className="flex items-center gap-3">
                     <Truck className="h-5 w-5 text-muted-foreground" />
@@ -307,15 +307,38 @@ function BookingPage() {
           label="Итого"
           value={breakdown ? formatRub(breakdown.total) : "—"}
         >
-          {!valid && (
-            <p className="mb-2 text-center text-xs text-muted-foreground">
-              Укажите {missing.join(", ")}, чтобы продолжить
-            </p>
+          {showErrors && !valid ? (
+            <div
+              role="alert"
+              className="mb-2 rounded-2xl border border-destructive/40 bg-destructive/10 p-3 text-left"
+            >
+              <p className="text-xs font-semibold text-destructive">
+                Не заполнено: {errors.length}
+              </p>
+              <ul className="mt-1.5 space-y-1">
+                {errors.map((e) => (
+                  <li key={e.key}>
+                    <button
+                      type="button"
+                      onClick={() => focusSection(e.anchor)}
+                      className="text-left text-xs text-destructive underline underline-offset-2"
+                    >
+                      {e.label}: {e.message}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ) : (
+            !valid && (
+              <p className="mb-2 text-center text-xs text-muted-foreground">
+                Укажите {errors.map((e) => e.label.toLowerCase()).join(", ")}, чтобы продолжить
+              </p>
+            )
           )}
           <Button
             onClick={goPay}
-            disabled={!valid}
-            className="h-12 w-full rounded-2xl bg-accent text-base font-semibold text-primary-foreground hover:bg-accent disabled:opacity-50"
+            className="h-12 w-full rounded-2xl bg-accent text-base font-semibold text-primary-foreground hover:bg-accent"
           >
             Перейти к оплате
           </Button>
