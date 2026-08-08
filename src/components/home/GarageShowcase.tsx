@@ -160,7 +160,7 @@ export function GarageShowcase({ compact = false }: { compact?: boolean }) {
                 index={i}
                 entered={entered}
                 active={i === active}
-                onOpen={() => setQuickCar(car)}
+                onQuickView={() => setQuickCar(car)}
               />
             ))}
           </div>
