@@ -177,6 +177,8 @@ export function GarageShowcase({ compact = false }: { compact?: boolean }) {
 
       <CarQuickView car={quickCar} onClose={() => setQuickCar(null)} />
     </section>
+    </TooltipProvider>
+
   );
 }
 
