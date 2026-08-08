@@ -253,6 +253,11 @@ function BookingPage() {
           label="Итого"
           value={breakdown ? formatRub(breakdown.total) : "—"}
         >
+          {!valid && (
+            <p className="mb-2 text-center text-xs text-muted-foreground">
+              Укажите {missing.join(", ")}, чтобы продолжить
+            </p>
+          )}
           <Button
             onClick={goPay}
             disabled={!valid}
