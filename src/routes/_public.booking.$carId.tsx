@@ -101,16 +101,70 @@ function BookingPage() {
     });
   }, [draft, car.pricePerDay, car.deposit, tariff.multiplier]);
 
-  const missing: string[] = [];
-  if (!draft?.startDate || !draft?.endDate) missing.push("даты аренды");
-  if (!draft?.pickupPointId) missing.push("точку выдачи");
-  if (draft?.delivery && !draft.deliveryAddress?.trim()) missing.push("адрес доставки");
-  const valid = missing.length === 0;
+  const [showErrors, setShowErrors] = useState(false);
+
+  const today = new Date().toISOString().slice(0, 10);
+  const errors: { key: string; anchor: string; label: string; message: string }[] = [];
+  if (!draft?.startDate || !draft?.endDate) {
+    errors.push({
+      key: "dates",
+      anchor: "section-dates",
+      label: "Даты аренды",
+      message: "Выберите даты получения и возврата",
+    });
+  } else if (draft.startDate < today) {
+    errors.push({
+      key: "dates",
+      anchor: "section-dates",
+      label: "Даты аренды",
+      message: "Дата получения не может быть в прошлом",
+    });
+  } else if (draft.endDate <= draft.startDate) {
+    errors.push({
+      key: "dates",
+      anchor: "section-dates",
+      label: "Даты аренды",
+      message: "Возврат должен быть позже получения — минимум 1 сутки",
+    });
+  }
+  if (!draft?.pickupPointId) {
+    errors.push({
+      key: "pickup",
+      anchor: "section-pickup",
+      label: "Точка выдачи",
+      message: "Выберите, где забрать автомобиль",
+    });
+  }
+  if (draft?.delivery && !draft.deliveryAddress?.trim()) {
+    errors.push({
+      key: "delivery",
+      anchor: "section-delivery",
+      label: "Адрес доставки",
+      message: "Укажите адрес: улица, дом, подъезд",
+    });
+  }
+  const valid = errors.length === 0;
+  const errorFor = (key: string) =>
+    showErrors ? (errors.find((e) => e.key === key)?.message ?? null) : null;
+
+  const focusSection = (anchor: string) => {
+    const el = document.getElementById(anchor);
+    if (!el) return;
+    el.scrollIntoView({ behavior: "smooth", block: "center" });
+    (el as HTMLElement).focus({ preventScroll: true });
+  };
 
   const goPay = () => {
-    if (!draft || !valid) return;
+    if (!draft) return;
+    if (!valid) {
+      setShowErrors(true);
+      const first = errors[0];
+      if (first) requestAnimationFrame(() => focusSection(first.anchor));
+      return;
+    }
     navigate({ to: "/payment/$bookingId", params: { bookingId: draft.id } });
   };
+
 
   return (
     <div>
