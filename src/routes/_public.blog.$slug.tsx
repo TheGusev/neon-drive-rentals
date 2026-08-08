@@ -101,13 +101,13 @@ function Page() {
             height={675}
             className="ken-burns h-full w-full object-cover"
           />
-          <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-background via-background/30 to-transparent" />
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-background/70 via-background/10 to-transparent" />
         </div>
 
         <h1 className="mt-6 font-display text-3xl font-black leading-tight md:text-5xl">{post.title}</h1>
         <div className="road-line mt-4 w-24" />
 
-        <div className="mt-4 flex items-center gap-4 text-sm text-muted-foreground">
+        <div className="text-soft mt-4 flex items-center gap-4 text-sm">
           <span className="inline-flex items-center gap-1">
             <Calendar className="h-4 w-4" />
             {new Date(post.date).toLocaleDateString("ru-RU", { day: "numeric", month: "long", year: "numeric" })}
@@ -118,7 +118,7 @@ function Page() {
           </span>
         </div>
 
-        <p className="mt-6 text-lg leading-relaxed text-muted-foreground">{post.description}</p>
+        <p className="text-soft mt-6 text-lg leading-relaxed">{post.description}</p>
 
         <div className="prose prose-theme mt-8 max-w-none prose-headings:font-display prose-headings:font-bold prose-h2:mt-8 prose-h2:text-2xl prose-h3:text-xl prose-table:text-sm">
           <ReactMarkdown remarkPlugins={[remarkGfm]}>{post.body}</ReactMarkdown>
