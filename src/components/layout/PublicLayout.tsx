@@ -88,15 +88,15 @@ function PublicShell() {
           </div>
 
           <div className="flex items-center gap-2 md:hidden">
-            <ThemeToggle className="h-12 w-12 justify-center rounded-2xl px-0" />
+            <ThemeToggle className="h-14 w-14 rounded-2xl border-2 border-border/70" />
             <Sheet open={open} onOpenChange={setOpen}>
               <SheetTrigger asChild>
                 <button
                   type="button"
                   aria-label="Открыть меню"
-                  className="menu-pulse relative z-50 inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border-2 border-accent/70 bg-background/90 text-foreground shadow-[0_0_24px_color-mix(in_oklab,var(--neon-blue)_55%,transparent)] backdrop-blur transition hover:scale-105 hover:border-accent active:scale-95"
+                  className="menu-pulse relative z-50 inline-flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl border-2 border-accent/70 bg-background/90 text-foreground shadow-[0_0_24px_color-mix(in_oklab,var(--neon-blue)_55%,transparent)] backdrop-blur transition hover:scale-105 hover:border-accent active:scale-95"
                 >
-                  <Menu className="h-6 w-6 text-accent" />
+                  <Menu className="h-7 w-7 text-accent" />
                 </button>
               </SheetTrigger>
 
