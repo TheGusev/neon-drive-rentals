@@ -308,17 +308,14 @@
 }
 .pulse-glow { animation: pulse-glow 2.4s ease-in-out infinite; }
 
-@keyframes float-slow {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-6px); }
-}
-.float-slow { animation: float-slow 5s ease-in-out infinite; }
+/* No-motion: floating drift removed to avoid any positional shift */
+.float-slow { animation: none; }
 
-@keyframes rise-in {
-  0% { opacity: 0; transform: translateY(24px); }
-  100% { opacity: 1; transform: translateY(0); }
+@keyframes fade-in-soft {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
 }
-.rise-in { animation: rise-in 0.7s cubic-bezier(0.16, 1, 0.3, 1) both; }
+.rise-in { animation: fade-in-soft 0.7s ease-out both; }
 
 /* Animated NSK-RENT logo — hue-shifting gradient */
 @utility logo-neon {
@@ -337,8 +334,8 @@
 
 /* NFS-style tile slide-in from left */
 @keyframes nfs-slide-in {
-  0% { opacity: 0; transform: translateX(-32px); }
-  100% { opacity: 1; transform: translateX(0); }
+  0% { opacity: 0; }
+  100% { opacity: 1; }
 }
 .nfs-tile { animation: nfs-slide-in 0.6s cubic-bezier(0.16, 1, 0.3, 1) both; }
 .nfs-tile:hover { transform: translateX(4px); box-shadow: -3px 0 0 0 var(--neon-orange); }
@@ -389,13 +386,13 @@
     transform: scale(1.04);
   }
 }
-.menu-pulse { animation: menu-pulse 2.4s ease-in-out infinite; }
+.menu-pulse { animation: none; }
 .menu-pulse:hover, .menu-pulse:active { animation: none; }
 
 
 /* Scroll reveal (used with IntersectionObserver via .reveal / .reveal-in) */
-.reveal { opacity: 0; transform: translateY(18px); }
-.reveal-in { animation: rise-in 0.7s cubic-bezier(0.16, 1, 0.3, 1) both; }
+.reveal { opacity: 0; }
+.reveal-in { animation: fade-in-soft 0.7s ease-out both; }
 
 /* Soft neon lift for cards/tiles across the site */
 @utility lift {
@@ -479,8 +476,8 @@
 
 /* Garage: staggered entrance */
 @keyframes garage-in {
-  from { opacity: 0; transform: translateY(18px) scale(0.97); }
-  to { opacity: 1; transform: translateY(0) scale(1); }
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 .garage-in {
   opacity: 0;
@@ -498,25 +495,22 @@
 
 /* Garage carousel card: soft scale + headlight sweep */
 .garage-card {
-  will-change: transform, opacity;
+  will-change: opacity;
   transition:
-    transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
     opacity 0.45s cubic-bezier(0.22, 1, 0.36, 1),
     filter 0.45s cubic-bezier(0.22, 1, 0.36, 1),
     border-color 0.45s cubic-bezier(0.22, 1, 0.36, 1),
     box-shadow 0.45s cubic-bezier(0.22, 1, 0.36, 1);
 }
 .garage-card[data-active="false"] {
-  transform: scale(0.965);
   opacity: 0.62;
   filter: blur(0.6px);
 }
 .garage-card[data-active="true"] {
-  transform: scale(1.025);
   opacity: 1;
   filter: none;
 }
-.garage-card:hover { transform: scale(1.035) translateY(-6px); opacity: 1; filter: none; }
+.garage-card:hover { opacity: 1; filter: none; }
 
 .garage-sweep {
   background: linear-gradient(
