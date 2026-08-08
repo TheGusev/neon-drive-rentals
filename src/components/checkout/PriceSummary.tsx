@@ -18,12 +18,6 @@ export function PriceSummary({ breakdown }: PriceSummaryProps) {
         </dt>
         <dd className="font-medium text-foreground">{formatRub(breakdown.rental)}</dd>
       </div>
-      {breakdown.delivery > 0 && (
-        <div className="flex items-center justify-between text-muted-foreground">
-          <dt>Доставка</dt>
-          <dd className="font-medium text-foreground">{formatRub(breakdown.delivery)}</dd>
-        </div>
-      )}
       <div className="flex items-center justify-between text-muted-foreground">
         <dt>Залог (возвращается)</dt>
         <dd className="font-medium text-foreground">{formatRub(breakdown.deposit)}</dd>

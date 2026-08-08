@@ -1,4 +1,5 @@
 import type { BookingDraft, BookingTariff, PaymentMethod } from "@/types/domain";
+import { PICKUP_POINT } from "@/mocks/pickupPoints";
 
 const KEY_PREFIX = "nsk-rent.booking.";
 const LIST_KEY = "nsk-rent.booking.list";
@@ -32,7 +33,7 @@ export function createDraft(carId: string, overrides: Partial<BookingDraft> = {}
     endDate: iso(dayAfter),
     startTime: "10:00",
     endTime: "10:00",
-    delivery: false,
+    pickupPointId: PICKUP_POINT.id,
     tariff: "city",
     phone: "+7 999 123 45 67",
     ...overrides,
@@ -99,7 +100,6 @@ export interface PriceBreakdown {
   tariff: BookingTariff;
   tariffMultiplier: number;
   rental: number;
-  delivery: number;
   deposit: number;
   total: number;
 }
@@ -107,22 +107,19 @@ export interface PriceBreakdown {
 export function calcPrice(params: {
   pricePerDay: number;
   deposit: number;
-  draft: Pick<BookingDraft, "startDate" | "endDate" | "tariff" | "delivery">;
-  deliveryPrice: number;
+  draft: Pick<BookingDraft, "startDate" | "endDate" | "tariff">;
   tariffMultiplier: number;
 }): PriceBreakdown {
   const days = daysBetween(params.draft.startDate, params.draft.endDate);
   const rental = Math.round(days * params.pricePerDay * params.tariffMultiplier);
-  const delivery = params.draft.delivery ? params.deliveryPrice : 0;
   return {
     days,
     pricePerDay: params.pricePerDay,
     tariff: params.draft.tariff,
     tariffMultiplier: params.tariffMultiplier,
     rental,
-    delivery,
     deposit: params.deposit,
-    total: rental + delivery + params.deposit,
+    total: rental + params.deposit,
   };
 }
 
