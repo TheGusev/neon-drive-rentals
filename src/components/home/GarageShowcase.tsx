@@ -210,9 +210,10 @@ function GarageCard({
   ];
 
   const card = (
-    <button
-      type="button"
-      onClick={onOpen}
+    <Link
+      to="/cars/$carId"
+      params={{ carId: car.id }}
+      preload="intent"
       aria-label={`${car.brand} ${car.model} — подробнее`}
       data-active={active ? "true" : "false"}
       style={{ "--i": index } as React.CSSProperties}
@@ -238,10 +239,22 @@ function GarageCard({
           {car.class === "sport" ? "Sport" : "Econom"}
         </span>
         {!free && (
-          <span className="absolute right-2 top-2 rounded-md bg-destructive/90 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-widest text-destructive-foreground">
+          <span className="absolute right-2 top-9 rounded-md bg-destructive/90 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-widest text-destructive-foreground">
             Занято{busyUntil ? ` до ${format(busyUntil, "d.MM")}` : ""}
           </span>
         )}
+        <button
+          type="button"
+          aria-label={`Быстрый просмотр: ${car.brand} ${car.model}`}
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            onQuickView();
+          }}
+          className="absolute right-2 top-2 grid h-7 w-7 place-items-center rounded-md border border-border/60 bg-background/75 text-foreground backdrop-blur transition hover:border-accent hover:text-[color:var(--neon-blue)]"
+        >
+          <Eye className="h-3.5 w-3.5" />
+        </button>
       </div>
       <div className="flex items-center justify-between gap-2 px-3 py-2.5">
         <div className="min-w-0">
@@ -257,8 +270,9 @@ function GarageCard({
           {price.toLocaleString("ru-RU")}₽
         </span>
       </div>
-    </button>
+    </Link>
   );
+
 
   return (
     <Tooltip {...(coarse ? { open: active } : {})}>
