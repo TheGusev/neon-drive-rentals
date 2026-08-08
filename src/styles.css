@@ -150,23 +150,70 @@
 
 /* Typography (blog) bound to theme tokens so text stays readable in both themes. */
 .prose-theme {
+  --prose-soft: var(--muted-foreground);
+  --prose-rule: var(--border);
   --tw-prose-body: var(--foreground);
   --tw-prose-headings: var(--foreground);
-  --tw-prose-lead: var(--muted-foreground);
-  --tw-prose-links: var(--primary);
+  --tw-prose-lead: var(--prose-soft);
+  --tw-prose-links: var(--accent);
   --tw-prose-bold: var(--foreground);
-  --tw-prose-counters: var(--muted-foreground);
+  --tw-prose-counters: var(--prose-soft);
   --tw-prose-bullets: var(--accent);
-  --tw-prose-hr: var(--border);
+  --tw-prose-hr: var(--prose-rule);
   --tw-prose-quotes: var(--foreground);
   --tw-prose-quote-borders: var(--accent);
-  --tw-prose-captions: var(--muted-foreground);
+  --tw-prose-captions: var(--prose-soft);
   --tw-prose-code: var(--foreground);
   --tw-prose-pre-code: var(--foreground);
-  --tw-prose-pre-bg: var(--card);
-  --tw-prose-th-borders: var(--border);
-  --tw-prose-td-borders: var(--border);
+  --tw-prose-pre-bg: var(--secondary);
+  --tw-prose-th-borders: var(--prose-rule);
+  --tw-prose-td-borders: var(--prose-rule);
 }
+
+/* Dark theme: lift secondary text and make rules/code opaque enough to read. */
+.nfs-theme .prose-theme,
+.public-dark .prose-theme,
+.nfs-theme.prose-theme,
+.public-dark.prose-theme {
+  --prose-soft: oklch(0.86 0.02 258);
+  --prose-rule: oklch(0.52 0.05 258);
+}
+
+.prose-theme :where(code):not(:where(pre code)) {
+  background-color: var(--secondary);
+  border: 1px solid var(--prose-rule);
+  border-radius: 0.375rem;
+  padding: 0.1rem 0.35rem;
+  font-weight: 600;
+}
+
+.prose-theme :where(code):not(:where(pre code))::before,
+.prose-theme :where(code):not(:where(pre code))::after {
+  content: "";
+}
+
+.prose-theme :where(pre) {
+  border: 1px solid var(--prose-rule);
+}
+
+.prose-theme :where(a) {
+  text-underline-offset: 3px;
+}
+
+.prose-theme :where(th) {
+  color: var(--foreground);
+}
+
+/* Secondary text that must stay legible on dark backgrounds. */
+.text-soft {
+  color: var(--muted-foreground);
+}
+
+.nfs-theme .text-soft,
+.public-dark .text-soft {
+  color: oklch(0.86 0.02 258);
+}
+
 
 
 @layer base {
