@@ -13,9 +13,19 @@ import { Button } from "@/components/ui/button";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { notifications } from "@/mocks/notifications";
 import { toast } from "sonner";
+import { useRouter } from "@tanstack/react-router";
+import { useServerFn } from "@tanstack/react-start";
+import { adminLogout } from "@/lib/adminGate.functions";
 
 export function AdminHeader() {
   const unread = notifications.filter((n) => n.unread).length;
+  const router = useRouter();
+  const logout = useServerFn(adminLogout);
+
+  async function handleLogout() {
+    await logout({});
+    await router.navigate({ to: "/admin/login" });
+  }
 
   return (
     <header className="sticky top-0 z-30 flex h-16 items-center gap-3 border-b bg-background/95 px-4 backdrop-blur md:px-6">
@@ -71,7 +81,7 @@ export function AdminHeader() {
             <DropdownMenuItem onClick={() => toast("Профиль скоро появится")}>Профиль</DropdownMenuItem>
             <DropdownMenuItem onClick={() => toast("Настройки скоро появятся")}>Настройки</DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => toast("Выход из системы")}>Выйти</DropdownMenuItem>
+            <DropdownMenuItem onClick={handleLogout}>Выйти</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>

@@ -14,6 +14,7 @@ import { Route as RobotsDottxtRouteImport } from './routes/robots[.]txt'
 import { Route as PublicRouteImport } from './routes/_public'
 import { Route as AdminRouteImport } from './routes/_admin'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AdminLoginRouteImport } from './routes/admin.login'
 import { Route as PublicTermsRouteImport } from './routes/_public.terms'
 import { Route as PublicProfileRouteImport } from './routes/_public.profile'
 import { Route as PublicPrivacyRouteImport } from './routes/_public.privacy'
@@ -55,6 +56,11 @@ const AdminRoute = AdminRouteImport.update({
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminLoginRoute = AdminLoginRouteImport.update({
+  id: '/admin/login',
+  path: '/admin/login',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PublicTermsRoute = PublicTermsRouteImport.update({
@@ -161,6 +167,7 @@ export interface FileRoutesByFullPath {
   '/privacy': typeof PublicPrivacyRoute
   '/profile': typeof PublicProfileRoute
   '/terms': typeof PublicTermsRoute
+  '/admin/login': typeof AdminLoginRoute
   '/admin/bookings': typeof AdminAdminBookingsRoute
   '/admin/cars': typeof AdminAdminCarsRoute
   '/admin/clients': typeof AdminAdminClientsRoute
@@ -185,6 +192,7 @@ export interface FileRoutesByTo {
   '/privacy': typeof PublicPrivacyRoute
   '/profile': typeof PublicProfileRoute
   '/terms': typeof PublicTermsRoute
+  '/admin/login': typeof AdminLoginRoute
   '/admin/bookings': typeof AdminAdminBookingsRoute
   '/admin/cars': typeof AdminAdminCarsRoute
   '/admin/clients': typeof AdminAdminClientsRoute
@@ -212,6 +220,7 @@ export interface FileRoutesById {
   '/_public/privacy': typeof PublicPrivacyRoute
   '/_public/profile': typeof PublicProfileRoute
   '/_public/terms': typeof PublicTermsRoute
+  '/admin/login': typeof AdminLoginRoute
   '/_admin/admin/bookings': typeof AdminAdminBookingsRoute
   '/_admin/admin/cars': typeof AdminAdminCarsRoute
   '/_admin/admin/clients': typeof AdminAdminClientsRoute
@@ -238,6 +247,7 @@ export interface FileRouteTypes {
     | '/privacy'
     | '/profile'
     | '/terms'
+    | '/admin/login'
     | '/admin/bookings'
     | '/admin/cars'
     | '/admin/clients'
@@ -262,6 +272,7 @@ export interface FileRouteTypes {
     | '/privacy'
     | '/profile'
     | '/terms'
+    | '/admin/login'
     | '/admin/bookings'
     | '/admin/cars'
     | '/admin/clients'
@@ -288,6 +299,7 @@ export interface FileRouteTypes {
     | '/_public/privacy'
     | '/_public/profile'
     | '/_public/terms'
+    | '/admin/login'
     | '/_admin/admin/bookings'
     | '/_admin/admin/cars'
     | '/_admin/admin/clients'
@@ -311,6 +323,7 @@ export interface RootRouteChildren {
   PublicRoute: typeof PublicRouteWithChildren
   RobotsDottxtRoute: typeof RobotsDottxtRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  AdminLoginRoute: typeof AdminLoginRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -348,6 +361,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/login': {
+      id: '/admin/login'
+      path: '/admin/login'
+      fullPath: '/admin/login'
+      preLoaderRoute: typeof AdminLoginRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_public/terms': {
@@ -547,6 +567,7 @@ const rootRouteChildren: RootRouteChildren = {
   PublicRoute: PublicRouteWithChildren,
   RobotsDottxtRoute: RobotsDottxtRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
+  AdminLoginRoute: AdminLoginRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
