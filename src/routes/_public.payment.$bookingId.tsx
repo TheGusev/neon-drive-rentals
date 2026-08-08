@@ -114,7 +114,7 @@ function PaymentPage() {
                 </div>
                 {pickup && (
                   <div className="mt-1 flex items-center gap-1 text-[11px] text-muted-foreground">
-                    <MapPin className="h-3 w-3" />{pickup.title}
+                    <MapPin className="h-3 w-3" />{pickup.address}
                   </div>
                 )}
               </div>

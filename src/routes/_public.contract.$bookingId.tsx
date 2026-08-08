@@ -132,7 +132,7 @@ function ContractPage() {
             <dl className="space-y-2 text-sm">
               <Row label="Автомобиль" value={`${car.brand} ${car.model}, ${car.year}`} />
               <Row label="Период" value={`${startLabel} ${draft.startTime} — ${endLabel} ${draft.endTime}`} />
-              {pickup && <Row label="Точка выдачи" value={pickup.title} />}
+              {pickup && <Row label="Пункт выдачи" value={pickup.address} />}
               <Row label="Тариф" value={tariff!.title} />
               <Row label="Итого" value={formatRub(breakdown.total)} strong />
             </dl>
