@@ -31,6 +31,7 @@ export function GarageShowcase({ compact = false }: { compact?: boolean }) {
   const [quickCar, setQuickCar] = useState<Car | null>(null);
   const [active, setActive] = useState(0);
   const [progress, setProgress] = useState(0);
+  const reducedMotion = useReducedMotion();
   const { from, to } = useHomeBooking();
   const { available } = useMemo(() => splitAvailability(cars, from, to), [from, to]);
 
