@@ -132,38 +132,11 @@ function HomeDesktopInner({ heroImage: _heroImage }: { heroImage: string }) {
           </div>
         </div>
 
-        {/* Popular strip */}
-        <div className="rise-in shrink-0 pt-1" style={{ animationDelay: "700ms" }}>
-          <div className="mx-auto mb-2 flex max-w-7xl items-end justify-between gap-4 px-6">
-            <div>
-              <p className="text-[10px] uppercase tracking-[0.35em] text-foreground/70">Каталог</p>
-              <p className="font-display text-lg font-black text-foreground md:text-xl">
-                Популярные <span className="text-[color:var(--neon-blue)]">модели</span>
-              </p>
-            </div>
-            <div className="flex items-center gap-2">
-              <Button size="icon" variant="outline" onClick={() => scrollBy(-320)} aria-label="Влево" className="h-8 w-8 border-border/70 bg-background/60 backdrop-blur hover:border-accent">
-                <ChevronLeft className="h-4 w-4" />
-              </Button>
-              <Button size="icon" variant="outline" onClick={() => scrollBy(320)} aria-label="Вправо" className="h-8 w-8 border-border/70 bg-background/60 backdrop-blur hover:border-accent">
-                <ChevronRight className="h-4 w-4" />
-              </Button>
-              <Button asChild variant="ghost" size="sm" className="ml-2 gap-1 text-accent hover:text-accent">
-                <Link to="/cars">Все <ArrowRight className="h-3.5 w-3.5" /></Link>
-              </Button>
-            </div>
-          </div>
-
-          <div
-            ref={stripRef}
-            className="no-scrollbar flex snap-x gap-3 overflow-x-auto pb-2 pr-6"
-            style={{ paddingLeft: "max(1.5rem, calc((100vw - 80rem) / 2 + 1.5rem))" }}
-          >
-            {popular.map((car) => (
-              <StripCard key={car.id} car={car} onOpen={() => setQuickCar(car)} />
-            ))}
-          </div>
+        {/* Garage picker */}
+        <div className="rise-in shrink-0 pt-2" style={{ animationDelay: "700ms" }}>
+          <GarageShowcase />
         </div>
+
 
         {/* SEO tiles */}
         <div className="shrink-0 pb-3 pt-2">
