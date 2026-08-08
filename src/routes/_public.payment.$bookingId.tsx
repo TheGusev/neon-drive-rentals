@@ -155,7 +155,7 @@ function PaymentPage() {
                 </span>
                 <span>
                   <span className="block font-medium text-foreground">Инструкцию по получению</span>
-                  <span className="block text-xs text-muted-foreground">Адрес, контакты менеджера и время подачи</span>
+                  <span className="block text-xs text-muted-foreground">Адрес пункта выдачи, контакты менеджера и время получения</span>
                 </span>
               </li>
             </ul>
