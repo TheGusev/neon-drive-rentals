@@ -47,6 +47,8 @@ export function NfsSideMenu({
 }) {
   const horizontal = orientation === "horizontal";
 
+  const coarse = useCoarsePointer();
+
   return (
     <TooltipProvider delayDuration={150}>
       <nav
@@ -58,38 +60,46 @@ export function NfsSideMenu({
           className,
         )}
       >
-        {items.map((it, i) => (
-          <Tooltip key={it.title}>
-            <TooltipTrigger asChild>
-              <button
-                type="button"
-                aria-label={`${it.title} — подробнее`}
-                className={cn(
-                  "group flex items-center gap-3 rounded-r-xl border border-l-2 border-border/50 border-l-[color:var(--neon-blue)]/70 bg-background/55 py-2.5 pl-3 pr-4 text-left backdrop-blur-md transition hover:border-accent/70",
-                  horizontal && "shrink-0 rounded-xl py-2 pr-3",
-                  animate && "garage-in",
-                )}
-                style={{ "--i": i } as React.CSSProperties}
-              >
-                <span className="grid h-9 w-9 shrink-0 place-items-center rounded-md bg-[color:var(--neon-blue)]/15 text-[color:var(--neon-blue)] transition group-hover:bg-[color:var(--neon-orange)]/20 group-hover:text-[color:var(--neon-orange)]">
-                  <it.icon className="h-4 w-4" />
-                </span>
-                <div className="min-w-0">
-                  <p className="truncate font-display text-sm font-bold text-foreground">{it.title}</p>
-                  <p className="truncate text-[11px] text-foreground/70">{it.sub}</p>
-                </div>
-              </button>
-            </TooltipTrigger>
-            <TooltipContent
-              side={horizontal ? "bottom" : "right"}
-              sideOffset={8}
-              className="pointer-events-none max-w-[240px] border-accent/50 bg-background/95 text-[11px] leading-snug text-foreground backdrop-blur"
+        {items.map((it, i) => {
+          const tile = (
+            <button
+              type="button"
+              aria-label={`${it.title} — подробнее`}
+              className={cn(
+                "group flex items-center gap-3 rounded-r-xl border border-l-2 border-border/50 border-l-[color:var(--neon-blue)]/70 bg-background/55 py-2.5 pl-3 pr-4 text-left backdrop-blur-md transition hover:border-accent/70",
+                horizontal && "shrink-0 rounded-xl py-2 pr-3",
+                animate && "garage-in",
+              )}
+              style={{ "--i": i } as React.CSSProperties}
             >
-              {it.hint}
-            </TooltipContent>
-          </Tooltip>
-        ))}
+              <span className="grid h-9 w-9 shrink-0 place-items-center rounded-md bg-[color:var(--neon-blue)]/15 text-[color:var(--neon-blue)] transition group-hover:bg-[color:var(--neon-orange)]/20 group-hover:text-[color:var(--neon-orange)]">
+                <it.icon className="h-4 w-4" />
+              </span>
+              <div className="min-w-0">
+                <p className="truncate font-display text-sm font-bold text-foreground">{it.title}</p>
+                <p className="truncate text-[11px] text-foreground/70">{it.sub}</p>
+              </div>
+            </button>
+          );
+
+          // На сенсорных устройствах подсказки не показываем — они перекрывают контент.
+          if (coarse) return <div key={it.title} className="contents">{tile}</div>;
+
+          return (
+            <Tooltip key={it.title}>
+              <TooltipTrigger asChild>{tile}</TooltipTrigger>
+              <TooltipContent
+                side={horizontal ? "bottom" : "right"}
+                sideOffset={8}
+                className="pointer-events-none max-w-[240px] border-accent/50 bg-background/95 text-[11px] leading-snug text-foreground backdrop-blur"
+              >
+                {it.hint}
+              </TooltipContent>
+            </Tooltip>
+          );
+        })}
       </nav>
     </TooltipProvider>
   );
 }
+
