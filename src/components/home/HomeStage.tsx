@@ -332,33 +332,11 @@ function HomeMobileInner({ heroImage: _heroImage }: { heroImage: string }) {
           ))}
         </div>
 
-        {/* Popular strip */}
-        <div className="rise-in mt-5" style={{ animationDelay: "680ms" }}>
-          <div className="mb-2 flex items-end justify-between gap-3">
-            <div>
-              <p className="text-[10px] uppercase tracking-[0.35em] text-foreground/70">Каталог</p>
-              <p className="font-display text-base font-black text-foreground">
-                Популярные <span className="text-[color:var(--neon-blue)]">модели</span>
-              </p>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <Button size="icon" variant="outline" onClick={() => scrollBy(-240)} aria-label="Влево" className="h-8 w-8 border-border/70 bg-background/60 backdrop-blur">
-                <ChevronLeft className="h-4 w-4" />
-              </Button>
-              <Button size="icon" variant="outline" onClick={() => scrollBy(240)} aria-label="Вправо" className="h-8 w-8 border-border/70 bg-background/60 backdrop-blur">
-                <ChevronRight className="h-4 w-4" />
-              </Button>
-            </div>
-          </div>
-          <div
-            ref={stripRef}
-            className="no-scrollbar -mx-4 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-2"
-          >
-            {popular.map((car) => (
-              <StripCard key={car.id} car={car} onOpen={() => setQuickCar(car)} />
-            ))}
-          </div>
+        {/* Garage picker */}
+        <div className="rise-in -mx-4 mt-5" style={{ animationDelay: "680ms" }}>
+          <GarageShowcase compact />
         </div>
+
 
         {/* SEO tiles — full-bleed 2-cols */}
         <div className="rise-in mt-5" style={{ animationDelay: "820ms" }}>
