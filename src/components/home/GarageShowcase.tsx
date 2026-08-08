@@ -11,6 +11,9 @@ import { isCarAvailable, nextBusyUntil, splitAvailability } from "@/lib/availabi
 import { useHomeBooking } from "./HomeBookingContext";
 import { CarQuickView } from "./CarQuickView";
 import { NfsSideMenu } from "./NfsSideMenu";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { useCoarsePointer } from "@/hooks/useCoarsePointer";
+
 
 const garageCars = cars.slice(0, 10);
 
@@ -94,7 +97,9 @@ export function GarageShowcase({ compact = false }: { compact?: boolean }) {
   };
 
   return (
+    <TooltipProvider delayDuration={150}>
     <section ref={sectionRef} aria-label="Гараж — выбор автомобиля" className="relative">
+
       <div className={cn("mx-auto w-full max-w-7xl px-4 md:px-6", compact && "px-4")}>
         <div className="flex items-end justify-between gap-3">
           <div className="min-w-0">
@@ -172,6 +177,8 @@ export function GarageShowcase({ compact = false }: { compact?: boolean }) {
 
       <CarQuickView car={quickCar} onClose={() => setQuickCar(null)} />
     </section>
+    </TooltipProvider>
+
   );
 }
 
@@ -192,8 +199,17 @@ function GarageCard({
   const free = isCarAvailable(car, from, to);
   const busyUntil = !free ? nextBusyUntil(car) : null;
   const price = Math.round(car.pricePerDay * getTariff(tariff).multiplier);
+  const coarse = useCoarsePointer();
 
-  return (
+  const perks = [
+    `${car.consumption} л/100 км`,
+    car.transmission === "AT" ? "Автомат" : "Механика",
+    `${car.seats} места`,
+    "Правый руль",
+    `${car.mileageLimit} км/сутки`,
+  ];
+
+  const card = (
     <button
       type="button"
       onClick={onOpen}
@@ -243,4 +259,46 @@ function GarageCard({
       </div>
     </button>
   );
+
+  return (
+    <Tooltip {...(coarse ? { open: active } : {})}>
+      <TooltipTrigger asChild>{card}</TooltipTrigger>
+      <TooltipContent
+        side="top"
+        sideOffset={10}
+        className="pointer-events-none max-w-[260px] border-accent/50 bg-background/95 text-foreground shadow-[0_10px_30px_-12px_color-mix(in_oklab,var(--neon-blue)_70%,transparent)] backdrop-blur"
+      >
+        <p className="font-display text-sm font-bold">
+          {car.brand} {car.model} · {car.year}
+        </p>
+        <p className="mt-0.5 text-[11px] text-muted-foreground">Цвет: {car.color}</p>
+        <div className="mt-1.5 flex flex-wrap gap-1">
+          {perks.map((p) => (
+            <span
+              key={p}
+              className="rounded-md border border-border/60 bg-muted/60 px-1.5 py-0.5 text-[10px] font-medium"
+            >
+              {p}
+            </span>
+          ))}
+        </div>
+        <p className="mt-2 text-[11px]">
+          <span className="font-display text-sm font-black text-[color:var(--neon-orange)]">
+            {price.toLocaleString("ru-RU")} ₽
+          </span>{" "}
+          <span className="text-muted-foreground">/ сутки</span>
+          {" · "}
+          {free ? (
+            <span className="text-[color:var(--neon-blue)]">Свободна</span>
+          ) : (
+            <span className="text-destructive">
+              Занято{busyUntil ? ` до ${format(busyUntil, "d.MM")}` : ""}
+            </span>
+          )}
+        </p>
+        <p className="mt-1 text-[10px] text-muted-foreground">Нажмите, чтобы посмотреть и забронировать</p>
+      </TooltipContent>
+    </Tooltip>
+  );
 }
+
