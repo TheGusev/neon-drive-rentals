@@ -6,7 +6,7 @@ import { cars } from "@/mocks/cars";
 import { formatRub } from "@/lib/bookingDraft";
 
 export function FavoritesBlock() {
-  const { favorites, toggle } = useFavorites();
+  const { favorites, toggleFavorite } = useFavorites();
   const list = cars.filter((c) => favorites.includes(c.id));
 
   return (
@@ -40,7 +40,7 @@ export function FavoritesBlock() {
               <button
                 type="button"
                 aria-label="Убрать из избранного"
-                onClick={() => toggle(car.id)}
+                onClick={() => toggleFavorite(car.id)}
                 className="shrink-0 rounded-full p-2 text-primary transition hover:bg-muted"
               >
                 <Heart className="h-4 w-4 fill-current" />

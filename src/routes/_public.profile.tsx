@@ -3,6 +3,7 @@ import { ProfileHeader } from "@/components/profile/ProfileHeader";
 import { CurrentRentalCard } from "@/components/profile/CurrentRentalCard";
 import { DocumentsBlock } from "@/components/profile/DocumentsBlock";
 import { BookingHistoryList } from "@/components/profile/BookingHistoryList";
+import { FavoritesBlock } from "@/components/profile/FavoritesBlock";
 import { ReviewsBlock } from "@/components/profile/ReviewsBlock";
 import { BottomNav } from "@/components/profile/BottomNav";
 import { SectionCard } from "@/components/checkout/SectionCard";
@@ -41,6 +42,8 @@ function ProfilePage() {
           )}
 
           <DocumentsBlock />
+
+          <FavoritesBlock />
 
           <section id="bookings" className="scroll-mt-24">
             <BookingHistoryList />
