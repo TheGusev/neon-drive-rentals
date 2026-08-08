@@ -94,6 +94,15 @@ export function SiteFooter() {
                 Пользовательское соглашение
               </Link>
             </li>
+            <li>
+              <Link
+                to="/admin/login"
+                rel="nofollow"
+                className="text-muted-foreground/70 transition hover:text-accent"
+              >
+                Вход для сотрудников
+              </Link>
+            </li>
           </ul>
         </div>
       </div>
