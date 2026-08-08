@@ -13,6 +13,8 @@ import { CarQuickView } from "./CarQuickView";
 import { NfsSideMenu } from "./NfsSideMenu";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { useCoarsePointer } from "@/hooks/useCoarsePointer";
+import { usePrefetchCar } from "@/hooks/usePrefetchCar";
+import { useReducedMotion } from "@/hooks/useReducedMotion";
 
 
 const garageCars = cars.slice(0, 10);
@@ -29,6 +31,7 @@ export function GarageShowcase({ compact = false }: { compact?: boolean }) {
   const [quickCar, setQuickCar] = useState<Car | null>(null);
   const [active, setActive] = useState(0);
   const [progress, setProgress] = useState(0);
+  const reducedMotion = useReducedMotion();
   const { from, to } = useHomeBooking();
   const { available } = useMemo(() => splitAvailability(cars, from, to), [from, to]);
 
@@ -93,8 +96,9 @@ export function GarageShowcase({ compact = false }: { compact?: boolean }) {
     const el = stripRef.current;
     if (!el) return;
     const step = (el.firstElementChild as HTMLElement | null)?.offsetWidth ?? 280;
-    el.scrollBy({ left: dir * (step + 12), behavior: "smooth" });
+    el.scrollBy({ left: dir * (step + 12), behavior: reducedMotion ? "auto" : "smooth" });
   };
+
 
   return (
     <TooltipProvider delayDuration={150}>
@@ -209,6 +213,13 @@ function GarageCard({
     `${car.mileageLimit} км/сутки`,
   ];
 
+  const { prefetch, cancel } = usePrefetchCar();
+
+  // On touch devices the centered card is the likely target — warm it early.
+  useEffect(() => {
+    if (coarse && active) prefetch(car, true);
+  }, [coarse, active, car, prefetch]);
+
   const card = (
     <Link
       to="/cars/$carId"
@@ -217,6 +228,10 @@ function GarageCard({
       aria-label={`${car.brand} ${car.model} — подробнее`}
       data-active={active ? "true" : "false"}
       style={{ "--i": index } as React.CSSProperties}
+      onMouseEnter={() => prefetch(car)}
+      onMouseLeave={cancel}
+      onFocus={() => prefetch(car, true)}
+      onTouchStart={() => prefetch(car, true)}
       className={cn(
         "garage-card group relative flex h-[200px] w-[240px] shrink-0 snap-center flex-col overflow-hidden rounded-2xl border text-left backdrop-blur sm:h-[220px] sm:w-[280px] xl:h-[250px] xl:w-[320px]",
         entered && "garage-in",
@@ -226,6 +241,7 @@ function GarageCard({
         !free && "grayscale-[0.35]",
       )}
     >
+
       <div className="relative flex-1 overflow-hidden bg-muted">
         <img
           src={car.image}
@@ -246,6 +262,8 @@ function GarageCard({
         <button
           type="button"
           aria-label={`Быстрый просмотр: ${car.brand} ${car.model}`}
+          onMouseEnter={() => prefetch(car, true)}
+          onFocus={() => prefetch(car, true)}
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
@@ -253,6 +271,7 @@ function GarageCard({
           }}
           className="absolute right-2 top-2 grid h-7 w-7 place-items-center rounded-md border border-border/60 bg-background/75 text-foreground backdrop-blur transition hover:border-accent hover:text-[color:var(--neon-blue)]"
         >
+
           <Eye className="h-3.5 w-3.5" />
         </button>
       </div>

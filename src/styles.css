@@ -562,5 +562,23 @@ html.theme-switching *::after {
   .garage-card[data-active="true"] .garage-sweep,
   .garage-card:hover .garage-sweep { animation: none; }
   .garage-strip { scroll-behavior: auto; }
+  html { scroll-behavior: auto; }
+
+  /* Floating menu button: fade only, never slide out of view */
+  [data-hidden] {
+    transition-property: opacity !important;
+    transition-duration: 120ms !important;
+    transform: none !important;
+  }
+  [data-hidden="true"] { opacity: 1 !important; pointer-events: auto !important; }
+
+  /* Radix overlays (Dialog / Sheet / Tooltip / Popover): plain fade */
+  [data-state="open"],
+  [data-state="closed"] {
+    animation-duration: 100ms !important;
+    animation-timing-function: linear !important;
+    transform: none !important;
+  }
 }
+
 
