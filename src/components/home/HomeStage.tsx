@@ -43,8 +43,6 @@ const benefits = [
   { icon: Wrench, title: "JDM качество", text: "авто из Японии" },
 ];
 
-const popular = cars.slice(0, 8);
-
 // -------- Desktop --------
 
 export function HomeDesktop({ heroImage }: { heroImage: string }) {
@@ -56,11 +54,7 @@ export function HomeDesktop({ heroImage }: { heroImage: string }) {
 }
 
 function HomeDesktopInner({ heroImage: _heroImage }: { heroImage: string }) {
-  const stripRef = useRef<HTMLDivElement>(null);
-  const [quickCar, setQuickCar] = useState<Car | null>(null);
   const { from, to } = useHomeBooking();
-
-  const scrollBy = (delta: number) => stripRef.current?.scrollBy({ left: delta, behavior: "smooth" });
 
   const { available } = useMemo(() => splitAvailability(cars, from, to), [from, to]);
 
@@ -70,11 +64,7 @@ function HomeDesktopInner({ heroImage: _heroImage }: { heroImage: string }) {
 
       {/* Content */}
       <div className="relative z-10 flex min-h-[100svh] flex-col">
-        <div className="mx-auto grid w-full max-w-7xl flex-1 grid-cols-1 items-center gap-5 px-6 pt-4 xl:grid-cols-[280px_1fr] xl:gap-8">
-          {/* Left: NFS-style menu — column on xl, chip row below */}
-          <NfsSideMenu className="hidden xl:flex" />
-          <NfsSideMenu orientation="horizontal" className="-mx-6 px-6 xl:hidden" />
-
+        <div className="mx-auto grid w-full max-w-7xl flex-1 grid-cols-1 items-center gap-5 px-6 pt-4">
           {/* Middle: title + copy + CTAs */}
           <div className="max-w-2xl">
             <p className="rise-in text-[10px] uppercase tracking-[0.5em] text-[color:var(--neon-blue)] drop-shadow" style={{ animationDelay: "50ms" }}>
@@ -146,59 +136,10 @@ function HomeDesktopInner({ heroImage: _heroImage }: { heroImage: string }) {
         </div>
       </div>
 
-      <CarQuickView car={quickCar} onClose={() => setQuickCar(null)} />
     </div>
   );
 }
 
-
-function StripCard({ car, onOpen }: { car: Car; onOpen: () => void }) {
-  const { from, to, tariff } = useHomeBooking();
-  const available = isCarAvailable(car, from, to);
-  const busyUntil = !available ? nextBusyUntil(car) : null;
-  const t = getTariff(tariff);
-  const priceInTariff = Math.round(car.pricePerDay * t.multiplier);
-
-  return (
-    <button
-      type="button"
-      onClick={onOpen}
-      className={cn(
-        "group relative flex h-[180px] w-[240px] shrink-0 snap-start flex-col overflow-hidden rounded-xl border border-border/60 bg-card/70 text-left backdrop-blur transition hover:-translate-y-1 hover:border-accent hover:neon-glow sm:h-[200px] sm:w-[270px] xl:h-[220px] xl:w-[300px]",
-        !available && "opacity-60 grayscale-[0.3] hover:opacity-90",
-      )}
-    >
-      <div className="relative flex-1 overflow-hidden bg-muted">
-        <img
-          src={car.image}
-          alt={`${car.brand} ${car.model}`}
-          loading="lazy"
-          className="h-full w-full object-cover transition duration-700 group-hover:scale-110"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-background/85 via-background/10 to-transparent" />
-        <span className="absolute left-2 top-2 rounded-md bg-background/70 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-widest backdrop-blur">
-          {car.class === "sport" ? "Sport" : "Econom"}
-        </span>
-        {!available && (
-          <span className="absolute right-2 top-2 rounded-md bg-destructive/90 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-widest text-destructive-foreground">
-            Занято{busyUntil ? ` до ${format(busyUntil, "d.MM")}` : ""}
-          </span>
-        )}
-      </div>
-      <div className="flex items-center justify-between gap-2 px-3 py-2.5">
-        <div className="min-w-0">
-          <p className="truncate font-display text-sm font-bold">{car.brand} {car.model}</p>
-          <p className="text-[10px] text-muted-foreground">
-            <Fuel className="mr-0.5 inline h-2.5 w-2.5" />{car.consumption}л · {car.transmission}
-          </p>
-        </div>
-        <span className="font-display text-base font-black text-[color:var(--neon-orange)]">
-          {priceInTariff.toLocaleString("ru-RU")}₽
-        </span>
-      </div>
-    </button>
-  );
-}
 
 // -------- Mobile --------
 
@@ -211,12 +152,8 @@ export function HomeMobile({ heroImage }: { heroImage: string }) {
 }
 
 function HomeMobileInner({ heroImage: _heroImage }: { heroImage: string }) {
-  const stripRef = useRef<HTMLDivElement>(null);
-  const [quickCar, setQuickCar] = useState<Car | null>(null);
   const { from, to } = useHomeBooking();
   const { available } = useMemo(() => splitAvailability(cars, from, to), [from, to]);
-
-  const scrollBy = (delta: number) => stripRef.current?.scrollBy({ left: delta, behavior: "smooth" });
 
   return (
     <div className="relative min-h-[100svh] overflow-hidden bg-background text-foreground">
@@ -304,7 +241,6 @@ function HomeMobileInner({ heroImage: _heroImage }: { heroImage: string }) {
         </div>
       </div>
 
-      <CarQuickView car={quickCar} onClose={() => setQuickCar(null)} />
     </div>
   );
 }
