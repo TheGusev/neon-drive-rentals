@@ -12,10 +12,12 @@ export function ThemeToggle({ className, withLabel = false }: { className?: stri
       onClick={toggle}
       aria-label={dark ? "Включить светлую тему" : "Включить тёмную тему"}
       className={cn(
-        "inline-flex items-center gap-2 rounded-xl border border-border bg-card/70 px-3 py-2 text-sm font-semibold text-foreground transition hover:border-accent hover:text-accent active:scale-95",
+        "inline-flex h-10 shrink-0 items-center justify-center gap-2 rounded-xl border border-border bg-card/70 px-3 text-sm font-semibold text-foreground transition-[transform,color,border-color] hover:border-accent hover:text-accent active:scale-95",
+        !withLabel && "w-10 px-0",
         className,
       )}
     >
+
       <span className="relative grid h-5 w-5 place-items-center">
         <Sun
           className={cn(
