@@ -9,6 +9,7 @@ import {
 } from "@tanstack/react-router";
 import { useEffect, type ReactNode } from "react";
 import { Toaster } from "@/components/ui/sonner";
+import { BUILD_ID } from "@/lib/build-info";
 
 
 import appCss from "../styles.css?url";
@@ -90,6 +91,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:description", content: "Аренда авто в Новосибирске: онлайн-бронирование, электронный договор, выдача на Доватора, 11." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "build-id", content: BUILD_ID },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
