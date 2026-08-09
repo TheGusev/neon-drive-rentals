@@ -22,6 +22,7 @@ import { Route as PublicKeiCarsRouteImport } from './routes/_public.kei-cars'
 import { Route as PublicCarsIndexRouteImport } from './routes/_public.cars.index'
 import { Route as PublicBlogIndexRouteImport } from './routes/_public.blog.index'
 import { Route as AdminAdminIndexRouteImport } from './routes/_admin.admin.index'
+import { Route as ApiPublicVersionRouteImport } from './routes/api/public/version'
 import { Route as PublicRentNovosibirskRouteImport } from './routes/_public.rent.novosibirsk'
 import { Route as PublicRentBezZalogaRouteImport } from './routes/_public.rent.bez-zaloga'
 import { Route as PublicPaymentBookingIdRouteImport } from './routes/_public.payment.$bookingId'
@@ -97,6 +98,11 @@ const AdminAdminIndexRoute = AdminAdminIndexRouteImport.update({
   id: '/admin/',
   path: '/admin/',
   getParentRoute: () => AdminRoute,
+} as any)
+const ApiPublicVersionRoute = ApiPublicVersionRouteImport.update({
+  id: '/api/public/version',
+  path: '/api/public/version',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const PublicRentNovosibirskRoute = PublicRentNovosibirskRouteImport.update({
   id: '/rent/novosibirsk',
@@ -180,6 +186,7 @@ export interface FileRoutesByFullPath {
   '/payment/$bookingId': typeof PublicPaymentBookingIdRoute
   '/rent/bez-zaloga': typeof PublicRentBezZalogaRoute
   '/rent/novosibirsk': typeof PublicRentNovosibirskRoute
+  '/api/public/version': typeof ApiPublicVersionRoute
   '/admin/': typeof AdminAdminIndexRoute
   '/blog/': typeof PublicBlogIndexRoute
   '/cars/': typeof PublicCarsIndexRoute
@@ -205,6 +212,7 @@ export interface FileRoutesByTo {
   '/payment/$bookingId': typeof PublicPaymentBookingIdRoute
   '/rent/bez-zaloga': typeof PublicRentBezZalogaRoute
   '/rent/novosibirsk': typeof PublicRentNovosibirskRoute
+  '/api/public/version': typeof ApiPublicVersionRoute
   '/admin': typeof AdminAdminIndexRoute
   '/blog': typeof PublicBlogIndexRoute
   '/cars': typeof PublicCarsIndexRoute
@@ -233,6 +241,7 @@ export interface FileRoutesById {
   '/_public/payment/$bookingId': typeof PublicPaymentBookingIdRoute
   '/_public/rent/bez-zaloga': typeof PublicRentBezZalogaRoute
   '/_public/rent/novosibirsk': typeof PublicRentNovosibirskRoute
+  '/api/public/version': typeof ApiPublicVersionRoute
   '/_admin/admin/': typeof AdminAdminIndexRoute
   '/_public/blog/': typeof PublicBlogIndexRoute
   '/_public/cars/': typeof PublicCarsIndexRoute
@@ -260,6 +269,7 @@ export interface FileRouteTypes {
     | '/payment/$bookingId'
     | '/rent/bez-zaloga'
     | '/rent/novosibirsk'
+    | '/api/public/version'
     | '/admin/'
     | '/blog/'
     | '/cars/'
@@ -285,6 +295,7 @@ export interface FileRouteTypes {
     | '/payment/$bookingId'
     | '/rent/bez-zaloga'
     | '/rent/novosibirsk'
+    | '/api/public/version'
     | '/admin'
     | '/blog'
     | '/cars'
@@ -312,6 +323,7 @@ export interface FileRouteTypes {
     | '/_public/payment/$bookingId'
     | '/_public/rent/bez-zaloga'
     | '/_public/rent/novosibirsk'
+    | '/api/public/version'
     | '/_admin/admin/'
     | '/_public/blog/'
     | '/_public/cars/'
@@ -324,6 +336,7 @@ export interface RootRouteChildren {
   RobotsDottxtRoute: typeof RobotsDottxtRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   AdminLoginRoute: typeof AdminLoginRoute
+  ApiPublicVersionRoute: typeof ApiPublicVersionRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -418,6 +431,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin/'
       preLoaderRoute: typeof AdminAdminIndexRouteImport
       parentRoute: typeof AdminRoute
+    }
+    '/api/public/version': {
+      id: '/api/public/version'
+      path: '/api/public/version'
+      fullPath: '/api/public/version'
+      preLoaderRoute: typeof ApiPublicVersionRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/_public/rent/novosibirsk': {
       id: '/_public/rent/novosibirsk'
@@ -568,17 +588,8 @@ const rootRouteChildren: RootRouteChildren = {
   RobotsDottxtRoute: RobotsDottxtRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   AdminLoginRoute: AdminLoginRoute,
+  ApiPublicVersionRoute: ApiPublicVersionRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
