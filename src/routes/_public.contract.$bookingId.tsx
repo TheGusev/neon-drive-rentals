@@ -174,7 +174,7 @@ function ContractPage() {
             <SmsCodeInput value={code} onChange={setCode} />
             <button
               type="button"
-              className="mt-3 text-xs font-medium text-accent hover:underline"
+              className="link-text mt-3 text-xs"
               onClick={() => toast("Код отправлен повторно")}
             >
               Отправить код ещё раз
@@ -197,7 +197,7 @@ function ContractPage() {
           <Button
             onClick={sign}
             disabled={!canSign}
-            className="h-12 w-full rounded-2xl bg-accent text-base font-semibold text-primary-foreground hover:bg-accent disabled:opacity-50"
+            variant="accent" size="xl" className="w-full"
           >
             Подписать договор
           </Button>

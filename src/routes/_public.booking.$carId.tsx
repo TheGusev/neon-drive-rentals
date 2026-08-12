@@ -215,7 +215,7 @@ function BookingPage() {
                       href={PICKUP_POINT.mapUrl}
                       target="_blank"
                       rel="noreferrer"
-                      className="mt-1 inline-block text-xs font-medium text-accent underline underline-offset-2"
+                      className="link-text mt-1 inline-block text-xs underline"
                     >
                       Показать на карте
                     </a>
@@ -296,7 +296,7 @@ function BookingPage() {
           )}
           <Button
             onClick={goPay}
-            className="h-12 w-full rounded-2xl bg-accent text-base font-semibold text-primary-foreground hover:bg-accent"
+            variant="accent" size="xl" className="w-full"
           >
             Перейти к оплате
           </Button>

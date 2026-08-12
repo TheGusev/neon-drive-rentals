@@ -167,7 +167,7 @@ function PaymentPage() {
         <StickyBottomBar>
           <Button
             onClick={proceed}
-            className="h-12 w-full rounded-2xl bg-accent text-base font-semibold text-primary-foreground hover:bg-accent"
+            variant="accent" size="xl" className="w-full"
           >
             Оплатить {formatRub(breakdown.total)}
           </Button>

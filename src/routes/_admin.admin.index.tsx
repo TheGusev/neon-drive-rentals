@@ -148,7 +148,7 @@ function DashboardPage() {
             selected={bookedDates}
             onSelect={() => {}}
             className="rounded-md border-0"
-            modifiersClassNames={{ selected: "bg-rose-500 text-white hover:bg-rose-500" }}
+            modifiersClassNames={{ selected: "bg-destructive text-destructive-foreground hover:bg-destructive" }}
           />
         </section>
 
@@ -196,7 +196,7 @@ function DashboardPage() {
           />
           <Link
             to="/admin/settings"
-            className="flex flex-col items-center gap-2 rounded-xl border bg-background p-4 text-sm font-medium transition hover:border-primary hover:text-primary"
+            className="tile-action"
           >
             <Settings className="h-5 w-5" /> Настройки
           </Link>
@@ -218,7 +218,7 @@ function QuickAction({
   return (
     <button
       onClick={onClick}
-      className="flex flex-col items-center gap-2 rounded-xl border bg-background p-4 text-sm font-medium transition hover:border-primary hover:text-primary"
+      className="tile-action"
     >
       <Icon className="h-5 w-5" />
       {label}
