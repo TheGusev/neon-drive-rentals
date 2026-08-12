@@ -114,7 +114,7 @@ function BookingPage() {
       label: "Даты аренды",
       message: "Выберите даты получения и возврата",
     });
-  } else if (draft.startDate < today) {
+  } else if (today && draft.startDate < today) {
     errors.push({
       key: "dates",
       anchor: "section-dates",
