@@ -47,19 +47,19 @@ function AdminFinancePage() {
           label="Всего платежей"
           value={String(payments.length)}
           icon={Hash}
-          iconTone="bg-slate-100 text-slate-700"
+          iconTone="bg-muted text-muted-foreground"
         />
         <StatCard
           label="Оборот"
           value={`${revenue.toLocaleString("ru-RU")} ₽`}
           icon={Wallet}
-          iconTone="bg-emerald-100 text-emerald-700"
+          iconTone="bg-emerald-500/15 text-emerald-600 public-dark:text-emerald-400"
         />
         <StatCard
           label="Средний чек"
           value={`${avg.toLocaleString("ru-RU")} ₽`}
           icon={TrendingUp}
-          iconTone="bg-sky-100 text-sky-700"
+          iconTone="bg-sky-500/15 text-sky-600 public-dark:text-sky-400"
         />
       </div>
 

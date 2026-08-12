@@ -9,7 +9,7 @@ const fmt = (iso: string) =>
   new Date(iso).toLocaleDateString("ru-RU", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" });
 
 const statusLabel = { signed: "Подписан", pending: "Ожидает подписи", none: "Не оформлен" } as const;
-const statusTone = { signed: "bg-emerald-100 text-emerald-700", pending: "bg-amber-100 text-amber-700", none: "bg-muted text-muted-foreground" } as const;
+const statusTone = { signed: "bg-emerald-500/15 text-emerald-600 public-dark:text-emerald-400", pending: "bg-amber-500/15 text-amber-600 public-dark:text-amber-400", none: "bg-muted text-muted-foreground" } as const;
 
 export function CurrentRentalCard({ booking, car }: { booking: Booking; car: Car }) {
   const cs = booking.contractStatus ?? "none";

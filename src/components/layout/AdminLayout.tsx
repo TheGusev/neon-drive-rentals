@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/sidebar";
 import { LayoutDashboard, Car, CalendarCheck, Users, Wallet, Settings } from "lucide-react";
 import { AdminHeader } from "@/components/admin/AdminHeader";
+import { ThemeProvider, useTheme } from "@/components/layout/ThemeProvider";
 
 const items = [
   { to: "/admin", label: "Дашборд", icon: LayoutDashboard, exact: true },
@@ -68,7 +69,16 @@ function AdminSidebar() {
 
 export function AdminLayout() {
   return (
-    <div className="clean-light min-h-screen bg-background text-foreground">
+    <ThemeProvider>
+      <AdminShell />
+    </ThemeProvider>
+  );
+}
+
+function AdminShell() {
+  const { themeClass } = useTheme();
+  return (
+    <div className={`${themeClass} min-h-screen bg-background text-foreground transition-colors duration-300`}>
       <SidebarProvider>
         <div className="flex min-h-screen w-full">
           <AdminSidebar />

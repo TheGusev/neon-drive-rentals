@@ -5,10 +5,10 @@ import type { Car, Client, Payment } from "@/types/domain";
 
 const methodLabel = { card: "Карта", sbp: "СБП" } as const;
 const statusMap: Record<Payment["status"], { label: string; cls: string }> = {
-  success: { label: "Успешно", cls: "bg-emerald-100 text-emerald-700" },
-  pending: { label: "Ожидает", cls: "bg-amber-100 text-amber-700" },
-  refunded: { label: "Возврат", cls: "bg-sky-100 text-sky-700" },
-  failed: { label: "Ошибка", cls: "bg-rose-100 text-rose-700" },
+  success: { label: "Успешно", cls: "bg-emerald-500/15 text-emerald-500" },
+  pending: { label: "Ожидает", cls: "bg-amber-500/15 text-amber-500" },
+  refunded: { label: "Возврат", cls: "bg-sky-500/15 text-sky-500" },
+  failed: { label: "Ошибка", cls: "bg-rose-500/15 text-rose-500" },
 };
 
 const fmt = (iso: string) =>

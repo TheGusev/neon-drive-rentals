@@ -15,7 +15,11 @@ interface Props {
 
 export function AdminCarCard({ car, index, onEdit, onDelete }: Props) {
   return (
-    <EntityCard index={index}>
+    <EntityCard
+      index={index}
+      onClick={onEdit}
+      label={`Изменить ${car.brand} ${car.model}`}
+    >
       <div className="flex min-w-0 gap-3">
         <div className="relative aspect-[4/3] w-28 shrink-0 overflow-hidden rounded-xl bg-muted">
           {car.image && (
@@ -46,7 +50,10 @@ export function AdminCarCard({ car, index, onEdit, onDelete }: Props) {
                 variant="ghost"
                 size="icon"
                 className="h-8 w-8"
-                onClick={onEdit}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onEdit();
+                }}
                 aria-label="Изменить"
               >
                 <Pencil className="h-4 w-4" />
@@ -55,7 +62,10 @@ export function AdminCarCard({ car, index, onEdit, onDelete }: Props) {
                 variant="ghost"
                 size="icon"
                 className="h-8 w-8"
-                onClick={onDelete}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onDelete();
+                }}
                 aria-label="Удалить"
               >
                 <Trash2 className="h-4 w-4 text-rose-500" />

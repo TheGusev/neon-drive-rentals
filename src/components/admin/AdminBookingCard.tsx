@@ -17,7 +17,10 @@ interface Props {
 
 export function AdminBookingCard({ booking, car, client, index, onView }: Props) {
   return (
-    <EntityCard index={index}>
+    <EntityCard
+      index={index}
+      {...(onView ? { onClick: onView, label: `Бронирование № ${booking.id}` } : {})}
+    >
       <div className="flex min-w-0 items-start gap-3">
         <div className="aspect-[4/3] w-20 shrink-0 overflow-hidden rounded-lg bg-muted">
           {car?.image && (
@@ -54,7 +57,10 @@ export function AdminBookingCard({ booking, car, client, index, onView }: Props)
               variant="ghost"
               size="icon"
               className="h-8 w-8"
-              onClick={onView}
+              onClick={(e) => {
+                e.stopPropagation();
+                onView();
+              }}
               aria-label="Просмотр"
             >
               <Eye className="h-4 w-4" />

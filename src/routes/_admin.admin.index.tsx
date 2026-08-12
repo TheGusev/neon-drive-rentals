@@ -70,7 +70,7 @@ function DashboardPage() {
           delta={`+${dashboardStats.bookingsDelta} к вчера`}
           deltaTone="up"
           icon={CalendarCheck}
-          iconTone="bg-sky-100 text-sky-700"
+          iconTone="bg-sky-500/15 text-sky-600 public-dark:text-sky-400"
         />
         <StatCard
           label="Выручка сегодня"
@@ -78,13 +78,13 @@ function DashboardPage() {
           delta={`+${fmtRub(dashboardStats.revenueDelta)}`}
           deltaTone="up"
           icon={Wallet}
-          iconTone="bg-emerald-100 text-emerald-700"
+          iconTone="bg-emerald-500/15 text-emerald-600 public-dark:text-emerald-400"
         />
         <StatCard
           label="Всего автомобилей"
           value={String(dashboardStats.carsTotal)}
           icon={CarIcon}
-          iconTone="bg-amber-100 text-amber-700"
+          iconTone="bg-amber-500/15 text-amber-600 public-dark:text-amber-400"
         />
         <StatCard
           label="Всего клиентов"

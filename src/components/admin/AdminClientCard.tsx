@@ -17,7 +17,7 @@ export function AdminClientCard({ client, index, onToggleBlacklist }: Props) {
     .join("");
 
   return (
-    <EntityCard index={index} className={client.blacklisted ? "border-rose-300" : undefined}>
+    <EntityCard index={index} className={client.blacklisted ? "border-rose-500/60" : undefined}>
       <div className="flex min-w-0 items-start gap-3">
         <div className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-primary/10 text-sm font-bold text-primary">
           {initials}

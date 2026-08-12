@@ -11,9 +11,9 @@ const typeLabel: Record<ClientDocument["type"], string> = {
 };
 
 const statusMap = {
-  verified: { label: "Проверено", tone: "text-emerald-700 bg-emerald-100", Icon: Check },
-  pending: { label: "На проверке", tone: "text-amber-700 bg-amber-100", Icon: Clock },
-  rejected: { label: "Отклонено", tone: "text-rose-700 bg-rose-100", Icon: X },
+  verified: { label: "Проверено", tone: "bg-emerald-500/15 text-emerald-600 public-dark:text-emerald-400", Icon: Check },
+  pending: { label: "На проверке", tone: "bg-amber-500/15 text-amber-600 public-dark:text-amber-400", Icon: Clock },
+  rejected: { label: "Отклонено", tone: "bg-rose-500/15 text-rose-600 public-dark:text-rose-400", Icon: X },
 } as const;
 
 export function DocumentsBlock() {
