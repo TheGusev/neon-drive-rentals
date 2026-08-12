@@ -22,6 +22,7 @@ import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
+import { useHydrated } from "@/hooks/useHydrated";
 
 export const Route = createFileRoute("/_public/booking/$carId")({
   validateSearch: (
@@ -101,8 +102,10 @@ function BookingPage() {
   }, [draft, car.pricePerDay, car.deposit, tariff.multiplier]);
 
   const [showErrors, setShowErrors] = useState(false);
-
-  const today = new Date().toISOString().slice(0, 10);
+  const hydrated = useHydrated();
+  // Past-date validation is computed only after hydration so server and client
+  // agree during the initial render (they may be in different timezones/days).
+  const today = hydrated ? new Date().toISOString().slice(0, 10) : undefined;
   const errors: { key: string; anchor: string; label: string; message: string }[] = [];
   if (!draft?.startDate || !draft?.endDate) {
     errors.push({
@@ -111,7 +114,7 @@ function BookingPage() {
       label: "Даты аренды",
       message: "Выберите даты получения и возврата",
     });
-  } else if (draft.startDate < today) {
+  } else if (today && draft.startDate < today) {
     errors.push({
       key: "dates",
       anchor: "section-dates",

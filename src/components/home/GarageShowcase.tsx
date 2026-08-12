@@ -13,6 +13,7 @@ import { CarQuickView } from "./CarQuickView";
 import { NfsSideMenu } from "./NfsSideMenu";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { useCoarsePointer } from "@/hooks/useCoarsePointer";
+import { useHydrated } from "@/hooks/useHydrated";
 import { usePrefetchCar } from "@/hooks/usePrefetchCar";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 
@@ -201,7 +202,10 @@ function GarageCard({
 }) {
   const { from, to, tariff } = useHomeBooking();
   const free = isCarAvailable(car, from, to);
-  const busyUntil = !free ? nextBusyUntil(car) : null;
+  const hydrated = useHydrated();
+  // Date-dependent availability label is rendered only after hydration to avoid
+  // server/client mismatches caused by different timezones or render moments.
+  const busyUntil = !free && hydrated ? nextBusyUntil(car) : null;
   const price = Math.round(car.pricePerDay * getTariff(tariff).multiplier);
   const coarse = useCoarsePointer();
 
