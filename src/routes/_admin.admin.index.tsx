@@ -2,11 +2,12 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { CalendarCheck, Wallet, Car as CarIcon, Users, FilePlus2, UserPlus, PlusCircle, Droplets, BarChart3, Settings, Star } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Calendar } from "@/components/ui/calendar";
 import { StatCard } from "@/components/admin/StatCard";
 import { StatusDot, fleetStatusLabels } from "@/components/admin/StatusDot";
-import { PaymentStatusBadge } from "@/components/admin/PaymentStatusBadge";
+import { AdminBookingCard } from "@/components/admin/AdminBookingCard";
+import { EmptyState } from "@/components/admin/EntityCard";
+
 import { dashboardStats } from "@/mocks/dashboardStats";
 import { bookings } from "@/mocks/bookings";
 import { getCarById } from "@/mocks/cars";
