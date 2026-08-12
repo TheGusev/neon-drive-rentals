@@ -16,6 +16,7 @@ import { toast } from "sonner";
 import { useRouter } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { adminLogout } from "@/lib/adminGate.functions";
+import { ThemeToggle } from "@/components/layout/ThemeToggle";
 
 export function AdminHeader() {
   const unread = notifications.filter((n) => n.unread).length;
@@ -38,6 +39,7 @@ export function AdminHeader() {
       </div>
 
       <div className="ml-auto flex items-center gap-2">
+        <ThemeToggle />
         <Popover>
           <PopoverTrigger asChild>
             <Button variant="ghost" size="icon" className="relative">

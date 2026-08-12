@@ -3,7 +3,9 @@
 @import "tw-animate-css";
 @plugin "@tailwindcss/typography";
 
-@custom-variant dark (&:is(.dark *));
+@custom-variant dark (&:is(.dark *, .public-dark *, .nfs-theme *));
+@custom-variant public-dark (&:is(.public-dark *, .nfs-theme *));
+
 
 /*
  * NSK Rent design tokens.
@@ -123,7 +125,16 @@
   --ring: oklch(0.68 0.19 258);
   --neon-blue: oklch(0.72 0.2 258);
   --neon-orange: oklch(0.75 0.2 45);
+  --sidebar: oklch(0.17 0.032 265);
+  --sidebar-foreground: oklch(0.97 0.01 250);
+  --sidebar-primary: oklch(0.68 0.19 258);
+  --sidebar-primary-foreground: oklch(0.14 0.03 265);
+  --sidebar-accent: oklch(0.24 0.04 265);
+  --sidebar-accent-foreground: oklch(0.97 0.01 250);
+  --sidebar-border: oklch(0.45 0.06 258 / 45%);
+  --sidebar-ring: oklch(0.68 0.19 258);
 }
+
 
 /* Light theme (user-selectable) + admin panel. */
 .clean-light {
@@ -228,6 +239,10 @@
 @layer base {
   * {
     border-color: var(--color-border);
+  }
+
+  html {
+    background-color: var(--color-background);
   }
 
   body {

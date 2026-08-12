@@ -82,7 +82,6 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "viewport", content: "width=device-width, initial-scale=1, viewport-fit=cover" },
       { title: "NSK-RENT — Аренда авто в Новосибирске" },
       { name: "description", content: "NSK-RENT — прокат японских кей-каров и премиум-авто в Новосибирске. Онлайн-бронирование, честные цены, поддержка 24/7." },
-      { name: "theme-color", content: "#0a0a0f" },
       { name: "apple-mobile-web-app-capable", content: "yes" },
       { name: "mobile-web-app-capable", content: "yes" },
       { name: "apple-mobile-web-app-status-bar-style", content: "black-translucent" },
@@ -114,11 +113,24 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
   errorComponent: ErrorComponent,
 });
 
+const THEME_BOOT_SCRIPT = `(function(){try{
+var k='nsk-rent-theme';var s=localStorage.getItem(k);
+var t=(s==='light'||s==='dark')?s:(window.matchMedia('(max-width: 767px)').matches?'light':'dark');
+var r=document.documentElement;
+r.classList.remove('public-dark','clean-light');
+r.classList.add(t==='dark'?'public-dark':'clean-light');
+r.style.colorScheme=t;
+var m=document.querySelector('meta[name="theme-color"]');
+if(!m){m=document.createElement('meta');m.setAttribute('name','theme-color');document.head.appendChild(m);}
+m.setAttribute('content',t==='dark'?'#0b0d16':'#fbfcfe');
+}catch(e){}})();`;
+
 function RootShell({ children }: { children: ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="ru" className="public-dark" suppressHydrationWarning>
       <head>
         <HeadContent />
+        <script dangerouslySetInnerHTML={{ __html: THEME_BOOT_SCRIPT }} />
       </head>
       <body>
         {children}
@@ -127,6 +139,7 @@ function RootShell({ children }: { children: ReactNode }) {
     </html>
   );
 }
+
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();

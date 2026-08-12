@@ -3,11 +3,11 @@ import { cn } from "@/lib/utils";
 import type { BookingStatus } from "@/types/domain";
 
 const map: Record<BookingStatus, { label: string; cls: string }> = {
-  paid: { label: "Оплачено", cls: "bg-emerald-100 text-emerald-700" },
-  pending: { label: "Ожидает", cls: "bg-amber-100 text-amber-700" },
-  active: { label: "Активна", cls: "bg-sky-100 text-sky-700" },
-  completed: { label: "Завершена", cls: "bg-slate-200 text-slate-700" },
-  cancelled: { label: "Отменена", cls: "bg-rose-100 text-rose-700" },
+  paid: { label: "Оплачено", cls: "bg-emerald-500/15 text-emerald-600 public-dark:text-emerald-400" },
+  pending: { label: "Ожидает", cls: "bg-amber-500/15 text-amber-600 public-dark:text-amber-400" },
+  active: { label: "Активна", cls: "bg-sky-500/15 text-sky-600 public-dark:text-sky-400" },
+  completed: { label: "Завершена", cls: "bg-muted text-muted-foreground" },
+  cancelled: { label: "Отменена", cls: "bg-rose-500/15 text-rose-600 public-dark:text-rose-400" },
 };
 
 export function PaymentStatusBadge({ status }: { status: BookingStatus }) {
