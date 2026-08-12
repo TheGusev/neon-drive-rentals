@@ -1,4 +1,4 @@
-name: Deploy to rentsib.ru
+name: Deploy to nsk-rent.ru
 
 on:
   push:
@@ -53,4 +53,4 @@ jobs:
       - name: Verify deployed version
         run: |
           sleep 10
-          curl -sS --fail https://rentsib.ru/api/public/version
+          curl -sS --fail https://nsk-rent.ru/api/public/version
