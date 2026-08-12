@@ -13,6 +13,7 @@ import { CarQuickView } from "./CarQuickView";
 import { NfsSideMenu } from "./NfsSideMenu";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { useCoarsePointer } from "@/hooks/useCoarsePointer";
+import { useHydrated } from "@/hooks/useHydrated";
 import { usePrefetchCar } from "@/hooks/usePrefetchCar";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 
