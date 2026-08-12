@@ -121,7 +121,7 @@ function ContractPage() {
             <Link
               to="/payment/$bookingId"
               params={{ bookingId: draft.id }}
-              className="text-xs text-muted-foreground hover:text-foreground"
+              className="link-quiet text-xs"
             >
               ← Назад к оплате
             </Link>

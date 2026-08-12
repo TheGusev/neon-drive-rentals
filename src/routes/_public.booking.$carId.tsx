@@ -157,7 +157,7 @@ function BookingPage() {
       <div className="min-h-screen bg-card text-foreground">
         <div className="mx-auto max-w-xl px-4 py-5 pb-4 space-y-4">
           <div>
-            <Link to="/cars/$carId" params={{ carId: car.id }} className="text-xs text-muted-foreground hover:text-foreground">
+            <Link to="/cars/$carId" params={{ carId: car.id }} className="link-quiet text-xs">
               ← Назад к авто
             </Link>
             <h1 className="mt-2 text-2xl font-bold tracking-tight">Оформление аренды</h1>

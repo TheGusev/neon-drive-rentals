@@ -77,11 +77,11 @@ function Page() {
     <div className="bg-background text-foreground">
       <article className="mx-auto w-full max-w-3xl py-4 md:py-8">
         <nav aria-label="breadcrumbs" className="mb-4 text-xs text-muted-foreground">
-          <Link to="/" className="hover:text-foreground">
+          <Link to="/" className="link-quiet">
             Главная
           </Link>{" "}
           /{" "}
-          <Link to="/blog" className="hover:text-foreground">
+          <Link to="/blog" className="link-quiet">
             Блог
           </Link>{" "}
           / <span className="line-clamp-1 inline text-foreground">{post.title}</span>

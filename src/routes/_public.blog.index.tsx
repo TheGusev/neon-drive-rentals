@@ -50,7 +50,7 @@ function Page() {
     <div className="bg-background text-foreground">
       <div className="mx-auto w-full max-w-5xl py-4 md:py-8">
         <nav aria-label="breadcrumbs" className="text-soft mb-4 text-xs">
-          <Link to="/" className="hover:text-foreground">
+          <Link to="/" className="link-quiet">
             Главная
           </Link>{" "}
           / <span className="text-foreground">Блог</span>

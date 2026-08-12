@@ -35,7 +35,7 @@ function Page() {
   return (
     <article className="mx-auto w-full max-w-3xl px-1 py-6 md:py-10">
       <nav aria-label="breadcrumbs" className="mb-4 text-xs text-muted-foreground">
-        <Link to="/" className="hover:text-foreground">
+        <Link to="/" className="link-quiet">
           Главная
         </Link>{" "}
         / <span className="text-foreground">Политика конфиденциальности</span>

@@ -95,7 +95,7 @@ function PaymentPage() {
               to="/booking/$carId"
               params={{ carId: car.id }}
               search={{ from: undefined, to: undefined, tariff: undefined }}
-              className="text-xs text-muted-foreground hover:text-foreground"
+              className="link-quiet text-xs"
             >
               ← Изменить бронь
             </Link>

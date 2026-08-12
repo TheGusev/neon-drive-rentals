@@ -29,7 +29,7 @@ export function FavoritesBlock() {
                 <Link
                   to="/cars/$carId"
                   params={{ carId: car.id }}
-                  className="block truncate text-sm font-semibold hover:text-primary"
+                  className="block truncate text-sm font-semibold transition-colors hover:text-accent"
                 >
                   {car.brand} {car.model}
                 </Link>
