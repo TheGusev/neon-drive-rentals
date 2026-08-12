@@ -157,7 +157,7 @@ function BookingPage() {
       <div className="min-h-screen bg-card text-foreground">
         <div className="mx-auto max-w-xl px-4 py-5 pb-4 space-y-4">
           <div>
-            <Link to="/cars/$carId" params={{ carId: car.id }} className="text-xs text-muted-foreground hover:text-foreground">
+            <Link to="/cars/$carId" params={{ carId: car.id }} className="link-quiet text-xs">
               ← Назад к авто
             </Link>
             <h1 className="mt-2 text-2xl font-bold tracking-tight">Оформление аренды</h1>
@@ -215,7 +215,7 @@ function BookingPage() {
                       href={PICKUP_POINT.mapUrl}
                       target="_blank"
                       rel="noreferrer"
-                      className="mt-1 inline-block text-xs font-medium text-accent underline underline-offset-2"
+                      className="link-text mt-1 inline-block text-xs underline"
                     >
                       Показать на карте
                     </a>
@@ -296,7 +296,7 @@ function BookingPage() {
           )}
           <Button
             onClick={goPay}
-            className="h-12 w-full rounded-2xl bg-accent text-base font-semibold text-primary-foreground hover:bg-accent"
+            variant="accent" size="xl" className="w-full"
           >
             Перейти к оплате
           </Button>

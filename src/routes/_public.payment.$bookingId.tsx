@@ -95,7 +95,7 @@ function PaymentPage() {
               to="/booking/$carId"
               params={{ carId: car.id }}
               search={{ from: undefined, to: undefined, tariff: undefined }}
-              className="text-xs text-muted-foreground hover:text-foreground"
+              className="link-quiet text-xs"
             >
               ← Изменить бронь
             </Link>
@@ -167,7 +167,7 @@ function PaymentPage() {
         <StickyBottomBar>
           <Button
             onClick={proceed}
-            className="h-12 w-full rounded-2xl bg-accent text-base font-semibold text-primary-foreground hover:bg-accent"
+            variant="accent" size="xl" className="w-full"
           >
             Оплатить {formatRub(breakdown.total)}
           </Button>

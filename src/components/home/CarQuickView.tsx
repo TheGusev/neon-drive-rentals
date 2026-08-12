@@ -97,7 +97,7 @@ function QuickBody({
             {car.class === "sport" ? "Sport" : "Econom"}
           </Badge>
           {available ? (
-            <Badge className="bg-emerald-500/90 text-primary-foreground hover:bg-emerald-500/90">
+            <Badge className="bg-emerald-500/15 text-emerald-600 public-dark:text-emerald-400 hover:bg-emerald-500/15">
               Свободно на даты
             </Badge>
           ) : (

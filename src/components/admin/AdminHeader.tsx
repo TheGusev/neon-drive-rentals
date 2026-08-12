@@ -45,7 +45,7 @@ export function AdminHeader() {
             <Button variant="ghost" size="icon" className="relative">
               <Bell className="h-5 w-5" />
               {unread > 0 && (
-                <span className="absolute right-1.5 top-1.5 grid h-4 min-w-4 place-items-center rounded-full bg-rose-500 px-1 text-[10px] font-semibold text-white">
+                <span className="absolute right-1.5 top-1.5 grid h-4 min-w-4 place-items-center rounded-full bg-destructive px-1 text-[10px] font-semibold text-destructive-foreground">
                   {unread}
                 </span>
               )}

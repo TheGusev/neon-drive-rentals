@@ -20,7 +20,7 @@ export function LandingPage({ h1, lead, breadcrumb, sections, bullets, cars, faq
     <article className="bg-background text-foreground">
       <div className="mx-auto w-full max-w-4xl px-4 py-10 md:px-6 md:py-16">
         <nav aria-label="breadcrumbs" className="mb-4 text-xs text-muted-foreground">
-          <Link to="/" className="hover:text-foreground">
+          <Link to="/" className="link-quiet">
             Главная
           </Link>{" "}
           / <span className="text-foreground">{breadcrumb}</span>
