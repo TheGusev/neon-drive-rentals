@@ -202,7 +202,10 @@ function GarageCard({
 }) {
   const { from, to, tariff } = useHomeBooking();
   const free = isCarAvailable(car, from, to);
-  const busyUntil = !free ? nextBusyUntil(car) : null;
+  const hydrated = useHydrated();
+  // Date-dependent availability label is rendered only after hydration to avoid
+  // server/client mismatches caused by different timezones or render moments.
+  const busyUntil = !free && hydrated ? nextBusyUntil(car) : null;
   const price = Math.round(car.pricePerDay * getTariff(tariff).multiplier);
   const coarse = useCoarsePointer();
 
