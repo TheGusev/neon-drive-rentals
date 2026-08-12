@@ -57,7 +57,8 @@ function AdminClientsPage() {
           <TabsList className="flex w-full flex-wrap justify-start">
             <TabsTrigger value="all">Все ({rows.length})</TabsTrigger>
             <TabsTrigger value="blacklist">
-              <Ban className="mr-1.5 h-4 w-4" /> Чёрный список ({rows.filter((r) => r.blacklisted).length})
+              <Ban className="mr-1.5 h-4 w-4" /> Чёрный список (
+              {rows.filter((r) => r.blacklisted).length})
             </TabsTrigger>
           </TabsList>
         </Tabs>

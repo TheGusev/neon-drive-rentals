@@ -77,7 +77,6 @@ export function AdminLayout() {
             <main className="w-full flex-1 bg-muted/30 px-4 pb-6 md:px-6">
               <Outlet />
             </main>
-
           </div>
         </div>
       </SidebarProvider>

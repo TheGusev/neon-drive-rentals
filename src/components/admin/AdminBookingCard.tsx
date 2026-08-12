@@ -50,7 +50,13 @@ export function AdminBookingCard({ booking, car, client, index, onView }: Props)
             {booking.totalPrice.toLocaleString("ru-RU")} ₽
           </span>
           {onView && (
-            <Button variant="ghost" size="icon" className="h-8 w-8" onClick={onView} aria-label="Просмотр">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8"
+              onClick={onView}
+              aria-label="Просмотр"
+            >
               <Eye className="h-4 w-4" />
             </Button>
           )}

@@ -43,9 +43,24 @@ function AdminFinancePage() {
       />
 
       <div className="mb-6 grid w-full grid-cols-2 gap-3 lg:grid-cols-3">
-        <StatCard label="Всего платежей" value={String(payments.length)} icon={Hash} iconTone="bg-slate-100 text-slate-700" />
-        <StatCard label="Оборот" value={`${revenue.toLocaleString("ru-RU")} ₽`} icon={Wallet} iconTone="bg-emerald-100 text-emerald-700" />
-        <StatCard label="Средний чек" value={`${avg.toLocaleString("ru-RU")} ₽`} icon={TrendingUp} iconTone="bg-sky-100 text-sky-700" />
+        <StatCard
+          label="Всего платежей"
+          value={String(payments.length)}
+          icon={Hash}
+          iconTone="bg-slate-100 text-slate-700"
+        />
+        <StatCard
+          label="Оборот"
+          value={`${revenue.toLocaleString("ru-RU")} ₽`}
+          icon={Wallet}
+          iconTone="bg-emerald-100 text-emerald-700"
+        />
+        <StatCard
+          label="Средний чек"
+          value={`${avg.toLocaleString("ru-RU")} ₽`}
+          icon={TrendingUp}
+          iconTone="bg-sky-100 text-sky-700"
+        />
       </div>
 
       {payments.length === 0 ? (

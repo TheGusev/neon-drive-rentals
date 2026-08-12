@@ -8,10 +8,24 @@ const map: Record<CarFleetStatus, { label: string; dot: string; tone: string }> 
   maintenance: { label: "ТО", dot: "bg-amber-500", tone: "text-amber-700" },
 };
 
-export function StatusDot({ status, showLabel = true, className }: { status: CarFleetStatus; showLabel?: boolean; className?: string }) {
+export function StatusDot({
+  status,
+  showLabel = true,
+  className,
+}: {
+  status: CarFleetStatus;
+  showLabel?: boolean;
+  className?: string;
+}) {
   const s = map[status];
   return (
-    <span className={cn("inline-flex items-center gap-2 text-xs font-medium", showLabel && s.tone, className)}>
+    <span
+      className={cn(
+        "inline-flex items-center gap-2 text-xs font-medium",
+        showLabel && s.tone,
+        className,
+      )}
+    >
       <span className={cn("h-2 w-2 rounded-full", s.dot)} />
       {showLabel && s.label}
     </span>

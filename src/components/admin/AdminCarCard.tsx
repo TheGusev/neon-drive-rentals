@@ -42,10 +42,22 @@ export function AdminCarCard({ car, index, onEdit, onDelete }: Props) {
               </div>
             </div>
             <div className="flex shrink-0 gap-0.5">
-              <Button variant="ghost" size="icon" className="h-8 w-8" onClick={onEdit} aria-label="Изменить">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-8 w-8"
+                onClick={onEdit}
+                aria-label="Изменить"
+              >
                 <Pencil className="h-4 w-4" />
               </Button>
-              <Button variant="ghost" size="icon" className="h-8 w-8" onClick={onDelete} aria-label="Удалить">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-8 w-8"
+                onClick={onDelete}
+                aria-label="Удалить"
+              >
                 <Trash2 className="h-4 w-4 text-rose-500" />
               </Button>
             </div>
@@ -77,7 +89,8 @@ export function AdminCarCard({ car, index, onEdit, onDelete }: Props) {
           {classLabel[car.class]}
         </span>
         <span className="admin-nums text-base font-bold">
-          {car.pricePerDay.toLocaleString("ru-RU")} ₽<span className="text-xs font-normal text-muted-foreground">/сутки</span>
+          {car.pricePerDay.toLocaleString("ru-RU")} ₽
+          <span className="text-xs font-normal text-muted-foreground">/сутки</span>
         </span>
       </div>
     </EntityCard>
