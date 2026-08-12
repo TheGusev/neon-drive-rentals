@@ -1,4 +1,4 @@
-import { createContext, useContext, useMemo, useState, type ReactNode } from "react";
+import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
 import type { BookingTariff } from "@/types/domain";
 import { PICKUP_POINT } from "@/mocks/pickupPoints";
 
@@ -22,10 +22,17 @@ function isoInDays(days: number): string {
 }
 
 export function HomeBookingProvider({ children }: { children: ReactNode }) {
-  const [from, setFrom] = useState<string | undefined>(() => isoInDays(1));
-  const [to, setTo] = useState<string | undefined>(() => isoInDays(3));
+  // Start with undefined so the server and the first client render are identical.
+  // Real defaults are applied after hydration to avoid timezone/day-boundary mismatches.
+  const [from, setFrom] = useState<string | undefined>(undefined);
+  const [to, setTo] = useState<string | undefined>(undefined);
   const [tariff, setTariff] = useState<BookingTariff>("city");
   const [location, setLocation] = useState(PICKUP_POINT.id);
+
+  useEffect(() => {
+    setFrom(isoInDays(1));
+    setTo(isoInDays(3));
+  }, []);
 
   const value = useMemo(
     () => ({ from, to, tariff, location, setFrom, setTo, setTariff, setLocation }),
