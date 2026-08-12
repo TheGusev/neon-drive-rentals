@@ -54,7 +54,9 @@ export function AdminHeader() {
             <ul className="max-h-80 divide-y overflow-y-auto">
               {notifications.map((n) => (
                 <li key={n.id} className="flex gap-3 px-4 py-3 text-sm">
-                  <span className={`mt-1.5 h-2 w-2 shrink-0 rounded-full ${n.unread ? "bg-sky-500" : "bg-transparent"}`} />
+                  <span
+                    className={`mt-1.5 h-2 w-2 shrink-0 rounded-full ${n.unread ? "bg-sky-500" : "bg-transparent"}`}
+                  />
                   <div className="min-w-0">
                     <div className="font-medium">{n.title}</div>
                     <div className="text-xs text-muted-foreground">{n.description}</div>
@@ -70,7 +72,9 @@ export function AdminHeader() {
           <DropdownMenuTrigger asChild>
             <button className="flex items-center gap-2 rounded-full py-1 pl-1 pr-3 hover:bg-muted">
               <Avatar className="h-8 w-8">
-                <AvatarFallback className="bg-primary text-primary-foreground text-xs font-semibold">АД</AvatarFallback>
+                <AvatarFallback className="bg-primary text-primary-foreground text-xs font-semibold">
+                  АД
+                </AvatarFallback>
               </Avatar>
               <span className="hidden text-sm font-medium sm:inline">Администратор</span>
             </button>
@@ -78,8 +82,12 @@ export function AdminHeader() {
           <DropdownMenuContent align="end" className="w-48">
             <DropdownMenuLabel>Администратор</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => toast("Профиль скоро появится")}>Профиль</DropdownMenuItem>
-            <DropdownMenuItem onClick={() => toast("Настройки скоро появятся")}>Настройки</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => toast("Профиль скоро появится")}>
+              Профиль
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => toast("Настройки скоро появятся")}>
+              Настройки
+            </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={handleLogout}>Выйти</DropdownMenuItem>
           </DropdownMenuContent>

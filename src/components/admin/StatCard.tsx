@@ -10,12 +10,21 @@ interface StatCardProps {
   iconTone?: string; // tailwind bg color class
 }
 
-export function StatCard({ label, value, delta, deltaTone = "neutral", icon: Icon, iconTone = "bg-primary/10 text-primary" }: StatCardProps) {
+export function StatCard({
+  label,
+  value,
+  delta,
+  deltaTone = "neutral",
+  icon: Icon,
+  iconTone = "bg-primary/10 text-primary",
+}: StatCardProps) {
   return (
     <div className="rounded-2xl border bg-card p-4 shadow-sm">
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
-          <div className="text-xs font-medium uppercase tracking-wide text-muted-foreground">{label}</div>
+          <div className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+            {label}
+          </div>
           <div className="mt-1 text-2xl font-bold tracking-tight">{value}</div>
           {delta && (
             <div
