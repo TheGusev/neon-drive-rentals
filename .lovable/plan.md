@@ -1,0 +1,326 @@
+# Структура проекта NSK-RENT и инструкция по развёртыванию на сервере
+
+## 1. Общее описание проекта
+
+- **Название:** NSK-RENT
+- **Домен:** nsk-rent.ru (текущий целевой)
+- **Технологический стек:** TanStack Start v1 + React 19 + TypeScript + Tailwind CSS v4 + Vite 8 + Nitro
+- **Сборщик/рантайм:** Bun (рекомендуется), Node 20+ тоже подходит
+- **Текущее состояние:** только фронтенд и локальные мок-данные. База данных, платежи, SMS, реальная авторизация клиентов — не подключены.
+- **Админ-панель:** защищена серверной сессией по паролю (`ADMIN_PASSWORD`).
+
+## 2. Полная структура файлов
+
+```text
+nsk-rent/
+├── .github/workflows/deploy.yml      # CI/CD: сборка в GitHub Actions + деплой по SSH
+├── .lovable/
+│   ├── plan/                         # Архив планов (не нужен для деплоя)
+│   └── project.json                  # Метаданные шаблона Lovable
+├── public/                           # Статика, отдаётся как есть
+│   ├── favicon.png
+│   ├── icon-192.png
+│   ├── icon-512.png
+│   ├── icon-maskable-512.png
+│   ├── apple-touch-icon.png
+│   └── manifest.webmanifest
+├── src/
+│   ├── assets/cars/                  # ~25 фото автомобилей (~3 МБ)
+│   ├── components/
+│   │   ├── admin/                    # Карточки, шапка, KPI админки
+│   │   ├── car/                      # Галерея, календарь занятости
+│   │   ├── catalog/                  # Карточка авто, фильтры каталога
+│   │   ├── checkout/                 # Оплата, сводка, SMS-поле
+│   │   ├── home/                     # Герой, NFS-меню, популярные модели, FAQ
+│   │   ├── layout/                   # PublicLayout, AdminLayout, ThemeProvider, SiteFooter
+│   │   ├── profile/                  # Личный кабинет клиента
+│   │   ├── seo/                      # SEO-лэндинги
+│   │   └── ui/                       # 40+ shadcn/ui компонентов
+│   ├── data/
+│   │   ├── mockCars.ts               # Единый автопарк: 21 кей-кар
+│   │   └── mockBookings.ts           # Мок-брони
+│   ├── hooks/                        # use-mobile, useHideOnScroll, usePrefetchCar и др.
+│   ├── lib/                          # Утилиты, SEO, контакты, ошибки
+│   ├── mocks/                        # Дополнительные моки (клиенты, платежи, FAQ, блог)
+│   ├── routes/                       # Файловый роутинг TanStack Start
+│   │   ├── __root.tsx                # Корневой layout
+│   │   ├── index.tsx                 # Главная страница
+│   │   ├── _public.*.tsx             # Публичные страницы
+│   │   ├── _admin.*.tsx              # Админ-разделы
+│   │   ├── admin.login.tsx           # Вход в админку
+│   │   ├── api/public/version.ts     # Эндпоинт версии сборки
+│   │   ├── robots[.]txt.ts           # robots.txt
+│   │   └── sitemap[.]xml.ts          # sitemap.xml
+│   ├── state/
+│   │   └── FavoritesContext.tsx      # Избранное в localStorage
+│   ├── styles.css                    # Дизайн-токены, темы, анимации
+│   ├── types/domain.ts               # Типы Car, Booking и т.д.
+│   ├── build-info.ts                 # BUILD_COMMIT / BUILD_TIME
+│   ├── router.tsx                    # Инициализация роутера
+│   ├── server.ts                     # SSR-обёртка с обработкой ошибок
+│   └── start.ts                      # TanStack Start instance
+├── AGENTS.md
+├── README.md
+├── bunfig.toml                       # Настройки Bun install
+├── components.json                   # Конфиг shadcn/ui
+├── eslint.config.js
+├── package.json                      # Зависимости
+├── tsconfig.json
+└── vite.config.ts                    # Точка входа сервера: src/server.ts
+```
+
+## 3. Полный список зависимостей (package.json)
+
+### Runtime / production
+
+| Пакет | Версия | Назначение |
+|-------|--------|------------|
+| @hookform/resolvers | ^5.2.2 | Валидация react-hook-form через Zod |
+| @radix-ui/react-* | ^1.x | 25+ примитивов интерфейса (диалоги, табы, тултипы и т.д.) |
+| @tailwindcss/typography | ^0.5.20 | Стили для markdown-статей блога |
+| @tailwindcss/vite | ^4.2.1 | Интеграция Tailwind v4 в Vite |
+| @tanstack/react-query | ^5.101.1 | Кеширование серверных данных |
+| @tanstack/react-router | ^1.170.16 | Роутинг |
+| @tanstack/react-start | ^1.168.26 | SSR/SSG + server functions |
+| @tanstack/router-plugin | ^1.168.18 | Генерация routeTree.gen.ts |
+| class-variance-authority | ^0.7.1 | Варианты shadcn-компонентов |
+| clsx | ^2.1.1 | Условные классы |
+| cmdk | ^1.1.1 | Командное меню / поиск |
+| date-fns | ^4.1.0 | Работа с датами бронирования |
+| embla-carousel-* | ^8.6.0 | Карусели на главной и в каталоге |
+| input-otp | ^1.4.2 | Поле ввода SMS-кода договора |
+| lucide-react | ^0.575.0 | Иконки |
+| react | ^19.2.0 | UI-фреймворк |
+| react-day-picker | ^9.14.0 | Календари аренды |
+| react-dom | ^19.2.0 | Рендеринг |
+| react-hook-form | ^7.71.2 | Формы бронирования и админки |
+| react-markdown | ^10.1.0 | Рендер markdown-статей |
+| react-resizable-panels | ^4.6.5 | Разделители панелей |
+| recharts | ^2.15.4 | Графики в админке |
+| remark-gfm | ^4.0.1 | Таблицы и чек-листы в markdown |
+| sonner | ^2.0.7 | Тосты |
+| tailwind-merge | ^3.5.0 | Слияние классов Tailwind |
+| tailwindcss | ^4.2.1 | CSS-фреймворк |
+| tw-animate-css | ^1.3.4 | Анимации Tailwind v4 |
+| vaul | ^1.1.2 | Нижние шторы на мобилке |
+| vite-tsconfig-paths | ^6.0.2 | Алиас `@/*` |
+| xlsx | ^0.18.5 | Экспорт Excel/CSV из админки |
+| zod | ^3.24.2 | Схемы валидации |
+
+### Dev / build
+
+| Пакет | Версия | Назначение |
+|-------|--------|------------|
+| @eslint/js | ^9.32.0 | Линтер |
+| @lovable.dev/vite-tanstack-config | 2.9.1 | Пресет Vite для TanStack Start |
+| @types/node | ^22.16.5 | Типы Node |
+| @types/react | ^19.2.0 | Типы React |
+| @types/react-dom | ^19.2.0 | Типы React DOM |
+| @vitejs/plugin-react | ^5.2.0 | React-плагин Vite |
+| eslint + плагины | ^9 / ^5 | Линтинг |
+| globals | ^15.15.0 | Глобальные переменные ESLint |
+| nitro | 3.0.260603-beta | SSR-сервер, встроен в TanStack Start |
+| prettier | ^3.7.3 | Форматирование |
+| typescript | ^5.8.3 | Типизация |
+| typescript-eslint | ^8.56.1 | ESLint для TS |
+| vite | ^8.0.16 | Сборщик |
+
+## 4. Требования к серверу
+
+### Минимальная конфигурация
+
+- **OS:** Ubuntu 22.04/24.04 LTS
+- **CPU:** 1 vCPU
+- **RAM:** 1–2 ГБ
+- **Диск:** 10+ ГБ SSD
+- **Node:** 20+ (или Bun 1.1+)
+- **Nginx:** 1.18+ (обратный прокси + SSL)
+- **SSL:** Certbot / Let's Encrypt
+- **Процесс-менеджер:** PM2 или systemd
+
+### Рекомендуемая конфигурация под нагрузку
+
+- 2 vCPU / 2–4 ГБ RAM
+- PostgreSQL 15+ отдельно (когда подключим БД)
+- Redis для сессий (опционально)
+
+## 5. Переменные окружения
+
+Сейчас приложение использует минимум секретов. Полный список:
+
+| Переменная | Обязательная | Назначение |
+|------------|--------------|------------|
+| `ADMIN_PASSWORD` | Да | Пароль входа в `/admin` |
+| `SESSION_SECRET` | Да | Ключ шифрования сессии админа |
+| `VITE_BUILD_COMMIT` | Нет | Хеш коммита, подставляется CI |
+| `VITE_BUILD_TIME` | Нет | Время сборки, подставляется CI |
+
+**Важно:** фронтенд-переменные в Vite должны начинаться с `VITE_`, чтобы попасть в клиентский бандл.
+
+## 6. Процесс сборки
+
+```bash
+# Установка зависимостей
+bun install --frozen-lockfile
+
+# Сборка production-артефактов
+VITE_BUILD_COMMIT=$(git rev-parse HEAD) \
+VITE_BUILD_TIME=$(date -u +%Y-%m-%dT%H:%M:%SZ) \
+bun run build
+```
+
+После сборки появляется директория `.output/`:
+
+```text
+.output/
+├── public/                 # Статика + клиентские ассеты
+├── server/
+│   └── index.mjs           # SSR/Server entry (Nitro)
+└── nitro.json
+```
+
+Запуск на сервере:
+
+```bash
+cd /var/www/nsk-rent/.output
+node server/index.mjs
+# или через PM2:
+pm2 start server/index.mjs --name nsk-rent
+```
+
+По умолчанию сервер слушает порт 3000 (можно переопределить через `PORT` или `NITRO_PORT`).
+
+## 7. Nginx-конфигурация
+
+```nginx
+server {
+    listen 80;
+    server_name nsk-rent.ru www.nsk-rent.ru;
+    return 301 https://$host$request_uri;
+}
+
+server {
+    listen 443 ssl http2;
+    server_name nsk-rent.ru www.nsk-rent.ru;
+
+    ssl_certificate /etc/letsencrypt/live/nsk-rent.ru/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/nsk-rent.ru/privkey.pem;
+
+    root /var/www/nsk-rent/.output/public;
+
+    location / {
+        proxy_pass http://127.0.0.1:3000;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    # Статика с версионным кэшем
+    location ~* \.(js|css|png|jpg|jpeg|gif|svg|webp|ico|woff|woff2)$ {
+        expires 1y;
+        add_header Cache-Control "public, immutable";
+        try_files $uri $uri/ =404;
+    }
+}
+```
+
+## 8. CI/CD (уже добавлено в репозиторий)
+
+Файл `.github/workflows/deploy.yml` выполняет:
+
+1. Checkout кода
+2. Установку Bun и зависимостей
+3. Сборку с `VITE_BUILD_COMMIT` и `VITE_BUILD_TIME`
+4. `rsync` папки `.output/` на сервер
+5. Перезапуск приложения через SSH-команду
+6. Проверку `/api/public/version`
+
+**Необходимые GitHub Secrets:**
+
+- `SSH_HOST`
+- `SSH_USER`
+- `SSH_KEY` (приватный ключ, без passphrase)
+- `SSH_PORT` (опционально, по умолчанию 22)
+- `DEPLOY_PATH` (например `/var/www/nsk-rent`)
+- `RESTART_COMMAND` (например `cd /var/www/nsk-rent && pm2 reload nsk-rent`)
+
+## 9. Что нужно сделать на сервере перед первым деплоем
+
+1. Установить Node 20+ или Bun.
+2. Создать пользователя и директорию проекта:
+   ```bash
+   sudo mkdir -p /var/www/nsk-rent
+   sudo chown $USER:$USER /var/www/nsk-rent
+   ```
+3. Добавить SSH-ключ GitHub Actions в `~/.ssh/authorized_keys`.
+4. Установить и настроить Nginx + Certbot.
+5. Создать `.env` файл рядом с `server/index.mjs` или экспортировать переменные в PM2:
+   ```bash
+   ADMIN_PASSWORD=...
+   SESSION_SECRET=$(openssl rand -hex 32)
+   ```
+6. Создать PM2-конфиг:
+   ```bash
+   pm2 start /var/www/nsk-rent/.output/server/index.mjs --name nsk-rent
+   pm2 save
+   pm2 startup
+   ```
+
+## 10. Проверка деплоя
+
+После пуша в `main`:
+
+```bash
+curl -s https://nsk-rent.ru/api/public/version
+# Ожидаемый ответ:
+# {"commit":"abc123...","builtAt":"2026-08-12T...","servedAt":"2026-08-12T..."}
+```
+
+Также в `<head>` страницы есть мета-тег `build-id`.
+
+## 11. Известные проблемы, которые нужно поправить до запуска
+
+1. **Hydration mismatch на главной:** дата "до 15.08" / "до 14.08" рендерится по-разному на сервере и клиенте. Нужно обернуть динамические даты в `useEffect` / клиентский компонент.
+2. **Домен в workflow:** `.github/workflows/deploy.yml` всё ещё ссылается на `rentsib.ru`. При переезде на `nsk-rent.ru` нужно обновить URL проверки и SEO-константы.
+3. **Мок-контакты:** телефон, email, Telegram, WhatsApp, MAX, ИНН/ОГРНИП — шаблонные значения, требуют замены на боевые.
+4. **Бэкенд не подключён:** брони, платежи, клиенты, SMS, ЮKassa — пока только моки в браузере.
+
+## 12. Следующие шаги (после деплоя фронтенда)
+
+1. Поднять PostgreSQL на сервере.
+2. Создать схему БД (cars, clients, bookings, payments, otp_codes, user_roles).
+3. Заменить моки в `src/data/` на server functions с запросами к БД.
+4. Подключить SMS-авторизацию клиентов.
+5. Интегрировать ЮKassa (создание платежа + webhook).
+6. Настроить email-уведомления.
+7. Добавить резервное копирование БД.
+
+## 13. Архитектура развёртывания (итоговая схема)
+
+```text
+Пользователь
+    ↓
+Cloudflare / DNS → nsk-rent.ru
+    ↓
+Nginx (443, SSL, статика)
+    ↓
+PM2 + Node/Bun (порт 3000)
+    ↓
+TanStack Start SSR (.output/server/index.mjs)
+    ↓
+PostgreSQL (в будущем)
+```
+
+## 14. Контрольный список для выгрузки
+
+- [ ] На сервере установлен Node 20+ или Bun 1.1+
+- [ ] Создана директория `/var/www/nsk-rent`
+- [ ] Настроен SSH-доступ для GitHub Actions
+- [ ] Добавлены секреты `ADMIN_PASSWORD` и `SESSION_SECRET`
+- [ ] Настроен Nginx + SSL (Certbot)
+- [ ] PM2 запущен и сохранён (`pm2 save && pm2 startup`)
+- [ ] В `.github/workflows/deploy.yml` обновлен домен проверки
+- [ ] Проверен `/api/public/version` после первого деплоя
+- [ ] Проверены основные маршруты: `/`, `/cars`, `/cars/:id`, `/admin`
