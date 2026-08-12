@@ -50,7 +50,9 @@ export function CurrentRentalCard({ booking, car }: { booking: Booking; car: Car
       </div>
 
       <Button
-        className="mt-4 h-12 w-full rounded-2xl bg-accent text-base font-semibold hover:bg-accent/90"
+        variant="accent"
+        size="xl"
+        className="mt-4 w-full"
         onClick={() => toast("Продление аренды скоро появится")}
       >
         Продлить аренду
