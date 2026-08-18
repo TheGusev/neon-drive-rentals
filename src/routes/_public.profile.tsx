@@ -7,8 +7,14 @@ import { FavoritesBlock } from "@/components/profile/FavoritesBlock";
 import { ReviewsBlock } from "@/components/profile/ReviewsBlock";
 import { BottomNav } from "@/components/profile/BottomNav";
 import { SectionCard } from "@/components/checkout/SectionCard";
-import { useBookings, useCarLookup } from "@/state/AppDataContext";
-import { currentClient } from "@/mocks/profile";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
+import { Link } from "@tanstack/react-router";
+import { LogIn, LogOut } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { myBookingsQueryOptions } from "@/lib/queries";
+import { clientLogout } from "@/lib/auth.functions";
+import { useCarLookup } from "@/state/AppDataContext";
 
 export const Route = createFileRoute("/_public/profile")({
   head: () => ({
@@ -23,10 +29,33 @@ export const Route = createFileRoute("/_public/profile")({
 });
 
 function ProfilePage() {
-  const bookings = useBookings();
   const getCarById = useCarLookup();
-  const active = bookings.find((b) => b.clientId === currentClient.id && b.status === "active");
+  const queryClient = useQueryClient();
+  const logout = useServerFn(clientLogout);
+  const { data, isLoading } = useQuery(myBookingsQueryOptions());
+  const authenticated = data?.authenticated ?? false;
+  const bookings = data?.bookings ?? [];
+  const active = bookings.find((b) => b.status === "active" || b.status === "paid");
   const car = active ? getCarById(active.carId) : undefined;
+
+  if (!isLoading && !authenticated) {
+    return (
+      <div className="min-h-screen bg-background text-foreground">
+        <div className="mx-auto max-w-md px-4 pb-28 pt-16 text-center">
+          <h1 className="text-2xl font-semibold tracking-tight">Личный кабинет</h1>
+          <p className="mt-2 text-sm text-muted-foreground">
+            Войдите по номеру телефона, чтобы увидеть аренды, документы и историю поездок.
+          </p>
+          <Button className="mt-6 w-full" asChild>
+            <Link to="/login">
+              <LogIn className="mr-2 h-4 w-4" /> Войти по SMS
+            </Link>
+          </Button>
+        </div>
+        <BottomNav />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -47,10 +76,21 @@ function ProfilePage() {
           <FavoritesBlock />
 
           <section id="bookings" className="scroll-mt-24">
-            <BookingHistoryList />
+            <BookingHistoryList items={bookings} />
           </section>
 
           <ReviewsBlock />
+
+          <Button
+            variant="soft"
+            className="w-full"
+            onClick={async () => {
+              await logout({});
+              await queryClient.invalidateQueries({ queryKey: ["me"] });
+            }}
+          >
+            <LogOut className="mr-2 h-4 w-4" /> Выйти
+          </Button>
         </div>
       </div>
 

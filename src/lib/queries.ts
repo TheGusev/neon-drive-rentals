@@ -6,6 +6,13 @@ import {
   getBookingsByPhone,
   getPublicBookings,
 } from "@/lib/bookings.functions";
+import {
+  getCarsAdmin,
+  getBookingsAdmin,
+  getClientsAdmin,
+  getPaymentsAdmin,
+} from "@/lib/admin.functions";
+import { getMyBookings } from "@/lib/auth.functions";
 
 export const carsQueryOptions = () =>
   queryOptions({
@@ -47,4 +54,39 @@ export const clientBookingsQueryOptions = (phone: string) =>
     queryKey: ["bookings", "client", phone] as const,
     queryFn: () => getBookingsByPhone({ data: { phone } }),
     staleTime: 30_000,
+  });
+
+export const adminCarsQueryOptions = () =>
+  queryOptions({
+    queryKey: ["admin", "cars"] as const,
+    queryFn: () => getCarsAdmin(),
+    staleTime: 15_000,
+  });
+
+export const adminBookingRowsQueryOptions = () =>
+  queryOptions({
+    queryKey: ["admin", "bookings"] as const,
+    queryFn: () => getBookingsAdmin({ data: {} }),
+    staleTime: 15_000,
+  });
+
+export const adminClientsQueryOptions = () =>
+  queryOptions({
+    queryKey: ["admin", "clients"] as const,
+    queryFn: () => getClientsAdmin(),
+    staleTime: 30_000,
+  });
+
+export const adminPaymentsQueryOptions = () =>
+  queryOptions({
+    queryKey: ["admin", "payments"] as const,
+    queryFn: () => getPaymentsAdmin({ data: {} }),
+    staleTime: 30_000,
+  });
+
+export const myBookingsQueryOptions = () =>
+  queryOptions({
+    queryKey: ["me", "bookings"] as const,
+    queryFn: () => getMyBookings(),
+    staleTime: 15_000,
   });

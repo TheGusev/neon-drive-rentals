@@ -9,6 +9,8 @@ import { useCarLookup } from "@/state/AppDataContext";
 import { useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { createBooking } from "@/lib/bookings.functions";
+import { confirmOtp, requestOtp } from "@/lib/auth.functions";
+import { startPayment } from "@/lib/payments.functions";
 import { getPickupPoint } from "@/mocks/pickupPoints";
 import { getTariff } from "@/mocks/tariffs";
 import { calcPrice, formatRub, getDraft, saveDraft } from "@/lib/bookingDraft";
@@ -43,6 +45,25 @@ function ContractPage() {
   const [saving, setSaving] = useState(false);
   const queryClient = useQueryClient();
   const submitBooking = useServerFn(createBooking);
+  const sendCode = useServerFn(requestOtp);
+  const verifyCode = useServerFn(confirmOtp);
+  const beginPayment = useServerFn(startPayment);
+  const [codeSent, setCodeSent] = useState(false);
+
+  const resendCode = async (phone: string) => {
+    try {
+      const res = await sendCode({ data: { phone } });
+      if (!res.ok) {
+        toast.error("Не удалось отправить код");
+        return;
+      }
+      setCodeSent(true);
+      const devCode = (res as { devCode?: string }).devCode;
+      toast.success(devCode ? `Тестовый код: ${devCode}` : "Код отправлен по SMS");
+    } catch {
+      toast.error("Сервис временно недоступен");
+    }
+  };
 
   useEffect(() => {
     setDraft(getDraft(bookingId));
@@ -108,12 +129,13 @@ function ContractPage() {
 
   const sign = async () => {
     if (!canSign || saving) return;
-    if (code !== "123456") {
-      toast.error("Неверный код из SMS", { description: "Демо-код: 123456" });
-      return;
-    }
     setSaving(true);
     try {
+      const otp = await verifyCode({ data: { phone: draft.phone ?? "", code } });
+      if (!otp.ok) {
+        toast.error("Неверный или просроченный код из SMS");
+        return;
+      }
       const res = await submitBooking({
         data: {
           carId: draft.carId,
@@ -133,7 +155,22 @@ function ContractPage() {
       }
       await queryClient.invalidateQueries({ queryKey: ["bookings"] });
       saveDraft({ ...draft, signed: true });
-      toast.success("Договор подписан", { description: "Копия отправлена на email" });
+
+      const pay = await beginPayment({
+        data: {
+          bookingId: res.booking.id,
+          amount: Math.round(breakdown?.total ?? 0),
+          description: `Аренда ${car.brand} ${car.model}, бронь ${res.booking.id}`,
+        },
+      });
+
+      if (pay.ok && pay.mode === "live" && pay.confirmationUrl) {
+        toast.success("Договор подписан. Переходим к оплате");
+        window.location.href = pay.confirmationUrl;
+        return;
+      }
+
+      toast.success("Договор подписан", { description: "Бронь сохранена, копия отправлена на email" });
       navigate({ to: "/profile" });
     } catch {
       toast.error("Сервис временно недоступен, попробуйте ещё раз");
@@ -201,15 +238,17 @@ function ContractPage() {
 
           <SectionCard title="Код из SMS">
             <p className="mb-3 text-xs text-muted-foreground">
-              Код отправлен на {maskPhone(draft.phone)}
+              {codeSent
+                ? `Код отправлен на ${maskPhone(draft.phone)}`
+                : `Нажмите «Отправить код» — SMS придёт на ${maskPhone(draft.phone)}`}
             </p>
             <SmsCodeInput value={code} onChange={setCode} />
             <button
               type="button"
               className="link-text mt-3 text-xs"
-              onClick={() => toast("Код отправлен повторно")}
+              onClick={() => void resendCode(draft.phone ?? "")}
             >
-              Отправить код ещё раз
+              {codeSent ? "Отправить код ещё раз" : "Отправить код"}
             </button>
           </SectionCard>
 

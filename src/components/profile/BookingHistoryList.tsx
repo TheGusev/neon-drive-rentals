@@ -1,13 +1,15 @@
 import { SectionCard } from "@/components/checkout/SectionCard";
 import { useBookings, useCarLookup } from "@/state/AppDataContext";
 import { currentClient } from "@/mocks/profile";
+import type { Booking } from "@/types/domain";
 
 const fmt = (iso: string) => new Date(iso).toLocaleDateString("ru-RU", { day: "2-digit", month: "short", year: "numeric" });
 
-export function BookingHistoryList() {
-  const bookings = useBookings();
+export function BookingHistoryList({ items }: { items?: Booking[] }) {
+  const fallback = useBookings();
   const getCarById = useCarLookup();
-  const history = bookings.filter((b) => b.clientId === currentClient.id && b.status === "completed");
+  const source = items ?? fallback.filter((b) => b.clientId === currentClient.id);
+  const history = source.filter((b) => b.status === "completed" || b.status === "cancelled");
 
   return (
     <SectionCard title="История бронирований">

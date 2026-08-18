@@ -5,8 +5,8 @@ import { StatCard } from "@/components/admin/StatCard";
 import { AdminPaymentCard } from "@/components/admin/AdminPaymentCard";
 import { EntityGrid, EmptyState } from "@/components/admin/EntityCard";
 import { Button } from "@/components/ui/button";
-import { payments } from "@/mocks/payments";
-import { getClientById } from "@/mocks/clients";
+import { useSuspenseQuery } from "@tanstack/react-query";
+import { adminPaymentsQueryOptions } from "@/lib/queries";
 import { useCarLookup } from "@/state/AppDataContext";
 import { exportPaymentsToExcel } from "@/lib/exportExcel";
 import { toast } from "sonner";
@@ -18,6 +18,7 @@ export const Route = createFileRoute("/_admin/admin/finance")({
 
 function AdminFinancePage() {
   const getCarById = useCarLookup();
+  const { data: payments } = useSuspenseQuery(adminPaymentsQueryOptions());
   const success = payments.filter((p) => p.status === "success");
   const revenue = success.reduce((s, p) => s + p.amount, 0);
   const avg = success.length ? Math.round(revenue / success.length) : 0;
@@ -73,7 +74,7 @@ function AdminFinancePage() {
               key={p.id}
               payment={p}
               car={getCarById(p.carId)}
-              client={getClientById(p.clientId)}
+              client={{ id: p.clientId, name: p.clientName, phone: p.clientPhone, ordersCount: 0, rating: 5 }}
               index={i}
             />
           ))}

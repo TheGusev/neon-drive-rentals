@@ -10,9 +10,8 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useMutation, useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { updateBookingStatus } from "@/lib/bookings.functions";
-import { adminBookingsQueryOptions } from "@/lib/queries";
+import { adminBookingRowsQueryOptions } from "@/lib/queries";
 import { useCarLookup } from "@/state/AppDataContext";
-import { getClientById } from "@/mocks/clients";
 import type { BookingStatus } from "@/types/domain";
 
 export const Route = createFileRoute("/_admin/admin/bookings")({
@@ -21,7 +20,7 @@ export const Route = createFileRoute("/_admin/admin/bookings")({
 });
 
 function AdminBookingsPage() {
-  const { data: bookings } = useSuspenseQuery(adminBookingsQueryOptions());
+  const { data: bookings } = useSuspenseQuery(adminBookingRowsQueryOptions());
   const getCarById = useCarLookup();
   const queryClient = useQueryClient();
   const changeStatus = useServerFn(updateBookingStatus);
@@ -33,6 +32,7 @@ function AdminBookingsPage() {
         return;
       }
       await queryClient.invalidateQueries({ queryKey: ["bookings"] });
+      await queryClient.invalidateQueries({ queryKey: ["admin"] });
       toast.success("Статус обновлён");
     },
     onError: () => toast.error("Сервис временно недоступен"),
@@ -45,8 +45,7 @@ function AdminBookingsPage() {
       if (tab !== "all" && b.status !== tab) return false;
       if (q) {
         const car = getCarById(b.carId);
-        const client = getClientById(b.clientId);
-        const hay = `${b.id} ${car?.brand} ${car?.model} ${client?.name}`.toLowerCase();
+        const hay = `${b.id} ${car?.brand ?? ""} ${car?.model ?? ""} ${b.carName} ${b.clientName} ${b.clientPhone}`.toLowerCase();
         if (!hay.includes(q.toLowerCase())) return false;
       }
       return true;
@@ -88,7 +87,7 @@ function AdminBookingsPage() {
               key={b.id}
               booking={b}
               car={getCarById(b.carId)}
-              client={getClientById(b.clientId)}
+              client={{ id: b.clientId, name: b.clientName, phone: b.clientPhone, ordersCount: 0, rating: 5 }}
               index={i}
               onView={() => toast(`Просмотр брони ${b.id}`)}
               onStatusChange={(status) => statusMutation.mutate({ id: b.id, status })}
