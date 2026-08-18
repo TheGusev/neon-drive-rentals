@@ -19,7 +19,7 @@ export function Breadcrumbs({ items }: { items: Crumb[] }) {
             {last || !item.to ? (
               <span className="text-foreground">{item.name}</span>
             ) : (
-              <Link to={item.to} className="link-quiet hover:text-accent">
+              <Link to={item.to as "/"} className="link-quiet hover:text-accent">
                 {item.name}
               </Link>
             )}
