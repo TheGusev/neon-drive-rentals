@@ -251,7 +251,7 @@ export async function insertBooking(input: CreateBookingInput): Promise<CreateBo
          and date_from < $3::timestamptz
          and $2::timestamptz < date_to
        for update`,
-      [input.carDbId, input.startDate, input.endDate, BLOCKING],
+      [input.carDbId, input.startDate, input.endDate, BLOCKING_DB],
     );
     if (conflicts.length) return { ok: false as const, reason: "conflict" as const };
 
