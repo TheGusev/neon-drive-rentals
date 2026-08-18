@@ -20,7 +20,7 @@ import { StatusDot, fleetStatusLabels } from "@/components/admin/StatusDot";
 import { AdminBookingCard } from "@/components/admin/AdminBookingCard";
 import { EmptyState } from "@/components/admin/EntityCard";
 
-import { dashboardStats } from "@/mocks/dashboardStats";
+import { buildDashboardStats } from "@/mocks/dashboardStats";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { adminBookingsQueryOptions } from "@/lib/queries";
 import { useCarLookup, useCars } from "@/state/AppDataContext";
@@ -45,6 +45,7 @@ function DashboardPage() {
   const { data: bookings } = useSuspenseQuery(adminBookingsQueryOptions());
   const getCarById = useCarLookup();
   const cars = useCars();
+  const dashboardStats = buildDashboardStats(cars, bookings);
   const activeBookings = bookings.filter(
     (b) => b.status === "active" || b.status === "paid" || b.status === "pending",
   );
