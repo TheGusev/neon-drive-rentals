@@ -108,7 +108,7 @@ export function SiteFooter() {
           <p>{LEGAL.offerNote}</p>
           <p>{LEGAL.ageNote}</p>
           <p>{LEGAL.dataNote}</p>
-          <p>{`${LEGAL.entity} · ${LEGAL.inn} · ${LEGAL.ogrnip}`}</p>
+          
           <p>{`© ${YEAR} NSK-RENT — аренда авто в Новосибирске. Все права защищены.`}</p>
 
         </div>
