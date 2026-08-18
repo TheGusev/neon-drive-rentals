@@ -80,10 +80,12 @@ export function SiteFooter() {
           <h2 className="font-display text-sm font-bold uppercase tracking-widest">Реквизиты</h2>
           <address className="mt-3 space-y-1 text-sm not-italic text-muted-foreground">
             <p>{LEGAL.entity}</p>
-            <p>{LEGAL.ogrnip}</p>
             <p>{LEGAL.inn}</p>
+            <p>{LEGAL.ogrnip}</p>
+            <p>{LEGAL.registrationAddress}</p>
             <p>{LEGAL.address}</p>
           </address>
+
           <div className="mt-3 flex flex-wrap gap-2">
             <Link to="/privacy" className="dash-chip text-muted-foreground hover:text-accent">
               Политика конфиденциальности
