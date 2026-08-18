@@ -3,12 +3,18 @@ import { hasDatabase, query } from "@/lib/db.server";
 import seedCars from "../../db/migrations/002_seed_cars.sql?raw";
 import addSignature from "../../db/migrations/003_add_signature.sql?raw";
 import authPayments from "../../db/migrations/004_auth_payments.sql?raw";
+import fixCarImages from "../../db/migrations/005_fix_car_images.sql?raw";
+import removeWashStatus from "../../db/migrations/006_remove_wash_status.sql?raw";
+import seoTimestamps from "../../db/migrations/007_seo_timestamps.sql?raw";
 
 /** Порядок применения важен. 001_init.sql уже применён на сервере вручную. */
 const MIGRATIONS: Array<{ name: string; sql: string }> = [
   { name: "002_seed_cars", sql: seedCars },
   { name: "003_add_signature", sql: addSignature },
   { name: "004_auth_payments", sql: authPayments },
+  { name: "005_fix_car_images", sql: fixCarImages },
+  { name: "006_remove_wash_status", sql: removeWashStatus },
+  { name: "007_seo_timestamps", sql: seoTimestamps },
 ];
 
 type Holder = { __nskMigrations?: Promise<string[]> };
