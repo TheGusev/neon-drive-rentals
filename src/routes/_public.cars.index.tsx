@@ -145,7 +145,7 @@ function CatalogPage() {
       <header className="space-y-4">
         <div>
           <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">NSK-RENT</p>
-          <h1 className="mt-1 font-display text-3xl font-black md:text-4xl md:neon-text">Автопарк</h1>
+          <h1 className="mt-1 font-display text-3xl font-black md:text-4xl md:neon-text">Автопарк японских кей-каров в аренду в Новосибирске</h1>
           <p className="mt-2 text-sm text-muted-foreground">
             Японские кей-кары для города и поездок по области. Найдено {list.length} из {allCars.length} авто.
           </p>
