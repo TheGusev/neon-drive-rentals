@@ -86,18 +86,118 @@ export async function fetchBookingsByPhone(phone: string): Promise<Booking[]> {
   return rows.map(mapBookingRow);
 }
 
+/** Доменный статус → значение в БД (в базе confirmed, в UI paid). */
+export function toDbBookingStatus(status: BookingStatus): string {
+  return status === "paid" ? "confirmed" : status;
+}
+
+export type AdminBookingRow = Booking & {
+  clientName: string;
+  clientPhone: string;
+  carName: string;
+  carPlate: string;
+  signedAt?: string;
+};
+
+export async function fetchBookingsAdmin(filters?: {
+  status?: BookingStatus;
+  dateFrom?: string;
+  dateTo?: string;
+}): Promise<AdminBookingRow[]> {
+  if (!hasDatabase()) {
+    return mockBookings.map((b) => ({
+      ...b,
+      clientName: "Клиент",
+      clientPhone: "",
+      carName: b.carId,
+      carPlate: "",
+    }));
+  }
+
+  const params: unknown[] = [];
+  const where: string[] = [];
+  if (filters?.status) {
+    params.push(toDbBookingStatus(filters.status));
+    where.push(`b.status = $${params.length}`);
+  }
+  if (filters?.dateFrom) {
+    params.push(filters.dateFrom);
+    where.push(`b.date_to >= $${params.length}::timestamptz`);
+  }
+  if (filters?.dateTo) {
+    params.push(filters.dateTo);
+    where.push(`b.date_from <= $${params.length}::timestamptz`);
+  }
+
+  const rows = await query<
+    BookingRow & {
+      client_name: string | null;
+      client_phone: string | null;
+      brand: string | null;
+      model: string | null;
+      plate: string | null;
+      signed_at: Date | string | null;
+    }
+  >(
+    `select b.id, b.car_id, c.slug as car_slug, b.client_id, b.date_from, b.date_to, b.total, b.status,
+            b.signed_at, cl.name as client_name, cl.phone as client_phone, c.brand, c.model, c.plate
+     from bookings b
+     left join cars c on c.id = b.car_id
+     left join clients cl on cl.id = b.client_id
+     ${where.length ? `where ${where.join(" and ")}` : ""}
+     order by b.date_from desc`,
+    params,
+  );
+
+  return rows.map((row) => ({
+    ...mapBookingRow(row),
+    clientName: row.client_name?.trim() || "Клиент",
+    clientPhone: row.client_phone ?? "",
+    carName: [row.brand, row.model].filter(Boolean).join(" ") || String(row.car_slug ?? ""),
+    carPlate: row.plate ?? "",
+    signedAt: row.signed_at ? new Date(row.signed_at).toISOString() : undefined,
+  }));
+}
+
+/** Синхронизирует статус авто с состоянием его броней. */
+async function syncCarStatus(carDbId: string): Promise<void> {
+  const active = await query<{ id: string }>(
+    `select id from bookings where car_id = $1 and status in ('confirmed','active') limit 1`,
+    [carDbId],
+  );
+  const next = active.length ? "busy" : "available";
+  await query(`update cars set status = $2 where id = $1 and status in ('available','busy')`, [carDbId, next]);
+}
+
 export async function updateBookingStatusInDb(id: string, status: BookingStatus): Promise<Booking | null> {
   if (!hasDatabase()) {
     const found = mockBookings.find((b) => b.id === id);
     return found ? { ...found, status } : null;
   }
-  const rows = await query<{ id: string }>(
-    `update bookings set status = $2 where id::text = $1 returning id`,
-    [id, status],
+  const rows = await query<{ id: string; car_id: string }>(
+    `update bookings set status = $2 where id::text = $1 returning id, car_id`,
+    [id, toDbBookingStatus(status)],
   );
   if (!rows.length) return null;
+  await syncCarStatus(String(rows[0].car_id));
   return fetchBookingById(id);
 }
+
+export async function markBookingSigned(
+  id: string,
+  ip: string,
+): Promise<Booking | null> {
+  if (!hasDatabase()) return fetchBookingById(id);
+  const rows = await query<{ id: string; car_id: string }>(
+    `update bookings set status = 'confirmed', signed_at = now(), signature_ip = $2
+     where id::text = $1 returning id, car_id`,
+    [id, ip],
+  );
+  if (!rows.length) return null;
+  await syncCarStatus(String(rows[0].car_id));
+  return fetchBookingById(id);
+}
+
 
 export type CreateBookingInput = {
   carId: string; // public slug
@@ -115,6 +215,8 @@ export type CreateBookingResult =
   | { ok: false; reason: "conflict" | "car_not_found" };
 
 const BLOCKING = ["pending", "paid", "active"];
+const BLOCKING_DB = ["pending", "confirmed", "active"];
+
 
 export async function insertBooking(input: CreateBookingInput): Promise<CreateBookingResult> {
   if (!hasDatabase()) {
@@ -149,7 +251,7 @@ export async function insertBooking(input: CreateBookingInput): Promise<CreateBo
          and date_from < $3::timestamptz
          and $2::timestamptz < date_to
        for update`,
-      [input.carDbId, input.startDate, input.endDate, BLOCKING],
+      [input.carDbId, input.startDate, input.endDate, BLOCKING_DB],
     );
     if (conflicts.length) return { ok: false as const, reason: "conflict" as const };
 
