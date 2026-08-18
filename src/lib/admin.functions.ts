@@ -138,3 +138,20 @@ export const runDbMigrations = createServerFn({ method: "POST" }).handler(async 
   const { runMigrationsNow } = await import("@/lib/migrations.server");
   return { applied: await runMigrationsNow() };
 });
+
+export const updateCarImages = createServerFn({ method: "POST" })
+  .inputValidator((data: unknown) =>
+    z
+      .object({
+        id: z.string().min(1).max(120),
+        images: z.array(z.string().min(1).max(500)).max(12),
+      })
+      .parse(data),
+  )
+  .handler(async ({ data }) => {
+    const { requireAdmin } = await import("@/lib/adminGuard.server");
+    await requireAdmin();
+    const { updateCarImagesInDb } = await import("@/lib/carsRepo.server");
+    const car = await updateCarImagesInDb(data.id, data.images);
+    return car ? { ok: true as const, car } : { ok: false as const };
+  });

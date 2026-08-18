@@ -331,3 +331,14 @@ export async function resolveCarDbId(slug: string): Promise<string | null> {
   return rows.length ? String(rows[0].id) : null;
 }
 
+
+/** Полная замена галереи автомобиля (первый кадр — обложка). */
+export async function updateCarImagesInDb(slug: string, images: string[]): Promise<Car | null> {
+  if (!(await ready())) return null;
+  const rows = await query<CarRow>(
+    `update cars set images = $2::jsonb where slug = $1 or id::text = $1
+     returning id, slug, brand, model, year, class, transmission, seats, price_city, price_out, status, images, specs, plate`,
+    [slug, JSON.stringify(images)],
+  );
+  return rows.length ? mapCarRow(rows[0]) : null;
+}
