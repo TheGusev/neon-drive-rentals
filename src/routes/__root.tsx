@@ -9,7 +9,9 @@ import {
 } from "@tanstack/react-router";
 import { useEffect, type ReactNode } from "react";
 import { Toaster } from "@/components/ui/sonner";
+import { AppDataProvider } from "@/state/AppDataContext";
 import { BUILD_ID } from "@/lib/build-info";
+
 
 
 import appCss from "../styles.css?url";
