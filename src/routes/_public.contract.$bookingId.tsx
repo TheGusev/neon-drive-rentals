@@ -10,6 +10,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { createBooking } from "@/lib/bookings.functions";
 import { confirmOtp, requestOtp } from "@/lib/auth.functions";
+import { startPayment } from "@/lib/payments.functions";
 import { getPickupPoint } from "@/mocks/pickupPoints";
 import { getTariff } from "@/mocks/tariffs";
 import { calcPrice, formatRub, getDraft, saveDraft } from "@/lib/bookingDraft";
@@ -46,6 +47,7 @@ function ContractPage() {
   const submitBooking = useServerFn(createBooking);
   const sendCode = useServerFn(requestOtp);
   const verifyCode = useServerFn(confirmOtp);
+  const beginPayment = useServerFn(startPayment);
   const [codeSent, setCodeSent] = useState(false);
 
   const resendCode = async (phone: string) => {
@@ -153,7 +155,22 @@ function ContractPage() {
       }
       await queryClient.invalidateQueries({ queryKey: ["bookings"] });
       saveDraft({ ...draft, signed: true });
-      toast.success("Договор подписан", { description: "Копия отправлена на email" });
+
+      const pay = await beginPayment({
+        data: {
+          bookingId: res.booking.id,
+          amount: Math.round(breakdown?.total ?? 0),
+          description: `Аренда ${car.brand} ${car.model}, бронь ${res.booking.id}`,
+        },
+      });
+
+      if (pay.ok && pay.mode === "live" && pay.confirmationUrl) {
+        toast.success("Договор подписан. Переходим к оплате");
+        window.location.href = pay.confirmationUrl;
+        return;
+      }
+
+      toast.success("Договор подписан", { description: "Бронь сохранена, копия отправлена на email" });
       navigate({ to: "/profile" });
     } catch {
       toast.error("Сервис временно недоступен, попробуйте ещё раз");
