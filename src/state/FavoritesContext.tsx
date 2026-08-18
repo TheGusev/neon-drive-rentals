@@ -1,3 +1,4 @@
+import { toast } from "sonner";
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
 
 const STORAGE_KEY = "nsk-rent-favorites";
@@ -36,6 +37,7 @@ export function FavoritesProvider({ children }: { children: ReactNode }) {
       } catch {
         /* ignore */
       }
+      toast.success(next.includes(id) ? "Добавлено в избранное" : "Удалено из избранного");
       return next;
     });
   }, []);

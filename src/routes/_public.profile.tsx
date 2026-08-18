@@ -23,6 +23,7 @@ export const Route = createFileRoute("/_public/profile")({
       { name: "description", content: "Текущая аренда, документы, история бронирований и рейтинг клиента NSK-RENT." },
       { property: "og:title", content: "Личный кабинет — NSK-RENT" },
       { property: "og:description", content: "Управляйте арендой, документами и историей поездок." },
+      { name: "robots", content: "noindex, nofollow" },
     ],
   }),
   component: ProfilePage,

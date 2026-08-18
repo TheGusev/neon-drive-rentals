@@ -17,7 +17,7 @@ export const Route = createFileRoute("/_public/login")({
       { name: "description", content: "Войдите в личный кабинет NSK-RENT по SMS-коду: аренды, документы и история поездок." },
       { property: "og:title", content: "Вход в личный кабинет — NSK-RENT" },
       { property: "og:description", content: "Авторизация по SMS-коду для клиентов NSK-RENT." },
-      { name: "robots", content: "noindex" },
+      { name: "robots", content: "noindex, nofollow" },
     ],
     links: [{ rel: "canonical", href: "https://nsk-rent.ru/login" }],
   }),

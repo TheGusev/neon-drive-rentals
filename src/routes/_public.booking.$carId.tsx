@@ -1,3 +1,4 @@
+import { toast } from "sonner";
 import { createFileRoute, Link, notFound, useNavigate } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import { CalendarIcon, MapPin } from "lucide-react";
@@ -51,6 +52,7 @@ export const Route = createFileRoute("/_public/booking/$carId")({
         { name: "description", content: "Выберите даты и тариф — расчёт стоимости в реальном времени. Выдача на ул. Доватора, 11." },
         { property: "og:title", content: title },
         { property: "og:description", content: "Онлайн-бронирование авто в Новосибирске: даты, тариф, выдача на Доватора, 11." },
+        { name: "robots", content: "noindex, nofollow" },
       ],
     };
   },
@@ -146,8 +148,10 @@ function BookingPage() {
       setShowErrors(true);
       const first = errors[0];
       if (first) requestAnimationFrame(() => focusSection(first.anchor));
+      toast.error("Проверьте форму", { description: first?.message ?? "Заполните обязательные поля" });
       return;
     }
+    toast.success("Бронь сохранена", { description: "Переходим к оплате" });
     navigate({ to: "/payment/$bookingId", params: { bookingId: draft.id } });
   };
 

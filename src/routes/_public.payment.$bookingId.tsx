@@ -28,6 +28,7 @@ export const Route = createFileRoute("/_public/payment/$bookingId")({
       { name: "description", content: "Оплата аренды авто картой или через СБП. Безопасно и мгновенно." },
       { property: "og:title", content: "Оплата бронирования — NSK-RENT" },
       { property: "og:description", content: "Оплата аренды авто картой или через СБП." },
+      { name: "robots", content: "noindex, nofollow" },
     ],
   }),
   component: PaymentPage,

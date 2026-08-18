@@ -40,7 +40,7 @@ export function FaqBlock({
         </CollapsibleTrigger>
 
         <CollapsibleContent className="overflow-hidden data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down">
-          <Accordion type="single" collapsible className="mt-3 w-full">
+          <Accordion type="single" collapsible className="mt-3 grid w-full gap-x-6 md:grid-cols-2">
             {items.map((item, i) => (
               <AccordionItem key={i} value={`faq-${i}`}>
                 <AccordionTrigger className="text-left font-semibold">{item.q}</AccordionTrigger>

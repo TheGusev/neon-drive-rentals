@@ -14,11 +14,18 @@ export const faqJsonLd = () => ({
   })),
 });
 
+export const canonical = (path: string) => `${SITE_URL}${path === "/" ? "" : path}`;
+
+/** Мета для приватных/служебных страниц. */
+export const noindexMeta = { name: "robots", content: "noindex, nofollow" } as const;
+
 export const localBusinessJsonLd = () => ({
   "@context": "https://schema.org",
   "@type": "AutoRental",
   name: "NSK-RENT — Аренда авто в Новосибирске",
   url: SITE_URL,
+  logo: `${SITE_URL}/icon-512.png`,
+  image: `${SITE_URL}/icon-512.png`,
   telephone: SITE_PHONE,
   priceRange: "₽₽",
   areaServed: {
@@ -39,6 +46,47 @@ export const localBusinessJsonLd = () => ({
   },
   openingHours: "Mo-Su 00:00-24:00",
 });
+
+interface VehicleSeed {
+  brand: string;
+  model: string;
+  year: number;
+  color: string;
+  pricePerDay: number;
+  slug: string;
+  image?: string;
+  status?: string;
+}
+
+/** Vehicle + offer для карточки авто. */
+export const vehicleJsonLd = (car: VehicleSeed) => ({
+  "@context": "https://schema.org",
+  "@type": "Vehicle",
+  name: `${car.brand} ${car.model} ${car.year}`,
+  brand: { "@type": "Brand", name: car.brand },
+  model: car.model,
+  vehicleModelDate: String(car.year),
+  color: car.color,
+  bodyType: "Kei car",
+  steeringPosition: "https://schema.org/RightHandDriving",
+  url: canonical(`/cars/${car.slug}`),
+  ...(car.image ? { image: car.image.startsWith("http") ? car.image : `${SITE_URL}${car.image}` } : {}),
+  offers: {
+    "@type": "Offer",
+    price: car.pricePerDay,
+    priceCurrency: "RUB",
+    availability:
+      (car.status ?? "free") === "free" ? "https://schema.org/InStock" : "https://schema.org/LimitedAvailability",
+    url: canonical(`/cars/${car.slug}`),
+    priceSpecification: {
+      "@type": "UnitPriceSpecification",
+      price: car.pricePerDay,
+      priceCurrency: "RUB",
+      unitCode: "DAY",
+    },
+  },
+});
+
 
 export const breadcrumbJsonLd = (items: Array<{ name: string; url: string }>) => ({
   "@context": "https://schema.org",

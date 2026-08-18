@@ -2,7 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import type { Car } from "@/types/domain";
 
-const fleetStatus = z.enum(["free", "busy", "washing", "maintenance"]);
+const fleetStatus = z.enum(["free", "busy", "maintenance"]);
 const bookingStatus = z.enum(["paid", "pending", "active", "completed", "cancelled"]);
 
 const carInputSchema = z.object({
