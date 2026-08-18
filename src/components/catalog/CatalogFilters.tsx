@@ -2,7 +2,7 @@ import { CalendarIcon, RotateCcw } from "lucide-react";
 import { format } from "date-fns";
 import { ru } from "date-fns/locale";
 import type { CarFleetStatus, Transmission } from "@/types/domain";
-import { carBrands, carColors, carYears, mockCars } from "@/data/mockCars";
+import { useCarFacets, useCars } from "@/state/AppDataContext";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Slider } from "@/components/ui/slider";
@@ -45,9 +45,12 @@ const statusOptions: { value: CarFleetStatus; label: string }[] = [
 export function CatalogFilters({ value, onChange, priceBounds, onReset }: CatalogFiltersProps) {
   const toggle = <T,>(arr: T[], v: T): T[] => (arr.includes(v) ? arr.filter((x) => x !== v) : [...arr, v]);
 
+  const allCars = useCars();
+  const { brands: carBrands, colors: carColors, years: carYears } = useCarFacets();
+
   const models = Array.from(
     new Set(
-      mockCars
+      allCars
         .filter((c) => (value.brands.length ? value.brands.includes(c.brand) : true))
         .map((c) => c.model),
     ),

@@ -1,8 +1,9 @@
 import { Calendar } from "@/components/ui/calendar";
-import { bookings as allBookings } from "@/mocks/bookings";
+import { useBookings } from "@/state/AppDataContext";
 import { eachDayOfInterval, parseISO } from "date-fns";
 
 export function AvailabilityCalendar({ carId }: { carId: string }) {
+  const allBookings = useBookings();
   const carBookings = allBookings.filter((b) => b.carId === carId);
   const bookedDays = carBookings.flatMap((b) =>
     eachDayOfInterval({ start: parseISO(b.startDate), end: parseISO(b.endDate) }),

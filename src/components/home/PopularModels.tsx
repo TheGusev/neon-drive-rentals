@@ -8,10 +8,9 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import { Button } from "@/components/ui/button";
-import { cars } from "@/mocks/cars";
+import { useCars } from "@/state/AppDataContext";
 import heroCar from "@/assets/hero-car.jpg";
 
-const popular = cars.slice(0, 6);
 
 export function PopularModels() {
   return (

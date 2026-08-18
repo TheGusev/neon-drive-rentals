@@ -10,6 +10,7 @@ import { PICKUP_POINT } from "@/mocks/pickupPoints";
 import { useHomeBooking } from "./HomeBookingContext";
 import { calcPrice, daysBetween, formatRub } from "@/lib/bookingDraft";
 import { isCarAvailable, nextBusyUntil } from "@/lib/availability";
+import { useBookings } from "@/state/AppDataContext";
 import { format } from "date-fns";
 import { ru } from "date-fns/locale";
 import { BookingConfirmDialog } from "./BookingConfirmDialog";
@@ -71,8 +72,9 @@ function QuickBody({
   onOrder: () => void;
 }) {
 
-  const available = isCarAvailable(car, from, to);
-  const busyUntil = !available ? nextBusyUntil(car) : null;
+  const bookings = useBookings();
+  const available = isCarAvailable(car, from, to, bookings);
+  const busyUntil = !available ? nextBusyUntil(car, bookings) : null;
   const tariffInfo = getTariff(tariff);
   const days = daysBetween(from, to);
   const price = calcPrice({

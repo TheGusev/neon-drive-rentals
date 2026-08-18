@@ -18,7 +18,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
-import { cars } from "@/mocks/cars";
+import { useBookings, useCars } from "@/state/AppDataContext";
 import { tariffs, getTariff } from "@/mocks/tariffs";
 import type { BookingTariff } from "@/types/domain";
 import { HomeBookingProvider, useHomeBooking } from "./HomeBookingContext";
@@ -50,7 +50,12 @@ export function HomeDesktop({ heroImage }: { heroImage: string }) {
 function HomeDesktopInner({ heroImage: _heroImage }: { heroImage: string }) {
   const { from, to } = useHomeBooking();
 
-  const { available } = useMemo(() => splitAvailability(cars, from, to), [from, to]);
+  const cars = useCars();
+  const bookings = useBookings();
+  const { available } = useMemo(
+    () => splitAvailability(cars, from, to, bookings),
+    [cars, from, to, bookings],
+  );
 
   return (
     <div className="relative min-h-[100svh] overflow-x-hidden">
@@ -147,7 +152,12 @@ export function HomeMobile({ heroImage }: { heroImage: string }) {
 
 function HomeMobileInner({ heroImage: _heroImage }: { heroImage: string }) {
   const { from, to } = useHomeBooking();
-  const { available } = useMemo(() => splitAvailability(cars, from, to), [from, to]);
+  const cars = useCars();
+  const bookings = useBookings();
+  const { available } = useMemo(
+    () => splitAvailability(cars, from, to, bookings),
+    [cars, from, to, bookings],
+  );
 
   return (
     <div className="relative min-h-[100svh] overflow-hidden bg-background text-foreground">
@@ -248,7 +258,12 @@ function QuickBookingForm() {
   const tariffInfo = getTariff(tariff);
   const days = daysBetween(from, to);
 
-  const { available } = useMemo(() => splitAvailability(cars, from, to), [from, to]);
+  const cars = useCars();
+  const bookings = useBookings();
+  const { available } = useMemo(
+    () => splitAvailability(cars, from, to, bookings),
+    [cars, from, to, bookings],
+  );
 
   const prices = useMemo(() => {
     if (!available.length) return null;
