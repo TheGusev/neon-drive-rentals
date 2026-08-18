@@ -229,11 +229,11 @@ function ContractPage() {
 
         <StickyBottomBar>
           <Button
-            onClick={sign}
-            disabled={!canSign}
+            onClick={() => void sign()}
+            disabled={!canSign || saving}
             variant="accent" size="xl" className="w-full"
           >
-            Подписать договор
+            {saving ? "Сохраняем…" : "Подписать договор"}
           </Button>
         </StickyBottomBar>
       </div>
