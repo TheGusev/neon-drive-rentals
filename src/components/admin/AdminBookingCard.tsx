@@ -2,7 +2,7 @@ import { Eye, CalendarDays } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { EntityCard } from "@/components/admin/EntityCard";
 import { PaymentStatusBadge } from "@/components/admin/PaymentStatusBadge";
-import type { Booking, Car, Client } from "@/types/domain";
+import type { Booking, BookingStatus, Car, Client } from "@/types/domain";
 
 const fmt = (iso: string) =>
   new Date(iso).toLocaleDateString("ru-RU", { day: "2-digit", month: "short" });
@@ -13,9 +13,18 @@ interface Props {
   client?: Client | undefined;
   index: number;
   onView?: () => void;
+  onStatusChange?: (status: BookingStatus) => void;
+  statusPending?: boolean;
 }
 
-export function AdminBookingCard({ booking, car, client, index, onView }: Props) {
+const NEXT_STATUS: Partial<Record<BookingStatus, { label: string; value: BookingStatus }>> = {
+  pending: { label: "Подтвердить оплату", value: "paid" },
+  paid: { label: "Выдать авто", value: "active" },
+  active: { label: "Завершить", value: "completed" },
+};
+
+export function AdminBookingCard({ booking, car, client, index, onView, onStatusChange, statusPending }: Props) {
+  const next = NEXT_STATUS[booking.status];
   return (
     <EntityCard
       index={index}
@@ -68,6 +77,36 @@ export function AdminBookingCard({ booking, car, client, index, onView }: Props)
           )}
         </div>
       </div>
+      {onStatusChange && (next || booking.status !== "cancelled") && (
+        <div className="mt-3 flex flex-wrap gap-2">
+          {next && (
+            <Button
+              size="sm"
+              variant="accent"
+              disabled={statusPending}
+              onClick={(e) => {
+                e.stopPropagation();
+                onStatusChange(next.value);
+              }}
+            >
+              {next.label}
+            </Button>
+          )}
+          {booking.status !== "completed" && booking.status !== "cancelled" && (
+            <Button
+              size="sm"
+              variant="soft"
+              disabled={statusPending}
+              onClick={(e) => {
+                e.stopPropagation();
+                onStatusChange("cancelled");
+              }}
+            >
+              Отменить
+            </Button>
+          )}
+        </div>
+      )}
     </EntityCard>
   );
 }
