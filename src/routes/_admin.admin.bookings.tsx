@@ -7,8 +7,9 @@ import { AdminBookingCard } from "@/components/admin/AdminBookingCard";
 import { EntityGrid, EmptyState } from "@/components/admin/EntityCard";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { bookings } from "@/mocks/bookings";
-import { getCarById } from "@/mocks/cars";
+import { useSuspenseQuery } from "@tanstack/react-query";
+import { adminBookingsQueryOptions } from "@/lib/queries";
+import { useCarLookup } from "@/state/AppDataContext";
 import { getClientById } from "@/mocks/clients";
 import type { BookingStatus } from "@/types/domain";
 
@@ -18,6 +19,8 @@ export const Route = createFileRoute("/_admin/admin/bookings")({
 });
 
 function AdminBookingsPage() {
+  const { data: bookings } = useSuspenseQuery(adminBookingsQueryOptions());
+  const getCarById = useCarLookup();
   const [q, setQ] = useState("");
   const [tab, setTab] = useState<"all" | BookingStatus>("all");
 
@@ -32,7 +35,7 @@ function AdminBookingsPage() {
       }
       return true;
     });
-  }, [q, tab]);
+  }, [q, tab, bookings, getCarById]);
 
   return (
     <div className="w-full">

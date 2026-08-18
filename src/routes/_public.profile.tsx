@@ -7,8 +7,7 @@ import { FavoritesBlock } from "@/components/profile/FavoritesBlock";
 import { ReviewsBlock } from "@/components/profile/ReviewsBlock";
 import { BottomNav } from "@/components/profile/BottomNav";
 import { SectionCard } from "@/components/checkout/SectionCard";
-import { bookings } from "@/mocks/bookings";
-import { getCarById } from "@/mocks/cars";
+import { useBookings, useCarLookup } from "@/state/AppDataContext";
 import { currentClient } from "@/mocks/profile";
 
 export const Route = createFileRoute("/_public/profile")({
@@ -24,6 +23,8 @@ export const Route = createFileRoute("/_public/profile")({
 });
 
 function ProfilePage() {
+  const bookings = useBookings();
+  const getCarById = useCarLookup();
   const active = bookings.find((b) => b.clientId === currentClient.id && b.status === "active");
   const car = active ? getCarById(active.carId) : undefined;
 
