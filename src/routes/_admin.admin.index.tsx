@@ -7,7 +7,6 @@ import {
   FilePlus2,
   UserPlus,
   PlusCircle,
-  Droplets,
   BarChart3,
   Settings,
   Star,
@@ -188,11 +187,6 @@ function DashboardPage() {
             icon={PlusCircle}
             label="Добавить авто"
             onClick={() => toast("Форма авто скоро появится")}
-          />
-          <QuickAction
-            icon={Droplets}
-            label="Календарь мойки"
-            onClick={() => toast("Календарь мойки скоро появится")}
           />
           <QuickAction
             icon={BarChart3}
