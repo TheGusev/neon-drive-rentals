@@ -21,20 +21,21 @@ import { reportLovableError } from "../lib/lovable-error-reporting";
 
 function NotFoundComponent() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background px-4">
-      <div className="max-w-md text-center">
-        <h1 className="text-7xl font-bold text-foreground">404</h1>
-        <h2 className="mt-4 text-xl font-semibold text-foreground">Page not found</h2>
+    <div className="flex min-h-screen items-center justify-center bg-background px-4 text-foreground">
+      <div className="w-full max-w-lg text-center">
+        <p className="font-display text-xs uppercase tracking-[0.4em] text-muted-foreground">NSK-RENT</p>
+        <h1 className="mt-3 font-display text-7xl font-black md:neon-text">404</h1>
+        <h2 className="mt-3 font-display text-xl font-bold">Страница не найдена</h2>
         <p className="mt-2 text-sm text-muted-foreground">
-          The page you're looking for doesn't exist or has been moved.
+          Возможно, ссылка устарела или автомобиль уже снят с проката. Начните с автопарка — 21 японский кей-кар в
+          Новосибирске, выдача на ул. Доватора, 11.
         </p>
-        <div className="mt-6">
-          <Link
-            to="/"
-            className="inline-flex h-9 items-center justify-center rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-          >
-            Go home
-          </Link>
+        <div className="mt-6 flex flex-wrap items-center justify-center gap-2">
+          <Link to="/" className="dash-chip font-semibold hover:text-accent">Главная</Link>
+          <Link to="/cars" className="dash-chip font-semibold hover:text-accent">Автопарк</Link>
+          <Link to="/rent/novosibirsk" className="dash-chip font-semibold hover:text-accent">Аренда в Новосибирске</Link>
+          <Link to="/blog" className="dash-chip font-semibold hover:text-accent">Блог</Link>
+          <Link to="/profile" className="dash-chip font-semibold hover:text-accent">Личный кабинет</Link>
         </div>
       </div>
     </div>
