@@ -1,9 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { Search, SlidersHorizontal } from "lucide-react";
-import { mockCars } from "@/data/mockCars";
-import type { Car } from "@/types/domain";
+import type { Booking, Car } from "@/types/domain";
 import { isCarAvailable } from "@/lib/availability";
+import { useBookings, useCars } from "@/state/AppDataContext";
 import { CarCard } from "@/components/catalog/CarCard";
 import { CatalogFilters, type CatalogFiltersState } from "@/components/catalog/CatalogFilters";
 import { Button } from "@/components/ui/button";
@@ -33,12 +33,12 @@ export const Route = createFileRoute("/_public/cars/")({
 
 type SortKey = "price-asc" | "price-desc" | "rating";
 
-const priceBounds: [number, number] = [
-  Math.min(...mockCars.map((c) => c.pricePerDay)),
-  Math.max(...mockCars.map((c) => c.pricePerDay)),
-];
+const computeBounds = (list: Car[]): [number, number] =>
+  list.length
+    ? [Math.min(...list.map((c) => c.pricePerDay)), Math.max(...list.map((c) => c.pricePerDay))]
+    : [0, 10000];
 
-const emptyFilters = (pickup?: Date, ret?: Date): CatalogFiltersState => ({
+const emptyFilters = (priceBounds: [number, number], pickup?: Date, ret?: Date): CatalogFiltersState => ({
   brands: [],
   models: [],
   colors: [],
@@ -56,7 +56,13 @@ const parseDate = (v?: string) => {
   return Number.isNaN(d.getTime()) ? undefined : d;
 };
 
-function applyFilters(list: Car[], f: CatalogFiltersState, sort: SortKey, query: string): Car[] {
+function applyFilters(
+  list: Car[],
+  f: CatalogFiltersState,
+  sort: SortKey,
+  query: string,
+  bookings: Booking[],
+): Car[] {
   const q = query.trim().toLowerCase();
   const filtered = list.filter((c) => {
     if (q && !`${c.brand} ${c.model} ${c.color}`.toLowerCase().includes(q)) return false;
@@ -67,7 +73,7 @@ function applyFilters(list: Car[], f: CatalogFiltersState, sort: SortKey, query:
     if (f.transmissions.length && !f.transmissions.includes(c.transmission)) return false;
     if (f.statuses.length && !f.statuses.includes(c.status ?? "free")) return false;
     if (c.pricePerDay < f.price[0] || c.pricePerDay > f.price[1]) return false;
-    if (f.pickup && f.ret && !isCarAvailable(c, f.pickup.toISOString(), f.ret.toISOString())) return false;
+    if (f.pickup && f.ret && !isCarAvailable(c, f.pickup.toISOString(), f.ret.toISOString(), bookings)) return false;
     return true;
   });
   const sorted = [...filtered];
@@ -79,17 +85,23 @@ function applyFilters(list: Car[], f: CatalogFiltersState, sort: SortKey, query:
 
 function CatalogPage() {
   const search = Route.useSearch();
+  const allCars = useCars();
+  const bookings = useBookings();
+  const priceBounds = useMemo(() => computeBounds(allCars), [allCars]);
   const [filters, setFilters] = useState<CatalogFiltersState>(() =>
-    emptyFilters(parseDate(search.from), parseDate(search.to)),
+    emptyFilters(computeBounds(allCars), parseDate(search.from), parseDate(search.to)),
   );
   const [query, setQuery] = useState("");
   const [sort, setSort] = useState<SortKey>("price-asc");
   const [sheetOpen, setSheetOpen] = useState(false);
 
-  const list = useMemo(() => applyFilters(mockCars, filters, sort, query), [filters, sort, query]);
+  const list = useMemo(
+    () => applyFilters(allCars, filters, sort, query, bookings),
+    [allCars, filters, sort, query, bookings],
+  );
 
   const reset = () => {
-    setFilters(emptyFilters());
+    setFilters(emptyFilters(priceBounds));
     setQuery("");
   };
 
@@ -100,7 +112,7 @@ function CatalogPage() {
           <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">NSK-RENT</p>
           <h1 className="mt-1 font-display text-3xl font-black md:text-4xl md:neon-text">Автопарк</h1>
           <p className="mt-2 text-sm text-muted-foreground">
-            Японские кей-кары для города и поездок по области. Найдено {list.length} из {mockCars.length} авто.
+            Японские кей-кары для города и поездок по области. Найдено {list.length} из {allCars.length} авто.
           </p>
         </div>
 

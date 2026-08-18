@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { LandingPage } from "@/components/seo/LandingPage";
-import { cars } from "@/mocks/cars";
+import { useCars } from "@/state/AppDataContext";
 import { faqItems } from "@/mocks/faq";
 import { SITE_URL, breadcrumbJsonLd, jsonLdScript } from "@/lib/seo";
 
@@ -34,6 +34,8 @@ export const Route = createFileRoute("/_public/rent/novosibirsk")({
 });
 
 function Page() {
+  const cars = useCars();
+
   return (
     <LandingPage
       breadcrumb="Аренда авто в Новосибирске"
