@@ -184,7 +184,6 @@ function AdminCarsPage() {
             <SelectItem value="all">Все статусы</SelectItem>
             <SelectItem value="free">Свободные</SelectItem>
             <SelectItem value="busy">В аренде</SelectItem>
-            <SelectItem value="washing">Мойка</SelectItem>
             <SelectItem value="maintenance">ТО</SelectItem>
           </SelectContent>
         </Select>
@@ -258,7 +257,6 @@ function AdminCarsPage() {
                 <SelectContent>
                   <SelectItem value="free">Свободен</SelectItem>
                   <SelectItem value="busy">В аренде</SelectItem>
-                  <SelectItem value="washing">Мойка</SelectItem>
                   <SelectItem value="maintenance">ТО</SelectItem>
                 </SelectContent>
               </Select>
