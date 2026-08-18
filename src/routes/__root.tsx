@@ -10,6 +10,8 @@ import {
 import { useEffect, type ReactNode } from "react";
 import { Toaster } from "@/components/ui/sonner";
 import { AppDataProvider } from "@/state/AppDataContext";
+import { carsQueryOptions, publicBookingsQueryOptions } from "@/lib/queries";
+
 import { BUILD_ID } from "@/lib/build-info";
 
 
