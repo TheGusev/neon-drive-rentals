@@ -3,6 +3,7 @@ import heroDrive from "@/assets/cars/hero-drive.jpg";
 import { HomeDesktop, HomeMobile } from "@/components/home/HomeStage";
 import { FaqBlock } from "@/components/home/FaqBlock";
 import { HomeIntro } from "@/components/home/HomeIntro";
+import { RealPhotoStrip } from "@/components/home/RealPhotoStrip";
 import { SITE_URL, faqJsonLd, jsonLdScript, localBusinessJsonLd } from "@/lib/seo";
 import { ThemeProvider, useTheme } from "@/components/layout/ThemeProvider";
 import { HomeControls } from "@/components/home/HomeControls";
@@ -58,6 +59,7 @@ function HomeShell() {
       {/* SEO content below hero (both viewports scroll to reach it) */}
       <div className="bg-background text-foreground">
         <HomeIntro />
+        <RealPhotoStrip />
         <FaqBlock />
       </div>
 
