@@ -78,6 +78,12 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
 }
 
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
+  loader: async ({ context }) => {
+    await Promise.all([
+      context.queryClient.ensureQueryData(carsQueryOptions()),
+      context.queryClient.ensureQueryData(publicBookingsQueryOptions()),
+    ]);
+  },
   head: () => ({
     meta: [
       { charSet: "utf-8" },
