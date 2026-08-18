@@ -63,7 +63,7 @@ function toForm(car: Car): FormState {
     transmission: (car.transmission as FormState["transmission"]) ?? "AT",
     seats: String(car.seats ?? 4),
     priceCity: String(car.pricePerDay),
-    priceOut: String(car.pricePerDayOut ?? car.pricePerDay + 200),
+    priceOut: String(car.pricePerDay + 200),
     status: car.status ?? "free",
     plate: car.plate ?? "",
     color: car.color ?? "",
