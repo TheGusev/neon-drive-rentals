@@ -8,7 +8,7 @@ import { EntityGrid, EmptyState } from "@/components/admin/EntityCard";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { cars } from "@/mocks/cars";
+import { useCars } from "@/state/AppDataContext";
 import type { CarFleetStatus } from "@/types/domain";
 
 export const Route = createFileRoute("/_admin/admin/cars")({
@@ -17,6 +17,7 @@ export const Route = createFileRoute("/_admin/admin/cars")({
 });
 
 function AdminCarsPage() {
+  const cars = useCars();
   const [q, setQ] = useState("");
   const [status, setStatus] = useState<"all" | CarFleetStatus>("all");
 
@@ -27,7 +28,7 @@ function AdminCarsPage() {
         return false;
       return true;
     });
-  }, [q, status]);
+  }, [q, status, cars]);
 
   return (
     <div className="w-full">

@@ -21,8 +21,9 @@ import { AdminBookingCard } from "@/components/admin/AdminBookingCard";
 import { EmptyState } from "@/components/admin/EntityCard";
 
 import { dashboardStats } from "@/mocks/dashboardStats";
-import { bookings } from "@/mocks/bookings";
-import { getCarById } from "@/mocks/cars";
+import { useSuspenseQuery } from "@tanstack/react-query";
+import { adminBookingsQueryOptions } from "@/lib/queries";
+import { useCarLookup, useCars } from "@/state/AppDataContext";
 import { clients, getClientById } from "@/mocks/clients";
 import type { CarFleetStatus } from "@/types/domain";
 
@@ -41,6 +42,9 @@ const fmtDate = (iso: string) =>
 const fmtRub = (n: number) => `${n.toLocaleString("ru-RU")} ₽`;
 
 function DashboardPage() {
+  const { data: bookings } = useSuspenseQuery(adminBookingsQueryOptions());
+  const getCarById = useCarLookup();
+  const cars = useCars();
   const activeBookings = bookings.filter(
     (b) => b.status === "active" || b.status === "paid" || b.status === "pending",
   );
