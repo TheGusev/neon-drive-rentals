@@ -22,6 +22,7 @@ import { Route as PublicKeiCarsRouteImport } from './routes/_public.kei-cars'
 import { Route as PublicCarsIndexRouteImport } from './routes/_public.cars.index'
 import { Route as PublicBlogIndexRouteImport } from './routes/_public.blog.index'
 import { Route as AdminAdminIndexRouteImport } from './routes/_admin.admin.index'
+import { Route as ApiPublicYookassaWebhookRouteImport } from './routes/api/public/yookassa-webhook'
 import { Route as ApiPublicVersionRouteImport } from './routes/api/public/version'
 import { Route as PublicRentNovosibirskRouteImport } from './routes/_public.rent.novosibirsk'
 import { Route as PublicRentBezZalogaRouteImport } from './routes/_public.rent.bez-zaloga'
@@ -99,6 +100,12 @@ const AdminAdminIndexRoute = AdminAdminIndexRouteImport.update({
   path: '/admin/',
   getParentRoute: () => AdminRoute,
 } as any)
+const ApiPublicYookassaWebhookRoute =
+  ApiPublicYookassaWebhookRouteImport.update({
+    id: '/api/public/yookassa-webhook',
+    path: '/api/public/yookassa-webhook',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ApiPublicVersionRoute = ApiPublicVersionRouteImport.update({
   id: '/api/public/version',
   path: '/api/public/version',
@@ -187,6 +194,7 @@ export interface FileRoutesByFullPath {
   '/rent/bez-zaloga': typeof PublicRentBezZalogaRoute
   '/rent/novosibirsk': typeof PublicRentNovosibirskRoute
   '/api/public/version': typeof ApiPublicVersionRoute
+  '/api/public/yookassa-webhook': typeof ApiPublicYookassaWebhookRoute
   '/admin/': typeof AdminAdminIndexRoute
   '/blog/': typeof PublicBlogIndexRoute
   '/cars/': typeof PublicCarsIndexRoute
@@ -213,6 +221,7 @@ export interface FileRoutesByTo {
   '/rent/bez-zaloga': typeof PublicRentBezZalogaRoute
   '/rent/novosibirsk': typeof PublicRentNovosibirskRoute
   '/api/public/version': typeof ApiPublicVersionRoute
+  '/api/public/yookassa-webhook': typeof ApiPublicYookassaWebhookRoute
   '/admin': typeof AdminAdminIndexRoute
   '/blog': typeof PublicBlogIndexRoute
   '/cars': typeof PublicCarsIndexRoute
@@ -242,6 +251,7 @@ export interface FileRoutesById {
   '/_public/rent/bez-zaloga': typeof PublicRentBezZalogaRoute
   '/_public/rent/novosibirsk': typeof PublicRentNovosibirskRoute
   '/api/public/version': typeof ApiPublicVersionRoute
+  '/api/public/yookassa-webhook': typeof ApiPublicYookassaWebhookRoute
   '/_admin/admin/': typeof AdminAdminIndexRoute
   '/_public/blog/': typeof PublicBlogIndexRoute
   '/_public/cars/': typeof PublicCarsIndexRoute
@@ -270,6 +280,7 @@ export interface FileRouteTypes {
     | '/rent/bez-zaloga'
     | '/rent/novosibirsk'
     | '/api/public/version'
+    | '/api/public/yookassa-webhook'
     | '/admin/'
     | '/blog/'
     | '/cars/'
@@ -296,6 +307,7 @@ export interface FileRouteTypes {
     | '/rent/bez-zaloga'
     | '/rent/novosibirsk'
     | '/api/public/version'
+    | '/api/public/yookassa-webhook'
     | '/admin'
     | '/blog'
     | '/cars'
@@ -324,6 +336,7 @@ export interface FileRouteTypes {
     | '/_public/rent/bez-zaloga'
     | '/_public/rent/novosibirsk'
     | '/api/public/version'
+    | '/api/public/yookassa-webhook'
     | '/_admin/admin/'
     | '/_public/blog/'
     | '/_public/cars/'
@@ -337,6 +350,7 @@ export interface RootRouteChildren {
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   AdminLoginRoute: typeof AdminLoginRoute
   ApiPublicVersionRoute: typeof ApiPublicVersionRoute
+  ApiPublicYookassaWebhookRoute: typeof ApiPublicYookassaWebhookRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -431,6 +445,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin/'
       preLoaderRoute: typeof AdminAdminIndexRouteImport
       parentRoute: typeof AdminRoute
+    }
+    '/api/public/yookassa-webhook': {
+      id: '/api/public/yookassa-webhook'
+      path: '/api/public/yookassa-webhook'
+      fullPath: '/api/public/yookassa-webhook'
+      preLoaderRoute: typeof ApiPublicYookassaWebhookRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/api/public/version': {
       id: '/api/public/version'
@@ -589,6 +610,7 @@ const rootRouteChildren: RootRouteChildren = {
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   AdminLoginRoute: AdminLoginRoute,
   ApiPublicVersionRoute: ApiPublicVersionRoute,
+  ApiPublicYookassaWebhookRoute: ApiPublicYookassaWebhookRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
