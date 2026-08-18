@@ -215,6 +215,8 @@ export type CreateBookingResult =
   | { ok: false; reason: "conflict" | "car_not_found" };
 
 const BLOCKING = ["pending", "paid", "active"];
+const BLOCKING_DB = ["pending", "confirmed", "active"];
+
 
 export async function insertBooking(input: CreateBookingInput): Promise<CreateBookingResult> {
   if (!hasDatabase()) {
