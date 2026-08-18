@@ -104,8 +104,13 @@ export function SiteFooter() {
         <div className="mx-auto flex w-full max-w-7xl flex-col gap-2 px-4 py-6 text-xs text-muted-foreground md:px-6">
           <p>{LEGAL.offerNote}</p>
           <p>{LEGAL.ageNote}</p>
+          <p>{LEGAL.dataNote}</p>
+          <p>
+            {LEGAL.entity} · {LEGAL.inn} · {LEGAL.ogrnip}
+          </p>
           <p>© {new Date().getFullYear()} NSK-RENT — аренда авто в Новосибирске. Все права защищены.</p>
         </div>
+
       </div>
     </footer>
   );
