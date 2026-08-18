@@ -118,8 +118,6 @@ function ContractPage() {
         data: {
           carId: draft.carId,
           clientPhone: draft.phone ?? "",
-          clientName: draft.name ?? undefined,
-          clientEmail: draft.email ?? undefined,
           startDate: draft.startDate ?? "",
           endDate: draft.endDate ?? "",
           totalPrice: Math.round(breakdown?.total ?? 0),
