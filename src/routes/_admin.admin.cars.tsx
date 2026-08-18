@@ -124,7 +124,13 @@ function AdminCarsPage() {
     mutationFn: (id: string) => deleteFn({ data: { id } }),
     onSuccess: async (res) => {
       if (!res.ok) {
-        toast.error("Не удалось удалить автомобиль");
+        toast.error(
+          res.reason === "has_bookings"
+            ? "Нельзя удалить: по автомобилю есть незакрытые брони"
+            : res.reason === "not_found"
+              ? "Автомобиль не найден"
+              : "Не удалось удалить автомобиль",
+        );
         return;
       }
       await refresh();

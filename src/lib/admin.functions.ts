@@ -68,7 +68,7 @@ export const deleteCar = createServerFn({ method: "POST" })
     const { requireAdmin } = await import("@/lib/adminGuard.server");
     await requireAdmin();
     const { deleteCarInDb } = await import("@/lib/carsRepo.server");
-    return { ok: await deleteCarInDb(data.id) };
+    return deleteCarInDb(data.id);
   });
 
 export const uploadCarPhoto = createServerFn({ method: "POST" })

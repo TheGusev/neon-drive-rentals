@@ -266,7 +266,7 @@ function BookingPage() {
         </div>
 
         <StickyBottomBar
-          label="Итого"
+          label="Итого с залогом"
           value={breakdown ? formatRub(breakdown.total) : "—"}
         >
           {showErrors && !valid ? (

@@ -301,13 +301,27 @@ export async function updateCarStatusInDb(slug: string, status: CarFleetStatus):
   return rows.length ? mapCarRow(rows[0]) : null;
 }
 
-export async function deleteCarInDb(slug: string): Promise<boolean> {
-  if (!(await ready())) return false;
+export type DeleteCarResult = { ok: true } | { ok: false; reason: "not_found" | "has_bookings" | "no_db" };
+
+/** Удаление авто запрещено, пока по нему есть незакрытые брони. */
+export async function deleteCarInDb(slug: string): Promise<DeleteCarResult> {
+  if (!(await ready())) return { ok: false, reason: "no_db" };
+
+  const blocking = await query<{ id: string }>(
+    `select b.id from bookings b
+     join cars c on c.id = b.car_id
+     where (c.slug = $1 or c.id::text = $1)
+       and b.status in ('pending','paid','confirmed','active')
+     limit 1`,
+    [slug],
+  );
+  if (blocking.length) return { ok: false, reason: "has_bookings" };
+
   const rows = await query<{ id: string }>(
     `delete from cars where slug = $1 or id::text = $1 returning id`,
     [slug],
   );
-  return rows.length > 0;
+  return rows.length > 0 ? { ok: true } : { ok: false, reason: "not_found" };
 }
 
 /** Internal id (primary key) for a public slug — needed when writing bookings. */

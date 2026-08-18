@@ -3,11 +3,12 @@ import { Car, Clock, MapPin, ShieldCheck, Zap } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { useCoarsePointer } from "@/hooks/useCoarsePointer";
+import { useCars } from "@/state/AppDataContext";
 
-const items = [
+const buildItems = (fleetSize: number) => [
   {
     icon: Car,
-    title: "8 JDM кей-каров",
+    title: `${fleetSize} JDM кей-каров`,
     sub: "весь парк из Японии",
     hint: "Весь парк — японские кей-кары: компактные, экономичные, идеальны для города и парковки во дворах.",
   },
@@ -49,6 +50,8 @@ export function NfsSideMenu({
   const horizontal = orientation === "horizontal";
 
   const coarse = useCoarsePointer();
+  const cars = useCars();
+  const items = buildItems(cars.length);
 
   return (
     <TooltipProvider delayDuration={150}>
