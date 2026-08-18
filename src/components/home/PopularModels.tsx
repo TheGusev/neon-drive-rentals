@@ -13,6 +13,9 @@ import heroCar from "@/assets/hero-car.jpg";
 
 
 export function PopularModels() {
+  const cars = useCars();
+  const popular = cars.slice(0, 6);
+
   return (
     <section className="py-12 md:py-20">
       <div className="mb-8 flex items-end justify-between gap-4">

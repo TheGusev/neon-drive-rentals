@@ -27,6 +27,7 @@ interface Props {
 export function BookingConfirmDialog({ open, car, from, to, tariff, locationLabel, onClose }: Props) {
   const [agree, setAgree] = useState(false);
   const navigate = useNavigate();
+  const bookings = useBookings();
 
   const tariffInfo = car ? getTariff(tariff) : null;
 
@@ -42,7 +43,7 @@ export function BookingConfirmDialog({ open, car, from, to, tariff, locationLabe
 
   const conflicts = useMemo(
     () => (car ? getConflictingBookings(car.id, from, to, bookings) : []),
-    [car, from, to],
+    [car, from, to, bookings],
   );
   const hasDates = !!(from && to);
   const blocked = !hasDates || conflicts.length > 0;
