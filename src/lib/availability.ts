@@ -1,5 +1,4 @@
 import type { Booking, Car } from "@/types/domain";
-import { bookings } from "@/mocks/bookings";
 
 /** Booking statuses that block a car for overlapping dates. */
 const BLOCKING_STATUSES: Booking["status"][] = ["paid", "pending", "active"];
@@ -9,7 +8,7 @@ export function getConflictingBookings(
   carId: string,
   from: string | undefined,
   to: string | undefined,
-  bookingList: Booking[] = bookings,
+  bookingList: Booking[],
 ): Booking[] {
   if (!from || !to) return [];
   const start = new Date(from);
@@ -39,7 +38,7 @@ export function isCarAvailable(
   car: Car,
   from: string | undefined,
   to: string | undefined,
-  bookingList: Booking[] = bookings,
+  bookingList: Booking[],
 ): boolean {
   if (HARD_BLOCK_STATUSES.includes(car.status)) return false;
   if (!from || !to) return car.status !== "busy";
@@ -62,7 +61,7 @@ export function splitAvailability(
   list: Car[],
   from: string | undefined,
   to: string | undefined,
-  bookingList: Booking[] = bookings,
+  bookingList: Booking[],
 ): { available: Car[]; busy: Car[] } {
   const available: Car[] = [];
   const busy: Car[] = [];
@@ -76,7 +75,7 @@ export function splitAvailability(
 /** Returns end date of the closest active/paid booking that blocks the car, or null. */
 export function nextBusyUntil(
   car: Car,
-  bookingList: Booking[] = bookings,
+  bookingList: Booking[],
 ): Date | null {
   const now = Date.now();
   const upcoming = bookingList
