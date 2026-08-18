@@ -4,7 +4,7 @@ import { CalendarIcon, MapPin } from "lucide-react";
 import { format, parseISO } from "date-fns";
 import { ru } from "date-fns/locale";
 
-import { getCarById } from "@/mocks/cars";
+import { carQueryOptions } from "@/lib/queries";
 import { PICKUP_POINT } from "@/mocks/pickupPoints";
 import { tariffs, getTariff } from "@/mocks/tariffs";
 import {
@@ -35,8 +35,8 @@ export const Route = createFileRoute("/_public/booking/$carId")({
         ? (search.tariff as BookingTariff)
         : undefined,
   }),
-  loader: ({ params }) => {
-    const car = getCarById(params.carId);
+  loader: async ({ params, context }) => {
+    const car = await context.queryClient.ensureQueryData(carQueryOptions(params.carId));
     if (!car) throw notFound();
     return { car };
   },

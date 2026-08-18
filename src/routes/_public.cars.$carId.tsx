@@ -1,15 +1,15 @@
 import { createFileRoute, Link, notFound, useRouter } from "@tanstack/react-router";
 import { ArrowLeft, ArrowRight, Fuel, Gauge, Star, Users, Wrench, Car as CarIcon, Coins, Route as RouteIcon, Droplet } from "lucide-react";
 
-import { getCarById } from "@/mocks/cars";
+import { carQueryOptions } from "@/lib/queries";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { CarGallery } from "@/components/car/CarGallery";
 import { AvailabilityCalendar } from "@/components/car/AvailabilityCalendar";
 
 export const Route = createFileRoute("/_public/cars/$carId")({
-  loader: ({ params }) => {
-    const car = getCarById(params.carId);
+  loader: async ({ params, context }) => {
+    const car = await context.queryClient.ensureQueryData(carQueryOptions(params.carId));
     if (!car) throw notFound();
     return { car };
   },

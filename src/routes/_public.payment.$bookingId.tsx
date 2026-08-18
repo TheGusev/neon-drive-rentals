@@ -4,7 +4,7 @@ import { FileText, Mail, MapPin } from "lucide-react";
 import { format, parseISO } from "date-fns";
 import { ru } from "date-fns/locale";
 
-import { getCarById } from "@/mocks/cars";
+import { useCarLookup } from "@/state/AppDataContext";
 import { getPickupPoint } from "@/mocks/pickupPoints";
 import { getTariff } from "@/mocks/tariffs";
 import {
@@ -45,7 +45,8 @@ function PaymentPage() {
     if (d?.paymentMethod) setMethod(d.paymentMethod);
   }, [bookingId]);
 
-  const car = draft ? getCarById(draft.carId) : null;
+  const getCarById = useCarLookup();
+  const car = draft ? getCarById(draft.carId) ?? null : null;
   const tariff = draft ? getTariff(draft.tariff) : null;
   const pickup = draft ? getPickupPoint(draft.pickupPointId) : null;
 

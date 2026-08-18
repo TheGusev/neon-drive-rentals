@@ -5,7 +5,7 @@ import { format, parseISO } from "date-fns";
 import { ru } from "date-fns/locale";
 import { toast } from "sonner";
 
-import { getCarById } from "@/mocks/cars";
+import { useCarLookup } from "@/state/AppDataContext";
 import { getPickupPoint } from "@/mocks/pickupPoints";
 import { getTariff } from "@/mocks/tariffs";
 import { calcPrice, formatRub, getDraft, saveDraft } from "@/lib/bookingDraft";
@@ -42,7 +42,8 @@ function ContractPage() {
     setDraft(getDraft(bookingId));
   }, [bookingId]);
 
-  const car = draft ? getCarById(draft.carId) : null;
+  const getCarById = useCarLookup();
+  const car = draft ? getCarById(draft.carId) ?? null : null;
   const tariff = draft ? getTariff(draft.tariff) : null;
   const pickup = draft ? getPickupPoint(draft.pickupPointId) : null;
 
