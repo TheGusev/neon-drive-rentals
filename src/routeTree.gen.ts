@@ -18,6 +18,7 @@ import { Route as AdminLoginRouteImport } from './routes/admin.login'
 import { Route as PublicTermsRouteImport } from './routes/_public.terms'
 import { Route as PublicProfileRouteImport } from './routes/_public.profile'
 import { Route as PublicPrivacyRouteImport } from './routes/_public.privacy'
+import { Route as PublicLoginRouteImport } from './routes/_public.login'
 import { Route as PublicKeiCarsRouteImport } from './routes/_public.kei-cars'
 import { Route as PublicCarsIndexRouteImport } from './routes/_public.cars.index'
 import { Route as PublicBlogIndexRouteImport } from './routes/_public.blog.index'
@@ -78,6 +79,11 @@ const PublicProfileRoute = PublicProfileRouteImport.update({
 const PublicPrivacyRoute = PublicPrivacyRouteImport.update({
   id: '/privacy',
   path: '/privacy',
+  getParentRoute: () => PublicRoute,
+} as any)
+const PublicLoginRoute = PublicLoginRouteImport.update({
+  id: '/login',
+  path: '/login',
   getParentRoute: () => PublicRoute,
 } as any)
 const PublicKeiCarsRoute = PublicKeiCarsRouteImport.update({
@@ -177,6 +183,7 @@ export interface FileRoutesByFullPath {
   '/robots.txt': typeof RobotsDottxtRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/kei-cars': typeof PublicKeiCarsRoute
+  '/login': typeof PublicLoginRoute
   '/privacy': typeof PublicPrivacyRoute
   '/profile': typeof PublicProfileRoute
   '/terms': typeof PublicTermsRoute
@@ -204,6 +211,7 @@ export interface FileRoutesByTo {
   '/robots.txt': typeof RobotsDottxtRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/kei-cars': typeof PublicKeiCarsRoute
+  '/login': typeof PublicLoginRoute
   '/privacy': typeof PublicPrivacyRoute
   '/profile': typeof PublicProfileRoute
   '/terms': typeof PublicTermsRoute
@@ -234,6 +242,7 @@ export interface FileRoutesById {
   '/robots.txt': typeof RobotsDottxtRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/_public/kei-cars': typeof PublicKeiCarsRoute
+  '/_public/login': typeof PublicLoginRoute
   '/_public/privacy': typeof PublicPrivacyRoute
   '/_public/profile': typeof PublicProfileRoute
   '/_public/terms': typeof PublicTermsRoute
@@ -263,6 +272,7 @@ export interface FileRouteTypes {
     | '/robots.txt'
     | '/sitemap.xml'
     | '/kei-cars'
+    | '/login'
     | '/privacy'
     | '/profile'
     | '/terms'
@@ -290,6 +300,7 @@ export interface FileRouteTypes {
     | '/robots.txt'
     | '/sitemap.xml'
     | '/kei-cars'
+    | '/login'
     | '/privacy'
     | '/profile'
     | '/terms'
@@ -319,6 +330,7 @@ export interface FileRouteTypes {
     | '/robots.txt'
     | '/sitemap.xml'
     | '/_public/kei-cars'
+    | '/_public/login'
     | '/_public/privacy'
     | '/_public/profile'
     | '/_public/terms'
@@ -416,6 +428,13 @@ declare module '@tanstack/react-router' {
       path: '/privacy'
       fullPath: '/privacy'
       preLoaderRoute: typeof PublicPrivacyRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/login': {
+      id: '/_public/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof PublicLoginRouteImport
       parentRoute: typeof PublicRoute
     }
     '/_public/kei-cars': {
@@ -569,6 +588,7 @@ const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
 interface PublicRouteChildren {
   PublicKeiCarsRoute: typeof PublicKeiCarsRoute
+  PublicLoginRoute: typeof PublicLoginRoute
   PublicPrivacyRoute: typeof PublicPrivacyRoute
   PublicProfileRoute: typeof PublicProfileRoute
   PublicTermsRoute: typeof PublicTermsRoute
@@ -585,6 +605,7 @@ interface PublicRouteChildren {
 
 const PublicRouteChildren: PublicRouteChildren = {
   PublicKeiCarsRoute: PublicKeiCarsRoute,
+  PublicLoginRoute: PublicLoginRoute,
   PublicPrivacyRoute: PublicPrivacyRoute,
   PublicProfileRoute: PublicProfileRoute,
   PublicTermsRoute: PublicTermsRoute,
