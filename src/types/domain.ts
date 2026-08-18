@@ -33,7 +33,7 @@ export interface Car {
 }
 
 
-export type CarFleetStatus = "free" | "busy" | "washing" | "maintenance";
+export type CarFleetStatus = "free" | "busy" | "maintenance";
 
 export type BookingStatus = "paid" | "pending" | "active" | "completed" | "cancelled";
 export type BookingTariff = "city" | "region" | "outside";
@@ -136,7 +136,6 @@ export interface DashboardStats {
   fleetStatus: {
     free: number;
     busy: number;
-    washing: number;
     maintenance: number;
   };
 }

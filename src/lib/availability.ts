@@ -32,7 +32,7 @@ function overlaps(aStart: Date, aEnd: Date, bStart: Date, bEnd: Date): boolean {
 }
 
 /** Statuses that make a car unavailable regardless of dates. */
-const HARD_BLOCK_STATUSES: Car["status"][] = ["maintenance", "washing"];
+const HARD_BLOCK_STATUSES: Car["status"][] = ["maintenance"];
 
 export function isCarAvailable(
   car: Car,

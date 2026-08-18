@@ -56,7 +56,7 @@ function toImages(value: unknown): string[] {
   return [];
 }
 
-const FLEET_STATUSES: CarFleetStatus[] = ["free", "busy", "washing", "maintenance"];
+const FLEET_STATUSES: CarFleetStatus[] = ["free", "busy", "maintenance"];
 const FLEET_SYNONYMS: Record<string, CarFleetStatus> = {
   available: "free",
   ready: "free",
@@ -64,7 +64,7 @@ const FLEET_SYNONYMS: Record<string, CarFleetStatus> = {
   booked: "busy",
   service: "maintenance",
   repair: "maintenance",
-  wash: "washing",
+  wash: "maintenance",
 };
 
 export function normalizeFleetStatus(value: unknown): CarFleetStatus {
@@ -137,7 +137,6 @@ const withoutPlate = (car: Car): Car => ({ ...car, plate: undefined });
 /** Доменный статус → значение в БД (available / busy / wash / maintenance). */
 export function toDbFleetStatus(status: CarFleetStatus): string {
   if (status === "free") return "available";
-  if (status === "washing") return "wash";
   return status;
 }
 

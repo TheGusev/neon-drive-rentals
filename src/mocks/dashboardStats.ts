@@ -23,7 +23,6 @@ export function buildDashboardStats(cars: Car[], bookings: Booking[]): Dashboard
     fleetStatus: {
       free: countStatus("free"),
       busy: countStatus("busy"),
-      washing: countStatus("washing"),
       maintenance: countStatus("maintenance"),
     },
   };

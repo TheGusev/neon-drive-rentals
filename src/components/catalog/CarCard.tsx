@@ -9,7 +9,6 @@ import heroCar from "@/assets/hero-car.jpg";
 export const fleetStatusMeta: Record<NonNullable<Car["status"]>, { label: string; className: string }> = {
   free: { label: "Свободен", className: "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400" },
   busy: { label: "В аренде", className: "bg-orange-500/15 text-orange-600 dark:text-orange-400" },
-  washing: { label: "На мойке", className: "bg-sky-500/15 text-sky-600 dark:text-sky-400" },
   maintenance: { label: "На ТО", className: "bg-muted text-muted-foreground" },
 };
 

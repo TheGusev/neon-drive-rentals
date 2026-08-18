@@ -38,7 +38,6 @@ const transmissionOptions: { value: Transmission; label: string }[] = [
 const statusOptions: { value: CarFleetStatus; label: string }[] = [
   { value: "free", label: "Свободен" },
   { value: "busy", label: "В аренде" },
-  { value: "washing", label: "На мойке" },
   { value: "maintenance", label: "На ТО" },
 ];
 
