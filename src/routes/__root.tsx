@@ -9,7 +9,11 @@ import {
 } from "@tanstack/react-router";
 import { useEffect, type ReactNode } from "react";
 import { Toaster } from "@/components/ui/sonner";
+import { AppDataProvider } from "@/state/AppDataContext";
+import { carsQueryOptions, publicBookingsQueryOptions } from "@/lib/queries";
+
 import { BUILD_ID } from "@/lib/build-info";
+
 
 
 import appCss from "../styles.css?url";
@@ -76,6 +80,12 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
 }
 
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
+  loader: async ({ context }) => {
+    await Promise.all([
+      context.queryClient.ensureQueryData(carsQueryOptions()),
+      context.queryClient.ensureQueryData(publicBookingsQueryOptions()),
+    ]);
+  },
   head: () => ({
     meta: [
       { charSet: "utf-8" },
@@ -146,10 +156,13 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-      <Outlet />
+      <AppDataProvider>
+        {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
+        <Outlet />
+      </AppDataProvider>
       <Toaster />
     </QueryClientProvider>
   );
 }
+
 

@@ -1,12 +1,12 @@
 import * as XLSX from "xlsx";
 import { payments } from "@/mocks/payments";
 import { getClientById } from "@/mocks/clients";
-import { getCarById } from "@/mocks/cars";
+import type { Car } from "@/types/domain";
 
 const methodLabel = { card: "Карта", sbp: "СБП" } as const;
 const statusLabel = { success: "Успешно", pending: "Ожидает", refunded: "Возврат", failed: "Ошибка" } as const;
 
-export function exportPaymentsToExcel() {
+export function exportPaymentsToExcel(getCarById: (id: string) => Car | undefined) {
   const rows = payments.map((p) => {
     const client = getClientById(p.clientId);
     const car = getCarById(p.carId);

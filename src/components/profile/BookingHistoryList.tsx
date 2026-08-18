@@ -1,11 +1,12 @@
 import { SectionCard } from "@/components/checkout/SectionCard";
-import { bookings } from "@/mocks/bookings";
-import { getCarById } from "@/mocks/cars";
+import { useBookings, useCarLookup } from "@/state/AppDataContext";
 import { currentClient } from "@/mocks/profile";
 
 const fmt = (iso: string) => new Date(iso).toLocaleDateString("ru-RU", { day: "2-digit", month: "short", year: "numeric" });
 
 export function BookingHistoryList() {
+  const bookings = useBookings();
+  const getCarById = useCarLookup();
   const history = bookings.filter((b) => b.clientId === currentClient.id && b.status === "completed");
 
   return (

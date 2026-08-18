@@ -4,7 +4,7 @@ import { format } from "date-fns";
 import { ArrowRight, ChevronLeft, ChevronRight, Eye, Fuel } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { cars } from "@/mocks/cars";
+import { useBookings, useCars } from "@/state/AppDataContext";
 import { getTariff } from "@/mocks/tariffs";
 import type { Car } from "@/types/domain";
 import { isCarAvailable, nextBusyUntil, splitAvailability } from "@/lib/availability";
@@ -17,8 +17,6 @@ import { useHydrated } from "@/hooks/useHydrated";
 import { usePrefetchCar } from "@/hooks/usePrefetchCar";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 
-
-const garageCars = cars.slice(0, 10);
 
 /**
  * "Гараж" — NFS-style car picker: benefit tiles on the side,
@@ -34,7 +32,13 @@ export function GarageShowcase({ compact = false }: { compact?: boolean }) {
   const [progress, setProgress] = useState(0);
   const reducedMotion = useReducedMotion();
   const { from, to } = useHomeBooking();
-  const { available } = useMemo(() => splitAvailability(cars, from, to), [from, to]);
+  const cars = useCars();
+  const bookings = useBookings();
+  const garageCars = useMemo(() => cars.slice(0, 10), [cars]);
+  const { available } = useMemo(
+    () => splitAvailability(cars, from, to, bookings),
+    [cars, from, to, bookings],
+  );
 
   const measure = useCallback(() => {
     const el = stripRef.current;
@@ -201,11 +205,12 @@ function GarageCard({
   onQuickView: () => void;
 }) {
   const { from, to, tariff } = useHomeBooking();
-  const free = isCarAvailable(car, from, to);
+  const bookings = useBookings();
+  const free = isCarAvailable(car, from, to, bookings);
   const hydrated = useHydrated();
   // Date-dependent availability label is rendered only after hydration to avoid
   // server/client mismatches caused by different timezones or render moments.
-  const busyUntil = !free && hydrated ? nextBusyUntil(car) : null;
+  const busyUntil = !free && hydrated ? nextBusyUntil(car, bookings) : null;
   const price = Math.round(car.pricePerDay * getTariff(tariff).multiplier);
   const coarse = useCoarsePointer();
 

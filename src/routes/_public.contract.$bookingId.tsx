@@ -5,7 +5,10 @@ import { format, parseISO } from "date-fns";
 import { ru } from "date-fns/locale";
 import { toast } from "sonner";
 
-import { getCarById } from "@/mocks/cars";
+import { useCarLookup } from "@/state/AppDataContext";
+import { useQueryClient } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
+import { createBooking } from "@/lib/bookings.functions";
 import { getPickupPoint } from "@/mocks/pickupPoints";
 import { getTariff } from "@/mocks/tariffs";
 import { calcPrice, formatRub, getDraft, saveDraft } from "@/lib/bookingDraft";
@@ -37,12 +40,16 @@ function ContractPage() {
   const [dataOk, setDataOk] = useState(false);
   const [pep, setPep] = useState(false);
   const [code, setCode] = useState("");
+  const [saving, setSaving] = useState(false);
+  const queryClient = useQueryClient();
+  const submitBooking = useServerFn(createBooking);
 
   useEffect(() => {
     setDraft(getDraft(bookingId));
   }, [bookingId]);
 
-  const car = draft ? getCarById(draft.carId) : null;
+  const getCarById = useCarLookup();
+  const car = draft ? getCarById(draft.carId) ?? null : null;
   const tariff = draft ? getTariff(draft.tariff) : null;
   const pickup = draft ? getPickupPoint(draft.pickupPointId) : null;
 
@@ -99,15 +106,40 @@ function ContractPage() {
     toast.success("Договор скачан");
   };
 
-  const sign = () => {
-    if (!canSign) return;
+  const sign = async () => {
+    if (!canSign || saving) return;
     if (code !== "123456") {
       toast.error("Неверный код из SMS", { description: "Демо-код: 123456" });
       return;
     }
-    saveDraft({ ...draft, signed: true });
-    toast.success("Договор подписан", { description: "Копия отправлена на email" });
-    navigate({ to: "/profile" });
+    setSaving(true);
+    try {
+      const res = await submitBooking({
+        data: {
+          carId: draft.carId,
+          clientPhone: draft.phone ?? "",
+          startDate: draft.startDate ?? "",
+          endDate: draft.endDate ?? "",
+          totalPrice: Math.round(breakdown?.total ?? 0),
+        },
+      });
+      if (!res.ok) {
+        toast.error(
+          res.reason === "conflict"
+            ? "Эти даты уже заняты"
+            : "Не удалось сохранить бронирование",
+        );
+        return;
+      }
+      await queryClient.invalidateQueries({ queryKey: ["bookings"] });
+      saveDraft({ ...draft, signed: true });
+      toast.success("Договор подписан", { description: "Копия отправлена на email" });
+      navigate({ to: "/profile" });
+    } catch {
+      toast.error("Сервис временно недоступен, попробуйте ещё раз");
+    } finally {
+      setSaving(false);
+    }
   };
 
   const startLabel = draft.startDate ? format(parseISO(draft.startDate), "d MMM yyyy", { locale: ru }) : "—";
@@ -195,11 +227,11 @@ function ContractPage() {
 
         <StickyBottomBar>
           <Button
-            onClick={sign}
-            disabled={!canSign}
+            onClick={() => void sign()}
+            disabled={!canSign || saving}
             variant="accent" size="xl" className="w-full"
           >
-            Подписать договор
+            {saving ? "Сохраняем…" : "Подписать договор"}
           </Button>
         </StickyBottomBar>
       </div>

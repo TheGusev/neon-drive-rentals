@@ -7,7 +7,7 @@ import { EntityGrid, EmptyState } from "@/components/admin/EntityCard";
 import { Button } from "@/components/ui/button";
 import { payments } from "@/mocks/payments";
 import { getClientById } from "@/mocks/clients";
-import { getCarById } from "@/mocks/cars";
+import { useCarLookup } from "@/state/AppDataContext";
 import { exportPaymentsToExcel } from "@/lib/exportExcel";
 import { toast } from "sonner";
 
@@ -17,13 +17,14 @@ export const Route = createFileRoute("/_admin/admin/finance")({
 });
 
 function AdminFinancePage() {
+  const getCarById = useCarLookup();
   const success = payments.filter((p) => p.status === "success");
   const revenue = success.reduce((s, p) => s + p.amount, 0);
   const avg = success.length ? Math.round(revenue / success.length) : 0;
 
   const handleExport = () => {
     try {
-      exportPaymentsToExcel();
+      exportPaymentsToExcel(getCarById);
       toast.success("Файл payments.xlsx готов");
     } catch {
       toast.error("Не удалось сгенерировать файл");

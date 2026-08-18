@@ -12,6 +12,7 @@ import type { BookingTariff, Car } from "@/types/domain";
 import { getTariff } from "@/mocks/tariffs";
 import { calcPrice, formatRub } from "@/lib/bookingDraft";
 import { getConflictingBookings } from "@/lib/availability";
+import { useBookings } from "@/state/AppDataContext";
 
 interface Props {
   open: boolean;
@@ -26,6 +27,7 @@ interface Props {
 export function BookingConfirmDialog({ open, car, from, to, tariff, locationLabel, onClose }: Props) {
   const [agree, setAgree] = useState(false);
   const navigate = useNavigate();
+  const bookings = useBookings();
 
   const tariffInfo = car ? getTariff(tariff) : null;
 
@@ -40,8 +42,8 @@ export function BookingConfirmDialog({ open, car, from, to, tariff, locationLabe
   }, [car, tariffInfo, from, to, tariff]);
 
   const conflicts = useMemo(
-    () => (car ? getConflictingBookings(car.id, from, to) : []),
-    [car, from, to],
+    () => (car ? getConflictingBookings(car.id, from, to, bookings) : []),
+    [car, from, to, bookings],
   );
   const hasDates = !!(from && to);
   const blocked = !hasDates || conflicts.length > 0;

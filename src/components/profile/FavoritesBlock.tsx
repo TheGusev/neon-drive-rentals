@@ -2,11 +2,12 @@ import { Link } from "@tanstack/react-router";
 import { Heart } from "lucide-react";
 import { SectionCard } from "@/components/checkout/SectionCard";
 import { useFavorites } from "@/state/FavoritesContext";
-import { cars } from "@/mocks/cars";
+import { useCars } from "@/state/AppDataContext";
 import { formatRub } from "@/lib/bookingDraft";
 
 export function FavoritesBlock() {
   const { favorites, toggleFavorite } = useFavorites();
+  const cars = useCars();
   const list = cars.filter((c) => favorites.includes(c.id));
 
   return (

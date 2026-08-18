@@ -8,12 +8,14 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import { Button } from "@/components/ui/button";
-import { cars } from "@/mocks/cars";
+import { useCars } from "@/state/AppDataContext";
 import heroCar from "@/assets/hero-car.jpg";
 
-const popular = cars.slice(0, 6);
 
 export function PopularModels() {
+  const cars = useCars();
+  const popular = cars.slice(0, 6);
+
   return (
     <section className="py-12 md:py-20">
       <div className="mb-8 flex items-end justify-between gap-4">

@@ -7,8 +7,11 @@ import { AdminBookingCard } from "@/components/admin/AdminBookingCard";
 import { EntityGrid, EmptyState } from "@/components/admin/EntityCard";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { bookings } from "@/mocks/bookings";
-import { getCarById } from "@/mocks/cars";
+import { useMutation, useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
+import { updateBookingStatus } from "@/lib/bookings.functions";
+import { adminBookingsQueryOptions } from "@/lib/queries";
+import { useCarLookup } from "@/state/AppDataContext";
 import { getClientById } from "@/mocks/clients";
 import type { BookingStatus } from "@/types/domain";
 
@@ -18,6 +21,22 @@ export const Route = createFileRoute("/_admin/admin/bookings")({
 });
 
 function AdminBookingsPage() {
+  const { data: bookings } = useSuspenseQuery(adminBookingsQueryOptions());
+  const getCarById = useCarLookup();
+  const queryClient = useQueryClient();
+  const changeStatus = useServerFn(updateBookingStatus);
+  const statusMutation = useMutation({
+    mutationFn: (vars: { id: string; status: BookingStatus }) => changeStatus({ data: vars }),
+    onSuccess: async (res) => {
+      if (!res.ok) {
+        toast.error("Не удалось изменить статус");
+        return;
+      }
+      await queryClient.invalidateQueries({ queryKey: ["bookings"] });
+      toast.success("Статус обновлён");
+    },
+    onError: () => toast.error("Сервис временно недоступен"),
+  });
   const [q, setQ] = useState("");
   const [tab, setTab] = useState<"all" | BookingStatus>("all");
 
@@ -32,7 +51,7 @@ function AdminBookingsPage() {
       }
       return true;
     });
-  }, [q, tab]);
+  }, [q, tab, bookings, getCarById]);
 
   return (
     <div className="w-full">
@@ -72,6 +91,8 @@ function AdminBookingsPage() {
               client={getClientById(b.clientId)}
               index={i}
               onView={() => toast(`Просмотр брони ${b.id}`)}
+              onStatusChange={(status) => statusMutation.mutate({ id: b.id, status })}
+              statusPending={statusMutation.isPending}
             />
           ))}
         </EntityGrid>
