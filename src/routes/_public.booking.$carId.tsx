@@ -51,6 +51,7 @@ export const Route = createFileRoute("/_public/booking/$carId")({
         { name: "description", content: "Выберите даты и тариф — расчёт стоимости в реальном времени. Выдача на ул. Доватора, 11." },
         { property: "og:title", content: title },
         { property: "og:description", content: "Онлайн-бронирование авто в Новосибирске: даты, тариф, выдача на Доватора, 11." },
+        { name: "robots", content: "noindex, nofollow" },
       ],
     };
   },

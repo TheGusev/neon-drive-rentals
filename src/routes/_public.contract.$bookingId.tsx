@@ -29,6 +29,7 @@ export const Route = createFileRoute("/_public/contract/$bookingId")({
       { name: "description", content: "Электронная подпись договора аренды авто по SMS." },
       { property: "og:title", content: "Подписание договора — NSK-RENT" },
       { property: "og:description", content: "ПЭП по SMS, скачивание PDF." },
+      { name: "robots", content: "noindex, nofollow" },
     ],
   }),
   component: ContractPage,
