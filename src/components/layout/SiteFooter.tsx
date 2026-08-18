@@ -11,6 +11,9 @@ const sections = [
   { to: "/profile" as const, label: "Личный кабинет" },
 ];
 
+const YEAR = new Date().getFullYear();
+
+
 export function SiteFooter() {
   return (
     <footer className="border-t border-border/60 bg-card/40">
