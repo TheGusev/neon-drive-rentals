@@ -37,6 +37,7 @@ import { Route as AdminAdminFinanceRouteImport } from './routes/_admin.admin.fin
 import { Route as AdminAdminClientsRouteImport } from './routes/_admin.admin.clients'
 import { Route as AdminAdminCarsRouteImport } from './routes/_admin.admin.cars'
 import { Route as AdminAdminBookingsRouteImport } from './routes/_admin.admin.bookings'
+import { Route as AdminAdminCarPhotosCarIdRouteImport } from './routes/_admin.admin.car-photos.$carId'
 
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
@@ -177,6 +178,12 @@ const AdminAdminBookingsRoute = AdminAdminBookingsRouteImport.update({
   path: '/admin/bookings',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminAdminCarPhotosCarIdRoute =
+  AdminAdminCarPhotosCarIdRouteImport.update({
+    id: '/admin/car-photos/$carId',
+    path: '/admin/car-photos/$carId',
+    getParentRoute: () => AdminRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -205,6 +212,7 @@ export interface FileRoutesByFullPath {
   '/admin/': typeof AdminAdminIndexRoute
   '/blog/': typeof PublicBlogIndexRoute
   '/cars/': typeof PublicCarsIndexRoute
+  '/admin/car-photos/$carId': typeof AdminAdminCarPhotosCarIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -233,6 +241,7 @@ export interface FileRoutesByTo {
   '/admin': typeof AdminAdminIndexRoute
   '/blog': typeof PublicBlogIndexRoute
   '/cars': typeof PublicCarsIndexRoute
+  '/admin/car-photos/$carId': typeof AdminAdminCarPhotosCarIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -264,6 +273,7 @@ export interface FileRoutesById {
   '/_admin/admin/': typeof AdminAdminIndexRoute
   '/_public/blog/': typeof PublicBlogIndexRoute
   '/_public/cars/': typeof PublicCarsIndexRoute
+  '/_admin/admin/car-photos/$carId': typeof AdminAdminCarPhotosCarIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -294,6 +304,7 @@ export interface FileRouteTypes {
     | '/admin/'
     | '/blog/'
     | '/cars/'
+    | '/admin/car-photos/$carId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -322,6 +333,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/blog'
     | '/cars'
+    | '/admin/car-photos/$carId'
   id:
     | '__root__'
     | '/'
@@ -352,6 +364,7 @@ export interface FileRouteTypes {
     | '/_admin/admin/'
     | '/_public/blog/'
     | '/_public/cars/'
+    | '/_admin/admin/car-photos/$carId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -563,6 +576,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminAdminBookingsRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/_admin/admin/car-photos/$carId': {
+      id: '/_admin/admin/car-photos/$carId'
+      path: '/admin/car-photos/$carId'
+      fullPath: '/admin/car-photos/$carId'
+      preLoaderRoute: typeof AdminAdminCarPhotosCarIdRouteImport
+      parentRoute: typeof AdminRoute
+    }
   }
 }
 
@@ -573,6 +593,7 @@ interface AdminRouteChildren {
   AdminAdminFinanceRoute: typeof AdminAdminFinanceRoute
   AdminAdminSettingsRoute: typeof AdminAdminSettingsRoute
   AdminAdminIndexRoute: typeof AdminAdminIndexRoute
+  AdminAdminCarPhotosCarIdRoute: typeof AdminAdminCarPhotosCarIdRoute
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
@@ -582,6 +603,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminAdminFinanceRoute: AdminAdminFinanceRoute,
   AdminAdminSettingsRoute: AdminAdminSettingsRoute,
   AdminAdminIndexRoute: AdminAdminIndexRoute,
+  AdminAdminCarPhotosCarIdRoute: AdminAdminCarPhotosCarIdRoute,
 }
 
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
