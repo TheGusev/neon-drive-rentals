@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { ChevronRight, Clock, Mail, MapPin, MessageCircle, Phone, Send } from "lucide-react";
 import { CONTACTS, LEGAL } from "@/lib/contacts";
+import { useHydrated } from "@/hooks/useHydrated";
 
 const sections = [
   { to: "/cars" as const, label: "Автопарк" },
@@ -11,10 +12,11 @@ const sections = [
   { to: "/profile" as const, label: "Личный кабинет" },
 ];
 
-const YEAR = new Date().getFullYear();
-
 
 export function SiteFooter() {
+  const hydrated = useHydrated();
+  const year = hydrated ? new Date().getFullYear() : "";
+
   return (
     <footer className="border-t border-border/60 bg-card/40">
       <div className="road-line road-line-run w-full opacity-60" />
@@ -109,7 +111,7 @@ export function SiteFooter() {
           <p>{LEGAL.ageNote}</p>
           <p>{LEGAL.dataNote}</p>
           
-          <p>{`© ${YEAR} NSK-RENT — аренда авто в Новосибирске. Все права защищены.`}</p>
+          <p>{`© ${year} NSK-RENT — аренда авто в Новосибирске. Все права защищены.`}</p>
 
         </div>
 
