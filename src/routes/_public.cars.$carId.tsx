@@ -8,7 +8,7 @@ import { CarGallery } from "@/components/car/CarGallery";
 import { AvailabilityCalendar } from "@/components/car/AvailabilityCalendar";
 import { SimilarCars } from "@/components/car/SimilarCars";
 import { Breadcrumbs } from "@/components/seo/Breadcrumbs";
-import { breadcrumbJsonLd, canonical, jsonLdScript, vehicleJsonLd } from "@/lib/seo";
+import { breadcrumbJsonLd, canonical, jsonLdScript, socialMeta, vehicleJsonLd } from "@/lib/seo";
 
 export const Route = createFileRoute("/_public/cars/$carId")({
   loader: async ({ params, context }) => {
@@ -35,6 +35,7 @@ export const Route = createFileRoute("/_public/cars/$carId")({
         { property: "og:type", content: "product" },
         { property: "og:url", content: url },
         { name: "twitter:card", content: "summary_large_image" },
+        ...socialMeta(c.gallery?.[0] ?? c.image ?? "/assets/cars/hero-garage.jpg"),
       ],
       links: [{ rel: "canonical", href: url }],
       scripts: [
