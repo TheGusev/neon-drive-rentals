@@ -19,6 +19,20 @@ export const canonical = (path: string) => `${SITE_URL}${path === "/" ? "" : pat
 /** Мета для приватных/служебных страниц. */
 export const noindexMeta = { name: "robots", content: "noindex, nofollow" } as const;
 
+/** Абсолютный адрес картинки предпросмотра. */
+export const absoluteUrl = (path: string) => (path.startsWith("http") ? path : `${SITE_URL}${path}`);
+
+/** Общие OG-теги: картинка предпросмотра, имя сайта и локаль. */
+export const socialMeta = (imagePath: string) => {
+  const image = absoluteUrl(imagePath);
+  return [
+    { property: "og:image", content: image },
+    { name: "twitter:image", content: image },
+    { property: "og:site_name", content: SITE_NAME },
+    { property: "og:locale", content: "ru_RU" },
+  ];
+};
+
 export const localBusinessJsonLd = () => ({
   "@context": "https://schema.org",
   "@type": "AutoRental",

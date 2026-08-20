@@ -11,7 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Breadcrumbs } from "@/components/seo/Breadcrumbs";
-import { SITE_URL, breadcrumbJsonLd, jsonLdScript } from "@/lib/seo";
+import { SITE_URL, breadcrumbJsonLd, jsonLdScript, socialMeta } from "@/lib/seo";
 
 const PER_PAGE = 12;
 
@@ -37,6 +37,7 @@ export const Route = createFileRoute("/_public/cars/")({
       { property: "og:type", content: "website" },
       { property: "og:url", content: url },
       { name: "twitter:card", content: "summary_large_image" },
+      ...socialMeta("/assets/cars/hero-drive.jpg"),
     ],
     links: [{ rel: "canonical", href: url }],
     scripts: [
