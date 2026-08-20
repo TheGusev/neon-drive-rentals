@@ -27,8 +27,6 @@ export const socialMeta = (imagePath: string) => {
   const image = absoluteUrl(imagePath);
   return [
     { property: "og:image", content: image },
-    { property: "og:image:width", content: "1200" },
-    { property: "og:image:height", content: "630" },
     { name: "twitter:image", content: image },
     { property: "og:site_name", content: SITE_NAME },
     { property: "og:locale", content: "ru_RU" },
