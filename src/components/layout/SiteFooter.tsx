@@ -15,7 +15,7 @@ const sections = [
 
 export function SiteFooter() {
   const hydrated = useHydrated();
-  const year = hydrated ? new Date().getFullYear() : "";
+  const year = hydrated ? new Date().getFullYear() : 2026;
 
   return (
     <footer className="border-t border-border/60 bg-card/40">
