@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight, Calendar, Clock } from "lucide-react";
 import { blogPosts } from "@/mocks/blog";
-import { SITE_URL, breadcrumbJsonLd, jsonLdScript } from "@/lib/seo";
+import { SITE_URL, breadcrumbJsonLd, jsonLdScript, socialMeta } from "@/lib/seo";
 
 const URL = `${SITE_URL}/blog`;
 const TITLE = "Блог NSK-RENT — гайды и советы по аренде авто в Новосибирске";
@@ -19,6 +19,7 @@ export const Route = createFileRoute("/_public/blog/")({
       { property: "og:type", content: "website" },
       { property: "og:url", content: URL },
       { name: "twitter:card", content: "summary_large_image" },
+      ...socialMeta("/assets/cars/suzuki-wagon-r.jpg"),
     ],
     links: [{ rel: "canonical", href: URL }],
     scripts: [

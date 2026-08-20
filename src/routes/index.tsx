@@ -4,7 +4,7 @@ import { HomeDesktop, HomeMobile } from "@/components/home/HomeStage";
 import { FaqBlock } from "@/components/home/FaqBlock";
 import { HomeIntro } from "@/components/home/HomeIntro";
 import { RealPhotoStrip } from "@/components/home/RealPhotoStrip";
-import { SITE_URL, faqJsonLd, jsonLdScript, localBusinessJsonLd } from "@/lib/seo";
+import { SITE_URL, faqJsonLd, jsonLdScript, localBusinessJsonLd, socialMeta } from "@/lib/seo";
 import { ThemeProvider, useTheme } from "@/components/layout/ThemeProvider";
 import { HomeControls } from "@/components/home/HomeControls";
 import { SiteFooter } from "@/components/layout/SiteFooter";
@@ -25,6 +25,7 @@ export const Route = createFileRoute("/")({
       { property: "og:type", content: "website" },
       { property: "og:url", content: SITE_URL },
       { name: "twitter:card", content: "summary_large_image" },
+      ...socialMeta("/assets/cars/hero-garage.jpg"),
     ],
     links: [{ rel: "canonical", href: SITE_URL }],
     scripts: [jsonLdScript(localBusinessJsonLd()), jsonLdScript(faqJsonLd())],

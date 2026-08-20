@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { LandingPage } from "@/components/seo/LandingPage";
 import { useCars } from "@/state/AppDataContext";
 import { faqItems } from "@/mocks/faq";
-import { SITE_URL, breadcrumbJsonLd, jsonLdScript } from "@/lib/seo";
+import { SITE_URL, breadcrumbJsonLd, jsonLdScript, socialMeta } from "@/lib/seo";
 
 const URL = `${SITE_URL}/rent/novosibirsk`;
 const TITLE = "Аренда авто в Новосибирске — от 1 800 ₽/сутки | NSK-RENT";
@@ -20,6 +20,7 @@ export const Route = createFileRoute("/_public/rent/novosibirsk")({
       { property: "og:type", content: "website" },
       { property: "og:url", content: URL },
       { name: "twitter:card", content: "summary_large_image" },
+      ...socialMeta("/assets/cars/hero-tunnel.jpg"),
     ],
     links: [{ rel: "canonical", href: URL }],
     scripts: [

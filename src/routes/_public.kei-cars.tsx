@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { LandingPage } from "@/components/seo/LandingPage";
 import { useCars } from "@/state/AppDataContext";
 import { faqItems } from "@/mocks/faq";
-import { SITE_URL, breadcrumbJsonLd, jsonLdScript } from "@/lib/seo";
+import { SITE_URL, breadcrumbJsonLd, jsonLdScript, socialMeta } from "@/lib/seo";
 
 const URL = `${SITE_URL}/kei-cars`;
 const TITLE = "Кей-кары из Японии в аренду — JDM автопарк | NSK-RENT";
@@ -20,6 +20,7 @@ export const Route = createFileRoute("/_public/kei-cars")({
       { property: "og:type", content: "website" },
       { property: "og:url", content: URL },
       { name: "twitter:card", content: "summary_large_image" },
+      ...socialMeta("/assets/cars/honda-n-wgn-turbo-white.jpg"),
     ],
     links: [{ rel: "canonical", href: URL }],
     scripts: [
