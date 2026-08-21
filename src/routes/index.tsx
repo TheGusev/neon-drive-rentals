@@ -16,7 +16,72 @@ const DESC =
 
 export const Route = createFileRoute("/")({
   component: Home,
+  loader: async () => await getIsMobileDevice(),
   head: () => ({
+    meta: [
+      { title: TITLE },
+      { name: "description", content: DESC },
+      { property: "og:title", content: TITLE },
+      { property: "og:description", content: DESC },
+      { property: "og:type", content: "website" },
+      { property: "og:url", content: SITE_URL },
+      { name: "twitter:card", content: "summary_large_image" },
+      ...socialMeta("/assets/cars/hero-garage.jpg"),
+    ],
+    links: [{ rel: "canonical", href: SITE_URL }],
+    scripts: [jsonLdScript(localBusinessJsonLd()), jsonLdScript(faqJsonLd())],
+  }),
+});
+
+function Home() {
+  return (
+    <ThemeProvider>
+      <FavoritesProvider>
+        <HomeShell />
+      </FavoritesProvider>
+    </ThemeProvider>
+  );
+}
+
+/** Ширина экрана после гидратации; до неё используется догадка по User-Agent. */
+function useIsMobileViewport(initial: boolean) {
+  const [isMobile, setIsMobile] = useState(initial);
+
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 767px)");
+    const sync = () => setIsMobile(mq.matches);
+    sync();
+    mq.addEventListener("change", sync);
+    return () => mq.removeEventListener("change", sync);
+  }, []);
+
+  return isMobile;
+}
+
+function HomeShell() {
+  const { themeClass } = useTheme();
+  const { isMobile: ssrIsMobile } = Route.useLoaderData();
+  const isMobile = useIsMobileViewport(ssrIsMobile);
+
+  return (
+    <div className={`${themeClass} min-h-screen bg-background text-foreground transition-colors duration-300`}>
+      <HomeControls />
+
+      {isMobile ? <HomeMobile heroImage={heroDrive} /> : <HomeDesktop heroImage={heroDrive} />}
+
+      {/* SEO content below hero (both viewports scroll to reach it) */}
+      <div className="bg-background text-foreground">
+        <HomeIntro />
+        <RealPhotoStrip />
+        <FaqBlock />
+      </div>
+
+      <SiteFooter />
+    </div>
+  );
+}
+
+const _unusedHead = () => ({
     meta: [
       { title: TITLE },
       { name: "description", content: DESC },
