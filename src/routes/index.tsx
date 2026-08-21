@@ -1,5 +1,7 @@
+import { useEffect, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import heroDrive from "@/assets/cars/hero-drive.jpg";
+import { getIsMobileDevice } from "@/lib/device.functions";
 import { HomeDesktop, HomeMobile } from "@/components/home/HomeStage";
 import { FaqBlock } from "@/components/home/FaqBlock";
 import { HomeIntro } from "@/components/home/HomeIntro";
@@ -16,6 +18,7 @@ const DESC =
 
 export const Route = createFileRoute("/")({
   component: Home,
+  loader: async () => await getIsMobileDevice(),
   head: () => ({
     meta: [
       { title: TITLE },
@@ -42,20 +45,31 @@ function Home() {
   );
 }
 
+/** Ширина экрана после гидратации; до неё используется догадка по User-Agent. */
+function useIsMobileViewport(initial: boolean) {
+  const [isMobile, setIsMobile] = useState(initial);
+
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 767px)");
+    const sync = () => setIsMobile(mq.matches);
+    sync();
+    mq.addEventListener("change", sync);
+    return () => mq.removeEventListener("change", sync);
+  }, []);
+
+  return isMobile;
+}
+
 function HomeShell() {
   const { themeClass } = useTheme();
+  const { isMobile: ssrIsMobile } = Route.useLoaderData();
+  const isMobile = useIsMobileViewport(ssrIsMobile);
 
   return (
     <div className={`${themeClass} min-h-screen bg-background text-foreground transition-colors duration-300`}>
       <HomeControls />
 
-
-      <div className="hidden md:block">
-        <HomeDesktop heroImage={heroDrive} />
-      </div>
-      <div className="md:hidden">
-        <HomeMobile heroImage={heroDrive} />
-      </div>
+      {isMobile ? <HomeMobile heroImage={heroDrive} /> : <HomeDesktop heroImage={heroDrive} />}
 
       {/* SEO content below hero (both viewports scroll to reach it) */}
       <div className="bg-background text-foreground">
@@ -67,5 +81,5 @@ function HomeShell() {
       <SiteFooter />
     </div>
   );
-
 }
+
