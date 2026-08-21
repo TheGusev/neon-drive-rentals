@@ -1,5 +1,7 @@
+import { useEffect, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import heroDrive from "@/assets/cars/hero-drive.jpg";
+import { getIsMobileDevice } from "@/lib/device.functions";
 import { HomeDesktop, HomeMobile } from "@/components/home/HomeStage";
 import { FaqBlock } from "@/components/home/FaqBlock";
 import { HomeIntro } from "@/components/home/HomeIntro";
