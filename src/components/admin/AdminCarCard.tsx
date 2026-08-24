@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { EntityCard } from "@/components/admin/EntityCard";
 import { StatusDot } from "@/components/admin/StatusDot";
 import type { Car } from "@/types/domain";
+import { CarImage } from "@/components/car/CarImage";
 
 const classLabel = { econom: "Эконом", sport: "Спорт", premium: "Премиум" } as const;
 
@@ -22,14 +23,12 @@ export function AdminCarCard({ car, index, onEdit, onDelete }: Props) {
     >
       <div className="flex min-w-0 gap-3">
         <div className="relative aspect-[4/3] w-28 shrink-0 overflow-hidden rounded-xl bg-muted">
-          {car.image && (
-            <img
-              src={car.image}
-              alt={`${car.brand} ${car.model}`}
-              loading="lazy"
-              className="h-full w-full object-cover"
-            />
-          )}
+          <CarImage
+            src={car.image}
+            alt={`${car.brand} ${car.model}`}
+            loading="lazy"
+            className="h-full w-full object-cover"
+          />
           <span className="absolute left-1.5 top-1.5 rounded-full bg-background/85 px-1.5 py-0.5 backdrop-blur">
             <StatusDot status={car.status ?? "free"} showLabel={false} />
           </span>

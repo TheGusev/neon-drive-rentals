@@ -14,6 +14,7 @@ import { adminCarsQueryOptions } from "@/lib/queries";
 import { updateCarImages, uploadCarPhoto } from "@/lib/admin.functions";
 import { noindexMeta } from "@/lib/seo";
 import type { Car } from "@/types/domain";
+import { CarImage } from "@/components/car/CarImage";
 
 export const Route = createFileRoute("/_admin/admin/car-photos/$carId")({
   head: () => ({ meta: [{ title: "Фотографии авто — Панель управления" }, noindexMeta] }),
@@ -144,7 +145,11 @@ function CarPhotosPage() {
                 {images.map((src, i) => (
                   <li key={`${src}-${i}`} className="overflow-hidden rounded-xl border border-border bg-background">
                     <div className="relative aspect-[4/3] bg-muted">
-                      <img src={src} alt={`${car.brand} ${car.model} — фото ${i + 1}`} className="h-full w-full object-cover" />
+                      <CarImage
+                        src={src}
+                        alt={`${car.brand} ${car.model} — фото ${i + 1}`}
+                        className="h-full w-full object-cover"
+                      />
                       {i === 0 && (
                         <span className="absolute left-2 top-2 inline-flex items-center gap-1 rounded-full bg-primary px-2 py-0.5 text-[11px] font-semibold text-primary-foreground">
                           <Star className="h-3 w-3" /> Обложка

@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { EntityCard } from "@/components/admin/EntityCard";
 import { PaymentStatusBadge } from "@/components/admin/PaymentStatusBadge";
 import type { Booking, BookingStatus, Car, Client } from "@/types/domain";
+import { CarImage } from "@/components/car/CarImage";
 
 const fmt = (iso: string) =>
   new Date(iso).toLocaleDateString("ru-RU", { day: "2-digit", month: "short" });
@@ -32,9 +33,7 @@ export function AdminBookingCard({ booking, car, client, index, onView, onStatus
     >
       <div className="flex min-w-0 items-start gap-3">
         <div className="aspect-[4/3] w-20 shrink-0 overflow-hidden rounded-lg bg-muted">
-          {car?.image && (
-            <img src={car.image} alt="" loading="lazy" className="h-full w-full object-cover" />
-          )}
+          {car && <CarImage src={car.image} alt="" loading="lazy" className="h-full w-full object-cover" />}
         </div>
         <div className="min-w-0 flex-1">
           <div className="flex min-w-0 items-start justify-between gap-2">
