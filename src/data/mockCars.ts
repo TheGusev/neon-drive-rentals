@@ -28,7 +28,7 @@ const base = {
   bodyType: "хэтчбек",
   seats: 4,
   deposit: 2000,
-  mileageLimit: 250,
+  mileageLimit: 300,
   fuelPolicy: "полный → полный",
   transmission: "AT" as const,
   engineVolume: 0.66,
