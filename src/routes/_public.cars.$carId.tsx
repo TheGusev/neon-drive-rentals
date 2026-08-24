@@ -101,7 +101,7 @@ function CarPage() {
     { icon: RouteIcon, label: "Пробег", value: car.mileageLimit ? `${car.mileageLimit} км/сутки` : "Без лимита" },
     { icon: Coins, label: "Залог", value: `${(car.deposit ?? 0).toLocaleString("ru-RU")} ₽` },
     { icon: Droplet, label: "Топливо", value: car.fuelPolicy ?? "полный → полный" },
-    { icon: Users, label: "Возраст / стаж", value: "от 21 года / 2 года" },
+    { icon: Users, label: "Возраст / стаж", value: "от 21 года / стаж 3 года" },
   ];
 
   return (

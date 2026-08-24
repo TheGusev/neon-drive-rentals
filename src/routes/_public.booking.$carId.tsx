@@ -97,7 +97,7 @@ function BookingPage() {
     if (!draft) return null;
     return calcPrice({
       pricePerDay: car.pricePerDay,
-      deposit: car.deposit ?? 5000,
+      deposit: car.deposit ?? 2000,
       draft,
       tariffMultiplier: tariff.multiplier,
     });
