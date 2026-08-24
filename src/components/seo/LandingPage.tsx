@@ -6,6 +6,7 @@ import { FaqBlock } from "@/components/home/FaqBlock";
 import { RENTAL_TERMS } from "@/lib/rentalTerms";
 import type { FaqItem } from "@/mocks/faq";
 import type { Car } from "@/types/domain";
+import { CarImage } from "@/components/car/CarImage";
 
 export interface RelatedLink {
   to: string;
@@ -117,7 +118,7 @@ export function LandingPage({
                   className="group overflow-hidden rounded-xl border border-border bg-card transition hover:border-primary"
                 >
                   <div className="aspect-[4/3] overflow-hidden bg-muted">
-                    <img
+                    <CarImage
                       src={car.image}
                       alt={`Аренда ${car.brand} ${car.model} в Новосибирске`}
                       loading="lazy"

@@ -10,6 +10,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { useCars } from "@/state/AppDataContext";
 import heroCar from "@/assets/hero-car.jpg";
+import { CarImage } from "@/components/car/CarImage";
 
 
 export function PopularModels() {
@@ -36,8 +37,9 @@ export function PopularModels() {
             <CarouselItem key={car.id} className="pl-4 basis-full md:basis-1/2 lg:basis-1/3">
               <article className="group h-full overflow-hidden rounded-2xl border border-border bg-card transition md:hover:neon-glow">
                 <div className="relative aspect-[4/3] overflow-hidden bg-muted">
-                  <img
+                  <CarImage
                     src={car.image ?? heroCar}
+                    fallbackSrc={heroCar}
                     alt={`${car.brand} ${car.model}, ${car.color}`}
                     loading="lazy"
                     width={1024}

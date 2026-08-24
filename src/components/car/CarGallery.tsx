@@ -1,6 +1,7 @@
 import { useState } from "react";
 import heroCar from "@/assets/hero-car.jpg";
 import { cn } from "@/lib/utils";
+import { CarImage } from "@/components/car/CarImage";
 
 interface CarGalleryProps {
   alt: string;
@@ -16,7 +17,7 @@ export function CarGallery({ alt, images }: CarGalleryProps) {
   return (
     <div className="space-y-3">
       <div className="aspect-[4/3] overflow-hidden rounded-2xl border border-border bg-muted md:neon-glow">
-        <img src={current} alt={alt} width={1024} height={768} className="h-full w-full object-cover" />
+        <CarImage src={current} fallbackSrc={heroCar} alt={alt} width={1024} height={768} className="h-full w-full object-cover" />
       </div>
       {photos.length > 1 && (
         <div className="grid grid-cols-4 gap-3">
@@ -31,7 +32,7 @@ export function CarGallery({ alt, images }: CarGalleryProps) {
                 i === active ? "border-accent ring-2 ring-accent/40" : "border-border opacity-70 hover:opacity-100",
               )}
             >
-              <img src={src} alt="" loading="lazy" className="h-full w-full object-cover" />
+              <CarImage src={src} fallbackSrc={heroCar} alt="" loading="lazy" className="h-full w-full object-cover" />
             </button>
           ))}
         </div>
