@@ -4,6 +4,12 @@ import coverKei from "@/assets/blog/kei-cars.jpg";
 import coverAirport from "@/assets/blog/airport.jpg";
 import coverNoDeposit from "@/assets/blog/no-deposit.jpg";
 import coverRoutes from "@/assets/blog/routes-nso.jpg";
+import coverKeiReal from "@/assets/cars/real/honda-n-box-black-pair-real.jpg";
+import coverYardReal from "@/assets/cars/real/fleet-yard-real.jpg";
+import coverDashReal from "@/assets/cars/real/kei-dashboard-real.jpg";
+import coverRhdReal from "@/assets/cars/real/honda-n-wgn-blue-real.jpg";
+import coverEkReal from "@/assets/cars/real/mitsubishi-ek-wagon-black-real.jpg";
+import coverVanReal from "@/assets/cars/real/kei-van-black-rear-real.jpg";
 
 export interface BlogPost {
   slug: string;
@@ -257,7 +263,7 @@ export const blogPosts: BlogPost[] = [
     date: "2026-06-02",
     readMinutes: 7,
     keywords: ["что такое кей-кар", "kei car", "японские микроавтомобили", "аренда кей-кара"],
-    cover: coverKei,
+    cover: coverKeiReal,
     body: `## Определение
 
 **Кей-кар** (яп. 軽自動車, kei jidosha — «лёгкий автомобиль») — официальный класс автомобилей в Японии с законодательно ограниченными габаритами и объёмом двигателя. Это не маркетинговое название и не «малолитражка вообще», а юридическая категория, дающая владельцу налоговые и парковочные льготы.
@@ -307,7 +313,7 @@ export const blogPosts: BlogPost[] = [
     date: "2026-05-28",
     readMinutes: 5,
     keywords: ["документы для аренды авто", "аренда авто требования", "договор аренды авто"],
-    cover: coverRentGuide,
+    cover: coverYardReal,
     body: `## Короткий список
 
 Для аренды автомобиля в NSK-RENT нужны всего три вещи:
@@ -353,7 +359,7 @@ export const blogPosts: BlogPost[] = [
     date: "2026-05-20",
     readMinutes: 6,
     keywords: ["правый руль в россии", "праворульный автомобиль", "аренда праворульного авто"],
-    cover: coverKei,
+    cover: coverRhdReal,
     body: `## Законно ли ездить на правом руле
 
 Да. Автомобили с правым расположением руля, ввезённые и зарегистрированные в установленном порядке, полностью легальны в России. Периодически появляющиеся новости о «запрете правого руля» касаются проектов, которые не были приняты. Сибирь и Дальний Восток — регионы, где такие машины составляют существенную долю парка.
@@ -393,7 +399,7 @@ export const blogPosts: BlogPost[] = [
     date: "2026-05-14",
     readMinutes: 6,
     keywords: ["кей-кар или седан", "что выгоднее арендовать", "экономичное авто в аренду"],
-    cover: coverVs,
+    cover: coverEkReal,
     body: `## Сравнение по ключевым параметрам
 
 | Параметр | Кей-кар | Седан B-класса |
@@ -520,7 +526,7 @@ export const blogPosts: BlogPost[] = [
     date: "2026-04-10",
     readMinutes: 6,
     keywords: ["как сэкономить на аренде авто", "дешевая аренда авто новосибирск", "аренда авто цена"],
-    cover: coverVs,
+    cover: coverDashReal,
     body: `## 1. Берите длинный тариф
 
 Суточная ставка падает с увеличением срока. Если поездка займёт 5–6 дней, часто выгоднее оформить [аренду на неделю](/arenda-avto-na-nedelyu) — итог получается ниже, чем при посуточном расчёте.
@@ -562,7 +568,7 @@ export const blogPosts: BlogPost[] = [
     date: "2026-03-26",
     readMinutes: 5,
     keywords: ["аренда авто для работы", "аренда авто для юр лиц", "авто в аренду для разъездов"],
-    cover: coverRentGuide,
+    cover: coverVanReal,
     body: `## Для каких рабочих задач подходит аренда
 
 - разъездная работа менеджеров и сервисных специалистов;
