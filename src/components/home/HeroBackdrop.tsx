@@ -29,7 +29,7 @@ export function HeroBackdrop({ variant = "desktop" }: { variant?: "desktop" | "m
     <div
       className={cn(
         "pointer-events-none absolute inset-x-0 top-0 overflow-hidden",
-        mobile ? "h-[72svh]" : "bottom-0",
+        mobile ? "h-[64svh]" : "bottom-0",
       )}
       aria-hidden
     >
@@ -56,9 +56,15 @@ export function HeroBackdrop({ variant = "desktop" }: { variant?: "desktop" | "m
 
       {mobile ? (
         <>
-          {/* Vertical readability mask: dense top & bottom, photo visible mid-frame */}
-          <div className="absolute inset-0 bg-gradient-to-b from-background/85 via-background/25 to-background" />
-          <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-b from-transparent to-background" />
+          {/* Vertical readability mask: photo stays visible in the mid band,
+              scrims sit exactly where the copy and the CTAs are. */}
+          <div
+            className="absolute inset-0"
+            style={{
+              background:
+                "linear-gradient(180deg, color-mix(in oklab, var(--background) 72%, transparent) 0%, color-mix(in oklab, var(--background) 30%, transparent) 34%, color-mix(in oklab, var(--background) 62%, transparent) 66%, var(--background) 100%)",
+            }}
+          />
         </>
       ) : (
         <div className="absolute inset-y-0 left-0 w-[62%] bg-gradient-to-r from-background/85 via-background/50 to-transparent" />
