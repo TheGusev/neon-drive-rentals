@@ -18,8 +18,23 @@ import { HeroBackdrop } from "./HeroBackdrop";
 import { SeoTiles } from "./SeoTiles";
 import { GarageShowcase } from "./GarageShowcase";
 
-/** Календарь + форма расчёта не нужны при первом рендере — грузим по клику. */
-const QuickBookingForm = lazy(() => import("./QuickBookingForm"));
+/** Календарь + форма расчёта не нужны при первом рендере — грузим по клику.
+ *  На слабой сети (Safari/iOS) первая попытка загрузки чанка может сорваться,
+ *  поэтому повторяем её дважды, прежде чем показывать ошибку. */
+const QuickBookingForm = lazy(() => retryImport(() => import("./QuickBookingForm")));
+
+async function retryImport<T>(load: () => Promise<T>, attempts = 3): Promise<T> {
+  let lastError: unknown;
+  for (let i = 0; i < attempts; i += 1) {
+    try {
+      return await load();
+    } catch (error) {
+      lastError = error;
+      await new Promise((r) => setTimeout(r, 400 * (i + 1)));
+    }
+  }
+  throw lastError;
+}
 
 function BookingFormSkeleton() {
   return (
