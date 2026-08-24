@@ -69,12 +69,14 @@ function AdminLoginPage() {
               autoComplete="current-password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              aria-invalid={error}
+              aria-invalid={error !== null}
               autoFocus
             />
             {error && (
               <p role="alert" className="text-sm font-medium text-destructive">
-                Неверный пароль
+                {error === "not-configured"
+                  ? "Вход не настроен на сервере: не заданы ADMIN_PASSWORD / SESSION_SECRET."
+                  : "Неверный пароль"}
               </p>
             )}
           </div>
