@@ -80,14 +80,21 @@ export function NfsSideMenu({
                 <it.icon className="h-4 w-4" />
               </span>
               <div className="min-w-0">
-                <p className="truncate font-display text-sm font-bold text-foreground">{it.title}</p>
+                <p className="truncate font-display text-sm font-bold text-foreground">
+                  {it.title}
+                </p>
                 <p className="truncate text-[11px] text-foreground/70">{it.sub}</p>
               </div>
             </button>
           );
 
           // На сенсорных устройствах подсказки не показываем — они перекрывают контент.
-          if (coarse) return <div key={it.title} className="contents">{tile}</div>;
+          if (coarse)
+            return (
+              <div key={it.title} className="contents">
+                {tile}
+              </div>
+            );
 
           return (
             <Tooltip key={it.title}>
@@ -106,4 +113,3 @@ export function NfsSideMenu({
     </TooltipProvider>
   );
 }
-

@@ -16,7 +16,9 @@ export function QuickBookingWidget() {
   return (
     <div className="w-full rounded-2xl border border-border bg-card p-5 shadow-lg md:p-6 md:neon-glow">
       <div className="mb-4">
-        <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">Быстрое бронирование</p>
+        <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">
+          Быстрое бронирование
+        </p>
         <h3 className="mt-1 font-display text-xl font-bold md:text-2xl">Найдите свой авто</h3>
       </div>
 
@@ -29,7 +31,9 @@ export function QuickBookingWidget() {
             <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-accent" />
             <div className="min-w-0">
               <p className="text-sm font-semibold leading-tight">{PICKUP_POINT.address}</p>
-              <p className="text-xs text-muted-foreground">Единственный пункт выдачи · {PICKUP_POINT.hours}</p>
+              <p className="text-xs text-muted-foreground">
+                Единственный пункт выдачи · {PICKUP_POINT.hours}
+              </p>
             </div>
           </div>
         </div>
@@ -61,7 +65,9 @@ function DateField({
 }) {
   return (
     <div className="space-y-1.5">
-      <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">{label}</label>
+      <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+        {label}
+      </label>
       <Popover>
         <PopoverTrigger asChild>
           <Button

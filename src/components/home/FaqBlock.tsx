@@ -22,15 +22,23 @@ export function FaqBlock({
   const isOpen = open ?? !isMobile;
 
   return (
-    <section aria-labelledby="faq-heading" className="mx-auto w-full max-w-4xl px-4 py-10 md:px-6 md:py-16">
+    <section
+      aria-labelledby="faq-heading"
+      className="mx-auto w-full max-w-4xl px-4 py-10 md:px-6 md:py-16"
+    >
       <Collapsible open={isOpen} onOpenChange={setOpen}>
         <CollapsibleTrigger className="group flex w-full items-center gap-3 rounded-2xl border border-border/60 bg-card/50 p-4 text-left transition hover:border-accent md:p-5">
           <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-accent/15 text-accent">
             <HelpCircle className="h-5 w-5" />
           </span>
           <span className="min-w-0 flex-1">
-            <span className="block text-[10px] uppercase tracking-[0.3em] text-muted-foreground">FAQ</span>
-            <h2 id="faq-heading" className="font-display text-lg font-black leading-tight md:text-2xl">
+            <span className="block text-[10px] uppercase tracking-[0.3em] text-muted-foreground">
+              FAQ
+            </span>
+            <h2
+              id="faq-heading"
+              className="font-display text-lg font-black leading-tight md:text-2xl"
+            >
               {title}
             </h2>
             <span className="mt-1 block text-xs text-muted-foreground md:text-sm">{subtitle}</span>

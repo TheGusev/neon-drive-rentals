@@ -45,7 +45,9 @@ export function SeoTiles() {
             <t.icon className="h-5 w-5" />
           </span>
           <div className="min-w-0 flex-1">
-            <h3 className="font-display text-[15px] font-bold leading-snug text-foreground">{t.h}</h3>
+            <h3 className="font-display text-[15px] font-bold leading-snug text-foreground">
+              {t.h}
+            </h3>
             <p className="mt-1 text-xs leading-snug text-foreground/70">{t.p}</p>
           </div>
           <ArrowUpRight className="mt-1 h-4 w-4 shrink-0 text-foreground/40 transition group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-[color:var(--neon-orange)]" />

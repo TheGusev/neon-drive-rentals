@@ -1,14 +1,6 @@
 import { Suspense, lazy, useMemo } from "react";
 import { Link } from "@tanstack/react-router";
-import {
-  ArrowRight,
-  CalendarIcon,
-  Clock,
-  Search,
-  Sparkles,
-  Wallet,
-  Wrench,
-} from "lucide-react";
+import { ArrowRight, CalendarIcon, Clock, Search, Sparkles, Wallet, Wrench } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useBookings, useCars } from "@/state/AppDataContext";
@@ -88,7 +80,10 @@ function HomeDesktopInner({ heroImage: _heroImage }: { heroImage: string }) {
         <div className="mx-auto grid w-full max-w-7xl flex-1 grid-cols-1 items-center gap-5 px-6 pt-4">
           {/* Middle: title + copy + CTAs */}
           <div className="max-w-2xl">
-            <p className="rise-in text-[10px] uppercase tracking-[0.5em] text-[color:var(--neon-blue)] drop-shadow" style={{ animationDelay: "50ms" }}>
+            <p
+              className="rise-in text-[10px] uppercase tracking-[0.5em] text-[color:var(--neon-blue)] drop-shadow"
+              style={{ animationDelay: "50ms" }}
+            >
               速度を感じる · Nsk · JDM
             </p>
 
@@ -102,21 +97,34 @@ function HomeDesktopInner({ heroImage: _heroImage }: { heroImage: string }) {
               </h1>
             </div>
 
-            <p className="rise-in mt-3 max-w-xl text-base text-foreground/95 drop-shadow-md md:text-lg" style={{ animationDelay: "280ms" }}>
+            <p
+              className="rise-in mt-3 max-w-xl text-base text-foreground/95 drop-shadow-md md:text-lg"
+              style={{ animationDelay: "280ms" }}
+            >
               Правый руль, честные цены, ключи за 3 минуты. Выдача авто на ул. Доватора, 11.
             </p>
 
-            <div className="rise-in mt-4 inline-flex flex-wrap items-center gap-x-4 gap-y-2 glass-surface rounded-xl px-3 py-2 text-xs text-foreground" style={{ animationDelay: "380ms" }}>
+            <div
+              className="rise-in mt-4 inline-flex flex-wrap items-center gap-x-4 gap-y-2 glass-surface rounded-xl px-3 py-2 text-xs text-foreground"
+              style={{ animationDelay: "380ms" }}
+            >
               <span className="inline-flex items-center gap-1.5">
                 <span className="h-2 w-2 rounded-full bg-[color:var(--neon-blue)] shadow-[0_0_10px_var(--neon-blue)]" />
                 {available.length} авто свободно
               </span>
               <span className="opacity-40">·</span>
-              <span>от <b className="text-[color:var(--neon-orange)]">1 800 ₽</b>/сутки · за город от <b className="text-[color:var(--neon-orange)]">2 000 ₽</b></span>
+              <span>
+                от <b className="text-[color:var(--neon-orange)]">1 800 ₽</b>/сутки · за город от{" "}
+                <b className="text-[color:var(--neon-orange)]">2 000 ₽</b>
+              </span>
             </div>
 
             <div className="rise-in mt-5 flex flex-wrap gap-3" style={{ animationDelay: "460ms" }}>
-              <Button asChild size="lg" className="gap-2 font-bold uppercase tracking-wider md:pulse-glow">
+              <Button
+                asChild
+                size="lg"
+                className="gap-2 font-bold uppercase tracking-wider md:pulse-glow"
+              >
                 <Link to="/cars">
                   <Search className="h-4 w-4" />
                   Найти авто
@@ -152,17 +160,14 @@ function HomeDesktopInner({ heroImage: _heroImage }: { heroImage: string }) {
           <GarageShowcase />
         </div>
 
-
         {/* SEO tiles */}
         <div className="shrink-0 pb-3 pt-2">
           <SeoTiles />
         </div>
       </div>
-
     </div>
   );
 }
-
 
 // -------- Mobile --------
 
@@ -189,11 +194,13 @@ function HomeMobileInner({ heroImage: _heroImage }: { heroImage: string }) {
 
       {/* Menu + theme controls live in HomeControls (single fixed row) */}
 
-
       <div className="relative z-10 flex min-h-[100svh] flex-col px-4 pb-6 pt-[calc(max(env(safe-area-inset-top),0.5rem)+7rem)]">
         {/* Hero copy */}
         <div className="max-w-full">
-          <p className="rise-in text-[10px] uppercase tracking-[0.5em] text-[color:var(--neon-blue)] drop-shadow" style={{ animationDelay: "50ms" }}>
+          <p
+            className="rise-in text-[10px] uppercase tracking-[0.5em] text-[color:var(--neon-blue)] drop-shadow"
+            style={{ animationDelay: "50ms" }}
+          >
             速度を感じる · Nsk · JDM
           </p>
           <div className="rise-in mt-2" style={{ animationDelay: "150ms" }}>
@@ -205,21 +212,33 @@ function HomeMobileInner({ heroImage: _heroImage }: { heroImage: string }) {
             </h1>
           </div>
 
-          <p className="rise-in mt-3 text-sm text-foreground/95 drop-shadow-md" style={{ animationDelay: "280ms" }}>
+          <p
+            className="rise-in mt-3 text-sm text-foreground/95 drop-shadow-md"
+            style={{ animationDelay: "280ms" }}
+          >
             Правый руль, честные цены, ключи за 3 минуты.
           </p>
 
-          <div className="rise-in mt-3 inline-flex flex-wrap items-center gap-x-3 gap-y-1.5 glass-surface rounded-xl px-3 py-2 text-[11px] text-foreground" style={{ animationDelay: "380ms" }}>
+          <div
+            className="rise-in mt-3 inline-flex flex-wrap items-center gap-x-3 gap-y-1.5 glass-surface rounded-xl px-3 py-2 text-[11px] text-foreground"
+            style={{ animationDelay: "380ms" }}
+          >
             <span className="inline-flex items-center gap-1.5">
               <span className="h-2 w-2 rounded-full bg-[color:var(--neon-blue)] shadow-[0_0_10px_var(--neon-blue)]" />
               {available.length} авто свободно
             </span>
             <span className="opacity-40">·</span>
-            <span>от <b className="text-[color:var(--neon-orange)]">1 800 ₽</b>/сутки</span>
+            <span>
+              от <b className="text-[color:var(--neon-orange)]">1 800 ₽</b>/сутки
+            </span>
           </div>
 
           <div className="rise-in mt-4 flex flex-col gap-2" style={{ animationDelay: "460ms" }}>
-            <Button asChild size="lg" className="w-full gap-2 font-bold uppercase tracking-wider pulse-glow">
+            <Button
+              asChild
+              size="lg"
+              className="w-full gap-2 font-bold uppercase tracking-wider pulse-glow"
+            >
               <Link to="/cars">
                 <Search className="h-4 w-4" />
                 Найти авто
@@ -238,7 +257,10 @@ function HomeMobileInner({ heroImage: _heroImage }: { heroImage: string }) {
                   Быстрое бронирование
                 </Button>
               </SheetTrigger>
-              <SheetContent side="bottom" className="max-h-[92svh] overflow-y-auto rounded-t-2xl bg-background p-5 text-foreground">
+              <SheetContent
+                side="bottom"
+                className="max-h-[92svh] overflow-y-auto rounded-t-2xl bg-background p-5 text-foreground"
+              >
                 <div className="pt-2">
                   <Suspense fallback={<BookingFormSkeleton />}>
                     <QuickBookingForm />
@@ -250,9 +272,15 @@ function HomeMobileInner({ heroImage: _heroImage }: { heroImage: string }) {
         </div>
 
         {/* Benefits pills strip */}
-        <div className="no-scrollbar rise-in -mx-4 mt-5 flex gap-2 overflow-x-auto px-4" style={{ animationDelay: "560ms" }}>
+        <div
+          className="no-scrollbar rise-in -mx-4 mt-5 flex gap-2 overflow-x-auto px-4"
+          style={{ animationDelay: "560ms" }}
+        >
           {benefits.map((b) => (
-            <div key={b.title} className="flex shrink-0 items-center gap-2 glass-surface rounded-full px-3 py-1.5 text-[11px] font-semibold text-foreground">
+            <div
+              key={b.title}
+              className="flex shrink-0 items-center gap-2 glass-surface rounded-full px-3 py-1.5 text-[11px] font-semibold text-foreground"
+            >
               <b.icon className="h-3.5 w-3.5 text-[color:var(--neon-blue)]" />
               {b.title}
             </div>
@@ -264,13 +292,11 @@ function HomeMobileInner({ heroImage: _heroImage }: { heroImage: string }) {
           <GarageShowcase compact />
         </div>
 
-
         {/* SEO tiles — full-bleed 2-cols */}
         <div className="rise-in mt-5" style={{ animationDelay: "820ms" }}>
           <SeoTiles />
         </div>
       </div>
-
     </div>
   );
 }

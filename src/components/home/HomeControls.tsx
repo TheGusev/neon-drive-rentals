@@ -42,8 +42,13 @@ export function HomeControls() {
           </Button>
         </SheetTrigger>
 
-        <SheetContent side="right" className="w-[86vw] max-w-sm overflow-y-auto bg-background p-5 text-foreground">
-          <p className="text-[10px] uppercase tracking-[0.5em] text-[color:var(--neon-blue)]">Nsk · JDM</p>
+        <SheetContent
+          side="right"
+          className="w-[86vw] max-w-sm overflow-y-auto bg-background p-5 text-foreground"
+        >
+          <p className="text-[10px] uppercase tracking-[0.5em] text-[color:var(--neon-blue)]">
+            Nsk · JDM
+          </p>
           <p className="mt-1 font-display text-3xl font-black">
             <span className="logo-neon">NSK-RENT</span>
           </p>
