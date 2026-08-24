@@ -126,7 +126,7 @@ export function GarageShowcase({ compact = false }: { compact?: boolean }) {
                 variant="outline"
                 aria-label="Влево"
                 onClick={() => scrollByCards(-1)}
-                className="h-9 w-9 border-border/70 bg-background/60 backdrop-blur hover:border-accent"
+                className="glass-surface h-9 w-9 hover:border-accent"
               >
                 <ChevronLeft className="h-4 w-4" />
               </Button>
@@ -135,7 +135,7 @@ export function GarageShowcase({ compact = false }: { compact?: boolean }) {
                 variant="outline"
                 aria-label="Вправо"
                 onClick={() => scrollByCards(1)}
-                className="h-9 w-9 border-border/70 bg-background/60 backdrop-blur hover:border-accent"
+                className="glass-surface h-9 w-9 hover:border-accent"
               >
                 <ChevronRight className="h-4 w-4" />
               </Button>
@@ -250,13 +250,14 @@ function GarageCard({
       className={cn(
         "garage-card group relative flex h-[200px] w-[240px] shrink-0 snap-center flex-col overflow-hidden rounded-2xl border text-left backdrop-blur sm:h-[220px] sm:w-[280px] xl:h-[250px] xl:w-[320px]",
         entered && "garage-in",
+        "glass-surface",
         active
-          ? "border-accent bg-card/85 shadow-[0_18px_40px_-18px_color-mix(in_oklab,var(--neon-blue)_75%,transparent)]"
-          : "border-border/60 bg-card/60",
+          ? "border-accent shadow-[0_18px_40px_-18px_color-mix(in_oklab,var(--neon-blue)_75%,transparent)]"
+          : "",
         !free && "grayscale-[0.35]",
       )}
     >
-      <div className="relative flex-1 overflow-hidden bg-muted">
+      <div className="soft-skeleton relative flex-1 overflow-hidden">
         <CarImage
           src={car.image}
           alt={`${car.brand} ${car.model} — аренда в Новосибирске`}
