@@ -4,7 +4,8 @@ import { currentClient } from "@/mocks/profile";
 import type { Booking } from "@/types/domain";
 import { CarImage } from "@/components/car/CarImage";
 
-const fmt = (iso: string) => new Date(iso).toLocaleDateString("ru-RU", { day: "2-digit", month: "short", year: "numeric" });
+const fmt = (iso: string) =>
+  new Date(iso).toLocaleDateString("ru-RU", { day: "2-digit", month: "short", year: "numeric" });
 
 export function BookingHistoryList({ items }: { items?: Booking[] }) {
   const fallback = useBookings();
@@ -22,13 +23,20 @@ export function BookingHistoryList({ items }: { items?: Booking[] }) {
             const car = getCarById(b.carId);
             if (!car) return null;
             return (
-              <li key={b.id} className="flex items-center gap-3 rounded-2xl bg-card p-3 ring-1 ring-border">
+              <li
+                key={b.id}
+                className="flex items-center gap-3 rounded-2xl bg-card p-3 ring-1 ring-border"
+              >
                 <div className="h-14 w-20 flex-shrink-0 overflow-hidden rounded-xl bg-muted">
                   <CarImage src={car.image} alt="" className="h-full w-full object-cover" />
                 </div>
                 <div className="min-w-0 flex-1">
-                  <div className="truncate text-sm font-semibold text-foreground">{car.brand} {car.model}</div>
-                  <div className="text-xs text-muted-foreground">{fmt(b.startDate)} — {fmt(b.endDate)}</div>
+                  <div className="truncate text-sm font-semibold text-foreground">
+                    {car.brand} {car.model}
+                  </div>
+                  <div className="text-xs text-muted-foreground">
+                    {fmt(b.startDate)} — {fmt(b.endDate)}
+                  </div>
                 </div>
                 <div className="text-right text-sm font-semibold text-foreground whitespace-nowrap">
                   {b.totalPrice.toLocaleString("ru-RU")} ₽

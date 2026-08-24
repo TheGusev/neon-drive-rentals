@@ -1,6 +1,15 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { ArrowLeft, ArrowUp, ArrowDown, ExternalLink, ImagePlus, Star, Trash2, Upload } from "lucide-react";
+import {
+  ArrowLeft,
+  ArrowUp,
+  ArrowDown,
+  ExternalLink,
+  ImagePlus,
+  Star,
+  Trash2,
+  Upload,
+} from "lucide-react";
 import { toast } from "sonner";
 import { useMutation, useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
@@ -125,7 +134,10 @@ function CarPhotosPage() {
                 <ArrowLeft className="mr-2 h-4 w-4" /> К автопарку
               </Link>
             </Button>
-            <Button onClick={() => saveMutation.mutate()} disabled={!dirty || saveMutation.isPending}>
+            <Button
+              onClick={() => saveMutation.mutate()}
+              disabled={!dirty || saveMutation.isPending}
+            >
               Сохранить
             </Button>
           </div>
@@ -143,7 +155,10 @@ function CarPhotosPage() {
             ) : (
               <ul className="grid gap-3 sm:grid-cols-2">
                 {images.map((src, i) => (
-                  <li key={`${src}-${i}`} className="overflow-hidden rounded-xl border border-border bg-background">
+                  <li
+                    key={`${src}-${i}`}
+                    className="overflow-hidden rounded-xl border border-border bg-background"
+                  >
                     <div className="relative aspect-[4/3] bg-muted">
                       <CarImage
                         src={src}
@@ -161,10 +176,22 @@ function CarPhotosPage() {
                         {src}
                       </span>
                       <div className="flex shrink-0 gap-0.5">
-                        <Button variant="ghost" size="icon" className="h-8 w-8" aria-label="Выше" onClick={() => move(i, i - 1)}>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-8 w-8"
+                          aria-label="Выше"
+                          onClick={() => move(i, i - 1)}
+                        >
                           <ArrowUp className="h-4 w-4" />
                         </Button>
-                        <Button variant="ghost" size="icon" className="h-8 w-8" aria-label="Ниже" onClick={() => move(i, i + 1)}>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-8 w-8"
+                          aria-label="Ниже"
+                          onClick={() => move(i, i + 1)}
+                        >
                           <ArrowDown className="h-4 w-4" />
                         </Button>
                         <Button
@@ -215,7 +242,11 @@ function CarPhotosPage() {
                   e.target.value = "";
                 }}
               />
-              <Button variant="soft" onClick={() => fileRef.current?.click()} disabled={uploadMutation.isPending}>
+              <Button
+                variant="soft"
+                onClick={() => fileRef.current?.click()}
+                disabled={uploadMutation.isPending}
+              >
                 <Upload className="mr-2 h-4 w-4" />
                 {uploadMutation.isPending ? "Загрузка…" : "Загрузить файл (JPG, PNG, WEBP до 6 МБ)"}
               </Button>
