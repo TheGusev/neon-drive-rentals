@@ -4,6 +4,7 @@ import { SectionCard } from "@/components/checkout/SectionCard";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import type { Booking, Car } from "@/types/domain";
+import { CarImage } from "@/components/car/CarImage";
 
 const fmt = (iso: string) =>
   new Date(iso).toLocaleDateString("ru-RU", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" });
@@ -17,11 +18,7 @@ export function CurrentRentalCard({ booking, car }: { booking: Booking; car: Car
     <SectionCard title="Текущая аренда" className="bg-card ring-1 ring-border">
       <div className="flex gap-4">
         <div className="h-20 w-28 flex-shrink-0 overflow-hidden rounded-2xl bg-muted">
-          {car.image ? (
-            <img src={car.image} alt={`${car.brand} ${car.model}`} className="h-full w-full object-cover" />
-          ) : (
-            <div className="flex h-full w-full items-center justify-center text-xs text-muted-foreground">Фото</div>
-          )}
+          <CarImage src={car.image} alt={`${car.brand} ${car.model}`} className="h-full w-full object-cover" />
         </div>
         <div className="min-w-0 flex-1">
           <div className="truncate text-base font-semibold text-foreground">{car.brand} {car.model}</div>

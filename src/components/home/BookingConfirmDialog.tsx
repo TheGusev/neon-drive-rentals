@@ -13,6 +13,7 @@ import { getTariff } from "@/mocks/tariffs";
 import { calcPrice, formatRub } from "@/lib/bookingDraft";
 import { getConflictingBookings } from "@/lib/availability";
 import { useBookings } from "@/state/AppDataContext";
+import { CarImage } from "@/components/car/CarImage";
 
 interface Props {
   open: boolean;
@@ -72,7 +73,7 @@ export function BookingConfirmDialog({ open, car, from, to, tariff, locationLabe
         {car && price && tariffInfo && (
           <div className="flex max-h-[85vh] flex-col overflow-y-auto">
             <div className="relative aspect-[16/8] w-full bg-muted">
-              <img src={car.image} alt={`${car.brand} ${car.model}`} className="h-full w-full object-cover" />
+              <CarImage src={car.image} alt={`${car.brand} ${car.model}`} className="h-full w-full object-cover" />
               <div className="absolute inset-0 bg-gradient-to-t from-background/95 via-background/20 to-transparent" />
               <div className="absolute bottom-3 left-4 right-4">
                 <Badge variant="secondary" className="mb-1 uppercase tracking-wider">

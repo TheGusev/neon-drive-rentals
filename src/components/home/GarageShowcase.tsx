@@ -16,6 +16,7 @@ import { useCoarsePointer } from "@/hooks/useCoarsePointer";
 import { useHydrated } from "@/hooks/useHydrated";
 import { usePrefetchCar } from "@/hooks/usePrefetchCar";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
+import { CarImage } from "@/components/car/CarImage";
 
 
 /**
@@ -252,10 +253,11 @@ function GarageCard({
     >
 
       <div className="relative flex-1 overflow-hidden bg-muted">
-        <img
+        <CarImage
           src={car.image}
           alt={`${car.brand} ${car.model} — аренда в Новосибирске`}
-          loading="eager"
+          loading={index === 0 ? "eager" : "lazy"}
+          fetchPriority={index === 0 ? "high" : "auto"}
           decoding="async"
           width={320}
           height={250}

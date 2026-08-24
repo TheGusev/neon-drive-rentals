@@ -56,6 +56,56 @@ function toImages(value: unknown): string[] {
   return [];
 }
 
+const STABLE_IMAGE_BY_SLUG: Record<string, string> = {
+  "honda-n-wgn-grey-1": "/assets/cars/honda-n-wgn-grey.jpg",
+  "honda-n-wgn-blue-1": "/assets/cars/real/honda-n-wgn-blue-real.jpg",
+  "honda-n-wgn-blue-2": "/assets/cars/honda-n-wgn-blue.jpg",
+  "honda-n-wgn-black-1": "/assets/cars/honda-n-wgn-black.jpg",
+  "nissan-dayz-green-1": "/assets/cars/nissan-dayz-green.jpg",
+  "nissan-dayz-brown-1": "/assets/cars/real/nissan-dayz-brown-real.jpg",
+  "mitsubishi-ek-wagon-blue-1": "/assets/cars/real/mitsubishi-ek-wagon-black-real.jpg",
+  "daihatsu-mira-es-black-1": "/assets/cars/daihatsu-mira-es-black.jpg",
+  "nissan-dayz-grey-1": "/assets/cars/nissan-dayz-grey.jpg",
+  "nissan-dayz-white-1": "/assets/cars/nissan-dayz-white.jpg",
+  "daihatsu-move-white-1": "/assets/cars/daihatsu-move-white.jpg",
+  "honda-n-wgn-white-1": "/assets/cars/honda-n-wgn-white.jpg",
+  "honda-n-wgn-turbo-white-1": "/assets/cars/honda-n-wgn-turbo-white.jpg",
+  "honda-n-wgn-white-2": "/assets/cars/real/honda-n-wgn-white-real.jpg",
+  "nissan-dayz-grey-2": "/assets/cars/nissan-dayz-grey.jpg",
+  "honda-n-box-black-1": "/assets/cars/real/honda-n-box-black-real-3.jpg",
+  "nissan-dayz-black-1": "/assets/cars/real/nissan-dayz-black-real.jpg",
+  "daihatsu-mira-white-1": "/assets/cars/daihatsu-mira-white.jpg",
+  "suzuki-alto-white-1": "/assets/cars/suzuki-alto-white.jpg",
+  "daihatsu-mira-es-white-1": "/assets/cars/daihatsu-mira-es-white.jpg",
+  "suzuki-alto-white-2": "/assets/cars/suzuki-alto-works.jpg",
+};
+
+const isStableAssetUrl = (url: string) =>
+  url.startsWith("/assets/cars/") || url.startsWith("http://") || url.startsWith("https://");
+
+function normalizedImages(slug: string, value: unknown): string[] {
+  const fallback = STABLE_IMAGE_BY_SLUG[slug];
+  const valid = toImages(value).filter(isStableAssetUrl);
+  return Array.from(new Set(fallback ? [fallback, ...valid] : valid));
+}
+
+async function withPublicFallback<T>(label: string, task: Promise<T>, fallback: T): Promise<T> {
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  try {
+    const timeout = new Promise<T>((resolve) => {
+      timer = setTimeout(() => resolve(fallback), 4_500);
+    });
+    const result = await Promise.race([task, timeout]);
+    if (result === fallback) console.error(`[public-data] ${label} timed out; serving fallback`);
+    return result;
+  } catch (error) {
+    console.error(`[public-data] ${label} failed; serving fallback`, error);
+    return fallback;
+  } finally {
+    if (timer) clearTimeout(timer);
+  }
+}
+
 const FLEET_STATUSES: CarFleetStatus[] = ["free", "busy", "maintenance"];
 const FLEET_SYNONYMS: Record<string, CarFleetStatus> = {
   available: "free",
@@ -88,10 +138,10 @@ function normalizeTransmission(value: unknown): Transmission {
 
 export function mapCarRow(row: CarRow): Car {
   const specs = toSpecs(row.specs);
-  const images = toImages(row.images);
   const brand = str(row.brand, "");
   const model = str(row.model, "");
   const id = str(row.slug, String(row.id));
+  const images = normalizedImages(id, row.images);
 
   return {
     id,
@@ -148,18 +198,24 @@ async function ready(): Promise<boolean> {
 }
 
 export async function fetchCars(): Promise<Car[]> {
-  if (!(await ready())) return mockCars.map(withoutPlate);
-  const rows = await query<CarRow>(`${SELECT_CARS} order by brand asc, model asc, year desc`);
-  return rows.map(mapCarRow).map(withoutPlate);
+  const fallback = mockCars.map(withoutPlate);
+  if (!hasDatabase()) return fallback;
+  return withPublicFallback("catalog", (async () => {
+    if (!(await ready())) return fallback;
+    const rows = await query<CarRow>(`${SELECT_CARS} order by brand asc, model asc, year desc`);
+    return rows.map(mapCarRow).map(withoutPlate);
+  })(), fallback);
 }
 
 export async function fetchCarBySlug(slug: string): Promise<Car | null> {
-  if (!(await ready())) {
-    const found = mockCars.find((c) => c.id === slug || c.slug === slug);
-    return found ? withoutPlate(found) : null;
-  }
-  const rows = await query<CarRow>(`${SELECT_CARS} where slug = $1 or id::text = $1 limit 1`, [slug]);
-  return rows.length ? withoutPlate(mapCarRow(rows[0])) : null;
+  const found = mockCars.find((c) => c.id === slug || c.slug === slug);
+  const fallback = found ? withoutPlate(found) : null;
+  if (!hasDatabase()) return fallback;
+  return withPublicFallback(`car:${slug}`, (async () => {
+    if (!(await ready())) return fallback;
+    const rows = await query<CarRow>(`${SELECT_CARS} where slug = $1 or id::text = $1 limit 1`, [slug]);
+    return rows.length ? withoutPlate(mapCarRow(rows[0])) : null;
+  })(), fallback);
 }
 
 /** Полные данные автопарка вместе с госномерами — только для админки. */

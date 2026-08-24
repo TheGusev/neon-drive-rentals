@@ -14,6 +14,7 @@ import { useBookings } from "@/state/AppDataContext";
 import { format } from "date-fns";
 import { ru } from "date-fns/locale";
 import { BookingConfirmDialog } from "./BookingConfirmDialog";
+import { CarImage } from "@/components/car/CarImage";
 
 
 interface Props {
@@ -88,7 +89,7 @@ function QuickBody({
   return (
     <div className="flex max-h-[85vh] flex-col overflow-y-auto">
       <div className="relative aspect-[16/9] w-full overflow-hidden bg-muted">
-        <img
+        <CarImage
           src={car.image}
           alt={`${car.brand} ${car.model}`}
           className="h-full w-full object-cover"

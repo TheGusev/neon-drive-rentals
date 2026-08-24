@@ -59,8 +59,22 @@ const SELECT_BOOKINGS = `
 
 /** Availability-only view: no client ids, no amounts. Safe for public pages. */
 export async function fetchPublicBookings(): Promise<Booking[]> {
-  const list = await fetchBookings();
-  return list.map((b) => ({ ...b, clientId: "", totalPrice: 0 }));
+  if (!hasDatabase()) return [];
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  try {
+    const timeout = new Promise<Booking[]>((resolve) => {
+      timer = setTimeout(() => resolve([]), 4_500);
+    });
+    const task = query<BookingRow>(`${SELECT_BOOKINGS} order by b.date_from desc`).then((rows) =>
+      rows.map(mapBookingRow).map((booking) => ({ ...booking, clientId: "", totalPrice: 0 })),
+    );
+    return await Promise.race([task, timeout]);
+  } catch (error) {
+    console.error("[public-data] bookings failed; serving empty availability", error);
+    return [];
+  } finally {
+    if (timer) clearTimeout(timer);
+  }
 }
 
 export async function fetchBookings(): Promise<Booking[]> {

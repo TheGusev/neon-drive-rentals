@@ -4,6 +4,7 @@ import { SectionCard } from "@/components/checkout/SectionCard";
 import { useFavorites } from "@/state/FavoritesContext";
 import { useCars } from "@/state/AppDataContext";
 import { formatRub } from "@/lib/bookingDraft";
+import { CarImage } from "@/components/car/CarImage";
 
 export function FavoritesBlock() {
   const { favorites, toggleFavorite } = useFavorites();
@@ -20,7 +21,7 @@ export function FavoritesBlock() {
         <ul className="space-y-3">
           {list.map((car) => (
             <li key={car.id} className="flex items-center gap-3 rounded-xl border border-border/70 p-2">
-              <img
+              <CarImage
                 src={car.image}
                 alt={`${car.brand} ${car.model}`}
                 loading="lazy"

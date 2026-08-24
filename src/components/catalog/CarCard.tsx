@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { useFavorites } from "@/state/FavoritesContext";
 import { cn } from "@/lib/utils";
 import heroCar from "@/assets/hero-car.jpg";
+import { CarImage } from "@/components/car/CarImage";
 
 export const fleetStatusMeta: Record<NonNullable<Car["status"]>, { label: string; className: string }> = {
   free: { label: "Свободен", className: "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400" },
@@ -21,8 +22,9 @@ export function CarCard({ car }: { car: Car }) {
   return (
     <article className="group flex h-full flex-col overflow-hidden rounded-3xl border border-border bg-card transition hover:-translate-y-1 hover:shadow-lg md:hover:neon-glow">
       <div className="relative aspect-[4/3] overflow-hidden bg-muted">
-        <img
+        <CarImage
           src={car.image ?? heroCar}
+          fallbackSrc={heroCar}
           alt={`${car.brand} ${car.model}, ${car.color}`}
           loading="lazy"
           width={1024}
