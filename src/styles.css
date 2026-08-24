@@ -489,11 +489,13 @@ html.clean-light .hero-photo { filter: saturate(0.75) brightness(1.45) contrast(
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  min-height: 2.5rem;
   border-radius: 0.6rem;
   border: 1px solid color-mix(in oklab, var(--border) 90%, transparent);
   background: color-mix(in oklab, var(--card) 55%, transparent);
   padding: 0.55rem 0.75rem;
   font-size: 0.8125rem;
+  line-height: 1.2;
   overflow: hidden;
   transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.25s ease,
     box-shadow 0.25s ease, background-color 0.25s ease;
