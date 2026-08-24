@@ -363,10 +363,12 @@ html.clean-light body {
 .float-slow { animation: none; }
 
 @keyframes fade-in-soft {
-  0% { opacity: 0; }
-  100% { opacity: 1; }
+  0% { opacity: 0; transform: translateY(10px); filter: blur(6px); }
+  60% { filter: blur(0); }
+  100% { opacity: 1; transform: translateY(0); filter: blur(0); }
 }
-.rise-in { animation: fade-in-soft 0.7s ease-out both; }
+.rise-in { animation: fade-in-soft 0.75s cubic-bezier(0.22, 1, 0.36, 1) both; }
+
 
 /* Animated NSK-RENT logo — hue-shifting gradient */
 @utility logo-neon {
