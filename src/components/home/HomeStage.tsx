@@ -38,8 +38,8 @@ async function retryImport<T>(load: () => Promise<T>, attempts = 3): Promise<T> 
 
 function BookingFormSkeleton() {
   return (
-    <div className="w-full animate-pulse space-y-3 rounded-2xl border border-border bg-card/95 p-4">
-      <div className="h-4 w-40 rounded bg-muted" />
+    <div className="w-full animate-pulse space-y-3 glass-surface rounded-2xl p-4">
+      <div className="soft-skeleton h-4 w-40 rounded" />
       <div className="h-14 rounded bg-muted" />
       <div className="grid grid-cols-2 gap-2">
         <div className="h-10 rounded bg-muted" />
@@ -106,7 +106,7 @@ function HomeDesktopInner({ heroImage: _heroImage }: { heroImage: string }) {
               Правый руль, честные цены, ключи за 3 минуты. Выдача авто на ул. Доватора, 11.
             </p>
 
-            <div className="rise-in mt-4 inline-flex flex-wrap items-center gap-x-4 gap-y-2 rounded-lg bg-background/60 px-3 py-2 text-xs text-foreground backdrop-blur-md" style={{ animationDelay: "380ms" }}>
+            <div className="rise-in mt-4 inline-flex flex-wrap items-center gap-x-4 gap-y-2 glass-surface rounded-xl px-3 py-2 text-xs text-foreground" style={{ animationDelay: "380ms" }}>
               <span className="inline-flex items-center gap-1.5">
                 <span className="h-2 w-2 rounded-full bg-[color:var(--neon-blue)] shadow-[0_0_10px_var(--neon-blue)]" />
                 {available.length} авто свободно
@@ -129,7 +129,7 @@ function HomeDesktopInner({ heroImage: _heroImage }: { heroImage: string }) {
                   <Button
                     size="lg"
                     variant="outline"
-                    className="gap-2 border-accent/60 bg-background/60 font-bold uppercase tracking-wider text-foreground backdrop-blur hover:border-accent hover:bg-background/80"
+                    className="glass-surface gap-2 border-accent/50 font-bold uppercase tracking-wider text-foreground hover:border-accent"
                   >
                     <CalendarIcon className="h-4 w-4 text-accent" />
                     Быстрое бронирование
@@ -185,7 +185,7 @@ function HomeMobileInner({ heroImage: _heroImage }: { heroImage: string }) {
 
   return (
     <div className="relative min-h-[100svh] overflow-hidden bg-background text-foreground">
-      <HeroBackdrop />
+      <HeroBackdrop variant="mobile" />
 
       {/* Menu + theme controls live in HomeControls (single fixed row) */}
 
@@ -209,7 +209,7 @@ function HomeMobileInner({ heroImage: _heroImage }: { heroImage: string }) {
             Правый руль, честные цены, ключи за 3 минуты.
           </p>
 
-          <div className="rise-in mt-3 inline-flex flex-wrap items-center gap-x-3 gap-y-1.5 rounded-lg bg-background/60 px-3 py-2 text-[11px] text-foreground backdrop-blur-md" style={{ animationDelay: "380ms" }}>
+          <div className="rise-in mt-3 inline-flex flex-wrap items-center gap-x-3 gap-y-1.5 glass-surface rounded-xl px-3 py-2 text-[11px] text-foreground" style={{ animationDelay: "380ms" }}>
             <span className="inline-flex items-center gap-1.5">
               <span className="h-2 w-2 rounded-full bg-[color:var(--neon-blue)] shadow-[0_0_10px_var(--neon-blue)]" />
               {available.length} авто свободно
@@ -232,7 +232,7 @@ function HomeMobileInner({ heroImage: _heroImage }: { heroImage: string }) {
                 <Button
                   size="lg"
                   variant="outline"
-                  className="w-full gap-2 border-accent/60 bg-background/60 font-bold uppercase tracking-wider text-foreground backdrop-blur hover:border-accent hover:bg-background/80"
+                  className="glass-surface w-full gap-2 border-accent/50 font-bold uppercase tracking-wider text-foreground hover:border-accent"
                 >
                   <CalendarIcon className="h-4 w-4 text-accent" />
                   Быстрое бронирование
@@ -252,7 +252,7 @@ function HomeMobileInner({ heroImage: _heroImage }: { heroImage: string }) {
         {/* Benefits pills strip */}
         <div className="no-scrollbar rise-in -mx-4 mt-5 flex gap-2 overflow-x-auto px-4" style={{ animationDelay: "560ms" }}>
           {benefits.map((b) => (
-            <div key={b.title} className="flex shrink-0 items-center gap-2 rounded-full border border-border/60 bg-background/60 px-3 py-1.5 text-[11px] font-semibold text-foreground backdrop-blur">
+            <div key={b.title} className="flex shrink-0 items-center gap-2 glass-surface rounded-full px-3 py-1.5 text-[11px] font-semibold text-foreground">
               <b.icon className="h-3.5 w-3.5 text-[color:var(--neon-blue)]" />
               {b.title}
             </div>

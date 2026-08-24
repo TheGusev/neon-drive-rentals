@@ -36,7 +36,7 @@ export function HomeControls() {
             variant="outline"
             aria-label="Меню"
             data-hidden="false"
-            className="pointer-events-auto h-14 w-14 rounded-2xl border-2 border-accent/70 bg-background/85 opacity-100 shadow-[0_0_24px_color-mix(in_oklab,var(--neon-blue)_55%,transparent)] backdrop-blur transition-opacity duration-300 hover:border-accent data-[hidden=true]:pointer-events-none data-[hidden=true]:opacity-0 md:h-12 md:w-12 motion-reduce:transition-none"
+            className="glass-surface pointer-events-auto h-14 w-14 rounded-2xl border-accent/50 opacity-100 transition-opacity duration-300 hover:border-accent data-[hidden=true]:pointer-events-none data-[hidden=true]:opacity-0 md:h-12 md:w-12 motion-reduce:transition-none"
           >
             <Menu className="h-7 w-7 text-accent md:h-6 md:w-6" />
           </Button>

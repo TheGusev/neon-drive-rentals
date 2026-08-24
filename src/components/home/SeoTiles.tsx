@@ -38,7 +38,7 @@ export function SeoTiles() {
         <Link
           key={t.h}
           to={t.to}
-          className="nfs-tile lift group flex h-full items-start gap-3 rounded-2xl border border-border/60 bg-background/70 p-4 backdrop-blur-md transition hover:border-[color:var(--neon-orange)]/70 hover:bg-background/85 active:scale-[0.99]"
+          className="nfs-tile lift glass-surface group flex h-full items-start gap-3 rounded-2xl p-4 transition hover:border-[color:var(--neon-orange)]/70 active:scale-[0.99]"
           style={{ animationDelay: `${400 + i * 90}ms` }}
         >
           <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-[color:var(--neon-orange)]/15 text-[color:var(--neon-orange)]">
