@@ -175,6 +175,16 @@ html.clean-light body {
   background-attachment: fixed;
 }
 
+/* Hero photo softening in the light theme so the shot blends with the canvas. */
+.hero-light-scrim { display: none; }
+html.clean-light .hero-light-scrim {
+  display: block;
+  background: linear-gradient(180deg,
+    color-mix(in oklab, var(--background) 55%, transparent) 0%,
+    color-mix(in oklab, var(--background) 68%, transparent) 100%);
+}
+html.clean-light .hero-photo { filter: saturate(0.85) brightness(1.2) contrast(0.9); }
+
 /* Unified glass surface used by hero pills, tiles and floating controls. */
 @utility glass-surface {
   background: var(--glass);

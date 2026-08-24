@@ -45,12 +45,15 @@ export function HeroBackdrop({ variant = "desktop" }: { variant?: "desktop" | "m
           fetchPriority={i === 0 ? "high" : "low"}
           decoding="async"
           className={cn(
-            "absolute inset-0 h-full w-full object-cover transition-opacity duration-[1200ms]",
+            "hero-photo absolute inset-0 h-full w-full object-cover transition-opacity duration-[1200ms]",
             !reduced && "ken-burns",
           )}
           style={{ opacity: i === idx ? 1 : 0 }}
         />
       ))}
+
+      {/* Light-theme softener: keeps the photo readable under light surfaces */}
+      <div className="hero-light-scrim absolute inset-0" />
 
       {mobile ? (
         <>
