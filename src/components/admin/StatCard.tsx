@@ -25,7 +25,9 @@ export function StatCard({
           <div className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
             {label}
           </div>
-          <div className="mt-1 text-2xl font-bold tracking-tight">{value}</div>
+          <div className="admin-nums mt-1 truncate text-xl font-bold tracking-tight sm:text-2xl">
+            {value}
+          </div>
           {delta && (
             <div
               className={cn(
