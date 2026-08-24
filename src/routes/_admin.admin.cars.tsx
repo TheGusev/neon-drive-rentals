@@ -18,6 +18,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { PhotoUploader } from "@/components/admin/PhotoUploader";
 import { adminCarsQueryOptions } from "@/lib/queries";
 import { createCar, deleteCar, updateCar } from "@/lib/admin.functions";
 import type { Car, CarFleetStatus } from "@/types/domain";
@@ -38,7 +39,12 @@ type FormState = {
   status: CarFleetStatus;
   plate: string;
   color: string;
-  image: string;
+  images: string[];
+  power: string;
+  consumption: string;
+  engineVolume: string;
+  deposit: string;
+  vin: string;
 };
 
 const emptyForm: FormState = {
@@ -52,7 +58,12 @@ const emptyForm: FormState = {
   status: "free",
   plate: "",
   color: "",
-  image: "",
+  images: [],
+  power: "52",
+  consumption: "4",
+  engineVolume: "0.66",
+  deposit: "2000",
+  vin: "",
 };
 
 function toForm(car: Car): FormState {
@@ -66,8 +77,13 @@ function toForm(car: Car): FormState {
     priceOut: String(car.pricePerDay + 200),
     status: car.status ?? "free",
     plate: car.plate ?? "",
-    color: car.color ?? "",
-    image: car.image ?? "",
+    color: car.color === "—" ? "" : (car.color ?? ""),
+    images: car.gallery ?? (car.image ? [car.image] : []),
+    power: String(car.power || 52),
+    consumption: String(car.consumption || 4),
+    engineVolume: String(car.engineVolume || 0.66),
+    deposit: String(car.deposit ?? 2000),
+    vin: car.vin ?? "",
   };
 }
 
@@ -102,7 +118,13 @@ function AdminCarsPage() {
         status: form.status,
         plate: form.plate.trim(),
         color: form.color.trim(),
-        image: form.image.trim() || undefined,
+        images: form.images,
+        image: form.images[0],
+        power: Number(form.power) || undefined,
+        consumption: Number(form.consumption) || undefined,
+        engineVolume: Number(form.engineVolume) || undefined,
+        deposit: Number(form.deposit) || undefined,
+        vin: form.vin.trim() || undefined,
       };
       return editing
         ? updateFn({ data: { id: editing.id, patch: payload } })
@@ -214,27 +236,18 @@ function AdminCarsPage() {
       )}
 
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="max-h-[85vh] overflow-y-auto sm:max-w-lg">
+        <DialogContent className="max-h-[88vh] overflow-y-auto sm:max-w-2xl">
           <DialogHeader>
             <DialogTitle>{editing ? "Редактирование авто" : "Новый автомобиль"}</DialogTitle>
           </DialogHeader>
-          <div className="grid grid-cols-2 gap-3">
+
+          <FormSection title="Основное">
             <Field label="Марка" value={form.brand} onChange={(v) => setForm({ ...form, brand: v })} />
             <Field label="Модель" value={form.model} onChange={(v) => setForm({ ...form, model: v })} />
             <Field label="Год" value={form.year} onChange={(v) => setForm({ ...form, year: v })} />
-            <Field label="Гос. номер" value={form.plate} onChange={(v) => setForm({ ...form, plate: v })} />
+            <Field label="Гос. номер (только в админке)" value={form.plate} onChange={(v) => setForm({ ...form, plate: v })} />
             <Field label="Цвет" value={form.color} onChange={(v) => setForm({ ...form, color: v })} />
             <Field label="Мест" value={form.seats} onChange={(v) => setForm({ ...form, seats: v })} />
-            <Field
-              label="Цена по городу, ₽"
-              value={form.priceCity}
-              onChange={(v) => setForm({ ...form, priceCity: v })}
-            />
-            <Field
-              label="Цена за город, ₽"
-              value={form.priceOut}
-              onChange={(v) => setForm({ ...form, priceOut: v })}
-            />
             <div className="space-y-1.5">
               <Label>Коробка</Label>
               <Select
@@ -267,19 +280,33 @@ function AdminCarsPage() {
                 </SelectContent>
               </Select>
             </div>
-            <div className="col-span-2">
-              <Field
-                label="Ссылка на фото"
-                value={form.image}
-                onChange={(v) => setForm({ ...form, image: v })}
-              />
-            </div>
-          </div>
+          </FormSection>
+
+          <FormSection title="Цены">
+            <Field label="Цена по городу, ₽" value={form.priceCity} onChange={(v) => setForm({ ...form, priceCity: v })} />
+            <Field label="Цена за город, ₽" value={form.priceOut} onChange={(v) => setForm({ ...form, priceOut: v })} />
+            <Field label="Залог, ₽" value={form.deposit} onChange={(v) => setForm({ ...form, deposit: v })} />
+          </FormSection>
+
+          <FormSection title="Характеристики">
+            <Field label="Мощность, л.с." value={form.power} onChange={(v) => setForm({ ...form, power: v })} />
+            <Field label="Расход, л/100" value={form.consumption} onChange={(v) => setForm({ ...form, consumption: v })} />
+            <Field label="Объём, л" value={form.engineVolume} onChange={(v) => setForm({ ...form, engineVolume: v })} />
+            <Field label="VIN" value={form.vin} onChange={(v) => setForm({ ...form, vin: v })} />
+          </FormSection>
+
+          <section className="space-y-2">
+            <h3 className="text-sm font-semibold">Фотографии</h3>
+            <PhotoUploader images={form.images} onChange={(images) => setForm({ ...form, images })} />
+          </section>
+
           <DialogFooter>
             <Button variant="soft" onClick={() => setOpen(false)}>
               Отмена
             </Button>
             <Button
+              size="lg"
+              className="w-full sm:w-auto"
               onClick={() => saveMutation.mutate()}
               disabled={saveMutation.isPending || !form.brand || !form.model}
             >
@@ -289,6 +316,15 @@ function AdminCarsPage() {
         </DialogContent>
       </Dialog>
     </div>
+  );
+}
+
+function FormSection({ title, children }: { title: string; children: React.ReactNode }) {
+  return (
+    <section className="space-y-2">
+      <h3 className="text-sm font-semibold">{title}</h3>
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">{children}</div>
+    </section>
   );
 }
 
