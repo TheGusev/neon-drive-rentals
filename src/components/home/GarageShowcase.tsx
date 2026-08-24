@@ -255,7 +255,10 @@ function GarageCard({
         <img
           src={car.image}
           alt={`${car.brand} ${car.model} — аренда в Новосибирске`}
-          loading="lazy"
+          loading="eager"
+          decoding="async"
+          width={320}
+          height={250}
           className="h-full w-full object-cover transition duration-700 group-hover:scale-110"
         />
         <span className="garage-sweep pointer-events-none absolute inset-0" aria-hidden />
