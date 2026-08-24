@@ -84,9 +84,10 @@ function AdminShell() {
           <AdminSidebar />
           <div className="flex min-w-0 flex-1 flex-col overflow-x-hidden">
             <AdminHeader />
-            <main className="w-full flex-1 bg-muted/30 px-4 pb-6 md:px-6">
+            <main className="w-full flex-1 bg-muted/30 px-4 pb-24 md:px-6 md:pb-6">
               <Outlet />
             </main>
+            <AdminTabBar />
           </div>
         </div>
       </SidebarProvider>
