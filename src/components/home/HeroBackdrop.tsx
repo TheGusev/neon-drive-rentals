@@ -15,7 +15,6 @@ const frames = [heroDrive, heroTunnel, heroGarage];
  */
 export function HeroBackdrop({ variant = "desktop" }: { variant?: "desktop" | "mobile" }) {
   const [idx, setIdx] = useState(0);
-  const [loaded, setLoaded] = useState(false);
   const reduced = useReducedMotion();
   const mobile = variant === "mobile";
 
@@ -45,12 +44,11 @@ export function HeroBackdrop({ variant = "desktop" }: { variant?: "desktop" | "m
           loading={i === 0 ? "eager" : "lazy"}
           fetchPriority={i === 0 ? "high" : "low"}
           decoding="async"
-          onLoad={() => i === 0 && setLoaded(true)}
           className={cn(
             "absolute inset-0 h-full w-full object-cover transition-opacity duration-[1200ms]",
             !reduced && "ken-burns",
           )}
-          style={{ opacity: i === idx ? (i === 0 && !loaded ? 0 : 1) : 0 }}
+          style={{ opacity: i === idx ? 1 : 0 }}
         />
       ))}
 
