@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { useMemo, useState, type ReactNode } from "react";
 import { Plus, Search } from "lucide-react";
 import { toast } from "sonner";
 import { useMutation, useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
@@ -319,7 +319,7 @@ function AdminCarsPage() {
   );
 }
 
-function FormSection({ title, children }: { title: string; children: React.ReactNode }) {
+function FormSection({ title, children }: { title: string; children: ReactNode }) {
   return (
     <section className="space-y-2">
       <h3 className="text-sm font-semibold">{title}</h3>
