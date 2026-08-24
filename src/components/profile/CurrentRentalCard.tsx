@@ -1,4 +1,4 @@
-import { CalendarDays, MapPin, ShieldCheck } from "lucide-react";
+import { CalendarDays, MapPin, Navigation, ShieldCheck } from "lucide-react";
 import { toast } from "sonner";
 import { SectionCard } from "@/components/checkout/SectionCard";
 import { Button } from "@/components/ui/button";
@@ -38,8 +38,16 @@ export function CurrentRentalCard({ booking, car }: { booking: Booking; car: Car
           />
         </div>
         <div className="min-w-0 flex-1">
-          <div className="truncate text-base font-semibold text-foreground">
-            {car.brand} {car.model}
+          <div className="flex min-w-0 items-center gap-2">
+            <div className="truncate text-base font-semibold text-foreground">
+              {car.brand} {car.model}
+            </div>
+            <Badge className="shrink-0 border-0 bg-emerald-500/15 font-medium text-emerald-600 public-dark:text-emerald-400">
+              Активна
+            </Badge>
+          </div>
+          <div className="mt-0.5 text-xs text-muted-foreground">
+            Договор № {booking.id.toUpperCase()}
           </div>
           <div className="text-xs text-muted-foreground">
             {car.year} · {car.transmission}
@@ -68,9 +76,23 @@ export function CurrentRentalCard({ booking, car }: { booking: Booking; car: Car
         {booking.pickupAddress && (
           <div className="flex items-start gap-2 text-foreground/80">
             <MapPin className="mt-0.5 h-4 w-4 text-muted-foreground" />
-            <span>{booking.pickupAddress}</span>
+            <span className="min-w-0 flex-1">{booking.pickupAddress}</span>
+            <a
+              href={`https://yandex.ru/maps/?text=${encodeURIComponent(booking.pickupAddress)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex shrink-0 items-center gap-1 rounded-full bg-card px-2.5 py-1 text-xs font-medium text-accent ring-1 ring-border"
+            >
+              <Navigation className="h-3.5 w-3.5" /> Маршрут
+            </a>
           </div>
         )}
+        <div className="flex items-center justify-between border-t border-border/60 pt-2 text-foreground/80">
+          <span>Сумма аренды</span>
+          <span className="font-semibold text-foreground">
+            {booking.totalPrice.toLocaleString("ru-RU")} ₽
+          </span>
+        </div>
       </div>
 
       <Button

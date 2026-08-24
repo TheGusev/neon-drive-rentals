@@ -44,11 +44,16 @@ async function apply(): Promise<string[]> {
 
     for (const migration of MIGRATIONS) {
       if (doneSet.has(migration.name)) continue;
-      await query(migration.sql);
-      await query(`insert into schema_migrations (name) values ($1) on conflict do nothing`, [
-        migration.name,
-      ]);
-      applied.push(migration.name);
+      try {
+        await query(migration.sql);
+        await query(`insert into schema_migrations (name) values ($1) on conflict do nothing`, [
+          migration.name,
+        ]);
+        applied.push(migration.name);
+      } catch (error) {
+        // Одна упавшая миграция не должна блокировать SSR и остальные миграции.
+        console.error(`[migrations] ${migration.name} failed`, error);
+      }
     }
   } finally {
     await query(`select pg_advisory_unlock(918273645)`);

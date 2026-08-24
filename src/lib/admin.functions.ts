@@ -22,7 +22,8 @@ const carInputSchema = z.object({
   engineVolume: z.number().min(0).max(10).optional(),
   deposit: z.number().int().min(0).max(1_000_000).optional(),
   vin: z.string().max(40).optional(),
-  image: z.string().max(300).optional(),
+  image: z.string().max(500).optional(),
+  images: z.array(z.string().min(1).max(500)).max(12).optional(),
 });
 
 export const getCarsAdmin = createServerFn({ method: "GET" }).handler(async (): Promise<Car[]> => {
