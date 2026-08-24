@@ -21,8 +21,14 @@ import altoWhite from "@/assets/cars/suzuki-alto-white.jpg";
 import dayzBrownReal from "@/assets/cars/real/nissan-dayz-brown-real.jpg";
 import nBoxBlackReal from "@/assets/cars/real/honda-n-box-black-real.jpg";
 import nBoxBlackReal2 from "@/assets/cars/real/honda-n-box-black-real-2.jpg";
+import nBoxBlackReal3 from "@/assets/cars/real/honda-n-box-black-real-3.jpg";
+import nBoxBlackFrontReal from "@/assets/cars/real/honda-n-box-black-front-real.jpg";
 import nWgnWhiteReal from "@/assets/cars/real/honda-n-wgn-white-real.jpg";
 import dayzWhiteReal from "@/assets/cars/real/nissan-dayz-white-real.jpg";
+import dayzBlackReal from "@/assets/cars/real/nissan-dayz-black-real.jpg";
+import nWgnBlueReal from "@/assets/cars/real/honda-n-wgn-blue-real.jpg";
+import ekWagonBlackReal from "@/assets/cars/real/mitsubishi-ek-wagon-black-real.jpg";
+import ekWagonSilverReal from "@/assets/cars/real/mitsubishi-ek-wagon-silver-real.jpg";
 
 const base = {
   bodyType: "хэтчбек",
