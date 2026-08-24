@@ -16,7 +16,6 @@ import { ru } from "date-fns/locale";
 import { BookingConfirmDialog } from "./BookingConfirmDialog";
 import { CarImage } from "@/components/car/CarImage";
 
-
 interface Props {
   car: Car | null;
   onClose: () => void;
@@ -58,7 +57,6 @@ export function CarQuickView({ car, onClose }: Props) {
   );
 }
 
-
 function QuickBody({
   car,
   from,
@@ -72,7 +70,6 @@ function QuickBody({
   tariff: ReturnType<typeof useHomeBooking>["tariff"];
   onOrder: () => void;
 }) {
-
   const bookings = useBookings();
   const available = isCarAvailable(car, from, to, bookings);
   const busyUntil = !available ? nextBusyUntil(car, bookings) : null;
@@ -114,14 +111,18 @@ function QuickBody({
             <p className="font-display text-2xl font-black leading-tight md:text-3xl">
               {car.brand} {car.model}
             </p>
-            <p className="text-xs text-muted-foreground">{car.year} · {car.transmission} · {car.engineVolume} л</p>
+            <p className="text-xs text-muted-foreground">
+              {car.year} · {car.transmission} · {car.engineVolume} л
+            </p>
           </div>
         </div>
       </div>
 
       <div className="p-5 md:p-6">
         <DialogHeader className="sr-only">
-          <DialogTitle>{car.brand} {car.model}</DialogTitle>
+          <DialogTitle>
+            {car.brand} {car.model}
+          </DialogTitle>
         </DialogHeader>
 
         <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
@@ -154,7 +155,10 @@ function QuickBody({
             )}
           </div>
           <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
-            <span className="inline-flex items-center gap-1"><Shield className="h-3 w-3" />Депозит {formatRub(car.deposit ?? 0)}</span>
+            <span className="inline-flex items-center gap-1">
+              <Shield className="h-3 w-3" />
+              Депозит {formatRub(car.deposit ?? 0)}
+            </span>
             <span>·</span>
             <span>Лимит {car.mileageLimit ?? 250} км/сутки</span>
             <span>·</span>
@@ -166,8 +170,9 @@ function QuickBody({
           <div className="mt-3 flex items-start gap-2 rounded-lg border border-destructive/40 bg-destructive/5 p-3 text-xs text-destructive">
             <Info className="mt-0.5 h-4 w-4 shrink-0" />
             <span>
-              Автомобиль занят на выбранные даты{busyUntil ? ` до ${format(busyUntil, "d MMMM yyyy", { locale: ru })}` : ""}.
-              Выберите другой период или похожую модель.
+              Автомобиль занят на выбранные даты
+              {busyUntil ? ` до ${format(busyUntil, "d MMMM yyyy", { locale: ru })}` : ""}. Выберите
+              другой период или похожую модель.
             </span>
           </div>
         )}
@@ -186,7 +191,6 @@ function QuickBody({
           >
             Заказать аренду <ArrowRight className="h-4 w-4" />
           </Button>
-
         </div>
       </div>
     </div>

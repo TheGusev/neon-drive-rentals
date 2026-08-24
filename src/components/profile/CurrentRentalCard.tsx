@@ -7,10 +7,23 @@ import type { Booking, Car } from "@/types/domain";
 import { CarImage } from "@/components/car/CarImage";
 
 const fmt = (iso: string) =>
-  new Date(iso).toLocaleDateString("ru-RU", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" });
+  new Date(iso).toLocaleDateString("ru-RU", {
+    day: "2-digit",
+    month: "short",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
 
-const statusLabel = { signed: "Подписан", pending: "Ожидает подписи", none: "Не оформлен" } as const;
-const statusTone = { signed: "bg-emerald-500/15 text-emerald-600 public-dark:text-emerald-400", pending: "bg-amber-500/15 text-amber-600 public-dark:text-amber-400", none: "bg-muted text-muted-foreground" } as const;
+const statusLabel = {
+  signed: "Подписан",
+  pending: "Ожидает подписи",
+  none: "Не оформлен",
+} as const;
+const statusTone = {
+  signed: "bg-emerald-500/15 text-emerald-600 public-dark:text-emerald-400",
+  pending: "bg-amber-500/15 text-amber-600 public-dark:text-amber-400",
+  none: "bg-muted text-muted-foreground",
+} as const;
 
 export function CurrentRentalCard({ booking, car }: { booking: Booking; car: Car }) {
   const cs = booking.contractStatus ?? "none";
@@ -18,14 +31,24 @@ export function CurrentRentalCard({ booking, car }: { booking: Booking; car: Car
     <SectionCard title="Текущая аренда" className="bg-card ring-1 ring-border">
       <div className="flex gap-4">
         <div className="h-20 w-28 flex-shrink-0 overflow-hidden rounded-2xl bg-muted">
-          <CarImage src={car.image} alt={`${car.brand} ${car.model}`} className="h-full w-full object-cover" />
+          <CarImage
+            src={car.image}
+            alt={`${car.brand} ${car.model}`}
+            className="h-full w-full object-cover"
+          />
         </div>
         <div className="min-w-0 flex-1">
-          <div className="truncate text-base font-semibold text-foreground">{car.brand} {car.model}</div>
-          <div className="text-xs text-muted-foreground">{car.year} · {car.transmission}</div>
+          <div className="truncate text-base font-semibold text-foreground">
+            {car.brand} {car.model}
+          </div>
+          <div className="text-xs text-muted-foreground">
+            {car.year} · {car.transmission}
+          </div>
           <div className="mt-2 flex items-center gap-1.5 text-xs text-muted-foreground">
             <ShieldCheck className="h-3.5 w-3.5" />
-            <Badge className={`${statusTone[cs]} border-0 font-medium`}>Договор: {statusLabel[cs]}</Badge>
+            <Badge className={`${statusTone[cs]} border-0 font-medium`}>
+              Договор: {statusLabel[cs]}
+            </Badge>
           </div>
         </div>
       </div>
@@ -34,8 +57,12 @@ export function CurrentRentalCard({ booking, car }: { booking: Booking; car: Car
         <div className="flex items-start gap-2 text-foreground/80">
           <CalendarDays className="mt-0.5 h-4 w-4 text-muted-foreground" />
           <div>
-            <div>Выдача: <span className="font-medium">{fmt(booking.startDate)}</span></div>
-            <div>Возврат: <span className="font-medium">{fmt(booking.endDate)}</span></div>
+            <div>
+              Выдача: <span className="font-medium">{fmt(booking.startDate)}</span>
+            </div>
+            <div>
+              Возврат: <span className="font-medium">{fmt(booking.endDate)}</span>
+            </div>
           </div>
         </div>
         {booking.pickupAddress && (

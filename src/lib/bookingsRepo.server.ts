@@ -29,7 +29,9 @@ const BOOKING_SYNONYMS: Record<string, BookingStatus> = {
 };
 
 export function normalizeBookingStatus(value: unknown): BookingStatus {
-  const key = String(value ?? "").trim().toLowerCase();
+  const key = String(value ?? "")
+    .trim()
+    .toLowerCase();
   if ((BOOKING_STATUSES as string[]).includes(key)) return key as BookingStatus;
   return BOOKING_SYNONYMS[key] ?? "pending";
 }
@@ -180,10 +182,16 @@ async function syncCarStatus(carDbId: string): Promise<void> {
     [carDbId],
   );
   const next = active.length ? "busy" : "available";
-  await query(`update cars set status = $2 where id = $1 and status in ('available','busy')`, [carDbId, next]);
+  await query(`update cars set status = $2 where id = $1 and status in ('available','busy')`, [
+    carDbId,
+    next,
+  ]);
 }
 
-export async function updateBookingStatusInDb(id: string, status: BookingStatus): Promise<Booking | null> {
+export async function updateBookingStatusInDb(
+  id: string,
+  status: BookingStatus,
+): Promise<Booking | null> {
   if (!hasDatabase()) {
     const found = mockBookings.find((b) => b.id === id);
     return found ? { ...found, status } : null;
@@ -197,10 +205,7 @@ export async function updateBookingStatusInDb(id: string, status: BookingStatus)
   return fetchBookingById(id);
 }
 
-export async function markBookingSigned(
-  id: string,
-  ip: string,
-): Promise<Booking | null> {
+export async function markBookingSigned(id: string, ip: string): Promise<Booking | null> {
   if (!hasDatabase()) return fetchBookingById(id);
   const rows = await query<{ id: string; car_id: string }>(
     `update bookings set status = 'confirmed', signed_at = now(), signature_ip = $2
@@ -211,7 +216,6 @@ export async function markBookingSigned(
   await syncCarStatus(String(rows[0].car_id));
   return fetchBookingById(id);
 }
-
 
 export type CreateBookingInput = {
   carId: string; // public slug
@@ -230,7 +234,6 @@ export type CreateBookingResult =
 
 const BLOCKING = ["pending", "paid", "active"];
 const BLOCKING_DB = ["pending", "confirmed", "active"];
-
 
 export async function insertBooking(input: CreateBookingInput): Promise<CreateBookingResult> {
   if (!hasDatabase()) {

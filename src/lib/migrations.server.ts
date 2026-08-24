@@ -45,7 +45,9 @@ async function apply(): Promise<string[]> {
     for (const migration of MIGRATIONS) {
       if (doneSet.has(migration.name)) continue;
       await query(migration.sql);
-      await query(`insert into schema_migrations (name) values ($1) on conflict do nothing`, [migration.name]);
+      await query(`insert into schema_migrations (name) values ($1) on conflict do nothing`, [
+        migration.name,
+      ]);
       applied.push(migration.name);
     }
   } finally {

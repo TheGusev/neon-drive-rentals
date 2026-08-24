@@ -74,7 +74,10 @@ export function LandingPage({
           <dl className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
             {[
               ["Залог", `${RENTAL_TERMS.deposit.toLocaleString("ru-RU")} ₽`],
-              ["Возраст / стаж", `от ${RENTAL_TERMS.minAge} лет / ${RENTAL_TERMS.minExperience} года`],
+              [
+                "Возраст / стаж",
+                `от ${RENTAL_TERMS.minAge} лет / ${RENTAL_TERMS.minExperience} года`,
+              ],
               ["Пробег", `${RENTAL_TERMS.mileagePerDay} км/сутки`],
               ["Выдача", "ул. Доватора, 11"],
             ].map(([k, v]) => (
@@ -89,7 +92,10 @@ export function LandingPage({
         {bullets && bullets.length > 0 && (
           <ul className="mt-8 grid gap-3 sm:grid-cols-2">
             {bullets.map((b) => (
-              <li key={b} className="flex items-start gap-2 rounded-lg border border-border bg-card p-3 text-sm">
+              <li
+                key={b}
+                className="flex items-start gap-2 rounded-lg border border-border bg-card p-3 text-sm"
+              >
                 <Check className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
                 <span>{b}</span>
               </li>
@@ -152,7 +158,9 @@ export function LandingPage({
                   to={l.to as "/"}
                   className="group rounded-xl border border-border bg-card p-4 transition hover:border-primary"
                 >
-                  <p className="font-display text-sm font-bold group-hover:text-primary">{l.label}</p>
+                  <p className="font-display text-sm font-bold group-hover:text-primary">
+                    {l.label}
+                  </p>
                   {l.hint && <p className="mt-1 text-xs text-muted-foreground">{l.hint}</p>}
                 </Link>
               ))}

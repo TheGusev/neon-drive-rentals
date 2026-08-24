@@ -9,7 +9,10 @@ export function SimilarCars({ car }: { car: Car }) {
   const all = useCars();
   const similar = all
     .filter((c) => c.id !== car.id && c.class === car.class)
-    .sort((a, b) => Math.abs(a.pricePerDay - car.pricePerDay) - Math.abs(b.pricePerDay - car.pricePerDay))
+    .sort(
+      (a, b) =>
+        Math.abs(a.pricePerDay - car.pricePerDay) - Math.abs(b.pricePerDay - car.pricePerDay),
+    )
     .slice(0, 4);
 
   if (!similar.length) return null;
