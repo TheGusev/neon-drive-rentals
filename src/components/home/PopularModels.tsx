@@ -37,9 +37,11 @@ export function PopularModels() {
               <article className="group h-full overflow-hidden rounded-2xl border border-border bg-card transition md:hover:neon-glow">
                 <div className="relative aspect-[4/3] overflow-hidden bg-muted">
                   <img
-                    src={heroCar}
-                    alt={`${car.brand} ${car.model}`}
+                    src={car.image ?? heroCar}
+                    alt={`${car.brand} ${car.model}, ${car.color}`}
                     loading="lazy"
+                    width={1024}
+                    height={768}
                     className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
                   />
                   <div className="absolute left-3 top-3 rounded-md bg-background/80 px-2 py-1 text-xs font-bold uppercase tracking-wider text-foreground backdrop-blur">

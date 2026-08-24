@@ -8,7 +8,6 @@ import dayzGreen from "@/assets/cars/nissan-dayz-green.jpg";
 import dayzGrey from "@/assets/cars/nissan-dayz-grey.jpg";
 import dayzWhite from "@/assets/cars/nissan-dayz-white.jpg";
 import dayzBlack from "@/assets/cars/nissan-dayz-black.jpg";
-import ekWagonBlue from "@/assets/cars/mitsubishi-ek-wagon-blue.jpg";
 import miraEsBlack from "@/assets/cars/daihatsu-mira-es-black.jpg";
 import miraEsWhite from "@/assets/cars/daihatsu-mira-es-white.jpg";
 import moveWhite from "@/assets/cars/daihatsu-move-white.jpg";
