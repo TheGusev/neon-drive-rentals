@@ -22,6 +22,7 @@ import { Route as PublicLoginRouteImport } from './routes/_public.login'
 import { Route as PublicKeiCarsRouteImport } from './routes/_public.kei-cars'
 import { Route as PublicArendaAvtoBezZalogaRouteImport } from './routes/_public.arenda-avto-bez-zaloga'
 import { Route as PublicArendaAvtoBezVoditelyaRouteImport } from './routes/_public.arenda-avto-bez-voditelya'
+import { Route as PublicArendaAvtoBezStazhaRouteImport } from './routes/_public.arenda-avto-bez-stazha'
 import { Route as PublicCarsIndexRouteImport } from './routes/_public.cars.index'
 import { Route as PublicBlogIndexRouteImport } from './routes/_public.blog.index'
 import { Route as AdminAdminIndexRouteImport } from './routes/_admin.admin.index'
@@ -104,6 +105,12 @@ const PublicArendaAvtoBezVoditelyaRoute =
   PublicArendaAvtoBezVoditelyaRouteImport.update({
     id: '/arenda-avto-bez-voditelya',
     path: '/arenda-avto-bez-voditelya',
+    getParentRoute: () => PublicRoute,
+  } as any)
+const PublicArendaAvtoBezStazhaRoute =
+  PublicArendaAvtoBezStazhaRouteImport.update({
+    id: '/arenda-avto-bez-stazha',
+    path: '/arenda-avto-bez-stazha',
     getParentRoute: () => PublicRoute,
   } as any)
 const PublicCarsIndexRoute = PublicCarsIndexRouteImport.update({
@@ -203,6 +210,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/robots.txt': typeof RobotsDottxtRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/arenda-avto-bez-stazha': typeof PublicArendaAvtoBezStazhaRoute
   '/arenda-avto-bez-voditelya': typeof PublicArendaAvtoBezVoditelyaRoute
   '/arenda-avto-bez-zaloga': typeof PublicArendaAvtoBezZalogaRoute
   '/kei-cars': typeof PublicKeiCarsRoute
@@ -234,6 +242,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/robots.txt': typeof RobotsDottxtRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/arenda-avto-bez-stazha': typeof PublicArendaAvtoBezStazhaRoute
   '/arenda-avto-bez-voditelya': typeof PublicArendaAvtoBezVoditelyaRoute
   '/arenda-avto-bez-zaloga': typeof PublicArendaAvtoBezZalogaRoute
   '/kei-cars': typeof PublicKeiCarsRoute
@@ -268,6 +277,7 @@ export interface FileRoutesById {
   '/_public': typeof PublicRouteWithChildren
   '/robots.txt': typeof RobotsDottxtRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/_public/arenda-avto-bez-stazha': typeof PublicArendaAvtoBezStazhaRoute
   '/_public/arenda-avto-bez-voditelya': typeof PublicArendaAvtoBezVoditelyaRoute
   '/_public/arenda-avto-bez-zaloga': typeof PublicArendaAvtoBezZalogaRoute
   '/_public/kei-cars': typeof PublicKeiCarsRoute
@@ -301,6 +311,7 @@ export interface FileRouteTypes {
     | '/'
     | '/robots.txt'
     | '/sitemap.xml'
+    | '/arenda-avto-bez-stazha'
     | '/arenda-avto-bez-voditelya'
     | '/arenda-avto-bez-zaloga'
     | '/kei-cars'
@@ -332,6 +343,7 @@ export interface FileRouteTypes {
     | '/'
     | '/robots.txt'
     | '/sitemap.xml'
+    | '/arenda-avto-bez-stazha'
     | '/arenda-avto-bez-voditelya'
     | '/arenda-avto-bez-zaloga'
     | '/kei-cars'
@@ -365,6 +377,7 @@ export interface FileRouteTypes {
     | '/_public'
     | '/robots.txt'
     | '/sitemap.xml'
+    | '/_public/arenda-avto-bez-stazha'
     | '/_public/arenda-avto-bez-voditelya'
     | '/_public/arenda-avto-bez-zaloga'
     | '/_public/kei-cars'
@@ -495,6 +508,13 @@ declare module '@tanstack/react-router' {
       path: '/arenda-avto-bez-voditelya'
       fullPath: '/arenda-avto-bez-voditelya'
       preLoaderRoute: typeof PublicArendaAvtoBezVoditelyaRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/arenda-avto-bez-stazha': {
+      id: '/_public/arenda-avto-bez-stazha'
+      path: '/arenda-avto-bez-stazha'
+      fullPath: '/arenda-avto-bez-stazha'
+      preLoaderRoute: typeof PublicArendaAvtoBezStazhaRouteImport
       parentRoute: typeof PublicRoute
     }
     '/_public/cars/': {
@@ -649,6 +669,7 @@ const AdminRouteChildren: AdminRouteChildren = {
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
 interface PublicRouteChildren {
+  PublicArendaAvtoBezStazhaRoute: typeof PublicArendaAvtoBezStazhaRoute
   PublicArendaAvtoBezVoditelyaRoute: typeof PublicArendaAvtoBezVoditelyaRoute
   PublicArendaAvtoBezZalogaRoute: typeof PublicArendaAvtoBezZalogaRoute
   PublicKeiCarsRoute: typeof PublicKeiCarsRoute
@@ -668,6 +689,7 @@ interface PublicRouteChildren {
 }
 
 const PublicRouteChildren: PublicRouteChildren = {
+  PublicArendaAvtoBezStazhaRoute: PublicArendaAvtoBezStazhaRoute,
   PublicArendaAvtoBezVoditelyaRoute: PublicArendaAvtoBezVoditelyaRoute,
   PublicArendaAvtoBezZalogaRoute: PublicArendaAvtoBezZalogaRoute,
   PublicKeiCarsRoute: PublicKeiCarsRoute,
