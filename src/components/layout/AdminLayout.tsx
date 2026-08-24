@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/sidebar";
 import { LayoutDashboard, Car, CalendarCheck, Users, Wallet, Settings } from "lucide-react";
 import { AdminHeader } from "@/components/admin/AdminHeader";
+import { AdminTabBar } from "@/components/admin/AdminTabBar";
 import { ThemeProvider, useTheme } from "@/components/layout/ThemeProvider";
 
 const items = [
