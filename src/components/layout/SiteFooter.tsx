@@ -1,5 +1,16 @@
 import { Link } from "@tanstack/react-router";
-import { ChevronRight, Clock, Mail, MapPin, MessageCircle, Phone, Send } from "lucide-react";
+import {
+  ChevronRight,
+  Clock,
+  FileText,
+  Lock,
+  Mail,
+  MapPin,
+  MessageCircle,
+  Phone,
+  Send,
+  ShieldCheck,
+} from "lucide-react";
 import { CONTACTS, LEGAL } from "@/lib/contacts";
 import { useHydrated } from "@/hooks/useHydrated";
 
@@ -22,6 +33,7 @@ const sections = [
 ];
 
 const headingClass = "font-display text-sm font-bold uppercase tracking-widest text-foreground";
+const plateClass = "dash-btn font-semibold text-foreground hover:text-accent";
 
 export function SiteFooter() {
   const hydrated = useHydrated();
@@ -30,31 +42,83 @@ export function SiteFooter() {
   return (
     <footer className="border-t border-border/60 bg-card/40">
       <div className="road-line road-line-run w-full opacity-60" />
-      <div className="mx-auto grid w-full max-w-7xl gap-8 px-4 py-10 md:grid-cols-2 md:px-6 md:py-12 lg:grid-cols-[1.05fr_1.7fr_1fr_1.15fr] lg:gap-10">
-        <div className="min-w-0">
-          <h2 className={headingClass}>О компании</h2>
-          <div className="mt-3 space-y-2">
-            <p className="font-display text-xl font-black tracking-widest">NSK-RENT</p>
-            <p className="text-sm text-muted-foreground">
-              Прокат японских кей-каров в Новосибирске. Пункт выдачи — ул. Доватора, 11, договор онлайн.
-            </p>
-            <p className="flex items-start gap-2 text-sm text-muted-foreground">
-              <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-accent" />
-              <span className="min-w-0">{CONTACTS.address} · {CONTACTS.city}</span>
-            </p>
-            <p className="flex items-start gap-2 text-sm text-muted-foreground">
-              <Clock className="mt-0.5 h-4 w-4 shrink-0 text-accent" />
-              <span className="min-w-0">{CONTACTS.hours}</span>
-            </p>
+
+      <div className="mx-auto w-full max-w-7xl space-y-8 px-4 py-10 md:px-6 md:py-12">
+        {/* Row 1: company / contacts / legal entity */}
+        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+          <div className="min-w-0">
+            <h2 className={headingClass}>О компании</h2>
+            <div className="mt-3 space-y-2">
+              <p className="font-display text-xl font-black tracking-widest">NSK-RENT</p>
+              <p className="text-sm text-muted-foreground">
+                Прокат японских кей-каров в Новосибирске. Пункт выдачи — ул. Доватора, 11, договор онлайн.
+              </p>
+              <p className="flex items-start gap-2 text-sm text-muted-foreground">
+                <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-accent" />
+                <span className="min-w-0">{CONTACTS.address} · {CONTACTS.city}</span>
+              </p>
+              <p className="flex items-start gap-2 text-sm text-muted-foreground">
+                <Clock className="mt-0.5 h-4 w-4 shrink-0 text-accent" />
+                <span className="min-w-0">{CONTACTS.hours}</span>
+              </p>
+            </div>
+          </div>
+
+          <div className="min-w-0">
+            <h2 className={headingClass}>Контакты</h2>
+            <ul className="mt-3 grid gap-2 sm:grid-cols-2">
+              <li className="min-w-0">
+                <a href={CONTACTS.phoneHref} className={plateClass}>
+                  <Phone className="h-4 w-4 shrink-0 text-accent" />
+                  <span className="min-w-0 truncate">{CONTACTS.phone}</span>
+                </a>
+              </li>
+              <li className="min-w-0">
+                <a href={CONTACTS.emailHref} className={plateClass}>
+                  <Mail className="h-4 w-4 shrink-0 text-accent" />
+                  <span className="min-w-0 truncate">{CONTACTS.email}</span>
+                </a>
+              </li>
+              <li className="min-w-0">
+                <a href={CONTACTS.telegram} target="_blank" rel="noreferrer" className={plateClass}>
+                  <Send className="h-4 w-4 shrink-0 text-accent" />
+                  <span className="min-w-0 truncate">Telegram</span>
+                </a>
+              </li>
+              <li className="min-w-0">
+                <a href={CONTACTS.whatsapp} target="_blank" rel="noreferrer" className={plateClass}>
+                  <MessageCircle className="h-4 w-4 shrink-0 text-accent" />
+                  <span className="min-w-0 truncate">WhatsApp</span>
+                </a>
+              </li>
+              <li className="min-w-0 sm:col-span-2">
+                <a href={CONTACTS.max} target="_blank" rel="noreferrer" className={plateClass}>
+                  <MessageCircle className="h-4 w-4 shrink-0 text-accent" />
+                  <span className="min-w-0 truncate">{CONTACTS.maxLabel}</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <div className="min-w-0">
+            <h2 className={headingClass}>Реквизиты</h2>
+            <address className="mt-3 space-y-1.5 text-sm not-italic leading-relaxed text-muted-foreground">
+              <p>{LEGAL.entity}</p>
+              <p>{LEGAL.inn}</p>
+              <p>{LEGAL.ogrnip}</p>
+              <p>{LEGAL.registrationAddress}</p>
+              <p>{LEGAL.address}</p>
+            </address>
           </div>
         </div>
 
+        {/* Row 2: sections as a compact plate grid */}
         <nav aria-label="Разделы сайта" className="min-w-0">
           <h2 className={headingClass}>Разделы</h2>
-          <ul className="mt-3 grid gap-2 sm:grid-cols-2">
+          <ul className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-5">
             {sections.map((s) => (
               <li key={s.to} className="min-w-0">
-                <Link to={s.to} className="dash-btn font-semibold text-foreground hover:text-accent">
+                <Link to={s.to} className={plateClass}>
                   <ChevronRight className="h-3.5 w-3.5 shrink-0 text-accent" />
                   <span className="min-w-0 truncate">{s.label}</span>
                 </Link>
@@ -63,61 +127,21 @@ export function SiteFooter() {
           </ul>
         </nav>
 
+        {/* Row 3: documents and staff access */}
         <div className="min-w-0">
-          <h2 className={headingClass}>Контакты</h2>
-          <ul className="mt-3 grid gap-2">
-            <li className="min-w-0">
-              <a href={CONTACTS.phoneHref} className="dash-btn font-semibold text-foreground hover:text-accent">
-                <Phone className="h-4 w-4 shrink-0 text-accent" />
-                <span className="min-w-0 truncate">{CONTACTS.phone}</span>
-              </a>
-            </li>
-            <li className="min-w-0">
-              <a href={CONTACTS.emailHref} className="dash-btn font-semibold text-foreground hover:text-accent">
-                <Mail className="h-4 w-4 shrink-0 text-accent" />
-                <span className="min-w-0 truncate">{CONTACTS.email}</span>
-              </a>
-            </li>
-            <li className="min-w-0">
-              <a href={CONTACTS.telegram} target="_blank" rel="noreferrer" className="dash-btn font-semibold text-foreground hover:text-accent">
-                <Send className="h-4 w-4 shrink-0 text-accent" />
-                <span className="min-w-0 truncate">Telegram {CONTACTS.telegramLabel}</span>
-              </a>
-            </li>
-            <li className="min-w-0">
-              <a href={CONTACTS.whatsapp} target="_blank" rel="noreferrer" className="dash-btn font-semibold text-foreground hover:text-accent">
-                <MessageCircle className="h-4 w-4 shrink-0 text-accent" />
-                <span className="min-w-0 truncate">WhatsApp {CONTACTS.whatsappLabel}</span>
-              </a>
-            </li>
-            <li className="min-w-0">
-              <a href={CONTACTS.max} target="_blank" rel="noreferrer" className="dash-btn font-semibold text-foreground hover:text-accent">
-                <MessageCircle className="h-4 w-4 shrink-0 text-accent" />
-                <span className="min-w-0 truncate">{CONTACTS.maxLabel}</span>
-              </a>
-            </li>
-          </ul>
-        </div>
-
-        <div className="min-w-0">
-          <h2 className={headingClass}>Реквизиты</h2>
-          <address className="mt-3 space-y-1.5 text-sm not-italic leading-relaxed text-muted-foreground">
-            <p>{LEGAL.entity}</p>
-            <p>{LEGAL.inn}</p>
-            <p>{LEGAL.ogrnip}</p>
-            <p>{LEGAL.registrationAddress}</p>
-            <p>{LEGAL.address}</p>
-          </address>
-
-          <div className="mt-4 grid gap-2">
-            <Link to="/privacy" className="dash-chip justify-center text-muted-foreground hover:text-accent">
-              Политика конфиденциальности
+          <h2 className={headingClass}>Документы и доступ</h2>
+          <div className="mt-3 grid gap-2 sm:grid-cols-3">
+            <Link to="/privacy" className={plateClass}>
+              <ShieldCheck className="h-4 w-4 shrink-0 text-accent" />
+              <span className="min-w-0 truncate">Политика конфиденциальности</span>
             </Link>
-            <Link to="/terms" className="dash-chip justify-center text-muted-foreground hover:text-accent">
-              Пользовательское соглашение
+            <Link to="/terms" className={plateClass}>
+              <FileText className="h-4 w-4 shrink-0 text-accent" />
+              <span className="min-w-0 truncate">Пользовательское соглашение</span>
             </Link>
-            <Link to="/admin/login" rel="nofollow" className="dash-chip justify-center text-muted-foreground/70 hover:text-accent">
-              Вход для сотрудников
+            <Link to="/admin/login" rel="nofollow" className={plateClass}>
+              <Lock className="h-4 w-4 shrink-0 text-accent" />
+              <span className="min-w-0 truncate">Вход для сотрудников</span>
             </Link>
           </div>
         </div>
