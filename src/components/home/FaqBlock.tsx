@@ -1,6 +1,7 @@
 import { useState } from "react";
+import * as AccordionPrimitive from "@radix-ui/react-accordion";
 import { ChevronDown, HelpCircle } from "lucide-react";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { Accordion, AccordionContent, AccordionItem } from "@/components/ui/accordion";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { faqItems, type FaqItem } from "@/mocks/faq";
