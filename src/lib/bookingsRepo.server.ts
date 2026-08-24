@@ -29,7 +29,9 @@ const BOOKING_SYNONYMS: Record<string, BookingStatus> = {
 };
 
 export function normalizeBookingStatus(value: unknown): BookingStatus {
-  const key = String(value ?? "").trim().toLowerCase();
+  const key = String(value ?? "")
+    .trim()
+    .toLowerCase();
   if ((BOOKING_STATUSES as string[]).includes(key)) return key as BookingStatus;
   return BOOKING_SYNONYMS[key] ?? "pending";
 }
@@ -59,8 +61,22 @@ const SELECT_BOOKINGS = `
 
 /** Availability-only view: no client ids, no amounts. Safe for public pages. */
 export async function fetchPublicBookings(): Promise<Booking[]> {
-  const list = await fetchBookings();
-  return list.map((b) => ({ ...b, clientId: "", totalPrice: 0 }));
+  if (!hasDatabase()) return [];
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  try {
+    const timeout = new Promise<Booking[]>((resolve) => {
+      timer = setTimeout(() => resolve([]), 4_500);
+    });
+    const task = query<BookingRow>(`${SELECT_BOOKINGS} order by b.date_from desc`).then((rows) =>
+      rows.map(mapBookingRow).map((booking) => ({ ...booking, clientId: "", totalPrice: 0 })),
+    );
+    return await Promise.race([task, timeout]);
+  } catch (error) {
+    console.error("[public-data] bookings failed; serving empty availability", error);
+    return [];
+  } finally {
+    if (timer) clearTimeout(timer);
+  }
 }
 
 export async function fetchBookings(): Promise<Booking[]> {
@@ -166,10 +182,16 @@ async function syncCarStatus(carDbId: string): Promise<void> {
     [carDbId],
   );
   const next = active.length ? "busy" : "available";
-  await query(`update cars set status = $2 where id = $1 and status in ('available','busy')`, [carDbId, next]);
+  await query(`update cars set status = $2 where id = $1 and status in ('available','busy')`, [
+    carDbId,
+    next,
+  ]);
 }
 
-export async function updateBookingStatusInDb(id: string, status: BookingStatus): Promise<Booking | null> {
+export async function updateBookingStatusInDb(
+  id: string,
+  status: BookingStatus,
+): Promise<Booking | null> {
   if (!hasDatabase()) {
     const found = mockBookings.find((b) => b.id === id);
     return found ? { ...found, status } : null;
@@ -183,10 +205,7 @@ export async function updateBookingStatusInDb(id: string, status: BookingStatus)
   return fetchBookingById(id);
 }
 
-export async function markBookingSigned(
-  id: string,
-  ip: string,
-): Promise<Booking | null> {
+export async function markBookingSigned(id: string, ip: string): Promise<Booking | null> {
   if (!hasDatabase()) return fetchBookingById(id);
   const rows = await query<{ id: string; car_id: string }>(
     `update bookings set status = 'confirmed', signed_at = now(), signature_ip = $2
@@ -197,7 +216,6 @@ export async function markBookingSigned(
   await syncCarStatus(String(rows[0].car_id));
   return fetchBookingById(id);
 }
-
 
 export type CreateBookingInput = {
   carId: string; // public slug
@@ -216,7 +234,6 @@ export type CreateBookingResult =
 
 const BLOCKING = ["pending", "paid", "active"];
 const BLOCKING_DB = ["pending", "confirmed", "active"];
-
 
 export async function insertBooking(input: CreateBookingInput): Promise<CreateBookingResult> {
   if (!hasDatabase()) {

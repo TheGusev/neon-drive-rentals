@@ -4,7 +4,13 @@ import { format, parseISO } from "date-fns";
 import { ru } from "date-fns/locale";
 import { AlertTriangle, Calendar, MapPin, Shield } from "lucide-react";
 
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -13,6 +19,7 @@ import { getTariff } from "@/mocks/tariffs";
 import { calcPrice, formatRub } from "@/lib/bookingDraft";
 import { getConflictingBookings } from "@/lib/availability";
 import { useBookings } from "@/state/AppDataContext";
+import { CarImage } from "@/components/car/CarImage";
 
 interface Props {
   open: boolean;
@@ -24,7 +31,15 @@ interface Props {
   onClose: () => void;
 }
 
-export function BookingConfirmDialog({ open, car, from, to, tariff, locationLabel, onClose }: Props) {
+export function BookingConfirmDialog({
+  open,
+  car,
+  from,
+  to,
+  tariff,
+  locationLabel,
+  onClose,
+}: Props) {
   const [agree, setAgree] = useState(false);
   const navigate = useNavigate();
   const bookings = useBookings();
@@ -72,7 +87,11 @@ export function BookingConfirmDialog({ open, car, from, to, tariff, locationLabe
         {car && price && tariffInfo && (
           <div className="flex max-h-[85vh] flex-col overflow-y-auto">
             <div className="relative aspect-[16/8] w-full bg-muted">
-              <img src={car.image} alt={`${car.brand} ${car.model}`} className="h-full w-full object-cover" />
+              <CarImage
+                src={car.image}
+                alt={`${car.brand} ${car.model}`}
+                className="h-full w-full object-cover"
+              />
               <div className="absolute inset-0 bg-gradient-to-t from-background/95 via-background/20 to-transparent" />
               <div className="absolute bottom-3 left-4 right-4">
                 <Badge variant="secondary" className="mb-1 uppercase tracking-wider">
@@ -86,8 +105,12 @@ export function BookingConfirmDialog({ open, car, from, to, tariff, locationLabe
 
             <div className="space-y-4 p-5 md:p-6">
               <DialogHeader className="sr-only">
-                <DialogTitle>Подтверждение бронирования {car.brand} {car.model}</DialogTitle>
-                <DialogDescription>Проверьте детали и итоговую стоимость перед подтверждением.</DialogDescription>
+                <DialogTitle>
+                  Подтверждение бронирования {car.brand} {car.model}
+                </DialogTitle>
+                <DialogDescription>
+                  Проверьте детали и итоговую стоимость перед подтверждением.
+                </DialogDescription>
               </DialogHeader>
 
               <div className="grid grid-cols-2 gap-3 text-sm">
@@ -101,7 +124,11 @@ export function BookingConfirmDialog({ open, car, from, to, tariff, locationLabe
                   label="Срок"
                   value={`${price.days} ${plural(price.days, ["сутки", "суток", "суток"])}`}
                 />
-                <InfoRow icon={MapPin} label="Место" value={locationLabel ?? "Уточним при оформлении"} />
+                <InfoRow
+                  icon={MapPin}
+                  label="Место"
+                  value={locationLabel ?? "Уточним при оформлении"}
+                />
                 <InfoRow icon={Shield} label="Тариф" value={tariffInfo.title} />
               </div>
 
@@ -112,8 +139,12 @@ export function BookingConfirmDialog({ open, car, from, to, tariff, locationLabe
                 />
                 <Row label="Залог (возвращается)" value={formatRub(price.deposit)} muted />
                 <div className="mt-3 flex items-baseline justify-between border-t border-border/60 pt-3">
-                  <span className="text-xs uppercase tracking-widest text-muted-foreground">Итого к оплате</span>
-                  <span className="font-display text-2xl font-black text-primary">{formatRub(price.total)}</span>
+                  <span className="text-xs uppercase tracking-widest text-muted-foreground">
+                    Итого к оплате
+                  </span>
+                  <span className="font-display text-2xl font-black text-primary">
+                    {formatRub(price.total)}
+                  </span>
                 </div>
               </div>
 
@@ -161,7 +192,15 @@ export function BookingConfirmDialog({ open, car, from, to, tariff, locationLabe
   );
 }
 
-function InfoRow({ icon: Icon, label, value }: { icon: typeof Calendar; label: string; value: string }) {
+function InfoRow({
+  icon: Icon,
+  label,
+  value,
+}: {
+  icon: typeof Calendar;
+  label: string;
+  value: string;
+}) {
   return (
     <div className="rounded-lg border border-border bg-card/60 p-3">
       <div className="flex items-center gap-1.5 text-[10px] uppercase tracking-wider text-muted-foreground">

@@ -16,7 +16,7 @@ import { useCoarsePointer } from "@/hooks/useCoarsePointer";
 import { useHydrated } from "@/hooks/useHydrated";
 import { usePrefetchCar } from "@/hooks/usePrefetchCar";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
-
+import { CarImage } from "@/components/car/CarImage";
 
 /**
  * "Гараж" — NFS-style car picker: benefit tiles on the side,
@@ -104,90 +104,96 @@ export function GarageShowcase({ compact = false }: { compact?: boolean }) {
     el.scrollBy({ left: dir * (step + 12), behavior: reducedMotion ? "auto" : "smooth" });
   };
 
-
   return (
     <TooltipProvider delayDuration={150}>
-    <section ref={sectionRef} aria-label="Гараж — выбор автомобиля" className="relative">
+      <section ref={sectionRef} aria-label="Гараж — выбор автомобиля" className="relative">
+        <div className={cn("mx-auto w-full max-w-7xl px-4 md:px-6", compact && "px-4")}>
+          <div className="flex items-end justify-between gap-3">
+            <div className="min-w-0">
+              <p className="text-[10px] uppercase tracking-[0.5em] text-[color:var(--neon-blue)]">
+                Garage · 車庫
+              </p>
+              <h2 className="mt-0.5 font-display text-xl font-black uppercase tracking-widest text-foreground md:text-3xl">
+                Гараж <span className="text-[color:var(--neon-blue)]">выбора</span>
+              </h2>
+              <p className="mt-1 text-xs text-foreground/75 md:text-sm">
+                {available.length} авто свободно · выберите машину и посмотрите цену
+              </p>
+            </div>
+            <div className="flex shrink-0 items-center gap-1.5">
+              <Button
+                size="icon"
+                variant="outline"
+                aria-label="Влево"
+                onClick={() => scrollByCards(-1)}
+                className="h-9 w-9 border-border/70 bg-background/60 backdrop-blur hover:border-accent"
+              >
+                <ChevronLeft className="h-4 w-4" />
+              </Button>
+              <Button
+                size="icon"
+                variant="outline"
+                aria-label="Вправо"
+                onClick={() => scrollByCards(1)}
+                className="h-9 w-9 border-border/70 bg-background/60 backdrop-blur hover:border-accent"
+              >
+                <ChevronRight className="h-4 w-4" />
+              </Button>
+              <Button
+                asChild
+                variant="ghost"
+                size="sm"
+                className="ml-1 gap-1 text-accent hover:text-accent"
+              >
+                <Link to="/cars">
+                  Все <ArrowRight className="h-3.5 w-3.5" />
+                </Link>
+              </Button>
+            </div>
+          </div>
 
-      <div className={cn("mx-auto w-full max-w-7xl px-4 md:px-6", compact && "px-4")}>
-        <div className="flex items-end justify-between gap-3">
+          <div className="road-line road-line-run mt-3 w-full opacity-70" />
+        </div>
+
+        <div className="mx-auto mt-4 grid w-full max-w-7xl gap-4 px-4 md:px-6 xl:grid-cols-[280px_minmax(0,1fr)] xl:gap-6">
+          <NfsSideMenu animate={entered} className="hidden xl:flex" />
+          <NfsSideMenu
+            animate={entered}
+            orientation="horizontal"
+            className="-mx-4 px-4 xl:hidden"
+          />
+
           <div className="min-w-0">
-            <p className="text-[10px] uppercase tracking-[0.5em] text-[color:var(--neon-blue)]">Garage · 車庫</p>
-            <h2
-              className="mt-0.5 font-display text-xl font-black uppercase tracking-widest text-foreground md:text-3xl"
-            >
-              Гараж <span className="text-[color:var(--neon-blue)]">выбора</span>
-            </h2>
-            <p className="mt-1 text-xs text-foreground/75 md:text-sm">
-              {available.length} авто свободно · выберите машину и посмотрите цену
-            </p>
-          </div>
-          <div className="flex shrink-0 items-center gap-1.5">
-            <Button
-              size="icon"
-              variant="outline"
-              aria-label="Влево"
-              onClick={() => scrollByCards(-1)}
-              className="h-9 w-9 border-border/70 bg-background/60 backdrop-blur hover:border-accent"
-            >
-              <ChevronLeft className="h-4 w-4" />
-            </Button>
-            <Button
-              size="icon"
-              variant="outline"
-              aria-label="Вправо"
-              onClick={() => scrollByCards(1)}
-              className="h-9 w-9 border-border/70 bg-background/60 backdrop-blur hover:border-accent"
-            >
-              <ChevronRight className="h-4 w-4" />
-            </Button>
-            <Button asChild variant="ghost" size="sm" className="ml-1 gap-1 text-accent hover:text-accent">
-              <Link to="/cars">
-                Все <ArrowRight className="h-3.5 w-3.5" />
-              </Link>
-            </Button>
-          </div>
-        </div>
-
-        <div className="road-line road-line-run mt-3 w-full opacity-70" />
-      </div>
-
-      <div className="mx-auto mt-4 grid w-full max-w-7xl gap-4 px-4 md:px-6 xl:grid-cols-[280px_minmax(0,1fr)] xl:gap-6">
-        <NfsSideMenu animate={entered} className="hidden xl:flex" />
-        <NfsSideMenu animate={entered} orientation="horizontal" className="-mx-4 px-4 xl:hidden" />
-
-        <div className="min-w-0">
-          <div
-            ref={stripRef}
-            onScroll={sync}
-            className="garage-strip no-scrollbar -mx-4 flex gap-3 overflow-x-auto px-4 pb-3 pt-1 md:-mx-6 md:px-6"
-          >
-            {garageCars.map((car, i) => (
-              <GarageCard
-                key={car.id}
-                car={car}
-                index={i}
-                entered={entered}
-                active={i === active}
-                onQuickView={() => setQuickCar(car)}
-              />
-            ))}
-          </div>
-
-          {/* Dashboard-like position indicator */}
-          <div className="mt-1 h-[3px] w-full overflow-hidden rounded-full bg-border/60">
             <div
-              className="h-full w-[28%] origin-left rounded-full bg-[color:var(--neon-blue)] shadow-[0_0_12px_var(--neon-blue)] transition-transform duration-300 ease-out will-change-transform"
-              style={{ transform: `translateX(${(progress * 72 * 100) / 28}%)` }}
-            />
+              ref={stripRef}
+              onScroll={sync}
+              className="garage-strip no-scrollbar -mx-4 flex gap-3 overflow-x-auto px-4 pb-3 pt-1 md:-mx-6 md:px-6"
+            >
+              {garageCars.map((car, i) => (
+                <GarageCard
+                  key={car.id}
+                  car={car}
+                  index={i}
+                  entered={entered}
+                  active={i === active}
+                  onQuickView={() => setQuickCar(car)}
+                />
+              ))}
+            </div>
+
+            {/* Dashboard-like position indicator */}
+            <div className="mt-1 h-[3px] w-full overflow-hidden rounded-full bg-border/60">
+              <div
+                className="h-full w-[28%] origin-left rounded-full bg-[color:var(--neon-blue)] shadow-[0_0_12px_var(--neon-blue)] transition-transform duration-300 ease-out will-change-transform"
+                style={{ transform: `translateX(${(progress * 72 * 100) / 28}%)` }}
+              />
+            </div>
           </div>
         </div>
-      </div>
 
-      <CarQuickView car={quickCar} onClose={() => setQuickCar(null)} />
-    </section>
+        <CarQuickView car={quickCar} onClose={() => setQuickCar(null)} />
+      </section>
     </TooltipProvider>
-
   );
 }
 
@@ -250,12 +256,12 @@ function GarageCard({
         !free && "grayscale-[0.35]",
       )}
     >
-
       <div className="relative flex-1 overflow-hidden bg-muted">
-        <img
+        <CarImage
           src={car.image}
           alt={`${car.brand} ${car.model} — аренда в Новосибирске`}
-          loading="eager"
+          loading={index === 0 ? "eager" : "lazy"}
+          fetchPriority={index === 0 ? "high" : "auto"}
           decoding="async"
           width={320}
           height={250}
@@ -283,7 +289,6 @@ function GarageCard({
           }}
           className="absolute right-2 top-2 grid h-7 w-7 place-items-center rounded-md border border-border/60 bg-background/75 text-foreground backdrop-blur transition hover:border-accent hover:text-[color:var(--neon-blue)]"
         >
-
           <Eye className="h-3.5 w-3.5" />
         </button>
       </div>
@@ -303,7 +308,6 @@ function GarageCard({
       </div>
     </Link>
   );
-
 
   // На сенсорных устройствах подсказки не показываем — они перекрывали контент при скролле.
   if (coarse) return card;
@@ -352,4 +356,3 @@ function GarageCard({
     </Tooltip>
   );
 }
-

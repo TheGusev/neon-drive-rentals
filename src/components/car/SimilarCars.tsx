@@ -2,13 +2,17 @@ import { Link } from "@tanstack/react-router";
 import type { Car } from "@/types/domain";
 import { useCars } from "@/state/AppDataContext";
 import heroCar from "@/assets/hero-car.jpg";
+import { CarImage } from "@/components/car/CarImage";
 
 /** Перелинковка: 3–4 авто того же класса, исключая текущее. */
 export function SimilarCars({ car }: { car: Car }) {
   const all = useCars();
   const similar = all
     .filter((c) => c.id !== car.id && c.class === car.class)
-    .sort((a, b) => Math.abs(a.pricePerDay - car.pricePerDay) - Math.abs(b.pricePerDay - car.pricePerDay))
+    .sort(
+      (a, b) =>
+        Math.abs(a.pricePerDay - car.pricePerDay) - Math.abs(b.pricePerDay - car.pricePerDay),
+    )
     .slice(0, 4);
 
   if (!similar.length) return null;
@@ -27,8 +31,9 @@ export function SimilarCars({ car }: { car: Car }) {
             className="group overflow-hidden rounded-2xl border border-border bg-card transition hover:border-accent"
           >
             <div className="aspect-[4/3] overflow-hidden bg-muted">
-              <img
+              <CarImage
                 src={c.image ?? heroCar}
+                fallbackSrc={heroCar}
                 alt={`Аренда ${c.brand} ${c.model} ${c.year}, ${c.color}, в Новосибирске`}
                 loading="lazy"
                 width={1024}

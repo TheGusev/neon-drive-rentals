@@ -44,16 +44,88 @@ function toSpecs(value: unknown): Specs {
 }
 
 function toImages(value: unknown): string[] {
-  if (Array.isArray(value)) return value.filter((v): v is string => typeof v === "string" && v.length > 0);
+  if (Array.isArray(value))
+    return value.filter((v): v is string => typeof v === "string" && v.length > 0);
   if (typeof value === "string" && value.trim()) {
     try {
       const parsed = JSON.parse(value);
       if (Array.isArray(parsed)) return parsed.filter((v): v is string => typeof v === "string");
     } catch {
-      return value.split(",").map((s) => s.trim()).filter(Boolean);
+      return value
+        .split(",")
+        .map((s) => s.trim())
+        .filter(Boolean);
     }
   }
   return [];
+}
+
+const STABLE_IMAGE_BY_SLUG: Record<string, string> = {
+  "honda-n-wgn-grey-1": "/assets/cars/honda-n-wgn-grey.jpg",
+  "honda-n-wgn-blue-1": "/assets/cars/real/honda-n-wgn-blue-real.jpg",
+  "honda-n-wgn-blue-2": "/assets/cars/honda-n-wgn-blue.jpg",
+  "honda-n-wgn-black-1": "/assets/cars/honda-n-wgn-black.jpg",
+  "nissan-dayz-green-1": "/assets/cars/nissan-dayz-green.jpg",
+  "nissan-dayz-brown-1": "/assets/cars/real/nissan-dayz-brown-real.jpg",
+  "mitsubishi-ek-wagon-blue-1": "/assets/cars/real/mitsubishi-ek-wagon-black-real.jpg",
+  "daihatsu-mira-es-black-1": "/assets/cars/daihatsu-mira-es-black.jpg",
+  "nissan-dayz-grey-1": "/assets/cars/nissan-dayz-grey.jpg",
+  "nissan-dayz-white-1": "/assets/cars/nissan-dayz-white.jpg",
+  "daihatsu-move-white-1": "/assets/cars/daihatsu-move-white.jpg",
+  "honda-n-wgn-white-1": "/assets/cars/honda-n-wgn-white.jpg",
+  "honda-n-wgn-turbo-white-1": "/assets/cars/honda-n-wgn-turbo-white.jpg",
+  "honda-n-wgn-white-2": "/assets/cars/real/honda-n-wgn-white-real.jpg",
+  "nissan-dayz-grey-2": "/assets/cars/nissan-dayz-grey.jpg",
+  "honda-n-box-black-1": "/assets/cars/real/honda-n-box-black-real-3.jpg",
+  "nissan-dayz-black-1": "/assets/cars/real/nissan-dayz-black-real.jpg",
+  "daihatsu-mira-white-1": "/assets/cars/daihatsu-mira-white.jpg",
+  "suzuki-alto-white-1": "/assets/cars/suzuki-alto-white.jpg",
+  "daihatsu-mira-es-white-1": "/assets/cars/daihatsu-mira-es-white.jpg",
+  "suzuki-alto-white-2": "/assets/cars/suzuki-alto-works.jpg",
+  "honda-n-wgn-grey-2": "/assets/cars/honda-n-wgn-grey-2018.jpg",
+  "honda-n-wgn-blue": "/assets/cars/real/honda-n-wgn-blue-real.jpg",
+  "honda-n-wgn-black": "/assets/cars/honda-n-wgn-black.jpg",
+  "honda-n-wgn-white": "/assets/cars/honda-n-wgn-white.jpg",
+  "honda-n-wgn-turbo-white": "/assets/cars/honda-n-wgn-turbo-white.jpg",
+  "nissan-dayz-green": "/assets/cars/nissan-dayz-green.jpg",
+  "nissan-dayz-brown": "/assets/cars/real/nissan-dayz-brown-real.jpg",
+  "nissan-dayz-grey": "/assets/cars/nissan-dayz-grey.jpg",
+  "nissan-dayz-white-2": "/assets/cars/nissan-dayz-highway-star-white.jpg",
+  "nissan-dayz-black": "/assets/cars/real/nissan-dayz-black-real.jpg",
+  "mitsubishi-ek-wagon-blue": "/assets/cars/real/mitsubishi-ek-wagon-black-real.jpg",
+  "daihatsu-mira-es-black-2": "/assets/cars/daihatsu-mira-es-black-2018.jpg",
+  "daihatsu-mira-es-white": "/assets/cars/daihatsu-mira-es-white.jpg",
+  "daihatsu-move-white": "/assets/cars/daihatsu-move-white.jpg",
+  "honda-n-box-black": "/assets/cars/real/honda-n-box-black-real-3.jpg",
+  "daihatsu-mira-white": "/assets/cars/daihatsu-mira-white.jpg",
+  "suzuki-alto-white": "/assets/cars/suzuki-alto-white.jpg",
+  "honda-n-wgn-black-2": "/assets/cars/honda-n-wgn-black-2020.jpg",
+};
+
+const isStableAssetUrl = (url: string) =>
+  url.startsWith("/assets/cars/") || url.startsWith("http://") || url.startsWith("https://");
+
+function normalizedImages(slug: string, value: unknown): string[] {
+  const fallback = STABLE_IMAGE_BY_SLUG[slug];
+  const valid = toImages(value).filter(isStableAssetUrl);
+  return Array.from(new Set(fallback ? [fallback, ...valid] : valid));
+}
+
+async function withPublicFallback<T>(label: string, task: Promise<T>, fallback: T): Promise<T> {
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  try {
+    const timeout = new Promise<T>((resolve) => {
+      timer = setTimeout(() => resolve(fallback), 4_500);
+    });
+    const result = await Promise.race([task, timeout]);
+    if (result === fallback) console.error(`[public-data] ${label} timed out; serving fallback`);
+    return result;
+  } catch (error) {
+    console.error(`[public-data] ${label} failed; serving fallback`, error);
+    return fallback;
+  } finally {
+    if (timer) clearTimeout(timer);
+  }
 }
 
 const FLEET_STATUSES: CarFleetStatus[] = ["free", "busy", "maintenance"];
@@ -68,7 +140,9 @@ const FLEET_SYNONYMS: Record<string, CarFleetStatus> = {
 };
 
 export function normalizeFleetStatus(value: unknown): CarFleetStatus {
-  const key = String(value ?? "").trim().toLowerCase();
+  const key = String(value ?? "")
+    .trim()
+    .toLowerCase();
   if ((FLEET_STATUSES as string[]).includes(key)) return key as CarFleetStatus;
   return FLEET_SYNONYMS[key] ?? "free";
 }
@@ -77,21 +151,25 @@ const CAR_CLASSES: CarClass[] = ["econom", "sport", "premium"];
 const TRANSMISSIONS: Transmission[] = ["AT", "MT", "CVT"];
 
 function normalizeClass(value: unknown): CarClass {
-  const key = String(value ?? "").trim().toLowerCase();
+  const key = String(value ?? "")
+    .trim()
+    .toLowerCase();
   return (CAR_CLASSES as string[]).includes(key) ? (key as CarClass) : "econom";
 }
 
 function normalizeTransmission(value: unknown): Transmission {
-  const key = String(value ?? "").trim().toUpperCase();
+  const key = String(value ?? "")
+    .trim()
+    .toUpperCase();
   return (TRANSMISSIONS as string[]).includes(key) ? (key as Transmission) : "AT";
 }
 
 export function mapCarRow(row: CarRow): Car {
   const specs = toSpecs(row.specs);
-  const images = toImages(row.images);
   const brand = str(row.brand, "");
   const model = str(row.model, "");
   const id = str(row.slug, String(row.id));
+  const images = normalizedImages(id, row.images);
 
   return {
     id,
@@ -148,18 +226,34 @@ async function ready(): Promise<boolean> {
 }
 
 export async function fetchCars(): Promise<Car[]> {
-  if (!(await ready())) return mockCars.map(withoutPlate);
-  const rows = await query<CarRow>(`${SELECT_CARS} order by brand asc, model asc, year desc`);
-  return rows.map(mapCarRow).map(withoutPlate);
+  const fallback = mockCars.map(withoutPlate);
+  if (!hasDatabase()) return fallback;
+  return withPublicFallback(
+    "catalog",
+    (async () => {
+      if (!(await ready())) return fallback;
+      const rows = await query<CarRow>(`${SELECT_CARS} order by brand asc, model asc, year desc`);
+      return rows.map(mapCarRow).map(withoutPlate);
+    })(),
+    fallback,
+  );
 }
 
 export async function fetchCarBySlug(slug: string): Promise<Car | null> {
-  if (!(await ready())) {
-    const found = mockCars.find((c) => c.id === slug || c.slug === slug);
-    return found ? withoutPlate(found) : null;
-  }
-  const rows = await query<CarRow>(`${SELECT_CARS} where slug = $1 or id::text = $1 limit 1`, [slug]);
-  return rows.length ? withoutPlate(mapCarRow(rows[0])) : null;
+  const found = mockCars.find((c) => c.id === slug || c.slug === slug);
+  const fallback = found ? withoutPlate(found) : null;
+  if (!hasDatabase()) return fallback;
+  return withPublicFallback(
+    `car:${slug}`,
+    (async () => {
+      if (!(await ready())) return fallback;
+      const rows = await query<CarRow>(`${SELECT_CARS} where slug = $1 or id::text = $1 limit 1`, [
+        slug,
+      ]);
+      return rows.length ? withoutPlate(mapCarRow(rows[0])) : null;
+    })(),
+    fallback,
+  );
 }
 
 /** Полные данные автопарка вместе с госномерами — только для админки. */
@@ -171,7 +265,9 @@ export async function fetchCarsAdmin(): Promise<Car[]> {
 
 export async function fetchCarAdminBySlug(slug: string): Promise<Car | null> {
   if (!(await ready())) return mockCars.find((c) => c.id === slug) ?? null;
-  const rows = await query<CarRow>(`${SELECT_CARS} where slug = $1 or id::text = $1 limit 1`, [slug]);
+  const rows = await query<CarRow>(`${SELECT_CARS} where slug = $1 or id::text = $1 limit 1`, [
+    slug,
+  ]);
   return rows.length ? mapCarRow(rows[0]) : null;
 }
 
@@ -196,9 +292,39 @@ export type CarInput = {
 };
 
 const translit: Record<string, string> = {
-  а: "a", б: "b", в: "v", г: "g", д: "d", е: "e", ё: "e", ж: "zh", з: "z", и: "i", й: "i",
-  к: "k", л: "l", м: "m", н: "n", о: "o", п: "p", р: "r", с: "s", т: "t", у: "u", ф: "f",
-  х: "h", ц: "c", ч: "ch", ш: "sh", щ: "sch", ъ: "", ы: "y", ь: "", э: "e", ю: "yu", я: "ya",
+  а: "a",
+  б: "b",
+  в: "v",
+  г: "g",
+  д: "d",
+  е: "e",
+  ё: "e",
+  ж: "zh",
+  з: "z",
+  и: "i",
+  й: "i",
+  к: "k",
+  л: "l",
+  м: "m",
+  н: "n",
+  о: "o",
+  п: "p",
+  р: "r",
+  с: "s",
+  т: "t",
+  у: "u",
+  ф: "f",
+  х: "h",
+  ц: "c",
+  ч: "ch",
+  ш: "sh",
+  щ: "sch",
+  ъ: "",
+  ы: "y",
+  ь: "",
+  э: "e",
+  ю: "yu",
+  я: "ya",
 };
 
 export function slugify(value: string): string {
@@ -231,10 +357,13 @@ function specsFrom(input: CarInput): Record<string, unknown> {
 
 export async function insertCar(input: CarInput): Promise<Car | null> {
   if (!(await ready())) return null;
-  const baseSlug = input.slug?.trim() || slugify(`${input.brand}-${input.model}-${input.color}-${input.year}`);
+  const baseSlug =
+    input.slug?.trim() || slugify(`${input.brand}-${input.model}-${input.color}-${input.year}`);
   let slug = baseSlug;
   for (let i = 2; i < 50; i += 1) {
-    const taken = await query<{ id: string }>(`select id from cars where slug = $1 limit 1`, [slug]);
+    const taken = await query<{ id: string }>(`select id from cars where slug = $1 limit 1`, [
+      slug,
+    ]);
     if (!taken.length) break;
     slug = `${baseSlug}-${i}`;
   }
@@ -266,7 +395,9 @@ export async function updateCarInDb(slug: string, input: CarInput): Promise<Car 
   const current = await fetchCarAdminBySlug(slug);
   if (!current) return null;
 
-  const images = input.image ? [input.image] : (current.gallery ?? (current.image ? [current.image] : []));
+  const images = input.image
+    ? [input.image]
+    : (current.gallery ?? (current.image ? [current.image] : []));
   const rows = await query<CarRow>(
     `update cars set brand=$2, model=$3, year=$4, transmission=$5, seats=$6,
             price_city=$7, price_out=$8, status=$9, images=$10::jsonb,
@@ -291,7 +422,10 @@ export async function updateCarInDb(slug: string, input: CarInput): Promise<Car 
   return rows.length ? mapCarRow(rows[0]) : null;
 }
 
-export async function updateCarStatusInDb(slug: string, status: CarFleetStatus): Promise<Car | null> {
+export async function updateCarStatusInDb(
+  slug: string,
+  status: CarFleetStatus,
+): Promise<Car | null> {
   if (!(await ready())) return null;
   const rows = await query<CarRow>(
     `update cars set status = $2 where slug = $1 or id::text = $1
@@ -301,7 +435,9 @@ export async function updateCarStatusInDb(slug: string, status: CarFleetStatus):
   return rows.length ? mapCarRow(rows[0]) : null;
 }
 
-export type DeleteCarResult = { ok: true } | { ok: false; reason: "not_found" | "has_bookings" | "no_db" };
+export type DeleteCarResult =
+  | { ok: true }
+  | { ok: false; reason: "not_found" | "has_bookings" | "no_db" };
 
 /** Удаление авто запрещено, пока по нему есть незакрытые брони. */
 export async function deleteCarInDb(slug: string): Promise<DeleteCarResult> {
@@ -327,10 +463,12 @@ export async function deleteCarInDb(slug: string): Promise<DeleteCarResult> {
 /** Internal id (primary key) for a public slug — needed when writing bookings. */
 export async function resolveCarDbId(slug: string): Promise<string | null> {
   if (!hasDatabase()) return mockCars.some((c) => c.id === slug) ? slug : null;
-  const rows = await query<{ id: string }>(`select id from cars where slug = $1 or id::text = $1 limit 1`, [slug]);
+  const rows = await query<{ id: string }>(
+    `select id from cars where slug = $1 or id::text = $1 limit 1`,
+    [slug],
+  );
   return rows.length ? String(rows[0].id) : null;
 }
-
 
 /** Полная замена галереи автомобиля (первый кадр — обложка). */
 export async function updateCarImagesInDb(slug: string, images: string[]): Promise<Car | null> {

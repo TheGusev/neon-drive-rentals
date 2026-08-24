@@ -10,7 +10,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { useCars } from "@/state/AppDataContext";
 import heroCar from "@/assets/hero-car.jpg";
-
+import { CarImage } from "@/components/car/CarImage";
 
 export function PopularModels() {
   const cars = useCars();
@@ -26,7 +26,9 @@ export function PopularModels() {
           </h2>
         </div>
         <Button asChild variant="outline" className="hidden md:inline-flex">
-          <Link to="/cars">Все авто <ArrowRight className="ml-2 h-4 w-4" /></Link>
+          <Link to="/cars">
+            Все авто <ArrowRight className="ml-2 h-4 w-4" />
+          </Link>
         </Button>
       </div>
 
@@ -36,8 +38,9 @@ export function PopularModels() {
             <CarouselItem key={car.id} className="pl-4 basis-full md:basis-1/2 lg:basis-1/3">
               <article className="group h-full overflow-hidden rounded-2xl border border-border bg-card transition md:hover:neon-glow">
                 <div className="relative aspect-[4/3] overflow-hidden bg-muted">
-                  <img
+                  <CarImage
                     src={car.image ?? heroCar}
+                    fallbackSrc={heroCar}
                     alt={`${car.brand} ${car.model}, ${car.color}`}
                     loading="lazy"
                     width={1024}
@@ -50,12 +53,20 @@ export function PopularModels() {
                 </div>
                 <div className="p-5">
                   <div className="flex items-baseline justify-between gap-2">
-                    <h3 className="font-display text-lg font-bold">{car.brand} {car.model}</h3>
+                    <h3 className="font-display text-lg font-bold">
+                      {car.brand} {car.model}
+                    </h3>
                     <span className="text-xs text-muted-foreground">{car.year}</span>
                   </div>
                   <div className="mt-3 flex items-center gap-4 text-xs text-muted-foreground">
-                    <span className="inline-flex items-center gap-1"><Gauge className="h-3.5 w-3.5" />{car.power} л.с.</span>
-                    <span className="inline-flex items-center gap-1"><Fuel className="h-3.5 w-3.5" />{car.consumption} л</span>
+                    <span className="inline-flex items-center gap-1">
+                      <Gauge className="h-3.5 w-3.5" />
+                      {car.power} л.с.
+                    </span>
+                    <span className="inline-flex items-center gap-1">
+                      <Fuel className="h-3.5 w-3.5" />
+                      {car.consumption} л
+                    </span>
                     <span>{car.transmission}</span>
                   </div>
                   <div className="mt-4 flex items-center justify-between">
@@ -82,7 +93,9 @@ export function PopularModels() {
 
       <div className="mt-6 flex md:hidden">
         <Button asChild variant="outline" className="w-full">
-          <Link to="/cars">Все авто <ArrowRight className="ml-2 h-4 w-4" /></Link>
+          <Link to="/cars">
+            Все авто <ArrowRight className="ml-2 h-4 w-4" />
+          </Link>
         </Button>
       </div>
     </section>
