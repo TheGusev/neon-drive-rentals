@@ -1,5 +1,6 @@
 import { useEffect, useState, type ImgHTMLAttributes } from "react";
 import heroCar from "@/assets/hero-car.jpg";
+import { cn } from "@/lib/utils";
 
 type CarImageProps = Omit<ImgHTMLAttributes<HTMLImageElement>, "src"> & {
   src?: string | null;
@@ -7,19 +8,40 @@ type CarImageProps = Omit<ImgHTMLAttributes<HTMLImageElement>, "src"> & {
 };
 
 /** Image with a stable visual fallback for empty, stale, or failed car URLs. */
-export function CarImage({ src, fallbackSrc = heroCar, onError, ...props }: CarImageProps) {
+export function CarImage({
+  src,
+  fallbackSrc = heroCar,
+  onError,
+  onLoad,
+  className,
+  ...props
+}: CarImageProps) {
   const requestedSrc = src || fallbackSrc;
   const [resolvedSrc, setResolvedSrc] = useState(requestedSrc);
+  const [ready, setReady] = useState(false);
 
-  useEffect(() => setResolvedSrc(requestedSrc), [requestedSrc]);
+  useEffect(() => {
+    setResolvedSrc(requestedSrc);
+    setReady(false);
+  }, [requestedSrc]);
 
   return (
     <img
       {...props}
       src={resolvedSrc}
+      className={cn(
+        "transition-opacity duration-500 motion-reduce:transition-none",
+        ready ? "opacity-100" : "opacity-0",
+        className,
+      )}
+      onLoad={(event) => {
+        onLoad?.(event);
+        setReady(true);
+      }}
       onError={(event) => {
         onError?.(event);
         if (resolvedSrc !== fallbackSrc) setResolvedSrc(fallbackSrc);
+        else setReady(true);
       }}
     />
   );
