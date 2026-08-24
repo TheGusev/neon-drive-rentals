@@ -180,10 +180,10 @@ html.clean-light body {
 html.clean-light .hero-light-scrim {
   display: block;
   background: linear-gradient(180deg,
-    color-mix(in oklab, var(--background) 55%, transparent) 0%,
-    color-mix(in oklab, var(--background) 68%, transparent) 100%);
+    color-mix(in oklab, var(--background) 62%, transparent) 0%,
+    color-mix(in oklab, var(--background) 88%, transparent) 100%);
 }
-html.clean-light .hero-photo { filter: saturate(0.85) brightness(1.2) contrast(0.9); }
+html.clean-light .hero-photo { filter: saturate(0.75) brightness(1.45) contrast(0.8); }
 
 /* Unified glass surface used by hero pills, tiles and floating controls. */
 @utility glass-surface {

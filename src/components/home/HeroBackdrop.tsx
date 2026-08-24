@@ -28,7 +28,7 @@ export function HeroBackdrop({ variant = "desktop" }: { variant?: "desktop" | "m
     <div
       className={cn(
         "pointer-events-none absolute inset-x-0 top-0 overflow-hidden",
-        mobile ? "h-[64svh]" : "bottom-0",
+        mobile ? "h-[64svh]" : "h-[92svh]",
       )}
       aria-hidden
     >
