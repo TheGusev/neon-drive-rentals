@@ -45,13 +45,17 @@ function Home() {
   );
 }
 
-/** Ширина экрана после гидратации; до неё используется догадка по User-Agent. */
+/**
+ * Ширина экрана после гидратации; до неё используется догадка по User-Agent.
+ * Первый клиентский рендер обязан совпадать с серверным, поэтому реальная
+ * ширина читается только в эффекте и только если она отличается от догадки.
+ */
 function useIsMobileViewport(initial: boolean) {
   const [isMobile, setIsMobile] = useState(initial);
 
   useEffect(() => {
     const mq = window.matchMedia("(max-width: 767px)");
-    const sync = () => setIsMobile(mq.matches);
+    const sync = () => setIsMobile((prev) => (prev === mq.matches ? prev : mq.matches));
     sync();
     mq.addEventListener("change", sync);
     return () => mq.removeEventListener("change", sync);
