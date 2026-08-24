@@ -23,22 +23,22 @@ function AdminLoginPage() {
   const router = useRouter();
   const login = useServerFn(adminLogin);
   const [password, setPassword] = useState("");
-  const [error, setError] = useState(false);
+  const [error, setError] = useState<null | "bad-password" | "not-configured">(null);
   const [loading, setLoading] = useState(false);
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setLoading(true);
-    setError(false);
+    setError(null);
     try {
       const res = await login({ data: { password } });
       if (res.ok) {
         await router.navigate({ to: "/admin" });
         return;
       }
-      setError(true);
+      setError(res.reason === "not-configured" ? "not-configured" : "bad-password");
     } catch {
-      setError(true);
+      setError("bad-password");
     } finally {
       setLoading(false);
     }
