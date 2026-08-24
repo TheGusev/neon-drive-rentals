@@ -6,7 +6,13 @@ import { ArrowRight, CalendarIcon, MapPin, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 import { useBookings, useCars } from "@/state/AppDataContext";
 import { tariffs, getTariff } from "@/mocks/tariffs";
@@ -44,7 +50,9 @@ export default function QuickBookingForm() {
   return (
     <div className="relative w-full rounded-2xl border border-border bg-card/95 p-4 shadow-xl backdrop-blur md:p-5 md:neon-glow">
       <div className="mb-3">
-        <p className="text-[10px] uppercase tracking-[0.3em] text-muted-foreground">Быстрое бронирование</p>
+        <p className="text-[10px] uppercase tracking-[0.3em] text-muted-foreground">
+          Быстрое бронирование
+        </p>
         <h3 className="mt-0.5 font-display text-lg font-bold md:text-xl">Найдите свой авто</h3>
       </div>
 
@@ -57,7 +65,9 @@ export default function QuickBookingForm() {
             <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-accent" />
             <div className="min-w-0">
               <p className="text-xs font-semibold leading-tight">{PICKUP_POINT.address}</p>
-              <p className="text-[10px] text-muted-foreground">Единственный пункт выдачи · {PICKUP_POINT.hours}</p>
+              <p className="text-[10px] text-muted-foreground">
+                Единственный пункт выдачи · {PICKUP_POINT.hours}
+              </p>
             </div>
           </div>
         </div>
@@ -90,7 +100,13 @@ export default function QuickBookingForm() {
           <div className="flex items-center justify-between text-xs">
             <span className="text-muted-foreground">Свободно</span>
             <span className="font-bold">
-              <span className={cn(available.length > 0 ? "text-emerald-600 dark:text-emerald-400" : "text-destructive")}>
+              <span
+                className={cn(
+                  available.length > 0
+                    ? "text-emerald-600 dark:text-emerald-400"
+                    : "text-destructive",
+                )}
+              >
                 {available.length}
               </span>
               <span className="text-muted-foreground"> / {cars.length} авто</span>
@@ -106,13 +122,16 @@ export default function QuickBookingForm() {
             <div className="mt-1 flex items-center justify-between text-xs">
               <span className="text-muted-foreground">Цена ({tariffInfo.title})</span>
               <span className="font-bold">
-                от {formatRub(prices.min)}<span className="text-muted-foreground"> / сутки</span>
+                от {formatRub(prices.min)}
+                <span className="text-muted-foreground"> / сутки</span>
               </span>
             </div>
           )}
           {totalRange && (
             <div className="mt-2 flex items-baseline justify-between border-t border-border/60 pt-2">
-              <span className="text-[10px] uppercase tracking-widest text-muted-foreground">Итого</span>
+              <span className="text-[10px] uppercase tracking-widest text-muted-foreground">
+                Итого
+              </span>
               <span className="font-display text-base font-black text-primary">
                 {totalRange.min === totalRange.max
                   ? formatRub(totalRange.min)
@@ -122,7 +141,11 @@ export default function QuickBookingForm() {
           )}
         </div>
 
-        <Button asChild size="lg" className="mt-1 w-full gap-2 font-bold uppercase tracking-wider md:pulse-glow">
+        <Button
+          asChild
+          size="lg"
+          className="mt-1 w-full gap-2 font-bold uppercase tracking-wider md:pulse-glow"
+        >
           <Link to="/cars" search={{ from, to }}>
             <Search className="h-4 w-4" />
             Найти автомобиль
@@ -146,7 +169,9 @@ function DateField({
   const dateValue = value ? parseISO(value) : undefined;
   return (
     <div className="space-y-1">
-      <label className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">{label}</label>
+      <label className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+        {label}
+      </label>
       <Popover>
         <PopoverTrigger asChild>
           <Button

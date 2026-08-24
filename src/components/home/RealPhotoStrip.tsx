@@ -12,15 +12,47 @@ import fleetYard from "@/assets/cars/real/fleet-yard-real.jpg";
 import dashboard from "@/assets/cars/real/kei-dashboard-real.jpg";
 
 const PHOTOS = [
-  { src: nBoxBlack, alt: "Honda N-BOX чёрный на площадке NSK-RENT в Новосибирске", caption: "Honda N-BOX" },
-  { src: ekWagonBlack, alt: "Mitsubishi eK Wagon чёрный, аренда в Новосибирске", caption: "Mitsubishi eK Wagon" },
-  { src: nWgnBlue, alt: "Honda N-WGN голубой на парковке проката NSK-RENT", caption: "Honda N-WGN" },
+  {
+    src: nBoxBlack,
+    alt: "Honda N-BOX чёрный на площадке NSK-RENT в Новосибирске",
+    caption: "Honda N-BOX",
+  },
+  {
+    src: ekWagonBlack,
+    alt: "Mitsubishi eK Wagon чёрный, аренда в Новосибирске",
+    caption: "Mitsubishi eK Wagon",
+  },
+  {
+    src: nWgnBlue,
+    alt: "Honda N-WGN голубой на парковке проката NSK-RENT",
+    caption: "Honda N-WGN",
+  },
   { src: dayzBlack, alt: "Nissan Dayz чёрный, вид сбоку, парк NSK-RENT", caption: "Nissan Dayz" },
-  { src: ekWagonSilver, alt: "Mitsubishi eK Wagon серебристый на площадке на Доватора, 11", caption: "Наш парк" },
-  { src: nBoxPair, alt: "Японские кей-кары в прокате NSK-RENT в Новосибирске", caption: "Доватора, 11" },
-  { src: keiVanRear, alt: "Кей-вэн чёрный, задняя часть кузова, состояние авто", caption: "Состояние кузова" },
-  { src: fleetYard, alt: "Площадка проката японских авто в Новосибирске", caption: "Площадка выдачи" },
-  { src: dashboard, alt: "Приборная панель японского кей-кара с запасом хода 511 км", caption: "Экономичный расход" },
+  {
+    src: ekWagonSilver,
+    alt: "Mitsubishi eK Wagon серебристый на площадке на Доватора, 11",
+    caption: "Наш парк",
+  },
+  {
+    src: nBoxPair,
+    alt: "Японские кей-кары в прокате NSK-RENT в Новосибирске",
+    caption: "Доватора, 11",
+  },
+  {
+    src: keiVanRear,
+    alt: "Кей-вэн чёрный, задняя часть кузова, состояние авто",
+    caption: "Состояние кузова",
+  },
+  {
+    src: fleetYard,
+    alt: "Площадка проката японских авто в Новосибирске",
+    caption: "Площадка выдачи",
+  },
+  {
+    src: dashboard,
+    alt: "Приборная панель японского кей-кара с запасом хода 511 км",
+    caption: "Экономичный расход",
+  },
 ];
 
 export function RealPhotoStrip() {

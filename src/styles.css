@@ -133,31 +133,77 @@
   --sidebar-accent-foreground: oklch(0.97 0.01 250);
   --sidebar-border: oklch(0.45 0.06 258 / 45%);
   --sidebar-ring: oklch(0.68 0.19 258);
+  /* Shared surface tokens (glassy blocks over the hero photo) */
+  --glass: oklch(0.22 0.04 265 / 55%);
+  --glass-border: oklch(0.72 0.09 258 / 38%);
+  --shadow-soft: 0 22px 48px -26px color-mix(in oklab, var(--neon-blue) 70%, transparent);
 }
 
 
 /* Light theme (user-selectable) + admin panel. */
 .clean-light {
-  --background: oklch(0.995 0.003 250);
+  --background: oklch(0.972 0.006 252);
   --foreground: oklch(0.16 0.03 264);
-  --card: oklch(1 0 0);
+  --card: oklch(0.992 0.004 252);
   --card-foreground: oklch(0.16 0.03 264);
-  --popover: oklch(1 0 0);
+  --popover: oklch(0.995 0.003 252);
   --popover-foreground: oklch(0.16 0.03 264);
   --primary: oklch(0.58 0.19 258);
   --primary-foreground: oklch(0.99 0 0);
-  --secondary: oklch(0.968 0.007 247.896);
+  --secondary: oklch(0.945 0.008 250);
   --secondary-foreground: oklch(0.208 0.042 265.755);
-  --muted: oklch(0.968 0.007 247.896);
+  --muted: oklch(0.945 0.008 250);
   --muted-foreground: oklch(0.48 0.04 257);
   --accent: oklch(0.58 0.19 258);
   --accent-foreground: oklch(0.99 0 0);
-  --border: oklch(0.9 0.015 255);
+  --border: oklch(0.88 0.018 255 / 80%);
   --input: oklch(0.9 0.015 255);
   --ring: oklch(0.58 0.19 258);
   --neon-blue: oklch(0.55 0.19 258);
   --neon-orange: oklch(0.62 0.19 45);
+  --glass: oklch(0.985 0.006 252 / 62%);
+  --glass-border: oklch(0.7 0.05 258 / 26%);
+  --shadow-soft: 0 20px 44px -28px color-mix(in oklab, var(--neon-blue) 55%, transparent);
 }
+
+/* Soft tinted page canvas so light-theme surfaces blend instead of cutting out. */
+html.clean-light body {
+  background-image:
+    radial-gradient(120% 55% at 50% -12%, color-mix(in oklab, var(--neon-blue) 14%, transparent), transparent 70%),
+    radial-gradient(90% 45% at 100% 110%, color-mix(in oklab, var(--neon-orange) 8%, transparent), transparent 70%),
+    linear-gradient(180deg, oklch(0.995 0.004 252) 0%, oklch(0.955 0.009 255) 100%);
+  background-attachment: fixed;
+}
+
+/* Hero photo softening in the light theme so the shot blends with the canvas. */
+.hero-light-scrim { display: none; }
+html.clean-light .hero-light-scrim {
+  display: block;
+  background: linear-gradient(180deg,
+    color-mix(in oklab, var(--background) 62%, transparent) 0%,
+    color-mix(in oklab, var(--background) 88%, transparent) 100%);
+}
+html.clean-light .hero-photo { filter: saturate(0.75) brightness(1.45) contrast(0.8); }
+
+/* Unified glass surface used by hero pills, tiles and floating controls. */
+@utility glass-surface {
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(14px) saturate(140%);
+  box-shadow: var(--shadow-soft);
+}
+
+@utility soft-skeleton {
+  background: linear-gradient(
+    100deg,
+    color-mix(in oklab, var(--muted) 90%, transparent) 20%,
+    color-mix(in oklab, var(--muted) 55%, transparent) 45%,
+    color-mix(in oklab, var(--muted) 90%, transparent) 70%
+  );
+  background-size: 220% 100%;
+  animation: shimmer 2.4s linear infinite;
+}
+
 
 /* Typography (blog) bound to theme tokens so text stays readable in both themes. */
 .prose-theme {
@@ -327,10 +373,12 @@
 .float-slow { animation: none; }
 
 @keyframes fade-in-soft {
-  0% { opacity: 0; }
-  100% { opacity: 1; }
+  0% { opacity: 0; transform: translateY(10px); filter: blur(6px); }
+  60% { filter: blur(0); }
+  100% { opacity: 1; transform: translateY(0); filter: blur(0); }
 }
-.rise-in { animation: fade-in-soft 0.7s ease-out both; }
+.rise-in { animation: fade-in-soft 0.75s cubic-bezier(0.22, 1, 0.36, 1) both; }
+
 
 /* Animated NSK-RENT logo — hue-shifting gradient */
 @utility logo-neon {
@@ -561,8 +609,10 @@ html.theme-switching *::after {
 
 @media (prefers-reduced-motion: reduce) {
   .reveal { opacity: 1; transform: none; }
+  .rise-in { opacity: 1; transform: none; filter: none; animation: none !important; }
   .reveal-in, .nfs-tile, .ken-burns, .float-slow, .pulse-glow, .menu-pulse, .neon-flicker,
   .road-line-run { animation: none !important; }
+
   .garage-in { opacity: 1; animation: none !important; }
   .garage-card,
   .garage-card:hover,
