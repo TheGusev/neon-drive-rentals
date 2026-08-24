@@ -70,7 +70,7 @@ export function NfsSideMenu({
               type="button"
               aria-label={`${it.title} — подробнее`}
               className={cn(
-                "group flex items-center gap-3 rounded-r-xl border border-l-2 border-border/50 border-l-[color:var(--neon-blue)]/70 bg-background/55 py-2.5 pl-3 pr-4 text-left backdrop-blur-md transition hover:border-accent/70",
+                "glass-surface group flex items-center gap-3 rounded-r-xl border-l-2 border-l-[color:var(--neon-blue)]/70 py-2.5 pl-3 pr-4 text-left transition hover:border-accent/70",
                 horizontal && "shrink-0 rounded-xl py-2 pr-3",
                 animate && "garage-in",
               )}
