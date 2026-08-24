@@ -599,8 +599,10 @@ html.theme-switching *::after {
 
 @media (prefers-reduced-motion: reduce) {
   .reveal { opacity: 1; transform: none; }
+  .rise-in { opacity: 1; transform: none; filter: none; animation: none !important; }
   .reveal-in, .nfs-tile, .ken-burns, .float-slow, .pulse-glow, .menu-pulse, .neon-flicker,
   .road-line-run { animation: none !important; }
+
   .garage-in { opacity: 1; animation: none !important; }
   .garage-card,
   .garage-card:hover,
