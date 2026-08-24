@@ -7,6 +7,8 @@ import fixCarImages from "../../db/migrations/005_fix_car_images.sql?raw";
 import removeWashStatus from "../../db/migrations/006_remove_wash_status.sql?raw";
 import seoTimestamps from "../../db/migrations/007_seo_timestamps.sql?raw";
 import carPhotos from "../../db/migrations/008_car_photos.sql?raw";
+import rentalTerms from "../../db/migrations/009_rental_terms.sql?raw";
+import realPhotos from "../../db/migrations/010_real_photos.sql?raw";
 
 /** Порядок применения важен. 001_init.sql уже применён на сервере вручную. */
 const MIGRATIONS: Array<{ name: string; sql: string }> = [
@@ -17,7 +19,8 @@ const MIGRATIONS: Array<{ name: string; sql: string }> = [
   { name: "006_remove_wash_status", sql: removeWashStatus },
   { name: "007_seo_timestamps", sql: seoTimestamps },
   { name: "008_car_photos", sql: carPhotos },
-
+  { name: "009_rental_terms", sql: rentalTerms },
+  { name: "010_real_photos", sql: realPhotos },
 ];
 
 type Holder = { __nskMigrations?: Promise<string[]> };
