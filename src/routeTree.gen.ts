@@ -20,6 +20,16 @@ import { Route as PublicProfileRouteImport } from './routes/_public.profile'
 import { Route as PublicPrivacyRouteImport } from './routes/_public.privacy'
 import { Route as PublicLoginRouteImport } from './routes/_public.login'
 import { Route as PublicKeiCarsRouteImport } from './routes/_public.kei-cars'
+import { Route as PublicArendaProbegIPlatezhiRouteImport } from './routes/_public.arenda-probeg-i-platezhi'
+import { Route as PublicArendaAvtoVyhodnyeRouteImport } from './routes/_public.arenda-avto-vyhodnye'
+import { Route as PublicArendaAvtoSPravymRulemRouteImport } from './routes/_public.arenda-avto-s-pravym-rulem'
+import { Route as PublicArendaAvtoPoezdkaAltayRouteImport } from './routes/_public.arenda-avto-poezdka-altay'
+import { Route as PublicArendaAvtoNaSutkiRouteImport } from './routes/_public.arenda-avto-na-sutki'
+import { Route as PublicArendaAvtoNaNedelyuRouteImport } from './routes/_public.arenda-avto-na-nedelyu'
+import { Route as PublicArendaAvtoNaMesyacRouteImport } from './routes/_public.arenda-avto-na-mesyac'
+import { Route as PublicArendaAvtoBezZalogaRouteImport } from './routes/_public.arenda-avto-bez-zaloga'
+import { Route as PublicArendaAvtoBezVoditelyaRouteImport } from './routes/_public.arenda-avto-bez-voditelya'
+import { Route as PublicArendaAvtoBezStazhaRouteImport } from './routes/_public.arenda-avto-bez-stazha'
 import { Route as PublicCarsIndexRouteImport } from './routes/_public.cars.index'
 import { Route as PublicBlogIndexRouteImport } from './routes/_public.blog.index'
 import { Route as AdminAdminIndexRouteImport } from './routes/_admin.admin.index'
@@ -92,6 +102,65 @@ const PublicKeiCarsRoute = PublicKeiCarsRouteImport.update({
   path: '/kei-cars',
   getParentRoute: () => PublicRoute,
 } as any)
+const PublicArendaProbegIPlatezhiRoute =
+  PublicArendaProbegIPlatezhiRouteImport.update({
+    id: '/arenda-probeg-i-platezhi',
+    path: '/arenda-probeg-i-platezhi',
+    getParentRoute: () => PublicRoute,
+  } as any)
+const PublicArendaAvtoVyhodnyeRoute =
+  PublicArendaAvtoVyhodnyeRouteImport.update({
+    id: '/arenda-avto-vyhodnye',
+    path: '/arenda-avto-vyhodnye',
+    getParentRoute: () => PublicRoute,
+  } as any)
+const PublicArendaAvtoSPravymRulemRoute =
+  PublicArendaAvtoSPravymRulemRouteImport.update({
+    id: '/arenda-avto-s-pravym-rulem',
+    path: '/arenda-avto-s-pravym-rulem',
+    getParentRoute: () => PublicRoute,
+  } as any)
+const PublicArendaAvtoPoezdkaAltayRoute =
+  PublicArendaAvtoPoezdkaAltayRouteImport.update({
+    id: '/arenda-avto-poezdka-altay',
+    path: '/arenda-avto-poezdka-altay',
+    getParentRoute: () => PublicRoute,
+  } as any)
+const PublicArendaAvtoNaSutkiRoute = PublicArendaAvtoNaSutkiRouteImport.update({
+  id: '/arenda-avto-na-sutki',
+  path: '/arenda-avto-na-sutki',
+  getParentRoute: () => PublicRoute,
+} as any)
+const PublicArendaAvtoNaNedelyuRoute =
+  PublicArendaAvtoNaNedelyuRouteImport.update({
+    id: '/arenda-avto-na-nedelyu',
+    path: '/arenda-avto-na-nedelyu',
+    getParentRoute: () => PublicRoute,
+  } as any)
+const PublicArendaAvtoNaMesyacRoute =
+  PublicArendaAvtoNaMesyacRouteImport.update({
+    id: '/arenda-avto-na-mesyac',
+    path: '/arenda-avto-na-mesyac',
+    getParentRoute: () => PublicRoute,
+  } as any)
+const PublicArendaAvtoBezZalogaRoute =
+  PublicArendaAvtoBezZalogaRouteImport.update({
+    id: '/arenda-avto-bez-zaloga',
+    path: '/arenda-avto-bez-zaloga',
+    getParentRoute: () => PublicRoute,
+  } as any)
+const PublicArendaAvtoBezVoditelyaRoute =
+  PublicArendaAvtoBezVoditelyaRouteImport.update({
+    id: '/arenda-avto-bez-voditelya',
+    path: '/arenda-avto-bez-voditelya',
+    getParentRoute: () => PublicRoute,
+  } as any)
+const PublicArendaAvtoBezStazhaRoute =
+  PublicArendaAvtoBezStazhaRouteImport.update({
+    id: '/arenda-avto-bez-stazha',
+    path: '/arenda-avto-bez-stazha',
+    getParentRoute: () => PublicRoute,
+  } as any)
 const PublicCarsIndexRoute = PublicCarsIndexRouteImport.update({
   id: '/cars/',
   path: '/cars/',
@@ -189,6 +258,16 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/robots.txt': typeof RobotsDottxtRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/arenda-avto-bez-stazha': typeof PublicArendaAvtoBezStazhaRoute
+  '/arenda-avto-bez-voditelya': typeof PublicArendaAvtoBezVoditelyaRoute
+  '/arenda-avto-bez-zaloga': typeof PublicArendaAvtoBezZalogaRoute
+  '/arenda-avto-na-mesyac': typeof PublicArendaAvtoNaMesyacRoute
+  '/arenda-avto-na-nedelyu': typeof PublicArendaAvtoNaNedelyuRoute
+  '/arenda-avto-na-sutki': typeof PublicArendaAvtoNaSutkiRoute
+  '/arenda-avto-poezdka-altay': typeof PublicArendaAvtoPoezdkaAltayRoute
+  '/arenda-avto-s-pravym-rulem': typeof PublicArendaAvtoSPravymRulemRoute
+  '/arenda-avto-vyhodnye': typeof PublicArendaAvtoVyhodnyeRoute
+  '/arenda-probeg-i-platezhi': typeof PublicArendaProbegIPlatezhiRoute
   '/kei-cars': typeof PublicKeiCarsRoute
   '/login': typeof PublicLoginRoute
   '/privacy': typeof PublicPrivacyRoute
@@ -218,6 +297,16 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/robots.txt': typeof RobotsDottxtRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/arenda-avto-bez-stazha': typeof PublicArendaAvtoBezStazhaRoute
+  '/arenda-avto-bez-voditelya': typeof PublicArendaAvtoBezVoditelyaRoute
+  '/arenda-avto-bez-zaloga': typeof PublicArendaAvtoBezZalogaRoute
+  '/arenda-avto-na-mesyac': typeof PublicArendaAvtoNaMesyacRoute
+  '/arenda-avto-na-nedelyu': typeof PublicArendaAvtoNaNedelyuRoute
+  '/arenda-avto-na-sutki': typeof PublicArendaAvtoNaSutkiRoute
+  '/arenda-avto-poezdka-altay': typeof PublicArendaAvtoPoezdkaAltayRoute
+  '/arenda-avto-s-pravym-rulem': typeof PublicArendaAvtoSPravymRulemRoute
+  '/arenda-avto-vyhodnye': typeof PublicArendaAvtoVyhodnyeRoute
+  '/arenda-probeg-i-platezhi': typeof PublicArendaProbegIPlatezhiRoute
   '/kei-cars': typeof PublicKeiCarsRoute
   '/login': typeof PublicLoginRoute
   '/privacy': typeof PublicPrivacyRoute
@@ -250,6 +339,16 @@ export interface FileRoutesById {
   '/_public': typeof PublicRouteWithChildren
   '/robots.txt': typeof RobotsDottxtRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/_public/arenda-avto-bez-stazha': typeof PublicArendaAvtoBezStazhaRoute
+  '/_public/arenda-avto-bez-voditelya': typeof PublicArendaAvtoBezVoditelyaRoute
+  '/_public/arenda-avto-bez-zaloga': typeof PublicArendaAvtoBezZalogaRoute
+  '/_public/arenda-avto-na-mesyac': typeof PublicArendaAvtoNaMesyacRoute
+  '/_public/arenda-avto-na-nedelyu': typeof PublicArendaAvtoNaNedelyuRoute
+  '/_public/arenda-avto-na-sutki': typeof PublicArendaAvtoNaSutkiRoute
+  '/_public/arenda-avto-poezdka-altay': typeof PublicArendaAvtoPoezdkaAltayRoute
+  '/_public/arenda-avto-s-pravym-rulem': typeof PublicArendaAvtoSPravymRulemRoute
+  '/_public/arenda-avto-vyhodnye': typeof PublicArendaAvtoVyhodnyeRoute
+  '/_public/arenda-probeg-i-platezhi': typeof PublicArendaProbegIPlatezhiRoute
   '/_public/kei-cars': typeof PublicKeiCarsRoute
   '/_public/login': typeof PublicLoginRoute
   '/_public/privacy': typeof PublicPrivacyRoute
@@ -281,6 +380,16 @@ export interface FileRouteTypes {
     | '/'
     | '/robots.txt'
     | '/sitemap.xml'
+    | '/arenda-avto-bez-stazha'
+    | '/arenda-avto-bez-voditelya'
+    | '/arenda-avto-bez-zaloga'
+    | '/arenda-avto-na-mesyac'
+    | '/arenda-avto-na-nedelyu'
+    | '/arenda-avto-na-sutki'
+    | '/arenda-avto-poezdka-altay'
+    | '/arenda-avto-s-pravym-rulem'
+    | '/arenda-avto-vyhodnye'
+    | '/arenda-probeg-i-platezhi'
     | '/kei-cars'
     | '/login'
     | '/privacy'
@@ -310,6 +419,16 @@ export interface FileRouteTypes {
     | '/'
     | '/robots.txt'
     | '/sitemap.xml'
+    | '/arenda-avto-bez-stazha'
+    | '/arenda-avto-bez-voditelya'
+    | '/arenda-avto-bez-zaloga'
+    | '/arenda-avto-na-mesyac'
+    | '/arenda-avto-na-nedelyu'
+    | '/arenda-avto-na-sutki'
+    | '/arenda-avto-poezdka-altay'
+    | '/arenda-avto-s-pravym-rulem'
+    | '/arenda-avto-vyhodnye'
+    | '/arenda-probeg-i-platezhi'
     | '/kei-cars'
     | '/login'
     | '/privacy'
@@ -341,6 +460,16 @@ export interface FileRouteTypes {
     | '/_public'
     | '/robots.txt'
     | '/sitemap.xml'
+    | '/_public/arenda-avto-bez-stazha'
+    | '/_public/arenda-avto-bez-voditelya'
+    | '/_public/arenda-avto-bez-zaloga'
+    | '/_public/arenda-avto-na-mesyac'
+    | '/_public/arenda-avto-na-nedelyu'
+    | '/_public/arenda-avto-na-sutki'
+    | '/_public/arenda-avto-poezdka-altay'
+    | '/_public/arenda-avto-s-pravym-rulem'
+    | '/_public/arenda-avto-vyhodnye'
+    | '/_public/arenda-probeg-i-platezhi'
     | '/_public/kei-cars'
     | '/_public/login'
     | '/_public/privacy'
@@ -455,6 +584,76 @@ declare module '@tanstack/react-router' {
       path: '/kei-cars'
       fullPath: '/kei-cars'
       preLoaderRoute: typeof PublicKeiCarsRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/arenda-probeg-i-platezhi': {
+      id: '/_public/arenda-probeg-i-platezhi'
+      path: '/arenda-probeg-i-platezhi'
+      fullPath: '/arenda-probeg-i-platezhi'
+      preLoaderRoute: typeof PublicArendaProbegIPlatezhiRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/arenda-avto-vyhodnye': {
+      id: '/_public/arenda-avto-vyhodnye'
+      path: '/arenda-avto-vyhodnye'
+      fullPath: '/arenda-avto-vyhodnye'
+      preLoaderRoute: typeof PublicArendaAvtoVyhodnyeRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/arenda-avto-s-pravym-rulem': {
+      id: '/_public/arenda-avto-s-pravym-rulem'
+      path: '/arenda-avto-s-pravym-rulem'
+      fullPath: '/arenda-avto-s-pravym-rulem'
+      preLoaderRoute: typeof PublicArendaAvtoSPravymRulemRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/arenda-avto-poezdka-altay': {
+      id: '/_public/arenda-avto-poezdka-altay'
+      path: '/arenda-avto-poezdka-altay'
+      fullPath: '/arenda-avto-poezdka-altay'
+      preLoaderRoute: typeof PublicArendaAvtoPoezdkaAltayRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/arenda-avto-na-sutki': {
+      id: '/_public/arenda-avto-na-sutki'
+      path: '/arenda-avto-na-sutki'
+      fullPath: '/arenda-avto-na-sutki'
+      preLoaderRoute: typeof PublicArendaAvtoNaSutkiRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/arenda-avto-na-nedelyu': {
+      id: '/_public/arenda-avto-na-nedelyu'
+      path: '/arenda-avto-na-nedelyu'
+      fullPath: '/arenda-avto-na-nedelyu'
+      preLoaderRoute: typeof PublicArendaAvtoNaNedelyuRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/arenda-avto-na-mesyac': {
+      id: '/_public/arenda-avto-na-mesyac'
+      path: '/arenda-avto-na-mesyac'
+      fullPath: '/arenda-avto-na-mesyac'
+      preLoaderRoute: typeof PublicArendaAvtoNaMesyacRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/arenda-avto-bez-zaloga': {
+      id: '/_public/arenda-avto-bez-zaloga'
+      path: '/arenda-avto-bez-zaloga'
+      fullPath: '/arenda-avto-bez-zaloga'
+      preLoaderRoute: typeof PublicArendaAvtoBezZalogaRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/arenda-avto-bez-voditelya': {
+      id: '/_public/arenda-avto-bez-voditelya'
+      path: '/arenda-avto-bez-voditelya'
+      fullPath: '/arenda-avto-bez-voditelya'
+      preLoaderRoute: typeof PublicArendaAvtoBezVoditelyaRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/arenda-avto-bez-stazha': {
+      id: '/_public/arenda-avto-bez-stazha'
+      path: '/arenda-avto-bez-stazha'
+      fullPath: '/arenda-avto-bez-stazha'
+      preLoaderRoute: typeof PublicArendaAvtoBezStazhaRouteImport
       parentRoute: typeof PublicRoute
     }
     '/_public/cars/': {
@@ -609,6 +808,16 @@ const AdminRouteChildren: AdminRouteChildren = {
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
 interface PublicRouteChildren {
+  PublicArendaAvtoBezStazhaRoute: typeof PublicArendaAvtoBezStazhaRoute
+  PublicArendaAvtoBezVoditelyaRoute: typeof PublicArendaAvtoBezVoditelyaRoute
+  PublicArendaAvtoBezZalogaRoute: typeof PublicArendaAvtoBezZalogaRoute
+  PublicArendaAvtoNaMesyacRoute: typeof PublicArendaAvtoNaMesyacRoute
+  PublicArendaAvtoNaNedelyuRoute: typeof PublicArendaAvtoNaNedelyuRoute
+  PublicArendaAvtoNaSutkiRoute: typeof PublicArendaAvtoNaSutkiRoute
+  PublicArendaAvtoPoezdkaAltayRoute: typeof PublicArendaAvtoPoezdkaAltayRoute
+  PublicArendaAvtoSPravymRulemRoute: typeof PublicArendaAvtoSPravymRulemRoute
+  PublicArendaAvtoVyhodnyeRoute: typeof PublicArendaAvtoVyhodnyeRoute
+  PublicArendaProbegIPlatezhiRoute: typeof PublicArendaProbegIPlatezhiRoute
   PublicKeiCarsRoute: typeof PublicKeiCarsRoute
   PublicLoginRoute: typeof PublicLoginRoute
   PublicPrivacyRoute: typeof PublicPrivacyRoute
@@ -626,6 +835,16 @@ interface PublicRouteChildren {
 }
 
 const PublicRouteChildren: PublicRouteChildren = {
+  PublicArendaAvtoBezStazhaRoute: PublicArendaAvtoBezStazhaRoute,
+  PublicArendaAvtoBezVoditelyaRoute: PublicArendaAvtoBezVoditelyaRoute,
+  PublicArendaAvtoBezZalogaRoute: PublicArendaAvtoBezZalogaRoute,
+  PublicArendaAvtoNaMesyacRoute: PublicArendaAvtoNaMesyacRoute,
+  PublicArendaAvtoNaNedelyuRoute: PublicArendaAvtoNaNedelyuRoute,
+  PublicArendaAvtoNaSutkiRoute: PublicArendaAvtoNaSutkiRoute,
+  PublicArendaAvtoPoezdkaAltayRoute: PublicArendaAvtoPoezdkaAltayRoute,
+  PublicArendaAvtoSPravymRulemRoute: PublicArendaAvtoSPravymRulemRoute,
+  PublicArendaAvtoVyhodnyeRoute: PublicArendaAvtoVyhodnyeRoute,
+  PublicArendaProbegIPlatezhiRoute: PublicArendaProbegIPlatezhiRoute,
   PublicKeiCarsRoute: PublicKeiCarsRoute,
   PublicLoginRoute: PublicLoginRoute,
   PublicPrivacyRoute: PublicPrivacyRoute,

@@ -6,11 +6,21 @@ import { useHydrated } from "@/hooks/useHydrated";
 const sections = [
   { to: "/cars" as const, label: "Автопарк" },
   { to: "/rent/novosibirsk" as const, label: "Аренда в Новосибирске" },
-  { to: "/rent/bez-zaloga" as const, label: "Аренда без залога" },
+  { to: "/arenda-avto-bez-zaloga" as const, label: "Аренда без залога" },
+  { to: "/arenda-avto-bez-voditelya" as const, label: "Аренда без водителя" },
+  { to: "/arenda-avto-bez-stazha" as const, label: "Требования к стажу" },
+  { to: "/arenda-avto-na-sutki" as const, label: "Аренда на сутки" },
+  { to: "/arenda-avto-na-nedelyu" as const, label: "Аренда на неделю" },
+  { to: "/arenda-avto-na-mesyac" as const, label: "Аренда на месяц" },
+  { to: "/arenda-avto-s-pravym-rulem" as const, label: "Праворульные авто" },
+  { to: "/arenda-avto-vyhodnye" as const, label: "Аренда на выходные" },
+  { to: "/arenda-avto-poezdka-altay" as const, label: "Поездка на Алтай" },
+  { to: "/arenda-probeg-i-platezhi" as const, label: "Пробег и платежи" },
   { to: "/kei-cars" as const, label: "Кей-кары из Японии" },
   { to: "/blog" as const, label: "Блог" },
   { to: "/profile" as const, label: "Личный кабинет" },
 ];
+
 
 
 export function SiteFooter() {
