@@ -20,6 +20,7 @@ import { Route as PublicProfileRouteImport } from './routes/_public.profile'
 import { Route as PublicPrivacyRouteImport } from './routes/_public.privacy'
 import { Route as PublicLoginRouteImport } from './routes/_public.login'
 import { Route as PublicKeiCarsRouteImport } from './routes/_public.kei-cars'
+import { Route as PublicArendaAvtoBezZalogaRouteImport } from './routes/_public.arenda-avto-bez-zaloga'
 import { Route as PublicCarsIndexRouteImport } from './routes/_public.cars.index'
 import { Route as PublicBlogIndexRouteImport } from './routes/_public.blog.index'
 import { Route as AdminAdminIndexRouteImport } from './routes/_admin.admin.index'
@@ -92,6 +93,12 @@ const PublicKeiCarsRoute = PublicKeiCarsRouteImport.update({
   path: '/kei-cars',
   getParentRoute: () => PublicRoute,
 } as any)
+const PublicArendaAvtoBezZalogaRoute =
+  PublicArendaAvtoBezZalogaRouteImport.update({
+    id: '/arenda-avto-bez-zaloga',
+    path: '/arenda-avto-bez-zaloga',
+    getParentRoute: () => PublicRoute,
+  } as any)
 const PublicCarsIndexRoute = PublicCarsIndexRouteImport.update({
   id: '/cars/',
   path: '/cars/',
@@ -189,6 +196,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/robots.txt': typeof RobotsDottxtRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/arenda-avto-bez-zaloga': typeof PublicArendaAvtoBezZalogaRoute
   '/kei-cars': typeof PublicKeiCarsRoute
   '/login': typeof PublicLoginRoute
   '/privacy': typeof PublicPrivacyRoute
@@ -218,6 +226,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/robots.txt': typeof RobotsDottxtRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/arenda-avto-bez-zaloga': typeof PublicArendaAvtoBezZalogaRoute
   '/kei-cars': typeof PublicKeiCarsRoute
   '/login': typeof PublicLoginRoute
   '/privacy': typeof PublicPrivacyRoute
@@ -250,6 +259,7 @@ export interface FileRoutesById {
   '/_public': typeof PublicRouteWithChildren
   '/robots.txt': typeof RobotsDottxtRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/_public/arenda-avto-bez-zaloga': typeof PublicArendaAvtoBezZalogaRoute
   '/_public/kei-cars': typeof PublicKeiCarsRoute
   '/_public/login': typeof PublicLoginRoute
   '/_public/privacy': typeof PublicPrivacyRoute
@@ -281,6 +291,7 @@ export interface FileRouteTypes {
     | '/'
     | '/robots.txt'
     | '/sitemap.xml'
+    | '/arenda-avto-bez-zaloga'
     | '/kei-cars'
     | '/login'
     | '/privacy'
@@ -310,6 +321,7 @@ export interface FileRouteTypes {
     | '/'
     | '/robots.txt'
     | '/sitemap.xml'
+    | '/arenda-avto-bez-zaloga'
     | '/kei-cars'
     | '/login'
     | '/privacy'
@@ -341,6 +353,7 @@ export interface FileRouteTypes {
     | '/_public'
     | '/robots.txt'
     | '/sitemap.xml'
+    | '/_public/arenda-avto-bez-zaloga'
     | '/_public/kei-cars'
     | '/_public/login'
     | '/_public/privacy'
@@ -455,6 +468,13 @@ declare module '@tanstack/react-router' {
       path: '/kei-cars'
       fullPath: '/kei-cars'
       preLoaderRoute: typeof PublicKeiCarsRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/arenda-avto-bez-zaloga': {
+      id: '/_public/arenda-avto-bez-zaloga'
+      path: '/arenda-avto-bez-zaloga'
+      fullPath: '/arenda-avto-bez-zaloga'
+      preLoaderRoute: typeof PublicArendaAvtoBezZalogaRouteImport
       parentRoute: typeof PublicRoute
     }
     '/_public/cars/': {
@@ -609,6 +629,7 @@ const AdminRouteChildren: AdminRouteChildren = {
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
 interface PublicRouteChildren {
+  PublicArendaAvtoBezZalogaRoute: typeof PublicArendaAvtoBezZalogaRoute
   PublicKeiCarsRoute: typeof PublicKeiCarsRoute
   PublicLoginRoute: typeof PublicLoginRoute
   PublicPrivacyRoute: typeof PublicPrivacyRoute
@@ -626,6 +647,7 @@ interface PublicRouteChildren {
 }
 
 const PublicRouteChildren: PublicRouteChildren = {
+  PublicArendaAvtoBezZalogaRoute: PublicArendaAvtoBezZalogaRoute,
   PublicKeiCarsRoute: PublicKeiCarsRoute,
   PublicLoginRoute: PublicLoginRoute,
   PublicPrivacyRoute: PublicPrivacyRoute,
