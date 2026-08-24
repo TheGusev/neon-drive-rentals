@@ -21,6 +21,7 @@ import { Route as PublicPrivacyRouteImport } from './routes/_public.privacy'
 import { Route as PublicLoginRouteImport } from './routes/_public.login'
 import { Route as PublicKeiCarsRouteImport } from './routes/_public.kei-cars'
 import { Route as PublicArendaProbegIPlatezhiRouteImport } from './routes/_public.arenda-probeg-i-platezhi'
+import { Route as PublicArendaAvtoSPravymRulemRouteImport } from './routes/_public.arenda-avto-s-pravym-rulem'
 import { Route as PublicArendaAvtoNaSutkiRouteImport } from './routes/_public.arenda-avto-na-sutki'
 import { Route as PublicArendaAvtoNaNedelyuRouteImport } from './routes/_public.arenda-avto-na-nedelyu'
 import { Route as PublicArendaAvtoNaMesyacRouteImport } from './routes/_public.arenda-avto-na-mesyac'
@@ -103,6 +104,12 @@ const PublicArendaProbegIPlatezhiRoute =
   PublicArendaProbegIPlatezhiRouteImport.update({
     id: '/arenda-probeg-i-platezhi',
     path: '/arenda-probeg-i-platezhi',
+    getParentRoute: () => PublicRoute,
+  } as any)
+const PublicArendaAvtoSPravymRulemRoute =
+  PublicArendaAvtoSPravymRulemRouteImport.update({
+    id: '/arenda-avto-s-pravym-rulem',
+    path: '/arenda-avto-s-pravym-rulem',
     getParentRoute: () => PublicRoute,
   } as any)
 const PublicArendaAvtoNaSutkiRoute = PublicArendaAvtoNaSutkiRouteImport.update({
@@ -243,6 +250,7 @@ export interface FileRoutesByFullPath {
   '/arenda-avto-na-mesyac': typeof PublicArendaAvtoNaMesyacRoute
   '/arenda-avto-na-nedelyu': typeof PublicArendaAvtoNaNedelyuRoute
   '/arenda-avto-na-sutki': typeof PublicArendaAvtoNaSutkiRoute
+  '/arenda-avto-s-pravym-rulem': typeof PublicArendaAvtoSPravymRulemRoute
   '/arenda-probeg-i-platezhi': typeof PublicArendaProbegIPlatezhiRoute
   '/kei-cars': typeof PublicKeiCarsRoute
   '/login': typeof PublicLoginRoute
@@ -279,6 +287,7 @@ export interface FileRoutesByTo {
   '/arenda-avto-na-mesyac': typeof PublicArendaAvtoNaMesyacRoute
   '/arenda-avto-na-nedelyu': typeof PublicArendaAvtoNaNedelyuRoute
   '/arenda-avto-na-sutki': typeof PublicArendaAvtoNaSutkiRoute
+  '/arenda-avto-s-pravym-rulem': typeof PublicArendaAvtoSPravymRulemRoute
   '/arenda-probeg-i-platezhi': typeof PublicArendaProbegIPlatezhiRoute
   '/kei-cars': typeof PublicKeiCarsRoute
   '/login': typeof PublicLoginRoute
@@ -318,6 +327,7 @@ export interface FileRoutesById {
   '/_public/arenda-avto-na-mesyac': typeof PublicArendaAvtoNaMesyacRoute
   '/_public/arenda-avto-na-nedelyu': typeof PublicArendaAvtoNaNedelyuRoute
   '/_public/arenda-avto-na-sutki': typeof PublicArendaAvtoNaSutkiRoute
+  '/_public/arenda-avto-s-pravym-rulem': typeof PublicArendaAvtoSPravymRulemRoute
   '/_public/arenda-probeg-i-platezhi': typeof PublicArendaProbegIPlatezhiRoute
   '/_public/kei-cars': typeof PublicKeiCarsRoute
   '/_public/login': typeof PublicLoginRoute
@@ -356,6 +366,7 @@ export interface FileRouteTypes {
     | '/arenda-avto-na-mesyac'
     | '/arenda-avto-na-nedelyu'
     | '/arenda-avto-na-sutki'
+    | '/arenda-avto-s-pravym-rulem'
     | '/arenda-probeg-i-platezhi'
     | '/kei-cars'
     | '/login'
@@ -392,6 +403,7 @@ export interface FileRouteTypes {
     | '/arenda-avto-na-mesyac'
     | '/arenda-avto-na-nedelyu'
     | '/arenda-avto-na-sutki'
+    | '/arenda-avto-s-pravym-rulem'
     | '/arenda-probeg-i-platezhi'
     | '/kei-cars'
     | '/login'
@@ -430,6 +442,7 @@ export interface FileRouteTypes {
     | '/_public/arenda-avto-na-mesyac'
     | '/_public/arenda-avto-na-nedelyu'
     | '/_public/arenda-avto-na-sutki'
+    | '/_public/arenda-avto-s-pravym-rulem'
     | '/_public/arenda-probeg-i-platezhi'
     | '/_public/kei-cars'
     | '/_public/login'
@@ -552,6 +565,13 @@ declare module '@tanstack/react-router' {
       path: '/arenda-probeg-i-platezhi'
       fullPath: '/arenda-probeg-i-platezhi'
       preLoaderRoute: typeof PublicArendaProbegIPlatezhiRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/arenda-avto-s-pravym-rulem': {
+      id: '/_public/arenda-avto-s-pravym-rulem'
+      path: '/arenda-avto-s-pravym-rulem'
+      fullPath: '/arenda-avto-s-pravym-rulem'
+      preLoaderRoute: typeof PublicArendaAvtoSPravymRulemRouteImport
       parentRoute: typeof PublicRoute
     }
     '/_public/arenda-avto-na-sutki': {
@@ -754,6 +774,7 @@ interface PublicRouteChildren {
   PublicArendaAvtoNaMesyacRoute: typeof PublicArendaAvtoNaMesyacRoute
   PublicArendaAvtoNaNedelyuRoute: typeof PublicArendaAvtoNaNedelyuRoute
   PublicArendaAvtoNaSutkiRoute: typeof PublicArendaAvtoNaSutkiRoute
+  PublicArendaAvtoSPravymRulemRoute: typeof PublicArendaAvtoSPravymRulemRoute
   PublicArendaProbegIPlatezhiRoute: typeof PublicArendaProbegIPlatezhiRoute
   PublicKeiCarsRoute: typeof PublicKeiCarsRoute
   PublicLoginRoute: typeof PublicLoginRoute
@@ -778,6 +799,7 @@ const PublicRouteChildren: PublicRouteChildren = {
   PublicArendaAvtoNaMesyacRoute: PublicArendaAvtoNaMesyacRoute,
   PublicArendaAvtoNaNedelyuRoute: PublicArendaAvtoNaNedelyuRoute,
   PublicArendaAvtoNaSutkiRoute: PublicArendaAvtoNaSutkiRoute,
+  PublicArendaAvtoSPravymRulemRoute: PublicArendaAvtoSPravymRulemRoute,
   PublicArendaProbegIPlatezhiRoute: PublicArendaProbegIPlatezhiRoute,
   PublicKeiCarsRoute: PublicKeiCarsRoute,
   PublicLoginRoute: PublicLoginRoute,
