@@ -106,9 +106,10 @@ const isStableAssetUrl = (url: string) =>
   url.startsWith("/assets/cars/") || url.startsWith("http://") || url.startsWith("https://");
 
 function normalizedImages(slug: string, value: unknown): string[] {
+  const valid = Array.from(new Set(toImages(value).filter(isStableAssetUrl)));
+  if (valid.length) return valid;
   const fallback = STABLE_IMAGE_BY_SLUG[slug];
-  const valid = toImages(value).filter(isStableAssetUrl);
-  return Array.from(new Set(fallback ? [fallback, ...valid] : valid));
+  return fallback ? [fallback] : [];
 }
 
 async function withPublicFallback<T>(label: string, task: Promise<T>, fallback: T): Promise<T> {
@@ -289,6 +290,7 @@ export type CarInput = {
   deposit?: number;
   vin?: string;
   image?: string;
+  images?: string[];
 };
 
 const translit: Record<string, string> = {
@@ -355,6 +357,14 @@ function specsFrom(input: CarInput): Record<string, unknown> {
   };
 }
 
+/** Галерея из формы: массив images, иначе одиночная ссылка image. */
+function inputImages(input: CarInput): string[] {
+  const list = (input.images ?? []).map((v) => v.trim()).filter(Boolean);
+  if (list.length) return Array.from(new Set(list));
+  const single = input.image?.trim();
+  return single ? [single] : [];
+}
+
 export async function insertCar(input: CarInput): Promise<Car | null> {
   if (!(await ready())) return null;
   const baseSlug =
@@ -382,7 +392,7 @@ export async function insertCar(input: CarInput): Promise<Car | null> {
       input.priceCity,
       input.priceOut,
       toDbFleetStatus(input.status),
-      JSON.stringify(input.image ? [input.image] : []),
+      JSON.stringify(inputImages(input)),
       JSON.stringify(specsFrom(input)),
       input.plate,
     ],
@@ -395,8 +405,9 @@ export async function updateCarInDb(slug: string, input: CarInput): Promise<Car 
   const current = await fetchCarAdminBySlug(slug);
   if (!current) return null;
 
-  const images = input.image
-    ? [input.image]
+  const provided = inputImages(input);
+  const images = provided.length
+    ? provided
     : (current.gallery ?? (current.image ? [current.image] : []));
   const rows = await query<CarRow>(
     `update cars set brand=$2, model=$3, year=$4, transmission=$5, seats=$6,
