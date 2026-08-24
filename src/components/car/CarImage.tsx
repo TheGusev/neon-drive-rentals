@@ -1,4 +1,4 @@
-import { useEffect, useState, type ImgHTMLAttributes } from "react";
+import { useEffect, useRef, useState, type ImgHTMLAttributes } from "react";
 import heroCar from "@/assets/hero-car.jpg";
 import { cn } from "@/lib/utils";
 
@@ -19,15 +19,22 @@ export function CarImage({
   const requestedSrc = src || fallbackSrc;
   const [resolvedSrc, setResolvedSrc] = useState(requestedSrc);
   const [ready, setReady] = useState(false);
+  const ref = useRef<HTMLImageElement>(null);
 
   useEffect(() => {
     setResolvedSrc(requestedSrc);
     setReady(false);
   }, [requestedSrc]);
 
+  // Cached images can finish before hydration, so `load` never fires here.
+  useEffect(() => {
+    if (ref.current?.complete) setReady(true);
+  }, [resolvedSrc]);
+
   return (
     <img
       {...props}
+      ref={ref}
       src={resolvedSrc}
       className={cn(
         "transition-opacity duration-500 motion-reduce:transition-none",
@@ -46,3 +53,4 @@ export function CarImage({
     />
   );
 }
+
