@@ -1,5 +1,6 @@
 import { hasDatabase, query } from "@/lib/db.server";
 
+import initSchema from "../../db/migrations/001_init.sql?raw";
 import seedCars from "../../db/migrations/002_seed_cars.sql?raw";
 import addSignature from "../../db/migrations/003_add_signature.sql?raw";
 import authPayments from "../../db/migrations/004_auth_payments.sql?raw";
@@ -11,8 +12,9 @@ import rentalTerms from "../../db/migrations/009_rental_terms.sql?raw";
 import realPhotos from "../../db/migrations/010_real_photos.sql?raw";
 import repairPhotos from "../../db/migrations/011_repair_and_merge_car_photos.sql?raw";
 
-/** Порядок применения важен. 001_init.sql уже применён на сервере вручную. */
+/** Порядок применения важен; все миграции идемпотентны для существующей базы. */
 const MIGRATIONS: Array<{ name: string; sql: string }> = [
+  { name: "001_init", sql: initSchema },
   { name: "002_seed_cars", sql: seedCars },
   { name: "003_add_signature", sql: addSignature },
   { name: "004_auth_payments", sql: authPayments },

@@ -35,6 +35,7 @@ import { Route as PublicBlogIndexRouteImport } from './routes/_public.blog.index
 import { Route as AdminAdminIndexRouteImport } from './routes/_admin.admin.index'
 import { Route as ApiPublicYookassaWebhookRouteImport } from './routes/api/public/yookassa-webhook'
 import { Route as ApiPublicVersionRouteImport } from './routes/api/public/version'
+import { Route as ApiPublicHealthRouteImport } from './routes/api/public/health'
 import { Route as PublicRentNovosibirskRouteImport } from './routes/_public.rent.novosibirsk'
 import { Route as PublicRentBezZalogaRouteImport } from './routes/_public.rent.bez-zaloga'
 import { Route as PublicPaymentBookingIdRouteImport } from './routes/_public.payment.$bookingId'
@@ -187,6 +188,11 @@ const ApiPublicVersionRoute = ApiPublicVersionRouteImport.update({
   path: '/api/public/version',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicHealthRoute = ApiPublicHealthRouteImport.update({
+  id: '/api/public/health',
+  path: '/api/public/health',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PublicRentNovosibirskRoute = PublicRentNovosibirskRouteImport.update({
   id: '/rent/novosibirsk',
   path: '/rent/novosibirsk',
@@ -286,6 +292,7 @@ export interface FileRoutesByFullPath {
   '/payment/$bookingId': typeof PublicPaymentBookingIdRoute
   '/rent/bez-zaloga': typeof PublicRentBezZalogaRoute
   '/rent/novosibirsk': typeof PublicRentNovosibirskRoute
+  '/api/public/health': typeof ApiPublicHealthRoute
   '/api/public/version': typeof ApiPublicVersionRoute
   '/api/public/yookassa-webhook': typeof ApiPublicYookassaWebhookRoute
   '/admin/': typeof AdminAdminIndexRoute
@@ -325,6 +332,7 @@ export interface FileRoutesByTo {
   '/payment/$bookingId': typeof PublicPaymentBookingIdRoute
   '/rent/bez-zaloga': typeof PublicRentBezZalogaRoute
   '/rent/novosibirsk': typeof PublicRentNovosibirskRoute
+  '/api/public/health': typeof ApiPublicHealthRoute
   '/api/public/version': typeof ApiPublicVersionRoute
   '/api/public/yookassa-webhook': typeof ApiPublicYookassaWebhookRoute
   '/admin': typeof AdminAdminIndexRoute
@@ -367,6 +375,7 @@ export interface FileRoutesById {
   '/_public/payment/$bookingId': typeof PublicPaymentBookingIdRoute
   '/_public/rent/bez-zaloga': typeof PublicRentBezZalogaRoute
   '/_public/rent/novosibirsk': typeof PublicRentNovosibirskRoute
+  '/api/public/health': typeof ApiPublicHealthRoute
   '/api/public/version': typeof ApiPublicVersionRoute
   '/api/public/yookassa-webhook': typeof ApiPublicYookassaWebhookRoute
   '/_admin/admin/': typeof AdminAdminIndexRoute
@@ -408,6 +417,7 @@ export interface FileRouteTypes {
     | '/payment/$bookingId'
     | '/rent/bez-zaloga'
     | '/rent/novosibirsk'
+    | '/api/public/health'
     | '/api/public/version'
     | '/api/public/yookassa-webhook'
     | '/admin/'
@@ -447,6 +457,7 @@ export interface FileRouteTypes {
     | '/payment/$bookingId'
     | '/rent/bez-zaloga'
     | '/rent/novosibirsk'
+    | '/api/public/health'
     | '/api/public/version'
     | '/api/public/yookassa-webhook'
     | '/admin'
@@ -488,6 +499,7 @@ export interface FileRouteTypes {
     | '/_public/payment/$bookingId'
     | '/_public/rent/bez-zaloga'
     | '/_public/rent/novosibirsk'
+    | '/api/public/health'
     | '/api/public/version'
     | '/api/public/yookassa-webhook'
     | '/_admin/admin/'
@@ -503,6 +515,7 @@ export interface RootRouteChildren {
   RobotsDottxtRoute: typeof RobotsDottxtRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   AdminLoginRoute: typeof AdminLoginRoute
+  ApiPublicHealthRoute: typeof ApiPublicHealthRoute
   ApiPublicVersionRoute: typeof ApiPublicVersionRoute
   ApiPublicYookassaWebhookRoute: typeof ApiPublicYookassaWebhookRoute
 }
@@ -691,6 +704,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicVersionRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/health': {
+      id: '/api/public/health'
+      path: '/api/public/health'
+      fullPath: '/api/public/health'
+      preLoaderRoute: typeof ApiPublicHealthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_public/rent/novosibirsk': {
       id: '/_public/rent/novosibirsk'
       path: '/rent/novosibirsk'
@@ -871,6 +891,7 @@ const rootRouteChildren: RootRouteChildren = {
   RobotsDottxtRoute: RobotsDottxtRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   AdminLoginRoute: AdminLoginRoute,
+  ApiPublicHealthRoute: ApiPublicHealthRoute,
   ApiPublicVersionRoute: ApiPublicVersionRoute,
   ApiPublicYookassaWebhookRoute: ApiPublicYookassaWebhookRoute,
 }

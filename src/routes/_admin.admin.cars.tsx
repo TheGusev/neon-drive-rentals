@@ -132,7 +132,7 @@ function AdminCarsPage() {
     },
     onSuccess: async (res) => {
       if (!res.ok) {
-        toast.error("Не удалось сохранить: база данных недоступна");
+        toast.error(res.error);
         return;
       }
       setOpen(false);
