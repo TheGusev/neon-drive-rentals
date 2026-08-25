@@ -59,7 +59,7 @@ function CarPhotosPage() {
     mutationFn: () => saveFn({ data: { id: carId, images } }),
     onSuccess: async (res) => {
       if (!res.ok) {
-        toast.error("Не удалось сохранить: база данных недоступна");
+        toast.error(res.error);
         return;
       }
       await queryClient.invalidateQueries({ queryKey: ["admin", "cars"] });
@@ -79,7 +79,7 @@ function CarPhotosPage() {
         toast.error(res.error ?? "Не удалось загрузить файл");
         return;
       }
-      setImages((prev) => [...prev, res.url!]);
+      setImages((prev) => (res.url ? [...prev, res.url] : prev));
       toast.success("Фото загружено — не забудьте сохранить");
     },
     onError: () => toast.error("Не удалось загрузить файл"),

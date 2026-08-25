@@ -38,9 +38,18 @@ export const createCar = createServerFn({ method: "POST" })
   .handler(async ({ data }) => {
     const { requireAdmin } = await import("@/lib/adminGuard.server");
     await requireAdmin();
+    const { hasDatabase } = await import("@/lib/db.server");
+    if (!hasDatabase()) return { ok: false as const, error: "База данных не настроена" };
     const { insertCar } = await import("@/lib/carsRepo.server");
-    const car = await insertCar(data);
-    return car ? { ok: true as const, car } : { ok: false as const };
+    try {
+      const car = await insertCar(data);
+      return car
+        ? { ok: true as const, car }
+        : { ok: false as const, error: "Автомобиль не был записан в базу" };
+    } catch (error) {
+      console.error("[admin] create car failed", error);
+      return { ok: false as const, error: "Ошибка записи автомобиля в базу" };
+    }
   });
 
 export const updateCar = createServerFn({ method: "POST" })
@@ -48,9 +57,18 @@ export const updateCar = createServerFn({ method: "POST" })
   .handler(async ({ data }) => {
     const { requireAdmin } = await import("@/lib/adminGuard.server");
     await requireAdmin();
+    const { hasDatabase } = await import("@/lib/db.server");
+    if (!hasDatabase()) return { ok: false as const, error: "База данных не настроена" };
     const { updateCarInDb } = await import("@/lib/carsRepo.server");
-    const car = await updateCarInDb(data.id, data.patch);
-    return car ? { ok: true as const, car } : { ok: false as const };
+    try {
+      const car = await updateCarInDb(data.id, data.patch);
+      return car
+        ? { ok: true as const, car }
+        : { ok: false as const, error: "Автомобиль не найден или не обновлён" };
+    } catch (error) {
+      console.error("[admin] update car failed", error);
+      return { ok: false as const, error: "Ошибка обновления автомобиля в базе" };
+    }
   });
 
 export const updateCarStatus = createServerFn({ method: "POST" })
@@ -152,7 +170,16 @@ export const updateCarImages = createServerFn({ method: "POST" })
   .handler(async ({ data }) => {
     const { requireAdmin } = await import("@/lib/adminGuard.server");
     await requireAdmin();
+    const { hasDatabase } = await import("@/lib/db.server");
+    if (!hasDatabase()) return { ok: false as const, error: "База данных не настроена" };
     const { updateCarImagesInDb } = await import("@/lib/carsRepo.server");
-    const car = await updateCarImagesInDb(data.id, data.images);
-    return car ? { ok: true as const, car } : { ok: false as const };
+    try {
+      const car = await updateCarImagesInDb(data.id, data.images);
+      return car
+        ? { ok: true as const, car }
+        : { ok: false as const, error: "Автомобиль не найден или галерея не обновлена" };
+    } catch (error) {
+      console.error("[admin] update car images failed", error);
+      return { ok: false as const, error: "Ошибка сохранения галереи в базе" };
+    }
   });
