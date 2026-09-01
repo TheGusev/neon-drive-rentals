@@ -31,7 +31,7 @@ export function SimilarCars({ car }: { car: Car }) {
           >
             <div className="aspect-[4/3] overflow-hidden bg-muted">
               <CarImage
-                src={c.image ?? heroCar}
+                src={c.image}
                 alt={`Аренда ${c.brand} ${c.model} ${c.year}, ${c.color}, в Новосибирске`}
                 loading="lazy"
                 width={1024}

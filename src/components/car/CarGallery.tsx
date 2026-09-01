@@ -9,7 +9,7 @@ interface CarGalleryProps {
 
 export function CarGallery({ alt, images }: CarGalleryProps) {
   const list = (images ?? []).filter(Boolean);
-  const photos = list.length ? list : [heroCar];
+  const photos = list.length ? list : [""];
   const [active, setActive] = useState(0);
   const current = photos[Math.min(active, photos.length - 1)];
 

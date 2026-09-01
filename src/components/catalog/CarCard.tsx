@@ -28,7 +28,7 @@ export function CarCard({ car }: { car: Car }) {
     <article className="group flex h-full flex-col overflow-hidden rounded-3xl border border-border bg-card transition hover:-translate-y-1 hover:shadow-lg md:hover:neon-glow">
       <div className="relative aspect-[4/3] overflow-hidden bg-muted">
         <CarImage
-          src={car.image ?? heroCar}
+          src={car.image}
           alt={`${car.brand} ${car.model}, ${car.color}`}
           loading="lazy"
           width={1024}
