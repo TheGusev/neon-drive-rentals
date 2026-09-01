@@ -9,7 +9,6 @@ import {
 } from "@/components/ui/carousel";
 import { Button } from "@/components/ui/button";
 import { useCars } from "@/state/AppDataContext";
-import heroCar from "@/assets/hero-car.jpg";
 import { CarImage } from "@/components/car/CarImage";
 
 export function PopularModels() {
@@ -40,7 +39,6 @@ export function PopularModels() {
                 <div className="relative aspect-[4/3] overflow-hidden bg-muted">
                   <CarImage
                     src={car.image ?? heroCar}
-                    fallbackSrc={heroCar}
                     alt={`${car.brand} ${car.model}, ${car.color}`}
                     loading="lazy"
                     width={1024}
