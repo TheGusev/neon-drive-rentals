@@ -60,8 +60,11 @@ export function PhotoUploader({ images, onChange }: Props) {
             if (ok) added.push(res.url);
             else toast.error(`${file.name}: файл сохранён, но недоступен по ссылке`);
           } else toast.error(res.error ?? `${file.name}: не удалось загрузить`);
-
+        } catch (error) {
+          toast.error(error instanceof Error ? error.message : "Ошибка загрузки файла");
+        }
       }
+
       if (added.length) {
         addUrls(added);
         toast.success(`Загружено фото: ${added.length}`);
