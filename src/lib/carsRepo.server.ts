@@ -411,7 +411,7 @@ export async function updateCarInDb(slug: string, input: CarInput): Promise<Car 
     : (current.gallery ?? (current.image ? [current.image] : []));
   const rows = await query<CarRow>(
     `update cars set brand=$2, model=$3, year=$4, transmission=$5, seats=$6,
-            price_city=$7, price_out=$8, status=$9, images=$10::jsonb,
+             price_city=$7, price_out=$8, status=$9, images=$10::jsonb, images_managed=true,
             specs = coalesce(specs, '{}'::jsonb) || $11::jsonb, plate=$12
      where slug = $1 or id::text = $1
      returning id, slug, brand, model, year, class, transmission, seats, price_city, price_out, status, images, specs, plate`,
@@ -485,7 +485,7 @@ export async function resolveCarDbId(slug: string): Promise<string | null> {
 export async function updateCarImagesInDb(slug: string, images: string[]): Promise<Car | null> {
   if (!(await ready())) return null;
   const rows = await query<CarRow>(
-    `update cars set images = $2::jsonb where slug = $1 or id::text = $1
+    `update cars set images = $2::jsonb, images_managed=true where slug = $1 or id::text = $1
      returning id, slug, brand, model, year, class, transmission, seats, price_city, price_out, status, images, specs, plate`,
     [slug, JSON.stringify(images)],
   );
