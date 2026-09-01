@@ -7,6 +7,17 @@ type CarImageProps = Omit<ImgHTMLAttributes<HTMLImageElement>, "src"> & {
   fallbackSrc?: string;
 };
 
+/**
+ * Для статики парка (`/assets/cars/*.jpg|png`) рядом лежит WebP-версия —
+ * она в 3-4 раза легче. Загруженные админом файлы конвертации не имеют.
+ */
+function webpVariant(src: string): string | null {
+  if (!src.startsWith("/assets/cars/")) return null;
+  if (src.includes("/uploads/")) return null;
+  if (!/\.(jpe?g|png)$/i.test(src)) return null;
+  return src.replace(/\.(jpe?g|png)$/i, ".webp");
+}
+
 /** Image with a stable visual fallback for empty, stale, or failed car URLs. */
 export function CarImage({
   src,
@@ -14,6 +25,8 @@ export function CarImage({
   onError,
   onLoad,
   className,
+  loading = "lazy",
+  decoding = "async",
   ...props
 }: CarImageProps) {
   const requestedSrc = src || fallbackSrc;
@@ -31,11 +44,15 @@ export function CarImage({
     if (ref.current?.complete) setReady(true);
   }, [resolvedSrc]);
 
-  return (
+  const webp = webpVariant(resolvedSrc);
+
+  const img = (
     <img
       {...props}
       ref={ref}
       src={resolvedSrc}
+      loading={loading}
+      decoding={decoding}
       className={cn(
         "transition-opacity duration-500 motion-reduce:transition-none",
         ready ? "opacity-100" : "opacity-0",
@@ -51,5 +68,14 @@ export function CarImage({
         else setReady(true);
       }}
     />
+  );
+
+  if (!webp) return img;
+
+  return (
+    <picture>
+      <source srcSet={webp} type="image/webp" />
+      {img}
+    </picture>
   );
 }
