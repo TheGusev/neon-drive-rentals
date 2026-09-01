@@ -434,7 +434,7 @@ export async function updateCarInDb(slug: string, input: CarInput): Promise<Car 
       input.plate,
     ],
   );
-  return rows.length ? mapCarRow(rows[0]) : null;
+  return rows.length ? mapCarRow(rows[0], false) : null;
 }
 
 export async function updateCarStatusInDb(
@@ -447,7 +447,7 @@ export async function updateCarStatusInDb(
      returning id, slug, brand, model, year, class, transmission, seats, price_city, price_out, status, images, specs, plate`,
     [slug, toDbFleetStatus(status)],
   );
-  return rows.length ? mapCarRow(rows[0]) : null;
+  return rows.length ? mapCarRow(rows[0], false) : null;
 }
 
 export type DeleteCarResult =
@@ -493,5 +493,5 @@ export async function updateCarImagesInDb(slug: string, images: string[]): Promi
      returning id, slug, brand, model, year, class, transmission, seats, price_city, price_out, status, images, specs, plate`,
     [slug, JSON.stringify(images)],
   );
-  return rows.length ? mapCarRow(rows[0]) : null;
+  return rows.length ? mapCarRow(rows[0], false) : null;
 }
