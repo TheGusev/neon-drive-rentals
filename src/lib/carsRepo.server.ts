@@ -165,12 +165,12 @@ function normalizeTransmission(value: unknown): Transmission {
   return (TRANSMISSIONS as string[]).includes(key) ? (key as Transmission) : "AT";
 }
 
-export function mapCarRow(row: CarRow): Car {
+export function mapCarRow(row: CarRow, useStableFallback = true): Car {
   const specs = toSpecs(row.specs);
   const brand = str(row.brand, "");
   const model = str(row.model, "");
   const id = str(row.slug, String(row.id));
-  const images = normalizedImages(id, row.images);
+  const images = useStableFallback ? normalizedImages(id, row.images) : toImages(row.images);
 
   return {
     id,
@@ -261,7 +261,7 @@ export async function fetchCarBySlug(slug: string): Promise<Car | null> {
 export async function fetchCarsAdmin(): Promise<Car[]> {
   if (!(await ready())) return mockCars;
   const rows = await query<CarRow>(`${SELECT_CARS} order by brand asc, model asc, year desc`);
-  return rows.map(mapCarRow);
+  return rows.map((row) => mapCarRow(row, false));
 }
 
 export async function fetchCarAdminBySlug(slug: string): Promise<Car | null> {
@@ -269,7 +269,7 @@ export async function fetchCarAdminBySlug(slug: string): Promise<Car | null> {
   const rows = await query<CarRow>(`${SELECT_CARS} where slug = $1 or id::text = $1 limit 1`, [
     slug,
   ]);
-  return rows.length ? mapCarRow(rows[0]) : null;
+  return rows.length ? mapCarRow(rows[0], false) : null;
 }
 
 export type CarInput = {
@@ -397,7 +397,7 @@ export async function insertCar(input: CarInput): Promise<Car | null> {
       input.plate,
     ],
   );
-  return rows.length ? mapCarRow(rows[0]) : null;
+  return rows.length ? mapCarRow(rows[0], false) : null;
 }
 
 export async function updateCarInDb(slug: string, input: CarInput): Promise<Car | null> {
