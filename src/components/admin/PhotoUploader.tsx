@@ -55,11 +55,12 @@ export function PhotoUploader({ images, onChange }: Props) {
           const res = await upload({
             data: { fileName: prepared.fileName, contentBase64: prepared.contentBase64 },
           });
-          if (res.ok && res.url) added.push(res.url);
-          else toast.error(res.error ?? `${file.name}: не удалось загрузить`);
-        } catch (error) {
-          toast.error(error instanceof Error ? error.message : "Ошибка загрузки файла");
-        }
+          if (res.ok && res.url) {
+            const ok = await verify(res.url);
+            if (ok) added.push(res.url);
+            else toast.error(`${file.name}: файл сохранён, но недоступен по ссылке`);
+          } else toast.error(res.error ?? `${file.name}: не удалось загрузить`);
+
       }
       if (added.length) {
         addUrls(added);
