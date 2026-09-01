@@ -103,7 +103,10 @@ const STABLE_IMAGE_BY_SLUG: Record<string, string> = {
 };
 
 const isStableAssetUrl = (url: string) =>
-  url.startsWith("/assets/cars/") || url.startsWith("http://") || url.startsWith("https://");
+  url.startsWith("/assets/cars/") ||
+  url.startsWith("/api/public/car-photo/") ||
+  url.startsWith("http://") ||
+  url.startsWith("https://");
 
 function normalizedImages(slug: string, value: unknown): string[] {
   const valid = Array.from(new Set(toImages(value).filter(isStableAssetUrl)));
@@ -379,8 +382,8 @@ export async function insertCar(input: CarInput): Promise<Car | null> {
   }
 
   const rows = await query<CarRow>(
-    `insert into cars (slug, brand, model, year, class, transmission, seats, price_city, price_out, status, images, specs, plate)
-     values ($1,$2,$3,$4,'Econom',$5,$6,$7,$8,$9,$10::jsonb,$11::jsonb,$12)
+    `insert into cars (slug, brand, model, year, class, transmission, seats, price_city, price_out, status, images, images_managed, specs, plate)
+     values ($1,$2,$3,$4,'Econom',$5,$6,$7,$8,$9,$10::jsonb,$13,$11::jsonb,$12)
      returning id, slug, brand, model, year, class, transmission, seats, price_city, price_out, status, images, specs, plate`,
     [
       slug,
@@ -395,6 +398,7 @@ export async function insertCar(input: CarInput): Promise<Car | null> {
       JSON.stringify(inputImages(input)),
       JSON.stringify(specsFrom(input)),
       input.plate,
+      inputImages(input).length > 0,
     ],
   );
   return rows.length ? mapCarRow(rows[0], false) : null;

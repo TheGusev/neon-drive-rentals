@@ -48,6 +48,7 @@ import { Route as AdminAdminFinanceRouteImport } from './routes/_admin.admin.fin
 import { Route as AdminAdminClientsRouteImport } from './routes/_admin.admin.clients'
 import { Route as AdminAdminCarsRouteImport } from './routes/_admin.admin.cars'
 import { Route as AdminAdminBookingsRouteImport } from './routes/_admin.admin.bookings'
+import { Route as ApiPublicCarPhotoIdRouteImport } from './routes/api/public/car-photo.$id'
 import { Route as AdminAdminCarPhotosCarIdRouteImport } from './routes/_admin.admin.car-photos.$carId'
 
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
@@ -253,6 +254,11 @@ const AdminAdminBookingsRoute = AdminAdminBookingsRouteImport.update({
   path: '/admin/bookings',
   getParentRoute: () => AdminRoute,
 } as any)
+const ApiPublicCarPhotoIdRoute = ApiPublicCarPhotoIdRouteImport.update({
+  id: '/api/public/car-photo/$id',
+  path: '/api/public/car-photo/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminAdminCarPhotosCarIdRoute =
   AdminAdminCarPhotosCarIdRouteImport.update({
     id: '/admin/car-photos/$carId',
@@ -299,6 +305,7 @@ export interface FileRoutesByFullPath {
   '/blog/': typeof PublicBlogIndexRoute
   '/cars/': typeof PublicCarsIndexRoute
   '/admin/car-photos/$carId': typeof AdminAdminCarPhotosCarIdRoute
+  '/api/public/car-photo/$id': typeof ApiPublicCarPhotoIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -339,6 +346,7 @@ export interface FileRoutesByTo {
   '/blog': typeof PublicBlogIndexRoute
   '/cars': typeof PublicCarsIndexRoute
   '/admin/car-photos/$carId': typeof AdminAdminCarPhotosCarIdRoute
+  '/api/public/car-photo/$id': typeof ApiPublicCarPhotoIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -382,6 +390,7 @@ export interface FileRoutesById {
   '/_public/blog/': typeof PublicBlogIndexRoute
   '/_public/cars/': typeof PublicCarsIndexRoute
   '/_admin/admin/car-photos/$carId': typeof AdminAdminCarPhotosCarIdRoute
+  '/api/public/car-photo/$id': typeof ApiPublicCarPhotoIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -424,6 +433,7 @@ export interface FileRouteTypes {
     | '/blog/'
     | '/cars/'
     | '/admin/car-photos/$carId'
+    | '/api/public/car-photo/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -464,6 +474,7 @@ export interface FileRouteTypes {
     | '/blog'
     | '/cars'
     | '/admin/car-photos/$carId'
+    | '/api/public/car-photo/$id'
   id:
     | '__root__'
     | '/'
@@ -506,6 +517,7 @@ export interface FileRouteTypes {
     | '/_public/blog/'
     | '/_public/cars/'
     | '/_admin/admin/car-photos/$carId'
+    | '/api/public/car-photo/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -518,6 +530,7 @@ export interface RootRouteChildren {
   ApiPublicHealthRoute: typeof ApiPublicHealthRoute
   ApiPublicVersionRoute: typeof ApiPublicVersionRoute
   ApiPublicYookassaWebhookRoute: typeof ApiPublicYookassaWebhookRoute
+  ApiPublicCarPhotoIdRoute: typeof ApiPublicCarPhotoIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -795,6 +808,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminAdminBookingsRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/api/public/car-photo/$id': {
+      id: '/api/public/car-photo/$id'
+      path: '/api/public/car-photo/$id'
+      fullPath: '/api/public/car-photo/$id'
+      preLoaderRoute: typeof ApiPublicCarPhotoIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_admin/admin/car-photos/$carId': {
       id: '/_admin/admin/car-photos/$carId'
       path: '/admin/car-photos/$carId'
@@ -894,6 +914,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiPublicHealthRoute: ApiPublicHealthRoute,
   ApiPublicVersionRoute: ApiPublicVersionRoute,
   ApiPublicYookassaWebhookRoute: ApiPublicYookassaWebhookRoute,
+  ApiPublicCarPhotoIdRoute: ApiPublicCarPhotoIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
