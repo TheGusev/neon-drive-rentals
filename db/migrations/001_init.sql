@@ -14,10 +14,13 @@ create table if not exists cars (
   price_out numeric(12,2) not null default 0,
   status text not null default 'available',
   images jsonb not null default '[]'::jsonb,
+  images_managed boolean not null default false,
   specs jsonb not null default '{}'::jsonb,
   plate text,
   created_at timestamptz not null default now()
 );
+
+alter table cars add column if not exists images_managed boolean not null default false;
 
 create table if not exists clients (
   id uuid primary key default gen_random_uuid(),

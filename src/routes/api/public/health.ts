@@ -25,16 +25,20 @@ export const Route = createFileRoute("/api/public/health")({
         }
 
         try {
+          const { ensureMigrations } = await import("@/lib/migrations.server");
+          await ensureMigrations();
           const rows = await query<{
             cars_table: string | null;
             bookings_table: string | null;
             clients_table: string | null;
             car_count: string;
-          }>(`select to_regclass('public.cars')::text as cars_table,
-                     to_regclass('public.bookings')::text as bookings_table,
-                     to_regclass('public.clients')::text as clients_table,
-                     case when to_regclass('public.cars') is null then '0'
-                          else (select count(*)::text from cars) end as car_count`);
+          }>(`select 'cars' as cars_table,
+                     'bookings' as bookings_table,
+                     'clients' as clients_table,
+                     (select count(*)::text from cars) as car_count
+              where to_regclass('public.cars') is not null
+                and to_regclass('public.bookings') is not null
+                and to_regclass('public.clients') is not null`);
           const state = rows[0];
           const tablesReady = Boolean(state?.cars_table && state.bookings_table && state.clients_table);
           const ok = tablesReady && storage.writable;
