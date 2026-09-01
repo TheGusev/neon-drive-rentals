@@ -29,12 +29,15 @@ export function useTheme() {
 
 function readInitialTheme(): Theme {
   if (typeof document === "undefined") return "dark";
-  if (document.documentElement.classList.contains("clean-light")) return "light";
-  if (document.documentElement.classList.contains("public-dark")) return "dark";
+  // Сохранённый выбор пользователя важнее класса на <html>: при гидратации
+  // React может вернуть серверный класс и «сбросить» тему.
   const stored = window.localStorage.getItem(STORAGE_KEY);
   if (stored === "light" || stored === "dark") return stored;
+  if (document.documentElement.classList.contains("clean-light")) return "light";
+  if (document.documentElement.classList.contains("public-dark")) return "dark";
   return window.matchMedia("(max-width: 767px)").matches ? "light" : "dark";
 }
+
 
 function applyTheme(theme: Theme) {
   const root = document.documentElement;
