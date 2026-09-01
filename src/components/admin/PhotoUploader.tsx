@@ -29,6 +29,16 @@ export function PhotoUploader({ images, onChange }: Props) {
     onChange(merged);
   };
 
+  /** Проверяем, что сохранённый файл реально отдаётся сервером. */
+  const verify = (src: string) =>
+    new Promise<boolean>((resolve) => {
+      const probe = new Image();
+      probe.onload = () => resolve(true);
+      probe.onerror = () => resolve(false);
+      probe.src = src;
+    });
+
+
   const handleFiles = async (files: FileList | null) => {
     if (!files || files.length === 0) return;
     const room = MAX_PHOTOS - images.length;
