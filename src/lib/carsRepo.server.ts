@@ -234,7 +234,7 @@ export async function fetchCars(): Promise<Car[]> {
     (async () => {
       if (!(await ready())) return fallback;
       const rows = await query<CarRow>(`${SELECT_CARS} order by brand asc, model asc, year desc`);
-      return rows.map(mapCarRow).map(withoutPlate);
+      return rows.map((row) => mapCarRow(row)).map(withoutPlate);
     })(),
     fallback,
   );
