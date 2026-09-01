@@ -63,7 +63,7 @@ function ProfilePage() {
   return (
     <div className="min-h-screen bg-background text-foreground">
       <div className="mx-auto max-w-md px-4 pb-28 pt-6 md:max-w-2xl md:pb-10">
-        <ProfileHeader />
+        <ProfileHeader name={profile?.name} rating={profile?.rating ?? 0} reviewsCount={profile?.reviewsCount ?? 0} />
 
         <div className="mt-5 space-y-4">
           {active && car ? (
@@ -74,7 +74,7 @@ function ProfilePage() {
             </SectionCard>
           )}
 
-          <DocumentsBlock />
+          <DocumentsBlock documents={profileData?.documents ?? []} />
 
           <FavoritesBlock />
 
@@ -82,7 +82,7 @@ function ProfilePage() {
             <BookingHistoryList items={bookings} />
           </section>
 
-          <ReviewsBlock />
+          <ReviewsBlock reviews={profileData?.reviews ?? []} rating={profile?.rating ?? 0} />
 
           <Button
             variant="soft"
