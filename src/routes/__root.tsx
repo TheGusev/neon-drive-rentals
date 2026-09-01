@@ -9,6 +9,7 @@ import {
 } from "@tanstack/react-router";
 import { useEffect, type ReactNode } from "react";
 import { Toaster } from "@/components/ui/sonner";
+import { YandexMetrika } from "@/components/analytics/YandexMetrika";
 import { AppDataProvider } from "@/state/AppDataContext";
 import { carsQueryOptions, publicBookingsQueryOptions } from "@/lib/queries";
 
@@ -164,6 +165,7 @@ function RootComponent() {
         <Outlet />
       </AppDataProvider>
       <Toaster />
+      <YandexMetrika />
     </QueryClientProvider>
   );
 }

@@ -4,7 +4,6 @@ import type { Car } from "@/types/domain";
 import { Button } from "@/components/ui/button";
 import { useFavorites } from "@/state/FavoritesContext";
 import { cn } from "@/lib/utils";
-import heroCar from "@/assets/hero-car.jpg";
 import { CarImage } from "@/components/car/CarImage";
 
 export const fleetStatusMeta: Record<
@@ -29,8 +28,7 @@ export function CarCard({ car }: { car: Car }) {
     <article className="group flex h-full flex-col overflow-hidden rounded-3xl border border-border bg-card transition hover:-translate-y-1 hover:shadow-lg md:hover:neon-glow">
       <div className="relative aspect-[4/3] overflow-hidden bg-muted">
         <CarImage
-          src={car.image ?? heroCar}
-          fallbackSrc={heroCar}
+          src={car.image}
           alt={`${car.brand} ${car.model}, ${car.color}`}
           loading="lazy"
           width={1024}

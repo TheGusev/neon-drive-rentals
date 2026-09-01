@@ -33,6 +33,13 @@ export async function inspectUploadStorage(): Promise<{ writable: boolean; pathC
   }
 }
 
+const MIME_BY_EXT: Record<string, string> = {
+  ".jpg": "image/jpeg",
+  ".jpeg": "image/jpeg",
+  ".png": "image/png",
+  ".webp": "image/webp",
+};
+
 export async function saveCarPhoto(
   fileName: string,
   contentBase64: string,
@@ -48,6 +55,22 @@ export async function saveCarPhoto(
   const signature = IMAGE_SIGNATURES.find((item) => item.ext.includes(ext));
   if (!signature?.matches(buffer)) return { ok: false, error: "Содержимое файла не соответствует формату изображения" };
 
+  // Основное хранилище — PostgreSQL: диск теряется при передеплое.
+  try {
+    const { hasDatabase, query } = await import("@/lib/db.server");
+    if (hasDatabase()) {
+      const rows = await query<{ id: string }>(
+        `insert into car_photos_blob (file_name, mime_type, byte_size, data)
+         values ($1, $2, $3, $4) returning id`,
+        [fileName.slice(0, 120), MIME_BY_EXT[ext] ?? "image/jpeg", buffer.length, buffer],
+      );
+      const id = rows[0]?.id;
+      if (id) return { ok: true, url: `/api/public/car-photo/${id}${ext}` };
+    }
+  } catch (error) {
+    console.error("[uploads] db store failed, falling back to disk", error);
+  }
+
   const dir = carUploadsDir();
   const safeName = `${randomUUID()}${ext}`;
   try {
@@ -60,3 +83,4 @@ export async function saveCarPhoto(
 
   return { ok: true, url: `/assets/cars/uploads/${safeName}` };
 }
+

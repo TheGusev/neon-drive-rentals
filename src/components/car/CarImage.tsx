@@ -1,10 +1,11 @@
 import { useEffect, useRef, useState, type ImgHTMLAttributes } from "react";
-import heroCar from "@/assets/hero-car.jpg";
+import { ImageOff } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 type CarImageProps = Omit<ImgHTMLAttributes<HTMLImageElement>, "src"> & {
   src?: string | null;
-  fallbackSrc?: string;
+  /** Подпись на заглушке, когда файл недоступен. */
+  placeholderLabel?: string;
 };
 
 /**
@@ -18,10 +19,29 @@ function webpVariant(src: string): string | null {
   return src.replace(/\.(jpe?g|png)$/i, ".webp");
 }
 
-/** Image with a stable visual fallback for empty, stale, or failed car URLs. */
+function Placeholder({ className, label }: { className?: string; label: string }) {
+  return (
+    <span
+      role="img"
+      aria-label={label}
+      className={cn(
+        "flex flex-col items-center justify-center gap-1 bg-muted text-muted-foreground",
+        className,
+      )}
+    >
+      <ImageOff className="h-5 w-5 opacity-70" />
+      <span className="px-2 text-center text-[10px] leading-tight opacity-80">{label}</span>
+    </span>
+  );
+}
+
+/**
+ * Изображение авто. Если файла нет — показываем нейтральную заглушку,
+ * а не фото другого автомобиля.
+ */
 export function CarImage({
   src,
-  fallbackSrc = heroCar,
+  placeholderLabel = "Фото недоступно",
   onError,
   onLoad,
   className,
@@ -29,28 +49,29 @@ export function CarImage({
   decoding = "async",
   ...props
 }: CarImageProps) {
-  const requestedSrc = src || fallbackSrc;
-  const [resolvedSrc, setResolvedSrc] = useState(requestedSrc);
+  const [failed, setFailed] = useState(false);
   const [ready, setReady] = useState(false);
   const ref = useRef<HTMLImageElement>(null);
 
   useEffect(() => {
-    setResolvedSrc(requestedSrc);
+    setFailed(false);
     setReady(false);
-  }, [requestedSrc]);
+  }, [src]);
 
   // Cached images can finish before hydration, so `load` never fires here.
   useEffect(() => {
-    if (ref.current?.complete) setReady(true);
-  }, [resolvedSrc]);
+    if (ref.current?.complete && ref.current.naturalWidth > 0) setReady(true);
+  }, [src]);
 
-  const webp = webpVariant(resolvedSrc);
+  if (!src || failed) return <Placeholder className={className} label={placeholderLabel} />;
+
+  const webp = webpVariant(src);
 
   const img = (
     <img
       {...props}
       ref={ref}
-      src={resolvedSrc}
+      src={src}
       loading={loading}
       decoding={decoding}
       className={cn(
@@ -64,8 +85,7 @@ export function CarImage({
       }}
       onError={(event) => {
         onError?.(event);
-        if (resolvedSrc !== fallbackSrc) setResolvedSrc(fallbackSrc);
-        else setReady(true);
+        setFailed(true);
       }}
     />
   );

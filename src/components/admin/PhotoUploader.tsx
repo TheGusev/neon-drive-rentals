@@ -29,6 +29,16 @@ export function PhotoUploader({ images, onChange }: Props) {
     onChange(merged);
   };
 
+  /** Проверяем, что сохранённый файл реально отдаётся сервером. */
+  const verify = (src: string) =>
+    new Promise<boolean>((resolve) => {
+      const probe = new Image();
+      probe.onload = () => resolve(true);
+      probe.onerror = () => resolve(false);
+      probe.src = src;
+    });
+
+
   const handleFiles = async (files: FileList | null) => {
     if (!files || files.length === 0) return;
     const room = MAX_PHOTOS - images.length;
@@ -45,12 +55,16 @@ export function PhotoUploader({ images, onChange }: Props) {
           const res = await upload({
             data: { fileName: prepared.fileName, contentBase64: prepared.contentBase64 },
           });
-          if (res.ok && res.url) added.push(res.url);
-          else toast.error(res.error ?? `${file.name}: не удалось загрузить`);
+          if (res.ok && res.url) {
+            const ok = await verify(res.url);
+            if (ok) added.push(res.url);
+            else toast.error(`${file.name}: файл сохранён, но недоступен по ссылке`);
+          } else toast.error(res.error ?? `${file.name}: не удалось загрузить`);
         } catch (error) {
           toast.error(error instanceof Error ? error.message : "Ошибка загрузки файла");
         }
       }
+
       if (added.length) {
         addUrls(added);
         toast.success(`Загружено фото: ${added.length}`);
