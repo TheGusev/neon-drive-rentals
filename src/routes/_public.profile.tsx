@@ -12,7 +12,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { Link } from "@tanstack/react-router";
 import { LogIn, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { myBookingsQueryOptions } from "@/lib/queries";
+import { myBookingsQueryOptions, myProfileQueryOptions } from "@/lib/queries";
 import { clientLogout } from "@/lib/auth.functions";
 import { useCarLookup } from "@/state/AppDataContext";
 
@@ -34,6 +34,8 @@ function ProfilePage() {
   const queryClient = useQueryClient();
   const logout = useServerFn(clientLogout);
   const { data, isLoading } = useQuery(myBookingsQueryOptions());
+  const { data: profileData } = useQuery(myProfileQueryOptions());
+  const profile = profileData?.profile ?? null;
   const authenticated = data?.authenticated ?? false;
   const bookings = data?.bookings ?? [];
   const active = bookings.find((b) => b.status === "active" || b.status === "paid");
@@ -61,7 +63,7 @@ function ProfilePage() {
   return (
     <div className="min-h-screen bg-background text-foreground">
       <div className="mx-auto max-w-md px-4 pb-28 pt-6 md:max-w-2xl md:pb-10">
-        <ProfileHeader />
+        <ProfileHeader name={profile?.name} rating={profile?.rating ?? 0} reviewsCount={profile?.reviewsCount ?? 0} />
 
         <div className="mt-5 space-y-4">
           {active && car ? (
@@ -72,7 +74,7 @@ function ProfilePage() {
             </SectionCard>
           )}
 
-          <DocumentsBlock />
+          <DocumentsBlock documents={profileData?.documents ?? []} />
 
           <FavoritesBlock />
 
@@ -80,7 +82,7 @@ function ProfilePage() {
             <BookingHistoryList items={bookings} />
           </section>
 
-          <ReviewsBlock />
+          <ReviewsBlock reviews={profileData?.reviews ?? []} rating={profile?.rating ?? 0} />
 
           <Button
             variant="soft"

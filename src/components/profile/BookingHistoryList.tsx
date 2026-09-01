@@ -1,6 +1,5 @@
 import { SectionCard } from "@/components/checkout/SectionCard";
 import { useBookings, useCarLookup } from "@/state/AppDataContext";
-import { currentClient } from "@/mocks/profile";
 import type { Booking } from "@/types/domain";
 import { CarImage } from "@/components/car/CarImage";
 
@@ -10,7 +9,7 @@ const fmt = (iso: string) =>
 export function BookingHistoryList({ items }: { items?: Booking[] }) {
   const fallback = useBookings();
   const getCarById = useCarLookup();
-  const source = items ?? fallback.filter((b) => b.clientId === currentClient.id);
+  const source = items ?? fallback;
   const history = source.filter((b) => b.status === "completed" || b.status === "cancelled");
 
   return (

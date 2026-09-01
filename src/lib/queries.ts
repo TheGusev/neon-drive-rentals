@@ -13,6 +13,7 @@ import {
   getPaymentsAdmin,
 } from "@/lib/admin.functions";
 import { getMyBookings } from "@/lib/auth.functions";
+import { getMyProfile, getClientDocumentsAdmin } from "@/lib/profile.functions";
 
 export const carsQueryOptions = () =>
   queryOptions({
@@ -88,5 +89,19 @@ export const myBookingsQueryOptions = () =>
   queryOptions({
     queryKey: ["me", "bookings"] as const,
     queryFn: () => getMyBookings(),
+    staleTime: 15_000,
+  });
+
+export const myProfileQueryOptions = () =>
+  queryOptions({
+    queryKey: ["me", "profile"] as const,
+    queryFn: () => getMyProfile(),
+    staleTime: 15_000,
+  });
+
+export const adminDocumentsQueryOptions = () =>
+  queryOptions({
+    queryKey: ["admin", "documents"] as const,
+    queryFn: () => getClientDocumentsAdmin(),
     staleTime: 15_000,
   });

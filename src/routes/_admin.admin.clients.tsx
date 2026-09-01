@@ -4,6 +4,7 @@ import { Ban } from "lucide-react";
 import { toast } from "sonner";
 import { PageHeader } from "@/components/admin/PageHeader";
 import { AdminClientCard } from "@/components/admin/AdminClientCard";
+import { AdminDocumentsPanel } from "@/components/admin/AdminDocumentsPanel";
 import { EntityGrid, EmptyState } from "@/components/admin/EntityCard";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -53,6 +54,8 @@ function AdminClientsPage() {
         title="Клиенты"
         description="CRM: контакты, история и чёрный список"
       />
+
+      <AdminDocumentsPanel />
 
       <div className="mb-4 w-full space-y-3">
         <Input
