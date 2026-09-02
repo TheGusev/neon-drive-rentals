@@ -291,10 +291,20 @@ export async function insertBooking(input: CreateBookingInput): Promise<CreateBo
         )[0].id;
 
     const inserted = await run<BookingRow>(
-      `insert into bookings (car_id, client_id, date_from, date_to, total, status)
-       values ($1, $2, $3::timestamptz, $4::timestamptz, $5, 'pending')
-       returning id, car_id, client_id, date_from, date_to, total, status`,
-      [input.carDbId, clientId, input.startDate, input.endDate, input.totalPrice],
+      `insert into bookings (car_id, client_id, date_from, date_to, total, status, signed_at, signature_ip)
+       values ($1, $2, $3::timestamptz, $4::timestamptz, $5, $6,
+               case when $7::boolean then now() else null end, $8)
+       returning id, car_id, client_id, date_from, date_to, total, status, signed_at`,
+      [
+        input.carDbId,
+        clientId,
+        input.startDate,
+        input.endDate,
+        input.totalPrice,
+        input.signed ? "confirmed" : "pending",
+        Boolean(input.signed),
+        input.signatureIp ?? null,
+      ],
     );
 
     return {
