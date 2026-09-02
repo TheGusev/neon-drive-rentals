@@ -10,6 +10,7 @@ const createBookingSchema = z.object({
   startDate: z.string().min(4).max(40),
   endDate: z.string().min(4).max(40),
   totalPrice: z.number().int().nonnegative().max(10_000_000),
+  signed: z.boolean().optional(),
 });
 
 const statusSchema = z.object({
@@ -49,11 +50,17 @@ export const createBooking = createServerFn({ method: "POST" })
   .handler(async ({ data }) => {
     const { resolveCarDbId } = await import("@/lib/carsRepo.server");
     const { insertBooking } = await import("@/lib/bookingsRepo.server");
+    const { getRequestIP } = await import("@tanstack/react-start/server");
 
     const carDbId = await resolveCarDbId(data.carId);
     if (!carDbId) return { ok: false as const, reason: "car_not_found" as const };
 
-    return insertBooking({ ...data, carDbId });
+    // Код из SMS подтверждает договор — фиксируем подпись сразу при создании брони.
+    return insertBooking({
+      ...data,
+      carDbId,
+      signatureIp: data.signed ? (getRequestIP({ xForwardedFor: true }) ?? "") : undefined,
+    });
   });
 
 export const updateBookingStatus = createServerFn({ method: "POST" })

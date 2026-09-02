@@ -136,3 +136,133 @@ export async function linkYandexAccount(input: {
   );
   return created.length ? created[0] : null;
 }
+
+export type ClientAccount = {
+  id: string;
+  name: string;
+  phone: string;
+  email: string | null;
+  passwordHash: string | null;
+};
+
+type AccountRow = {
+  id: string;
+  name: string | null;
+  phone: string | null;
+  email: string | null;
+  password_hash: string | null;
+};
+
+const mapAccount = (row: AccountRow): ClientAccount => ({
+  id: String(row.id),
+  name: row.name?.trim() || "Клиент",
+  phone: row.phone ?? "",
+  email: row.email,
+  passwordHash: row.password_hash,
+});
+
+/** Аккаунт с паролем по e-mail. */
+export async function findAccountByEmail(email: string): Promise<ClientAccount | null> {
+  if (!(await ready())) return null;
+  const rows = await query<AccountRow>(
+    `select id, name, phone, email, password_hash from clients
+     where lower(email) = lower($1) and password_hash is not null
+     order by created_at asc limit 1`,
+    [email.trim()],
+  );
+  return rows.length ? mapAccount(rows[0]) : null;
+}
+
+export async function findAccountByPhone(phone: string): Promise<ClientAccount | null> {
+  if (!(await ready())) return null;
+  const rows = await query<AccountRow>(
+    `select id, name, phone, email, password_hash from clients
+     where regexp_replace(phone, '\\D', '', 'g') = $1
+     order by (password_hash is null), created_at asc limit 1`,
+    [digits(phone)],
+  );
+  return rows.length ? mapAccount(rows[0]) : null;
+}
+
+export type RegisterResult =
+  | { ok: true; client: ClientAccount }
+  | { ok: false; reason: "email_taken" | "no_db" };
+
+/**
+ * Регистрация: если по телефону уже есть гостевая запись (бронировал без
+ * аккаунта) — привязываем пароль к ней, чтобы история броней сохранилась.
+ */
+export async function registerClientAccount(input: {
+  name: string;
+  email: string;
+  phone: string;
+  passwordHash: string;
+}): Promise<RegisterResult> {
+  if (!(await ready())) return { ok: false, reason: "no_db" };
+
+  const taken = await query<{ id: string }>(
+    `select id from clients where lower(email) = lower($1) and password_hash is not null limit 1`,
+    [input.email],
+  );
+  if (taken.length) return { ok: false, reason: "email_taken" };
+
+  const guest = await query<{ id: string }>(
+    `select id from clients
+     where regexp_replace(phone, '\\D', '', 'g') = $1 and password_hash is null
+     order by created_at asc limit 1`,
+    [digits(input.phone)],
+  );
+
+  const rows = guest.length
+    ? await query<AccountRow>(
+        `update clients
+         set name = coalesce(nullif($2, ''), name),
+             email = $3,
+             password_hash = $4
+         where id = $1
+         returning id, name, phone, email, password_hash`,
+        [guest[0].id, input.name, input.email, input.passwordHash],
+      )
+    : await query<AccountRow>(
+        `insert into clients (name, email, phone, password_hash)
+         values ($1, $2, $3, $4)
+         returning id, name, phone, email, password_hash`,
+        [input.name, input.email, input.phone, input.passwordHash],
+      );
+
+  return rows.length
+    ? { ok: true, client: mapAccount(rows[0]) }
+    : { ok: false, reason: "no_db" };
+}
+
+/** Установка/смена пароля существующему клиенту (после оплаты или сброса). */
+export async function setClientPassword(input: {
+  clientId: string;
+  passwordHash: string;
+  email?: string;
+  name?: string;
+}): Promise<boolean> {
+  if (!(await ready())) return false;
+  if (input.email) {
+    const taken = await query<{ id: string }>(
+      `select id from clients
+       where lower(email) = lower($1) and password_hash is not null and id::text <> $2 limit 1`,
+      [input.email, input.clientId],
+    );
+    if (taken.length) return false;
+  }
+  const rows = await query<{ id: string }>(
+    `update clients
+     set password_hash = $2,
+         email = coalesce(nullif($3, ''), email),
+         name = coalesce(nullif($4, ''), name)
+     where id::text = $1 returning id`,
+    [input.clientId, input.passwordHash, input.email ?? "", input.name ?? ""],
+  );
+  return rows.length > 0;
+}
+
+export async function markLogin(clientId: string): Promise<void> {
+  if (!(await ready())) return;
+  await query(`update clients set last_login_at = now() where id::text = $1`, [clientId]);
+}

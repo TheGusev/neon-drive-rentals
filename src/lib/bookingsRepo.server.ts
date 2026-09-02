@@ -12,6 +12,7 @@ type BookingRow = {
   date_to: Date | string;
   total: number | string | null;
   status: string | null;
+  signed_at?: Date | string | null;
 };
 
 const BOOKING_STATUSES: BookingStatus[] = ["paid", "pending", "active", "completed", "cancelled"];
@@ -49,12 +50,13 @@ function mapBookingRow(row: BookingRow): Booking {
     totalPrice: Number(row.total ?? 0),
     status: normalizeBookingStatus(row.status),
     pickupAddress: PICKUP_POINT.address,
+    contractStatus: row.signed_at ? "signed" : "pending",
   };
 }
 
 const SELECT_BOOKINGS = `
   select b.id, b.car_id, c.slug as car_slug, b.client_id,
-         b.date_from, b.date_to, b.total, b.status
+         b.date_from, b.date_to, b.total, b.status, b.signed_at
   from bookings b
   left join cars c on c.id = b.car_id
 `;
@@ -226,6 +228,9 @@ export type CreateBookingInput = {
   startDate: string;
   endDate: string;
   totalPrice: number;
+  /** Договор подписан кодом из SMS прямо в чекауте. */
+  signed?: boolean;
+  signatureIp?: string;
 };
 
 export type CreateBookingResult =
@@ -286,10 +291,20 @@ export async function insertBooking(input: CreateBookingInput): Promise<CreateBo
         )[0].id;
 
     const inserted = await run<BookingRow>(
-      `insert into bookings (car_id, client_id, date_from, date_to, total, status)
-       values ($1, $2, $3::timestamptz, $4::timestamptz, $5, 'pending')
-       returning id, car_id, client_id, date_from, date_to, total, status`,
-      [input.carDbId, clientId, input.startDate, input.endDate, input.totalPrice],
+      `insert into bookings (car_id, client_id, date_from, date_to, total, status, signed_at, signature_ip)
+       values ($1, $2, $3::timestamptz, $4::timestamptz, $5, $6,
+               case when $7::boolean then now() else null end, $8)
+       returning id, car_id, client_id, date_from, date_to, total, status, signed_at`,
+      [
+        input.carDbId,
+        clientId,
+        input.startDate,
+        input.endDate,
+        input.totalPrice,
+        input.signed ? "confirmed" : "pending",
+        Boolean(input.signed),
+        input.signatureIp ?? null,
+      ],
     );
 
     return {

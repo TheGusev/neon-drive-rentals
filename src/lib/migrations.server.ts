@@ -14,6 +14,7 @@ import repairPhotos from "../../db/migrations/011_repair_and_merge_car_photos.sq
 import protectCustomImages from "../../db/migrations/012_protect_custom_images.sql?raw";
 import clientProfile from "../../db/migrations/013_client_profile.sql?raw";
 import carPhotosBlob from "../../db/migrations/014_car_photos_blob.sql?raw";
+import clientAccounts from "../../db/migrations/015_client_accounts.sql?raw";
 
 /** Порядок применения важен; все миграции идемпотентны для существующей базы. */
 const MIGRATIONS: Array<{ name: string; sql: string }> = [
@@ -31,6 +32,7 @@ const MIGRATIONS: Array<{ name: string; sql: string }> = [
   { name: "012_protect_custom_images", sql: protectCustomImages },
   { name: "013_client_profile", sql: clientProfile },
   { name: "014_car_photos_blob", sql: carPhotosBlob },
+  { name: "015_client_accounts", sql: clientAccounts },
 ];
 
 type Holder = { __nskMigrations?: Promise<string[]> };

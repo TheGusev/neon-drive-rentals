@@ -93,6 +93,9 @@ export interface BookingDraft {
   paymentMethod?: PaymentMethod;
   signed?: boolean;
   phone: string;
+  name?: string;
+  email?: string;
+  bookingId?: string;
 }
 
 export interface Client {
