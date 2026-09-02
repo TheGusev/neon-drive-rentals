@@ -3,6 +3,7 @@ import {
   Sidebar,
   SidebarContent,
   SidebarGroup,
+  SidebarFooter,
   SidebarGroupContent,
   SidebarGroupLabel,
   SidebarHeader,
