@@ -3,6 +3,7 @@ import {
   Sidebar,
   SidebarContent,
   SidebarGroup,
+  SidebarFooter,
   SidebarGroupContent,
   SidebarGroupLabel,
   SidebarHeader,
@@ -11,7 +12,7 @@ import {
   SidebarMenuItem,
   SidebarProvider,
 } from "@/components/ui/sidebar";
-import { LayoutDashboard, Car, CalendarCheck, Users, Wallet, Settings } from "lucide-react";
+import { LayoutDashboard, Car, CalendarCheck, Users, Wallet, Settings, Globe } from "lucide-react";
 import { AdminHeader } from "@/components/admin/AdminHeader";
 import { AdminTabBar } from "@/components/admin/AdminTabBar";
 import { ThemeProvider, useTheme } from "@/components/layout/ThemeProvider";
@@ -64,6 +65,18 @@ function AdminSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
+      <SidebarFooter className="border-t p-3">
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton asChild>
+              <Link to="/" className="flex items-center gap-2">
+                <Globe className="h-4 w-4" />
+                <span>Вернуться на сайт</span>
+              </Link>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
+      </SidebarFooter>
     </Sidebar>
   );
 }
@@ -79,7 +92,10 @@ export function AdminLayout() {
 function AdminShell() {
   const { themeClass } = useTheme();
   return (
-    <div className={`${themeClass} min-h-screen bg-background text-foreground transition-colors duration-300`}>
+    <div
+      suppressHydrationWarning
+      className={`${themeClass} min-h-screen bg-background text-foreground transition-colors duration-300`}
+    >
       <SidebarProvider>
         <div className="flex min-h-screen w-full">
           <AdminSidebar />

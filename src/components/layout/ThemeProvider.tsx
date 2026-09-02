@@ -55,12 +55,11 @@ function applyTheme(theme: Theme) {
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
   // SSR renders the dark default; the inline boot script in <head> already set
-  // the real class on <html>, so we sync to it right after hydration.
-  const [theme, setThemeState] = useState<Theme>("dark");
-
-  useEffect(() => {
-    setThemeState(readInitialTheme());
-  }, []);
+  // the real class on <html>, so we read it synchronously on the client
+  // (lazy initializer) — no flash of the wrong theme after hydration.
+  const [theme, setThemeState] = useState<Theme>(() =>
+    typeof document === "undefined" ? "dark" : readInitialTheme(),
+  );
 
   useEffect(() => {
     applyTheme(theme);
