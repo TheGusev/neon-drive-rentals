@@ -10,6 +10,7 @@ const createBookingSchema = z.object({
   startDate: z.string().min(4).max(40),
   endDate: z.string().min(4).max(40),
   totalPrice: z.number().int().nonnegative().max(10_000_000),
+  signed: z.boolean().optional(),
 });
 
 const statusSchema = z.object({
@@ -48,12 +49,23 @@ export const createBooking = createServerFn({ method: "POST" })
   .inputValidator((data: unknown) => createBookingSchema.parse(data))
   .handler(async ({ data }) => {
     const { resolveCarDbId } = await import("@/lib/carsRepo.server");
-    const { insertBooking } = await import("@/lib/bookingsRepo.server");
+    const { insertBooking, markBookingSigned } = await import("@/lib/bookingsRepo.server");
 
     const carDbId = await resolveCarDbId(data.carId);
     if (!carDbId) return { ok: false as const, reason: "car_not_found" as const };
 
-    return insertBooking({ ...data, carDbId });
+    const { signed, ...payload } = data;
+    const result = await insertBooking({ ...payload, carDbId });
+    // Код из SMS подтверждает договор — фиксируем подпись сразу при создании брони.
+    if (result.ok && signed && result.booking) {
+      const { getRequestIP } = await import("@tanstack/react-start/server");
+      const signedBooking = await markBookingSigned(
+        result.booking.id,
+        getRequestIP({ xForwardedFor: true }) ?? "",
+      );
+      return { ...result, booking: signedBooking ?? result.booking };
+    }
+    return result;
   });
 
 export const updateBookingStatus = createServerFn({ method: "POST" })

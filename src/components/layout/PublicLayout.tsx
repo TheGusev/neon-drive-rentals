@@ -1,4 +1,7 @@
 import { Link, Outlet, useRouterState } from "@tanstack/react-router";
+import { useServerFn } from "@tanstack/react-start";
+import { useQuery } from "@tanstack/react-query";
+import { getClientSessionStatus } from "@/lib/auth.functions";
 import { Mail, Menu, MessageCircle, Phone, Send, User } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -40,6 +43,14 @@ function PublicShell() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const [open, setOpen] = useState(false);
   const { themeClass } = useTheme();
+  const sessionStatus = useServerFn(getClientSessionStatus);
+  const { data: me } = useQuery({
+    queryKey: ["me"],
+    queryFn: () => sessionStatus(),
+    staleTime: 60_000,
+  });
+  const signedIn = Boolean(me?.authenticated);
+
 
   // Close the mobile menu on route change so it never persists across pages.
   useEffect(() => {
@@ -82,8 +93,11 @@ function PublicShell() {
               <span className="font-semibold">{CONTACTS.phone}</span>
             </a>
             <ThemeToggle />
-            <Button variant="outline" size="sm" className="gap-2">
-              <User className="h-4 w-4" /> Войти
+            <Button asChild variant="outline" size="sm" className="gap-2">
+              <Link to={signedIn ? "/profile" : "/login"}>
+                <User className="h-4 w-4" />
+                {signedIn ? (me?.name?.split(" ")[0] ?? "Кабинет") : "Войти"}
+              </Link>
             </Button>
           </div>
 

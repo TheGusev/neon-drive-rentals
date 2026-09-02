@@ -16,6 +16,7 @@ import { Route as AdminRouteImport } from './routes/_admin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminLoginRouteImport } from './routes/admin.login'
 import { Route as PublicTermsRouteImport } from './routes/_public.terms'
+import { Route as PublicRegisterRouteImport } from './routes/_public.register'
 import { Route as PublicProfileRouteImport } from './routes/_public.profile'
 import { Route as PublicPrivacyRouteImport } from './routes/_public.privacy'
 import { Route as PublicLoginRouteImport } from './routes/_public.login'
@@ -82,6 +83,11 @@ const AdminLoginRoute = AdminLoginRouteImport.update({
 const PublicTermsRoute = PublicTermsRouteImport.update({
   id: '/terms',
   path: '/terms',
+  getParentRoute: () => PublicRoute,
+} as any)
+const PublicRegisterRoute = PublicRegisterRouteImport.update({
+  id: '/register',
+  path: '/register',
   getParentRoute: () => PublicRoute,
 } as any)
 const PublicProfileRoute = PublicProfileRouteImport.update({
@@ -284,6 +290,7 @@ export interface FileRoutesByFullPath {
   '/login': typeof PublicLoginRoute
   '/privacy': typeof PublicPrivacyRoute
   '/profile': typeof PublicProfileRoute
+  '/register': typeof PublicRegisterRoute
   '/terms': typeof PublicTermsRoute
   '/admin/login': typeof AdminLoginRoute
   '/admin/bookings': typeof AdminAdminBookingsRoute
@@ -325,6 +332,7 @@ export interface FileRoutesByTo {
   '/login': typeof PublicLoginRoute
   '/privacy': typeof PublicPrivacyRoute
   '/profile': typeof PublicProfileRoute
+  '/register': typeof PublicRegisterRoute
   '/terms': typeof PublicTermsRoute
   '/admin/login': typeof AdminLoginRoute
   '/admin/bookings': typeof AdminAdminBookingsRoute
@@ -369,6 +377,7 @@ export interface FileRoutesById {
   '/_public/login': typeof PublicLoginRoute
   '/_public/privacy': typeof PublicPrivacyRoute
   '/_public/profile': typeof PublicProfileRoute
+  '/_public/register': typeof PublicRegisterRoute
   '/_public/terms': typeof PublicTermsRoute
   '/admin/login': typeof AdminLoginRoute
   '/_admin/admin/bookings': typeof AdminAdminBookingsRoute
@@ -412,6 +421,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/privacy'
     | '/profile'
+    | '/register'
     | '/terms'
     | '/admin/login'
     | '/admin/bookings'
@@ -453,6 +463,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/privacy'
     | '/profile'
+    | '/register'
     | '/terms'
     | '/admin/login'
     | '/admin/bookings'
@@ -496,6 +507,7 @@ export interface FileRouteTypes {
     | '/_public/login'
     | '/_public/privacy'
     | '/_public/profile'
+    | '/_public/register'
     | '/_public/terms'
     | '/admin/login'
     | '/_admin/admin/bookings'
@@ -582,6 +594,13 @@ declare module '@tanstack/react-router' {
       path: '/terms'
       fullPath: '/terms'
       preLoaderRoute: typeof PublicTermsRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/register': {
+      id: '/_public/register'
+      path: '/register'
+      fullPath: '/register'
+      preLoaderRoute: typeof PublicRegisterRouteImport
       parentRoute: typeof PublicRoute
     }
     '/_public/profile': {
@@ -862,6 +881,7 @@ interface PublicRouteChildren {
   PublicLoginRoute: typeof PublicLoginRoute
   PublicPrivacyRoute: typeof PublicPrivacyRoute
   PublicProfileRoute: typeof PublicProfileRoute
+  PublicRegisterRoute: typeof PublicRegisterRoute
   PublicTermsRoute: typeof PublicTermsRoute
   PublicBlogSlugRoute: typeof PublicBlogSlugRoute
   PublicBookingCarIdRoute: typeof PublicBookingCarIdRoute
@@ -889,6 +909,7 @@ const PublicRouteChildren: PublicRouteChildren = {
   PublicLoginRoute: PublicLoginRoute,
   PublicPrivacyRoute: PublicPrivacyRoute,
   PublicProfileRoute: PublicProfileRoute,
+  PublicRegisterRoute: PublicRegisterRoute,
   PublicTermsRoute: PublicTermsRoute,
   PublicBlogSlugRoute: PublicBlogSlugRoute,
   PublicBookingCarIdRoute: PublicBookingCarIdRoute,
