@@ -49,23 +49,18 @@ export const createBooking = createServerFn({ method: "POST" })
   .inputValidator((data: unknown) => createBookingSchema.parse(data))
   .handler(async ({ data }) => {
     const { resolveCarDbId } = await import("@/lib/carsRepo.server");
-    const { insertBooking, markBookingSigned } = await import("@/lib/bookingsRepo.server");
+    const { insertBooking } = await import("@/lib/bookingsRepo.server");
+    const { getRequestIP } = await import("@tanstack/react-start/server");
 
     const carDbId = await resolveCarDbId(data.carId);
     if (!carDbId) return { ok: false as const, reason: "car_not_found" as const };
 
-    const { signed, ...payload } = data;
-    const result = await insertBooking({ ...payload, carDbId });
     // Код из SMS подтверждает договор — фиксируем подпись сразу при создании брони.
-    if (result.ok && signed && result.booking) {
-      const { getRequestIP } = await import("@tanstack/react-start/server");
-      const signedBooking = await markBookingSigned(
-        result.booking.id,
-        getRequestIP({ xForwardedFor: true }) ?? "",
-      );
-      return { ...result, booking: signedBooking ?? result.booking };
-    }
-    return result;
+    return insertBooking({
+      ...data,
+      carDbId,
+      signatureIp: data.signed ? (getRequestIP({ xForwardedFor: true }) ?? "") : undefined,
+    });
   });
 
 export const updateBookingStatus = createServerFn({ method: "POST" })
