@@ -2,6 +2,7 @@ import { Link } from "@tanstack/react-router";
 import {
   ChevronRight,
   Clock,
+  Cookie,
   FileText,
   Lock,
   Mail,
@@ -130,7 +131,7 @@ export function SiteFooter() {
         {/* Row 3: documents and staff access */}
         <div className="min-w-0">
           <h2 className={headingClass}>Документы и доступ</h2>
-          <div className="mt-3 grid gap-2 sm:grid-cols-3">
+          <div className="mt-3 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
             <Link to="/privacy" className={plateClass}>
               <ShieldCheck className="h-4 w-4 shrink-0 text-accent" />
               <span className="min-w-0 truncate">Политика конфиденциальности</span>
@@ -138,6 +139,14 @@ export function SiteFooter() {
             <Link to="/terms" className={plateClass}>
               <FileText className="h-4 w-4 shrink-0 text-accent" />
               <span className="min-w-0 truncate">Пользовательское соглашение</span>
+            </Link>
+            <Link to="/consent" className={plateClass}>
+              <ShieldCheck className="h-4 w-4 shrink-0 text-accent" />
+              <span className="min-w-0 truncate">Согласие на обработку ПДн</span>
+            </Link>
+            <Link to="/cookies" className={plateClass}>
+              <Cookie className="h-4 w-4 shrink-0 text-accent" />
+              <span className="min-w-0 truncate">Политика cookie</span>
             </Link>
             <Link to="/admin/login" rel="nofollow" className={plateClass}>
               <Lock className="h-4 w-4 shrink-0 text-accent" />
