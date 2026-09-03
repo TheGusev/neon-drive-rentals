@@ -107,3 +107,47 @@ export async function updatePaymentByProviderId(
   );
   return rows.length ? { bookingId: rows[0].booking_id ? String(rows[0].booking_id) : null } : null;
 }
+
+export type BookingPaymentRow = {
+  id: string;
+  amount: number;
+  status: string;
+  provider: string;
+  providerId: string | null;
+  createdAt: string;
+};
+
+/** Последний платёж по брони — для страницы счёта. */
+export async function fetchLatestPaymentByBooking(
+  bookingId: string,
+): Promise<BookingPaymentRow | null> {
+  if (!(await ready())) return null;
+  const rows = await query<{
+    id: string;
+    amount: string | number | null;
+    status: string | null;
+    provider: string | null;
+    provider_id: string | null;
+    created_at: Date | string;
+  }>(
+    `select id, amount, status, provider, provider_id, created_at
+       from payments where booking_id = $1::uuid
+      order by created_at desc limit 1`,
+    [bookingId],
+  );
+  if (!rows.length) return null;
+  const row = rows[0];
+  return {
+    id: String(row.id),
+    amount: Number(row.amount ?? 0),
+    status: String(row.status ?? "pending"),
+    provider: String(row.provider ?? "stub"),
+    providerId: row.provider_id ? String(row.provider_id) : null,
+    createdAt: new Date(row.created_at).toISOString(),
+  };
+}
+
+export async function updatePaymentStatusById(id: string, status: string): Promise<void> {
+  if (!(await ready())) return;
+  await query(`update payments set status = $2, updated_at = now() where id = $1::uuid`, [id, status]);
+}
