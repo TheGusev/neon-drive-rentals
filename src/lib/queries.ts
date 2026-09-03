@@ -70,6 +70,9 @@ export const adminBookingRowsQueryOptions = () =>
     queryKey: ["admin", "bookings"] as const,
     queryFn: () => getBookingsAdmin({ data: {} }),
     staleTime: 15_000,
+    // Статусы меняются автоматически по календарю — обновляем список в фоне.
+    refetchInterval: 60_000,
+    refetchOnWindowFocus: true,
   });
 
 export const adminClientsQueryOptions = () =>

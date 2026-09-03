@@ -72,9 +72,25 @@ function AdminBookingsPage() {
     });
   }, [q, tab, bookings, getCarById]);
 
+  const counts = useMemo(() => {
+    const base: Record<string, number> = {
+      all: bookings.length,
+      pending: 0,
+      paid: 0,
+      active: 0,
+      completed: 0,
+      cancelled: 0,
+    };
+    for (const b of bookings) base[b.status] = (base[b.status] ?? 0) + 1;
+    return base;
+  }, [bookings]);
+
   return (
     <div className="w-full">
-      <PageHeader title="Бронирования" description={`${filtered.length} заявок и аренд`} />
+      <PageHeader
+        title="Брони"
+        description={`${counts.active} активных аренд · ${counts.pending} ожидают оплаты · всего ${bookings.length}`}
+      />
 
       <div className="mb-4 w-full space-y-3">
         <div className="relative">
@@ -88,12 +104,12 @@ function AdminBookingsPage() {
         </div>
         <Tabs value={tab} onValueChange={(v) => setTab(v as typeof tab)}>
           <TabsList className="flex w-full flex-wrap justify-start">
-            <TabsTrigger value="all">Все</TabsTrigger>
-            <TabsTrigger value="pending">Ожидают</TabsTrigger>
-            <TabsTrigger value="paid">Оплачены</TabsTrigger>
-            <TabsTrigger value="active">Активные</TabsTrigger>
-            <TabsTrigger value="completed">Завершены</TabsTrigger>
-            <TabsTrigger value="cancelled">Отменены</TabsTrigger>
+            <TabsTrigger value="all">Все · {counts.all}</TabsTrigger>
+            <TabsTrigger value="pending">Ожидают · {counts.pending}</TabsTrigger>
+            <TabsTrigger value="paid">Оплачены · {counts.paid}</TabsTrigger>
+            <TabsTrigger value="active">Активные · {counts.active}</TabsTrigger>
+            <TabsTrigger value="completed">Завершены · {counts.completed}</TabsTrigger>
+            <TabsTrigger value="cancelled">Отменены · {counts.cancelled}</TabsTrigger>
           </TabsList>
         </Tabs>
       </div>
