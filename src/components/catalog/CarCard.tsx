@@ -18,7 +18,16 @@ export const fleetStatusMeta: Record<
   maintenance: { label: "На ТО", className: "bg-muted text-muted-foreground" },
 };
 
-export function CarCard({ car }: { car: Car }) {
+export function CarCard({
+  car,
+  from,
+  to,
+}: {
+  car: Car;
+  /** Даты из фильтров каталога — переносим их прямо в бронирование. */
+  from?: string;
+  to?: string;
+}) {
   const { isFavorite, toggleFavorite } = useFavorites();
   const fav = isFavorite(car.id);
   const status = fleetStatusMeta[car.status ?? "free"];
@@ -98,8 +107,12 @@ export function CarCard({ car }: { car: Car }) {
               </Link>
             </Button>
             <Button asChild size="sm" disabled={!canBook}>
-              <Link to="/booking/$carId" params={{ carId: car.id }}>
-                Выбрать
+              <Link
+                to="/booking/$carId"
+                params={{ carId: car.id }}
+                search={from && to ? { from, to } : {}}
+              >
+                {from && to ? "Забронировать" : "Выбрать даты"}
               </Link>
             </Button>
           </div>
