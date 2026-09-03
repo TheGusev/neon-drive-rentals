@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { Search, SlidersHorizontal } from "lucide-react";
 import type { Booking, Car } from "@/types/domain";
 import { isCarAvailable } from "@/lib/availability";
@@ -13,33 +13,23 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/co
 import { Breadcrumbs } from "@/components/seo/Breadcrumbs";
 import { SITE_URL, breadcrumbJsonLd, jsonLdScript, socialMeta } from "@/lib/seo";
 
-const PER_PAGE = 12;
-
 export const Route = createFileRoute("/_public/cars/")({
-  validateSearch: (search: Record<string, unknown>): { from?: string; to?: string; page?: number } => {
-    const page = Number(search.page);
-    return {
-      from: typeof search.from === "string" ? search.from : undefined,
-      to: typeof search.to === "string" ? search.to : undefined,
-      page: Number.isFinite(page) && page > 1 ? Math.floor(page) : undefined,
-    };
-  },
-  head: ({ match }) => {
-    const page = match.search.page ?? 1;
-    const suffix = page > 1 ? ` — страница ${page}` : "";
-    const url = page > 1 ? `${SITE_URL}/cars?page=${page}` : `${SITE_URL}/cars`;
-    return ({
+  validateSearch: (search: Record<string, unknown>): { from?: string; to?: string } => ({
+    from: typeof search.from === "string" ? search.from : undefined,
+    to: typeof search.to === "string" ? search.to : undefined,
+  }),
+  head: () => ({
     meta: [
-      { title: `Автопарк японских кей-каров в аренду в Новосибирске${suffix} — NSK-RENT` },
+      { title: "Автопарк японских кей-каров в аренду в Новосибирске — NSK-RENT" },
       { name: "description", content: "21 японский кей-кар в аренду в Новосибирске: фильтры по марке, модели, году, цвету, цене и датам. От 1 800 ₽ в сутки." },
-      { property: "og:title", content: `Автопарк японских кей-каров в аренду${suffix} — NSK-RENT` },
+      { property: "og:title", content: "Автопарк японских кей-каров в аренду — NSK-RENT" },
       { property: "og:description", content: "Выберите автомобиль и забронируйте онлайн за 3 минуты." },
       { property: "og:type", content: "website" },
-      { property: "og:url", content: url },
+      { property: "og:url", content: `${SITE_URL}/cars` },
       { name: "twitter:card", content: "summary_large_image" },
       ...socialMeta("/assets/cars/hero-drive.jpg"),
     ],
-    links: [{ rel: "canonical", href: url }],
+    links: [{ rel: "canonical", href: `${SITE_URL}/cars` }],
     scripts: [
       jsonLdScript(
         breadcrumbJsonLd([
@@ -48,8 +38,7 @@ export const Route = createFileRoute("/_public/cars/")({
         ]),
       ),
     ],
-  });
-  },
+  }),
   component: CatalogPage,
 });
 
