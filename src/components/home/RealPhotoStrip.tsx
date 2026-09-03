@@ -1,15 +1,16 @@
 import { Link } from "@tanstack/react-router";
 import { Camera } from "lucide-react";
 
-import nBoxBlack from "@/assets/cars/real/honda-n-box-black-real-3.jpg";
-import nBoxPair from "@/assets/cars/real/honda-n-box-black-pair-real.jpg";
-import ekWagonBlack from "@/assets/cars/real/mitsubishi-ek-wagon-black-real.jpg";
-import ekWagonSilver from "@/assets/cars/real/mitsubishi-ek-wagon-silver-real.jpg";
-import nWgnBlue from "@/assets/cars/real/honda-n-wgn-blue-real.jpg";
-import dayzBlack from "@/assets/cars/real/nissan-dayz-black-real.jpg";
-import keiVanRear from "@/assets/cars/real/kei-van-black-rear-real.jpg";
-import fleetYard from "@/assets/cars/real/fleet-yard-real.jpg";
-import dashboard from "@/assets/cars/real/kei-dashboard-real.jpg";
+/** Публичные пути: рядом лежат WebP-версии, отдаём их через <picture>. */
+const nBoxBlack = "/assets/cars/real/honda-n-box-black-real-3.jpg";
+const nBoxPair = "/assets/cars/real/honda-n-box-black-pair-real.jpg";
+const ekWagonBlack = "/assets/cars/real/mitsubishi-ek-wagon-black-real.jpg";
+const ekWagonSilver = "/assets/cars/real/mitsubishi-ek-wagon-silver-real.jpg";
+const nWgnBlue = "/assets/cars/real/honda-n-wgn-blue-real.jpg";
+const dayzBlack = "/assets/cars/real/nissan-dayz-black-real.jpg";
+const keiVanRear = "/assets/cars/real/kei-van-black-rear-real.jpg";
+const fleetYard = "/assets/cars/real/fleet-yard-real.jpg";
+const dashboard = "/assets/cars/real/kei-dashboard-real.jpg";
 
 const PHOTOS = [
   {
@@ -80,14 +81,18 @@ export function RealPhotoStrip() {
               key={photo.src}
               className="group relative overflow-hidden rounded-xl border border-border/60 bg-card"
             >
-              <img
-                src={photo.src}
-                alt={photo.alt}
-                loading="lazy"
-                width={1400}
-                height={1050}
-                className="aspect-[4/3] w-full object-cover transition-opacity duration-300 group-hover:opacity-90"
-              />
+              <picture>
+                <source srcSet={photo.src.replace(/\.jpg$/, ".webp")} type="image/webp" />
+                <img
+                  src={photo.src}
+                  alt={photo.alt}
+                  loading="lazy"
+                  decoding="async"
+                  width={1400}
+                  height={1050}
+                  className="aspect-[4/3] w-full object-cover transition-opacity duration-300 group-hover:opacity-90"
+                />
+              </picture>
               <figcaption className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent px-2 py-1.5 text-[11px] font-medium text-white">
                 {photo.caption}
               </figcaption>
