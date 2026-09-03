@@ -34,9 +34,9 @@ function readInitialTheme(): Theme {
   const stored = window.localStorage.getItem(STORAGE_KEY);
   if (stored === "light" || stored === "dark") return stored;
   if (document.documentElement.classList.contains("clean-light")) return "light";
-  if (document.documentElement.classList.contains("public-dark")) return "dark";
-  return window.matchMedia("(max-width: 767px)").matches ? "light" : "dark";
+  return "dark";
 }
+
 
 
 function applyTheme(theme: Theme) {
