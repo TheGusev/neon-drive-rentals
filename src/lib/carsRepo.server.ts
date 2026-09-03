@@ -119,7 +119,7 @@ async function withPublicFallback<T>(label: string, task: Promise<T>, fallback: 
   let timer: ReturnType<typeof setTimeout> | undefined;
   try {
     const timeout = new Promise<T>((resolve) => {
-      timer = setTimeout(() => resolve(fallback), 4_500);
+      timer = setTimeout(() => resolve(fallback), 9_000);
     });
     const result = await Promise.race([task, timeout]);
     if (result === fallback) console.error(`[public-data] ${label} timed out; serving fallback`);

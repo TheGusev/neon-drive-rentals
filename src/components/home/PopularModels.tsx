@@ -13,7 +13,8 @@ import { CarImage } from "@/components/car/CarImage";
 
 export function PopularModels() {
   const cars = useCars();
-  const popular = cars.slice(0, 6);
+  // Весь автопарк из базы — карусель прокручивает все машины.
+  const popular = cars;
 
   return (
     <section className="py-12 md:py-20">
