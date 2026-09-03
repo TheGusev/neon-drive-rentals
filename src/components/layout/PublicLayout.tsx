@@ -7,7 +7,6 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { ThemeProvider, useTheme } from "./ThemeProvider";
-import { ThemeToggle } from "./ThemeToggle";
 import { SiteFooter } from "./SiteFooter";
 import { CONTACTS, LEGAL } from "@/lib/contacts";
 import { FavoritesProvider } from "@/state/FavoritesContext";
@@ -31,7 +30,7 @@ const mobileNav = [
 
 export function PublicLayout() {
   return (
-    <ThemeProvider>
+    <ThemeProvider fixed="dark">
       <FavoritesProvider>
         <PublicShell />
       </FavoritesProvider>
@@ -95,7 +94,6 @@ function PublicShell() {
               <Phone className="h-4 w-4 text-accent" />
               <span className="font-semibold">{CONTACTS.phone}</span>
             </a>
-            <ThemeToggle />
             <Button asChild variant="outline" size="sm" className="gap-2">
               <Link to={signedIn ? "/profile" : "/login"}>
                 <User className="h-4 w-4" />
@@ -105,7 +103,6 @@ function PublicShell() {
           </div>
 
           <div className="flex items-center gap-2 md:hidden">
-            <ThemeToggle className="h-14 w-14 rounded-2xl border-2 border-border/70" />
             <Sheet open={open} onOpenChange={setOpen}>
               <SheetTrigger asChild>
                 <button
@@ -137,10 +134,6 @@ function PublicShell() {
                     );
                   })}
                 </nav>
-
-                <div className="mt-6">
-                  <ThemeToggle withLabel className="w-full justify-center" />
-                </div>
 
                 <div className="mt-6 space-y-3 border-t border-border pt-4 text-sm">
                   <a href={CONTACTS.phoneHref} className="flex items-center gap-2 font-semibold">

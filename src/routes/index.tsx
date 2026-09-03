@@ -37,7 +37,7 @@ export const Route = createFileRoute("/")({
 
 function Home() {
   return (
-    <ThemeProvider>
+    <ThemeProvider fixed="dark">
       <FavoritesProvider>
         <HomeShell />
       </FavoritesProvider>
