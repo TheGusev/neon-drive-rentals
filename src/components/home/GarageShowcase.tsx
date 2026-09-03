@@ -34,7 +34,8 @@ export function GarageShowcase({ compact = false }: { compact?: boolean }) {
   const { from, to } = useHomeBooking();
   const cars = useCars();
   const bookings = useBookings();
-  const garageCars = useMemo(() => cars.slice(0, 10), [cars]);
+  // Показываем весь парк из базы, без искусственного ограничения.
+  const garageCars = cars;
   const { available } = useMemo(
     () => splitAvailability(cars, from, to, bookings),
     [cars, from, to, bookings],

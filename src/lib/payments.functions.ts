@@ -19,7 +19,7 @@ export const startPayment = createServerFn({ method: "POST" })
       bookingId: data.bookingId,
       amount: data.amount,
       description: data.description ?? `Аренда автомобиля, бронь ${data.bookingId}`,
-      returnUrl: `${origin}/profile?payment=${data.bookingId}`,
+      returnUrl: `${origin}/invoice/${data.bookingId}`,
       idempotenceKey: randomUUID(),
     });
 
@@ -33,10 +33,20 @@ export const startPayment = createServerFn({ method: "POST" })
       status: result.mode === "live" ? "pending" : "succeeded",
     });
 
+    // В демо-режиме платёж подтверждается сразу, как после webhook ЮKassa.
     if (result.mode === "stub") {
       const { updateBookingStatusInDb } = await import("@/lib/bookingsRepo.server");
-      await updateBookingStatusInDb(data.bookingId, "paid");
+      await updateBookingStatusInDb(data.bookingId, "active");
     }
 
     return result;
+  });
+
+const bookingIdSchema = z.object({ bookingId: z.string().min(1).max(80) });
+
+export const getBookingPayment = createServerFn({ method: "GET" })
+  .inputValidator((data: unknown) => bookingIdSchema.parse(data))
+  .handler(async ({ data }) => {
+    const { fetchLatestPaymentByBooking } = await import("@/lib/paymentsRepo.server");
+    return fetchLatestPaymentByBooking(data.bookingId);
   });

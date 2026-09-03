@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { Search, SlidersHorizontal } from "lucide-react";
 import type { Booking, Car } from "@/types/domain";
 import { isCarAvailable } from "@/lib/availability";
@@ -13,33 +13,23 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/co
 import { Breadcrumbs } from "@/components/seo/Breadcrumbs";
 import { SITE_URL, breadcrumbJsonLd, jsonLdScript, socialMeta } from "@/lib/seo";
 
-const PER_PAGE = 12;
-
 export const Route = createFileRoute("/_public/cars/")({
-  validateSearch: (search: Record<string, unknown>): { from?: string; to?: string; page?: number } => {
-    const page = Number(search.page);
-    return {
-      from: typeof search.from === "string" ? search.from : undefined,
-      to: typeof search.to === "string" ? search.to : undefined,
-      page: Number.isFinite(page) && page > 1 ? Math.floor(page) : undefined,
-    };
-  },
-  head: ({ match }) => {
-    const page = match.search.page ?? 1;
-    const suffix = page > 1 ? ` — страница ${page}` : "";
-    const url = page > 1 ? `${SITE_URL}/cars?page=${page}` : `${SITE_URL}/cars`;
-    return ({
+  validateSearch: (search: Record<string, unknown>): { from?: string; to?: string } => ({
+    from: typeof search.from === "string" ? search.from : undefined,
+    to: typeof search.to === "string" ? search.to : undefined,
+  }),
+  head: () => ({
     meta: [
-      { title: `Автопарк японских кей-каров в аренду в Новосибирске${suffix} — NSK-RENT` },
+      { title: "Автопарк японских кей-каров в аренду в Новосибирске — NSK-RENT" },
       { name: "description", content: "21 японский кей-кар в аренду в Новосибирске: фильтры по марке, модели, году, цвету, цене и датам. От 1 800 ₽ в сутки." },
-      { property: "og:title", content: `Автопарк японских кей-каров в аренду${suffix} — NSK-RENT` },
+      { property: "og:title", content: "Автопарк японских кей-каров в аренду — NSK-RENT" },
       { property: "og:description", content: "Выберите автомобиль и забронируйте онлайн за 3 минуты." },
       { property: "og:type", content: "website" },
-      { property: "og:url", content: url },
+      { property: "og:url", content: `${SITE_URL}/cars` },
       { name: "twitter:card", content: "summary_large_image" },
       ...socialMeta("/assets/cars/hero-drive.jpg"),
     ],
-    links: [{ rel: "canonical", href: url }],
+    links: [{ rel: "canonical", href: `${SITE_URL}/cars` }],
     scripts: [
       jsonLdScript(
         breadcrumbJsonLd([
@@ -48,8 +38,7 @@ export const Route = createFileRoute("/_public/cars/")({
         ]),
       ),
     ],
-  });
-  },
+  }),
   component: CatalogPage,
 });
 
@@ -121,19 +110,6 @@ function CatalogPage() {
     () => applyFilters(allCars, filters, sort, query, bookings),
     [allCars, filters, sort, query, bookings],
   );
-
-  const page = search.page ?? 1;
-  const totalPages = Math.max(1, Math.ceil(list.length / PER_PAGE));
-  const currentPage = Math.min(page, totalPages);
-  const pageItems = list.slice((currentPage - 1) * PER_PAGE, currentPage * PER_PAGE);
-  const navigate = Route.useNavigate();
-
-  // при смене фильтров возвращаемся на первую страницу
-  useEffect(() => {
-    if ((search.page ?? 1) > totalPages) {
-      void navigate({ search: (prev) => ({ ...prev, page: undefined }), replace: true });
-    }
-  }, [totalPages, search.page, navigate]);
 
   const reset = () => {
     setFilters(emptyFilters(priceBounds));
@@ -207,7 +183,7 @@ function CatalogPage() {
         </aside>
 
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3">
-          {pageItems.map((c) => (
+          {list.map((c) => (
             <CarCard key={c.id} car={c} />
           ))}
           {list.length === 0 && (
@@ -215,25 +191,6 @@ function CatalogPage() {
               По выбранным фильтрам ничего не найдено.
               <Button variant="link" onClick={reset}>Сбросить фильтры</Button>
             </div>
-          )}
-          {totalPages > 1 && (
-            <nav aria-label="Страницы каталога" className="col-span-full mt-2 flex flex-wrap items-center justify-center gap-2">
-              {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
-                <Link
-                  key={p}
-                  to="/cars"
-                  search={(prev) => ({ ...prev, page: p === 1 ? undefined : p })}
-                  aria-current={p === currentPage ? "page" : undefined}
-                  className={
-                    p === currentPage
-                      ? "rounded-xl border border-accent bg-accent/10 px-4 py-2 text-sm font-bold text-accent"
-                      : "rounded-xl border border-border px-4 py-2 text-sm font-semibold text-muted-foreground transition hover:border-accent hover:text-accent"
-                  }
-                >
-                  {p}
-                </Link>
-              ))}
-            </nav>
           )}
         </div>
       </div>

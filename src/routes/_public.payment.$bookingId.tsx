@@ -191,15 +191,17 @@ function PaymentPage() {
       });
 
       if (payment.ok && payment.mode === "live" && payment.confirmationUrl) {
-        toast.success("Бронь сохранена. Переходим к оплате");
+        toast.success("Счёт создан. Переходим к оплате");
         window.location.href = payment.confirmationUrl;
         return;
       }
 
-      toast.success("Бронь оформлена", {
-        description: "Договор подписан, детали отправлены на указанные контакты",
-      });
-      navigate({ to: "/contract/$bookingId", params: { bookingId: draft.id } });
+      if (!payment.ok) {
+        toast.error(payment.error, { description: "Бронь сохранена — оплатить можно со страницы счёта" });
+      } else {
+        toast.success("Оплата подтверждена", { description: "Бронь переведена в активную аренду" });
+      }
+      navigate({ to: "/invoice/$bookingId", params: { bookingId: res.booking.id } });
     } catch {
       toast.error("Сервис временно недоступен, попробуйте ещё раз");
     } finally {

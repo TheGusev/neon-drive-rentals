@@ -38,7 +38,7 @@ function ProfilePage() {
   const profile = profileData?.profile ?? null;
   const authenticated = data?.authenticated ?? false;
   const bookings = data?.bookings ?? [];
-  const active = bookings.find((b) => b.status === "active" || b.status === "paid");
+  const active = bookings.find((b) => b.status === "active");
   const car = active ? getCarById(active.carId) : undefined;
 
   if (!isLoading && !authenticated) {

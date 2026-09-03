@@ -69,9 +69,9 @@ function ContractPage() {
 
   if (draft === undefined) return <div className="min-h-screen bg-background" />;
 
-  // Договор появляется только после оформления — иначе возвращаем на оплату.
+  // Договор появляется только после оформления — иначе возвращаем на счёт.
   if (draft && !draft.signed) {
-    return <Navigate to="/payment/$bookingId" params={{ bookingId: draft.id }} replace />;
+    return <Navigate to="/invoice/$bookingId" params={{ bookingId: draft.bookingId ?? draft.id }} replace />;
   }
 
   if (!draft || !car || !breakdown) {

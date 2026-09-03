@@ -40,7 +40,7 @@ export const Route = createFileRoute("/api/public/yookassa-webhook")({
 
         if (bookingId) {
           const { updateBookingStatusInDb } = await import("@/lib/bookingsRepo.server");
-          if (status === "succeeded") await updateBookingStatusInDb(bookingId, "paid");
+          if (status === "succeeded") await updateBookingStatusInDb(bookingId, "active");
           if (status === "canceled") await updateBookingStatusInDb(bookingId, "cancelled");
         }
 

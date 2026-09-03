@@ -40,6 +40,7 @@ import { Route as ApiPublicHealthRouteImport } from './routes/api/public/health'
 import { Route as PublicRentNovosibirskRouteImport } from './routes/_public.rent.novosibirsk'
 import { Route as PublicRentBezZalogaRouteImport } from './routes/_public.rent.bez-zaloga'
 import { Route as PublicPaymentBookingIdRouteImport } from './routes/_public.payment.$bookingId'
+import { Route as PublicInvoiceBookingIdRouteImport } from './routes/_public.invoice.$bookingId'
 import { Route as PublicContractBookingIdRouteImport } from './routes/_public.contract.$bookingId'
 import { Route as PublicCarsCarIdRouteImport } from './routes/_public.cars.$carId'
 import { Route as PublicBookingCarIdRouteImport } from './routes/_public.booking.$carId'
@@ -215,6 +216,11 @@ const PublicPaymentBookingIdRoute = PublicPaymentBookingIdRouteImport.update({
   path: '/payment/$bookingId',
   getParentRoute: () => PublicRoute,
 } as any)
+const PublicInvoiceBookingIdRoute = PublicInvoiceBookingIdRouteImport.update({
+  id: '/invoice/$bookingId',
+  path: '/invoice/$bookingId',
+  getParentRoute: () => PublicRoute,
+} as any)
 const PublicContractBookingIdRoute = PublicContractBookingIdRouteImport.update({
   id: '/contract/$bookingId',
   path: '/contract/$bookingId',
@@ -302,6 +308,7 @@ export interface FileRoutesByFullPath {
   '/booking/$carId': typeof PublicBookingCarIdRoute
   '/cars/$carId': typeof PublicCarsCarIdRoute
   '/contract/$bookingId': typeof PublicContractBookingIdRoute
+  '/invoice/$bookingId': typeof PublicInvoiceBookingIdRoute
   '/payment/$bookingId': typeof PublicPaymentBookingIdRoute
   '/rent/bez-zaloga': typeof PublicRentBezZalogaRoute
   '/rent/novosibirsk': typeof PublicRentNovosibirskRoute
@@ -344,6 +351,7 @@ export interface FileRoutesByTo {
   '/booking/$carId': typeof PublicBookingCarIdRoute
   '/cars/$carId': typeof PublicCarsCarIdRoute
   '/contract/$bookingId': typeof PublicContractBookingIdRoute
+  '/invoice/$bookingId': typeof PublicInvoiceBookingIdRoute
   '/payment/$bookingId': typeof PublicPaymentBookingIdRoute
   '/rent/bez-zaloga': typeof PublicRentBezZalogaRoute
   '/rent/novosibirsk': typeof PublicRentNovosibirskRoute
@@ -389,6 +397,7 @@ export interface FileRoutesById {
   '/_public/booking/$carId': typeof PublicBookingCarIdRoute
   '/_public/cars/$carId': typeof PublicCarsCarIdRoute
   '/_public/contract/$bookingId': typeof PublicContractBookingIdRoute
+  '/_public/invoice/$bookingId': typeof PublicInvoiceBookingIdRoute
   '/_public/payment/$bookingId': typeof PublicPaymentBookingIdRoute
   '/_public/rent/bez-zaloga': typeof PublicRentBezZalogaRoute
   '/_public/rent/novosibirsk': typeof PublicRentNovosibirskRoute
@@ -433,6 +442,7 @@ export interface FileRouteTypes {
     | '/booking/$carId'
     | '/cars/$carId'
     | '/contract/$bookingId'
+    | '/invoice/$bookingId'
     | '/payment/$bookingId'
     | '/rent/bez-zaloga'
     | '/rent/novosibirsk'
@@ -475,6 +485,7 @@ export interface FileRouteTypes {
     | '/booking/$carId'
     | '/cars/$carId'
     | '/contract/$bookingId'
+    | '/invoice/$bookingId'
     | '/payment/$bookingId'
     | '/rent/bez-zaloga'
     | '/rent/novosibirsk'
@@ -519,6 +530,7 @@ export interface FileRouteTypes {
     | '/_public/booking/$carId'
     | '/_public/cars/$carId'
     | '/_public/contract/$bookingId'
+    | '/_public/invoice/$bookingId'
     | '/_public/payment/$bookingId'
     | '/_public/rent/bez-zaloga'
     | '/_public/rent/novosibirsk'
@@ -764,6 +776,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PublicPaymentBookingIdRouteImport
       parentRoute: typeof PublicRoute
     }
+    '/_public/invoice/$bookingId': {
+      id: '/_public/invoice/$bookingId'
+      path: '/invoice/$bookingId'
+      fullPath: '/invoice/$bookingId'
+      preLoaderRoute: typeof PublicInvoiceBookingIdRouteImport
+      parentRoute: typeof PublicRoute
+    }
     '/_public/contract/$bookingId': {
       id: '/_public/contract/$bookingId'
       path: '/contract/$bookingId'
@@ -887,6 +906,7 @@ interface PublicRouteChildren {
   PublicBookingCarIdRoute: typeof PublicBookingCarIdRoute
   PublicCarsCarIdRoute: typeof PublicCarsCarIdRoute
   PublicContractBookingIdRoute: typeof PublicContractBookingIdRoute
+  PublicInvoiceBookingIdRoute: typeof PublicInvoiceBookingIdRoute
   PublicPaymentBookingIdRoute: typeof PublicPaymentBookingIdRoute
   PublicRentBezZalogaRoute: typeof PublicRentBezZalogaRoute
   PublicRentNovosibirskRoute: typeof PublicRentNovosibirskRoute
@@ -915,6 +935,7 @@ const PublicRouteChildren: PublicRouteChildren = {
   PublicBookingCarIdRoute: PublicBookingCarIdRoute,
   PublicCarsCarIdRoute: PublicCarsCarIdRoute,
   PublicContractBookingIdRoute: PublicContractBookingIdRoute,
+  PublicInvoiceBookingIdRoute: PublicInvoiceBookingIdRoute,
   PublicPaymentBookingIdRoute: PublicPaymentBookingIdRoute,
   PublicRentBezZalogaRoute: PublicRentBezZalogaRoute,
   PublicRentNovosibirskRoute: PublicRentNovosibirskRoute,
