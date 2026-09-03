@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useMutation, useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { updateBookingStatus } from "@/lib/bookings.functions";
+import { updateBookingStatus, issueKeys, acceptReturn } from "@/lib/bookings.functions";
 import { adminBookingRowsQueryOptions } from "@/lib/queries";
 import { useCarLookup } from "@/state/AppDataContext";
 import type { BookingStatus } from "@/types/domain";
@@ -37,6 +37,26 @@ function AdminBookingsPage() {
     },
     onError: () => toast.error("Сервис временно недоступен"),
   });
+  const runIssueKeys = useServerFn(issueKeys);
+  const runAcceptReturn = useServerFn(acceptReturn);
+  const journeyMutation = useMutation({
+    mutationFn: (vars: { id: string; action: "keys" | "return" }) =>
+      vars.action === "keys"
+        ? runIssueKeys({ data: { id: vars.id } })
+        : runAcceptReturn({ data: { id: vars.id } }),
+    onSuccess: async (res, vars) => {
+      if (!res.ok) {
+        toast.error("Не удалось обновить маршрут аренды");
+        return;
+      }
+      await queryClient.invalidateQueries({ queryKey: ["bookings"] });
+      await queryClient.invalidateQueries({ queryKey: ["admin"] });
+      await queryClient.invalidateQueries({ queryKey: ["cars"] });
+      toast.success(vars.action === "keys" ? "Ключи выданы" : "Возврат принят");
+    },
+    onError: () => toast.error("Сервис временно недоступен"),
+  });
+
   const [q, setQ] = useState("");
   const [tab, setTab] = useState<"all" | BookingStatus>("all");
 
@@ -92,6 +112,9 @@ function AdminBookingsPage() {
               onView={() => toast(`Просмотр брони ${b.id}`)}
               onStatusChange={(status) => statusMutation.mutate({ id: b.id, status })}
               statusPending={statusMutation.isPending}
+              onIssueKeys={() => journeyMutation.mutate({ id: b.id, action: "keys" })}
+              onAcceptReturn={() => journeyMutation.mutate({ id: b.id, action: "return" })}
+              journeyPending={journeyMutation.isPending}
             />
           ))}
         </EntityGrid>

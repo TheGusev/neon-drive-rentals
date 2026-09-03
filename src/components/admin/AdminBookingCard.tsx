@@ -16,6 +16,10 @@ interface Props {
   onView?: () => void;
   onStatusChange?: (status: BookingStatus) => void;
   statusPending?: boolean;
+  /** Маршрут аренды: выдачу ключей и приём возврата подтверждает администратор. */
+  onIssueKeys?: () => void;
+  onAcceptReturn?: () => void;
+  journeyPending?: boolean;
 }
 
 const NEXT_STATUS: Partial<Record<BookingStatus, { label: string; value: BookingStatus }>> = {
@@ -32,6 +36,9 @@ export function AdminBookingCard({
   onView,
   onStatusChange,
   statusPending,
+  onIssueKeys,
+  onAcceptReturn,
+  journeyPending,
 }: Props) {
   const next = NEXT_STATUS[booking.status];
   return (
@@ -91,6 +98,43 @@ export function AdminBookingCard({
           )}
         </div>
       </div>
+      {(onIssueKeys || onAcceptReturn) && booking.status !== "cancelled" && (
+        <div className="mt-3 flex flex-wrap items-center gap-2 rounded-xl bg-muted/50 p-2">
+          <span className="text-xs text-muted-foreground">
+            {booking.returnedAt
+              ? `Возврат принят ${new Date(booking.returnedAt).toLocaleString("ru-RU")}`
+              : booking.keysIssuedAt
+                ? `Ключи выданы ${new Date(booking.keysIssuedAt).toLocaleString("ru-RU")}`
+                : "Ключи ещё не выданы"}
+          </span>
+          {onIssueKeys && !booking.keysIssuedAt && (
+            <Button
+              size="sm"
+              variant="accent"
+              disabled={journeyPending}
+              onClick={(e) => {
+                e.stopPropagation();
+                onIssueKeys();
+              }}
+            >
+              Выдать ключи
+            </Button>
+          )}
+          {onAcceptReturn && booking.keysIssuedAt && !booking.returnedAt && (
+            <Button
+              size="sm"
+              variant="soft"
+              disabled={journeyPending}
+              onClick={(e) => {
+                e.stopPropagation();
+                onAcceptReturn();
+              }}
+            >
+              Принять возврат
+            </Button>
+          )}
+        </div>
+      )}
       {onStatusChange && (next || booking.status !== "cancelled") && (
         <div className="mt-3 flex flex-wrap gap-2">
           {next && (
