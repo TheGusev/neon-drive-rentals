@@ -34,8 +34,16 @@ export function GarageShowcase({ compact = false }: { compact?: boolean }) {
   const { from, to } = useHomeBooking();
   const cars = useCars();
   const bookings = useBookings();
-  // Показываем весь парк из базы, без искусственного ограничения.
-  const garageCars = cars;
+  // Показываем весь парк из базы, но на первый рендер отдаём часть карточек:
+  // на 4G лента из 21 фото блокирует загрузку страницы. Остальные подключаем
+  // сразу после первой отрисовки.
+  const [fullList, setFullList] = useState(false);
+  useEffect(() => {
+    const id = window.setTimeout(() => setFullList(true), 1200);
+    return () => window.clearTimeout(id);
+  }, []);
+  const garageCars = fullList ? cars : cars.slice(0, 6);
+
   const { available } = useMemo(
     () => splitAvailability(cars, from, to, bookings),
     [cars, from, to, bookings],

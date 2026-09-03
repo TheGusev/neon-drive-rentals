@@ -11,6 +11,7 @@ import { ThemeProvider, useTheme } from "@/components/layout/ThemeProvider";
 import { HomeControls } from "@/components/home/HomeControls";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { FavoritesProvider } from "@/state/FavoritesContext";
+import { LazyMount } from "@/components/common/LazyMount";
 
 const TITLE = "Аренда авто в Новосибирске от 1 800 ₽/сутки — японские кей-кары | NSK-RENT";
 const DESC =
@@ -37,7 +38,7 @@ export const Route = createFileRoute("/")({
 
 function Home() {
   return (
-    <ThemeProvider>
+    <ThemeProvider fixed="dark">
       <FavoritesProvider>
         <HomeShell />
       </FavoritesProvider>
@@ -78,8 +79,12 @@ function HomeShell() {
       {/* SEO content below hero (both viewports scroll to reach it) */}
       <div className="bg-background text-foreground">
         <HomeIntro />
-        <RealPhotoStrip />
-        <FaqBlock />
+        <LazyMount minHeight={420}>
+          <RealPhotoStrip />
+        </LazyMount>
+        <LazyMount minHeight={360}>
+          <FaqBlock />
+        </LazyMount>
       </div>
 
       <SiteFooter />

@@ -3,7 +3,6 @@ import { Link } from "@tanstack/react-router";
 import { Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { ThemeToggle } from "@/components/layout/ThemeToggle";
 import { NfsSideMenu } from "./NfsSideMenu";
 import { useHideOnScroll } from "@/hooks/useHideOnScroll";
 
@@ -52,9 +51,6 @@ export function HomeControls() {
           <p className="mt-1 font-display text-3xl font-black">
             <span className="logo-neon">NSK-RENT</span>
           </p>
-          <div className="mt-4">
-            <ThemeToggle withLabel className="w-full justify-center" />
-          </div>
           <div className="mt-5">
             <NfsSideMenu />
           </div>

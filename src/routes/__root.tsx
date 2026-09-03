@@ -129,7 +129,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 const THEME_BOOT_SCRIPT = `(function(){try{
 var k='nsk-rent-theme';var s=localStorage.getItem(k);
-var t=(s==='light'||s==='dark')?s:(window.matchMedia('(max-width: 767px)').matches?'light':'dark');
+var admin=location.pathname.indexOf('/admin')===0;
+var t=admin?((s==='light'||s==='dark')?s:'light'):'dark';
 var r=document.documentElement;
 r.classList.remove('public-dark','clean-light');
 r.classList.add(t==='dark'?'public-dark':'clean-light');
@@ -138,6 +139,7 @@ var m=document.querySelector('meta[name="theme-color"]');
 if(!m){m=document.createElement('meta');m.setAttribute('name','theme-color');document.head.appendChild(m);}
 m.setAttribute('content',t==='dark'?'#0b0d16':'#fbfcfe');
 }catch(e){}})();`;
+
 
 function RootShell({ children }: { children: ReactNode }) {
   return (

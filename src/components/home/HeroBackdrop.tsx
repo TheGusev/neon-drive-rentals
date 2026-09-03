@@ -1,11 +1,16 @@
 import { useEffect, useState } from "react";
-import heroDrive from "@/assets/cars/hero-drive.jpg";
-import heroTunnel from "@/assets/cars/hero-tunnel.jpg";
-import heroGarage from "@/assets/cars/hero-garage.jpg";
 import { cn } from "@/lib/utils";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 
-const frames = [heroDrive, heroTunnel, heroGarage];
+/**
+ * Кадры берём из /public в WebP (в 3 раза легче JPG) — критично для мобильного
+ * интернета: первый кадр ~44 КБ вместо ~140 КБ.
+ */
+const frames = [
+  "/assets/cars/hero-drive.webp",
+  "/assets/cars/hero-tunnel.webp",
+  "/assets/cars/hero-garage.webp",
+];
 
 /**
  * Hero photo backdrop.
@@ -15,14 +20,22 @@ const frames = [heroDrive, heroTunnel, heroGarage];
  */
 export function HeroBackdrop({ variant = "desktop" }: { variant?: "desktop" | "mobile" }) {
   const [idx, setIdx] = useState(0);
+  // Второй и третий кадр подключаем только после первой отрисовки —
+  // они не нужны для LCP и не должны конкурировать за канал на 4G.
+  const [framesReady, setFramesReady] = useState(1);
   const reduced = useReducedMotion();
   const mobile = variant === "mobile";
 
   useEffect(() => {
-    if (reduced) return;
+    const id = window.setTimeout(() => setFramesReady(frames.length), 2500);
+    return () => window.clearTimeout(id);
+  }, []);
+
+  useEffect(() => {
+    if (reduced || framesReady < frames.length) return;
     const id = setInterval(() => setIdx((i) => (i + 1) % frames.length), 7000);
     return () => clearInterval(id);
-  }, [reduced]);
+  }, [reduced, framesReady]);
 
   return (
     <div
@@ -35,7 +48,7 @@ export function HeroBackdrop({ variant = "desktop" }: { variant?: "desktop" | "m
       {/* Placeholder while the first frame decodes — tinted, never white */}
       <div className="absolute inset-0 bg-gradient-to-b from-muted/70 to-background" />
 
-      {frames.map((src, i) => (
+      {frames.slice(0, framesReady).map((src, i) => (
         <img
           key={src}
           src={src}
@@ -51,6 +64,7 @@ export function HeroBackdrop({ variant = "desktop" }: { variant?: "desktop" | "m
           style={{ opacity: i === idx ? 1 : 0 }}
         />
       ))}
+
 
       {/* Light-theme softener: keeps the photo readable under light surfaces */}
       <div className="hero-light-scrim absolute inset-0" />
