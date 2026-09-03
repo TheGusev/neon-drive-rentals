@@ -1,4 +1,4 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import { CheckCircle2, Clock3, FileText, Loader2, RefreshCw, XCircle } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
@@ -7,7 +7,7 @@ import { toast } from "sonner";
 
 import { getBookingById } from "@/lib/bookings.functions";
 import { getBookingPayment, startPayment } from "@/lib/payments.functions";
-import { getDraft, saveDraft } from "@/lib/bookingDraft";
+import { getDraft } from "@/lib/bookingDraft";
 import type { BookingDraft } from "@/types/domain";
 import { useCarLookup } from "@/state/AppDataContext";
 import { CarImage } from "@/components/car/CarImage";
@@ -29,7 +29,6 @@ export const Route = createFileRoute("/_public/invoice/$bookingId")({
 
 function InvoicePage() {
   const { bookingId } = Route.useParams();
-  const navigate = useNavigate();
   const getBooking = useServerFn(getBookingById);
   const getPayment = useServerFn(getBookingPayment);
   const beginPayment = useServerFn(startPayment);
@@ -45,12 +44,12 @@ function InvoicePage() {
   const paymentQuery = useQuery({
     queryKey: ["invoice", "payment", bookingId],
     queryFn: () => getPayment({ data: { bookingId } }),
+    enabled: Boolean(bookingQuery.data),
     staleTime: 10_000,
   });
 
   useEffect(() => {
-    const stored = getDraft(bookingId);
-    setDraft(stored);
+    setDraft(getDraft(bookingId));
   }, [bookingId]);
 
   const booking = bookingQuery.data;
@@ -59,7 +58,7 @@ function InvoicePage() {
   const paymentStatus = String(payment?.status ?? "pending").toLowerCase();
   const paid = paymentStatus === "succeeded" || paymentStatus === "success" || paymentStatus === "paid";
   const cancelled = paymentStatus === "cancelled" || paymentStatus === "canceled" || paymentStatus === "failed";
-  const loading = bookingQuery.isLoading || paymentQuery.isLoading || draft === undefined;
+  const loading = bookingQuery.isLoading || (Boolean(booking) && paymentQuery.isLoading) || draft === undefined;
 
   const period = useMemo(() => {
     if (!booking) return "—";
@@ -71,13 +70,13 @@ function InvoicePage() {
   };
 
   const payAgain = async () => {
-    if (!booking || !payment) return;
+    if (!booking) return;
     setPaying(true);
     try {
       const result = await beginPayment({
         data: {
           bookingId: booking.id,
-          amount: Math.round(payment.amount || booking.totalPrice),
+          amount: Math.round(payment?.amount || booking.totalPrice),
           description: `Аренда автомобиля, бронь ${booking.id}`,
         },
       });
@@ -106,7 +105,7 @@ function InvoicePage() {
     );
   }
 
-  if (!booking) {
+  if (bookingQuery.isError || !booking) {
     return (
       <div className="mx-auto max-w-xl py-10 text-center">
         <h1 className="text-xl font-bold">Счёт не найден</h1>
@@ -164,7 +163,7 @@ function InvoicePage() {
         </Button>
         {draft?.signed && (
           <Button asChild variant="outline">
-            <Link to="/contract/$bookingId" params={{ bookingId: draft.id }}>
+            <Link to="/contract/$bookingId" params={{ bookingId: draft.bookingId ?? draft.id }}>
               <FileText className="mr-2 h-4 w-4" /> Договор
             </Link>
           </Button>

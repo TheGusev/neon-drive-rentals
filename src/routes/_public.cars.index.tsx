@@ -122,19 +122,6 @@ function CatalogPage() {
     [allCars, filters, sort, query, bookings],
   );
 
-  const page = search.page ?? 1;
-  const totalPages = Math.max(1, Math.ceil(list.length / PER_PAGE));
-  const currentPage = Math.min(page, totalPages);
-  const pageItems = list.slice((currentPage - 1) * PER_PAGE, currentPage * PER_PAGE);
-  const navigate = Route.useNavigate();
-
-  // при смене фильтров возвращаемся на первую страницу
-  useEffect(() => {
-    if ((search.page ?? 1) > totalPages) {
-      void navigate({ search: (prev) => ({ ...prev, page: undefined }), replace: true });
-    }
-  }, [totalPages, search.page, navigate]);
-
   const reset = () => {
     setFilters(emptyFilters(priceBounds));
     setQuery("");
@@ -207,7 +194,7 @@ function CatalogPage() {
         </aside>
 
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3">
-          {pageItems.map((c) => (
+          {list.map((c) => (
             <CarCard key={c.id} car={c} />
           ))}
           {list.length === 0 && (
@@ -215,25 +202,6 @@ function CatalogPage() {
               По выбранным фильтрам ничего не найдено.
               <Button variant="link" onClick={reset}>Сбросить фильтры</Button>
             </div>
-          )}
-          {totalPages > 1 && (
-            <nav aria-label="Страницы каталога" className="col-span-full mt-2 flex flex-wrap items-center justify-center gap-2">
-              {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
-                <Link
-                  key={p}
-                  to="/cars"
-                  search={(prev) => ({ ...prev, page: p === 1 ? undefined : p })}
-                  aria-current={p === currentPage ? "page" : undefined}
-                  className={
-                    p === currentPage
-                      ? "rounded-xl border border-accent bg-accent/10 px-4 py-2 text-sm font-bold text-accent"
-                      : "rounded-xl border border-border px-4 py-2 text-sm font-semibold text-muted-foreground transition hover:border-accent hover:text-accent"
-                  }
-                >
-                  {p}
-                </Link>
-              ))}
-            </nav>
           )}
         </div>
       </div>
