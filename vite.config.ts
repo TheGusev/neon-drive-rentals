@@ -21,8 +21,9 @@ export default defineConfig({
       rollupOptions: {
         output: {
           experimentalMinChunkSize: 24_000,
-        },
+        } as Record<string, unknown>,
       },
     },
   },
+
 });
