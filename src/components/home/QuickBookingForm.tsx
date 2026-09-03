@@ -141,6 +141,33 @@ export default function QuickBookingForm() {
           )}
         </div>
 
+        {days > 0 && available.length > 0 && (
+          <div className="space-y-1.5 rounded-xl border border-border bg-background/60 p-2">
+            <p className="text-[10px] uppercase tracking-widest text-muted-foreground">
+              Свободны на эти даты
+            </p>
+            {available.slice(0, 3).map((car) => (
+              <div
+                key={car.id}
+                className="flex items-center justify-between gap-2 rounded-lg bg-muted/40 px-2 py-1.5"
+              >
+                <span className="min-w-0 truncate text-xs font-semibold">
+                  {car.brand} {car.model}
+                </span>
+                <Button asChild size="sm" className="h-7 shrink-0 px-2 text-[11px]">
+                  <Link
+                    to="/booking/$carId"
+                    params={{ carId: car.id }}
+                    search={{ from, to, tariff }}
+                  >
+                    Забронировать
+                  </Link>
+                </Button>
+              </div>
+            ))}
+          </div>
+        )}
+
         <Button
           asChild
           size="lg"

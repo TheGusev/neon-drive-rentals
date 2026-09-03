@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { Search, SlidersHorizontal } from "lucide-react";
 import type { Booking, Car } from "@/types/domain";
@@ -96,6 +96,7 @@ function applyFilters(
 
 function CatalogPage() {
   const search = Route.useSearch();
+  const navigate = useNavigate();
   const allCars = useCars();
   const bookings = useBookings();
   const priceBounds = useMemo(() => computeBounds(allCars), [allCars]);
@@ -114,7 +115,23 @@ function CatalogPage() {
   const reset = () => {
     setFilters(emptyFilters(priceBounds));
     setQuery("");
+    void navigate({ to: "/cars", search: {} });
   };
+
+  const toInput = (d?: Date) => (d ? d.toISOString().slice(0, 10) : "");
+  const setDates = (next: { pickup?: Date; ret?: Date }) => {
+    const merged = { ...filters, ...next };
+    setFilters(merged);
+    void navigate({
+      to: "/cars",
+      search: {
+        from: merged.pickup ? merged.pickup.toISOString() : undefined,
+        to: merged.ret ? merged.ret.toISOString() : undefined,
+      },
+    });
+  };
+  const bookingFrom = filters.pickup?.toISOString();
+  const bookingTo = filters.ret?.toISOString();
 
   return (
     <div className="space-y-6">
@@ -172,6 +189,32 @@ function CatalogPage() {
             </Select>
           </div>
         </div>
+
+        <div className="grid gap-2 rounded-2xl border border-border bg-card p-3 sm:grid-cols-[1fr_1fr_auto] sm:items-end">
+          <label className="text-xs font-semibold text-muted-foreground">
+            Дата получения
+            <Input
+              type="date"
+              className="mt-1 h-11 rounded-xl"
+              value={toInput(filters.pickup)}
+              onChange={(e) => setDates({ pickup: parseDate(e.target.value) })}
+            />
+          </label>
+          <label className="text-xs font-semibold text-muted-foreground">
+            Дата возврата
+            <Input
+              type="date"
+              className="mt-1 h-11 rounded-xl"
+              value={toInput(filters.ret)}
+              onChange={(e) => setDates({ ret: parseDate(e.target.value) })}
+            />
+          </label>
+          <p className="text-xs text-muted-foreground sm:pb-3">
+            {bookingFrom && bookingTo
+              ? `Свободно на выбранные даты: ${list.length}`
+              : "Выберите даты — покажем только свободные авто"}
+          </p>
+        </div>
       </header>
 
       <div className="grid gap-6 md:grid-cols-[280px_minmax(0,1fr)]">
@@ -184,7 +227,7 @@ function CatalogPage() {
 
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3">
           {list.map((c) => (
-            <CarCard key={c.id} car={c} />
+            <CarCard key={c.id} car={c} from={bookingFrom} to={bookingTo} />
           ))}
           {list.length === 0 && (
             <div className="col-span-full rounded-3xl border border-dashed border-border p-10 text-center text-sm text-muted-foreground">

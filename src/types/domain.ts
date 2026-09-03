@@ -79,6 +79,24 @@ export interface Booking {
   pickupAddress?: string;
   contractStatus?: ContractStatus;
   status: BookingStatus;
+  /** Маршрут аренды: подтверждает администратор. */
+  keysIssuedAt?: string;
+  returnedAt?: string;
+  handledBy?: string;
+}
+
+/** Публичный отзыв об автомобиле, оставленный после завершённой аренды. */
+export interface CarReview {
+  id: string;
+  bookingId: string;
+  carId: string;
+  author: string;
+  rating: number;
+  text: string;
+  /** Комментарий сервису — виден только клиенту и админке. */
+  serviceComment?: string;
+  hidden?: boolean;
+  date: string;
 }
 
 export interface BookingDraft {

@@ -5,6 +5,8 @@ import { DocumentsBlock } from "@/components/profile/DocumentsBlock";
 import { BookingHistoryList } from "@/components/profile/BookingHistoryList";
 import { FavoritesBlock } from "@/components/profile/FavoritesBlock";
 import { ReviewsBlock } from "@/components/profile/ReviewsBlock";
+import { RentalJourney } from "@/components/profile/RentalJourney";
+import { ReviewForm } from "@/components/profile/ReviewForm";
 import { BottomNav } from "@/components/profile/BottomNav";
 import { SectionCard } from "@/components/checkout/SectionCard";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
@@ -12,7 +14,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { Link } from "@tanstack/react-router";
 import { LogIn, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { myBookingsQueryOptions, myProfileQueryOptions } from "@/lib/queries";
+import { myBookingsQueryOptions, myProfileQueryOptions, myReviewsQueryOptions } from "@/lib/queries";
 import { clientLogout } from "@/lib/auth.functions";
 import { useCarLookup } from "@/state/AppDataContext";
 
@@ -38,8 +40,14 @@ function ProfilePage() {
   const profile = profileData?.profile ?? null;
   const authenticated = data?.authenticated ?? false;
   const bookings = data?.bookings ?? [];
-  const active = bookings.find((b) => b.status === "active");
+  const active = bookings.find((b) => b.status === "active" || b.status === "paid");
   const car = active ? getCarById(active.carId) : undefined;
+  const { data: myReviews } = useQuery({ ...myReviewsQueryOptions(), enabled: authenticated });
+  const reviewedBookings = new Set((myReviews ?? []).map((r) => r.bookingId));
+  const awaitingReview = bookings.find(
+    (b) => (b.status === "completed" || Boolean(b.returnedAt)) && !reviewedBookings.has(b.id),
+  );
+  const awaitingCar = awaitingReview ? getCarById(awaitingReview.carId) : undefined;
 
   if (!isLoading && !authenticated) {
     return (
@@ -67,11 +75,25 @@ function ProfilePage() {
 
         <div className="mt-5 space-y-4">
           {active && car ? (
-            <CurrentRentalCard booking={active} car={car} />
+            <>
+              <CurrentRentalCard booking={active} car={car} />
+              <SectionCard title="Маршрут аренды" className="bg-card ring-1 ring-border">
+                <RentalJourney booking={active} hasReview={reviewedBookings.has(active.id)} />
+              </SectionCard>
+            </>
           ) : (
             <SectionCard title="Текущая аренда" className="bg-card ring-1 ring-border">
               <p className="text-sm text-muted-foreground">Нет активных аренд. Загляните в каталог и выберите автомобиль.</p>
             </SectionCard>
+          )}
+
+          {awaitingReview && (
+            <ReviewForm
+              bookingId={awaitingReview.id}
+              carTitle={
+                awaitingCar ? `${awaitingCar.brand} ${awaitingCar.model}` : "Завершённая аренда"
+              }
+            />
           )}
 
           <DocumentsBlock documents={profileData?.documents ?? []} />

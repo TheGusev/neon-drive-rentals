@@ -14,6 +14,7 @@ import {
 } from "@/lib/admin.functions";
 import { getMyBookings } from "@/lib/auth.functions";
 import { getMyProfile, getClientDocumentsAdmin } from "@/lib/profile.functions";
+import { getCarReviews, getMyReviews, getReviewsAdmin } from "@/lib/reviews.functions";
 
 export const carsQueryOptions = () =>
   queryOptions({
@@ -103,5 +104,26 @@ export const adminDocumentsQueryOptions = () =>
   queryOptions({
     queryKey: ["admin", "documents"] as const,
     queryFn: () => getClientDocumentsAdmin(),
+    staleTime: 15_000,
+  });
+
+export const carReviewsQueryOptions = (carId: string) =>
+  queryOptions({
+    queryKey: ["cars", carId, "reviews"] as const,
+    queryFn: () => getCarReviews({ data: { carId } }),
+    staleTime: 60_000,
+  });
+
+export const myReviewsQueryOptions = () =>
+  queryOptions({
+    queryKey: ["me", "reviews"] as const,
+    queryFn: () => getMyReviews(),
+    staleTime: 15_000,
+  });
+
+export const adminReviewsQueryOptions = () =>
+  queryOptions({
+    queryKey: ["admin", "reviews"] as const,
+    queryFn: () => getReviewsAdmin(),
     staleTime: 15_000,
   });

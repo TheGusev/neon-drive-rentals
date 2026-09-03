@@ -13,6 +13,9 @@ type BookingRow = {
   total: number | string | null;
   status: string | null;
   signed_at?: Date | string | null;
+  keys_issued_at?: Date | string | null;
+  returned_at?: Date | string | null;
+  handled_by?: string | null;
 };
 
 const BOOKING_STATUSES: BookingStatus[] = ["paid", "pending", "active", "completed", "cancelled"];
@@ -51,12 +54,16 @@ function mapBookingRow(row: BookingRow): Booking {
     status: normalizeBookingStatus(row.status),
     pickupAddress: PICKUP_POINT.address,
     contractStatus: row.signed_at ? "signed" : "pending",
+    keysIssuedAt: row.keys_issued_at ? iso(row.keys_issued_at) : undefined,
+    returnedAt: row.returned_at ? iso(row.returned_at) : undefined,
+    handledBy: row.handled_by ?? undefined,
   };
 }
 
 const SELECT_BOOKINGS = `
   select b.id, b.car_id, c.slug as car_slug, b.client_id,
-         b.date_from, b.date_to, b.total, b.status, b.signed_at
+         b.date_from, b.date_to, b.total, b.status, b.signed_at,
+         b.keys_issued_at, b.returned_at, b.handled_by
   from bookings b
   left join cars c on c.id = b.car_id
 `;
@@ -158,7 +165,7 @@ export async function fetchBookingsAdmin(filters?: {
     }
   >(
     `select b.id, b.car_id, c.slug as car_slug, b.client_id, b.date_from, b.date_to, b.total, b.status,
-            b.signed_at, cl.name as client_name, cl.phone as client_phone, c.brand, c.model, c.plate
+            b.signed_at, b.keys_issued_at, b.returned_at, b.handled_by, cl.name as client_name, cl.phone as client_phone, c.brand, c.model, c.plate
      from bookings b
      left join cars c on c.id = b.car_id
      left join clients cl on cl.id = b.client_id
@@ -312,4 +319,41 @@ export async function insertBooking(input: CreateBookingInput): Promise<CreateBo
       booking: mapBookingRow({ ...inserted[0], car_slug: input.carId }),
     };
   });
+}
+
+/**
+ * Выдача ключей: фиксируем время и менеджера, бронь переводим в active.
+ * Только администратор — вызывается из защищённой server function.
+ */
+export async function markKeysIssued(id: string, manager: string): Promise<Booking | null> {
+  if (!hasDatabase()) return fetchBookingById(id);
+  const rows = await query<{ id: string; car_id: string }>(
+    `update bookings
+        set keys_issued_at = coalesce(keys_issued_at, now()),
+            handled_by = $2,
+            status = 'active'
+      where id::text = $1 and status in ('confirmed', 'active', 'pending')
+      returning id, car_id`,
+    [id, manager],
+  );
+  if (!rows.length) return null;
+  await syncCarStatus(String(rows[0].car_id));
+  return fetchBookingById(id);
+}
+
+/** Приём возврата: бронь завершается, авто освобождается. */
+export async function markReturned(id: string, manager: string): Promise<Booking | null> {
+  if (!hasDatabase()) return fetchBookingById(id);
+  const rows = await query<{ id: string; car_id: string }>(
+    `update bookings
+        set returned_at = coalesce(returned_at, now()),
+            handled_by = $2,
+            status = 'completed'
+      where id::text = $1
+      returning id, car_id`,
+    [id, manager],
+  );
+  if (!rows.length) return null;
+  await syncCarStatus(String(rows[0].car_id));
+  return fetchBookingById(id);
 }

@@ -72,3 +72,27 @@ export const updateBookingStatus = createServerFn({ method: "POST" })
     const booking = await updateBookingStatusInDb(data.id, data.status as BookingStatus);
     return { ok: Boolean(booking), booking };
   });
+
+const journeySchema = z.object({ id: z.string().min(1).max(100), manager: z.string().max(80).optional() });
+
+/** Админ подтверждает выдачу ключей — маршрут аренды в кабинете двигается сам. */
+export const issueKeys = createServerFn({ method: "POST" })
+  .inputValidator((data: unknown) => journeySchema.parse(data))
+  .handler(async ({ data }): Promise<{ ok: boolean; booking: Booking | null }> => {
+    const { requireAdmin } = await import("@/lib/adminGuard.server");
+    await requireAdmin();
+    const { markKeysIssued } = await import("@/lib/bookingsRepo.server");
+    const booking = await markKeysIssued(data.id, data.manager?.trim() || "Менеджер NSK-RENT");
+    return { ok: Boolean(booking), booking };
+  });
+
+/** Админ принимает возврат авто — аренда завершается. */
+export const acceptReturn = createServerFn({ method: "POST" })
+  .inputValidator((data: unknown) => journeySchema.parse(data))
+  .handler(async ({ data }): Promise<{ ok: boolean; booking: Booking | null }> => {
+    const { requireAdmin } = await import("@/lib/adminGuard.server");
+    await requireAdmin();
+    const { markReturned } = await import("@/lib/bookingsRepo.server");
+    const booking = await markReturned(data.id, data.manager?.trim() || "Менеджер NSK-RENT");
+    return { ok: Boolean(booking), booking };
+  });
