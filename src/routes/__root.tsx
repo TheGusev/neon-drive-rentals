@@ -10,6 +10,7 @@ import {
 import { useEffect, type ReactNode } from "react";
 import { Toaster } from "@/components/ui/sonner";
 import { YandexMetrika } from "@/components/analytics/YandexMetrika";
+import { CookieConsentBanner } from "@/components/legal/CookieConsentBanner";
 import { AppDataProvider } from "@/state/AppDataContext";
 import { carsQueryOptions, publicBookingsQueryOptions } from "@/lib/queries";
 
@@ -168,6 +169,7 @@ function RootComponent() {
       </AppDataProvider>
       <Toaster />
       <YandexMetrika />
+      <CookieConsentBanner />
     </QueryClientProvider>
   );
 }

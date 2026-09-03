@@ -16,6 +16,8 @@ import clientProfile from "../../db/migrations/013_client_profile.sql?raw";
 import carPhotosBlob from "../../db/migrations/014_car_photos_blob.sql?raw";
 import clientAccounts from "../../db/migrations/015_client_accounts.sql?raw";
 import rentalJourney from "../../db/migrations/016_rental_journey.sql?raw";
+import consents from "../../db/migrations/017_consents.sql?raw";
+import paymentEvents from "../../db/migrations/018_payment_events.sql?raw";
 
 /** Порядок применения важен; все миграции идемпотентны для существующей базы. */
 const MIGRATIONS: Array<{ name: string; sql: string }> = [
@@ -35,6 +37,8 @@ const MIGRATIONS: Array<{ name: string; sql: string }> = [
   { name: "014_car_photos_blob", sql: carPhotosBlob },
   { name: "015_client_accounts", sql: clientAccounts },
   { name: "016_rental_journey", sql: rentalJourney },
+  { name: "017_consents", sql: consents },
+  { name: "018_payment_events", sql: paymentEvents },
 ];
 
 type Holder = { __nskMigrations?: Promise<string[]> };

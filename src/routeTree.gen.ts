@@ -21,6 +21,8 @@ import { Route as PublicProfileRouteImport } from './routes/_public.profile'
 import { Route as PublicPrivacyRouteImport } from './routes/_public.privacy'
 import { Route as PublicLoginRouteImport } from './routes/_public.login'
 import { Route as PublicKeiCarsRouteImport } from './routes/_public.kei-cars'
+import { Route as PublicCookiesRouteImport } from './routes/_public.cookies'
+import { Route as PublicConsentRouteImport } from './routes/_public.consent'
 import { Route as PublicArendaProbegIPlatezhiRouteImport } from './routes/_public.arenda-probeg-i-platezhi'
 import { Route as PublicArendaAvtoVyhodnyeRouteImport } from './routes/_public.arenda-avto-vyhodnye'
 import { Route as PublicArendaAvtoSPravymRulemRouteImport } from './routes/_public.arenda-avto-s-pravym-rulem'
@@ -109,6 +111,16 @@ const PublicLoginRoute = PublicLoginRouteImport.update({
 const PublicKeiCarsRoute = PublicKeiCarsRouteImport.update({
   id: '/kei-cars',
   path: '/kei-cars',
+  getParentRoute: () => PublicRoute,
+} as any)
+const PublicCookiesRoute = PublicCookiesRouteImport.update({
+  id: '/cookies',
+  path: '/cookies',
+  getParentRoute: () => PublicRoute,
+} as any)
+const PublicConsentRoute = PublicConsentRouteImport.update({
+  id: '/consent',
+  path: '/consent',
   getParentRoute: () => PublicRoute,
 } as any)
 const PublicArendaProbegIPlatezhiRoute =
@@ -292,6 +304,8 @@ export interface FileRoutesByFullPath {
   '/arenda-avto-s-pravym-rulem': typeof PublicArendaAvtoSPravymRulemRoute
   '/arenda-avto-vyhodnye': typeof PublicArendaAvtoVyhodnyeRoute
   '/arenda-probeg-i-platezhi': typeof PublicArendaProbegIPlatezhiRoute
+  '/consent': typeof PublicConsentRoute
+  '/cookies': typeof PublicCookiesRoute
   '/kei-cars': typeof PublicKeiCarsRoute
   '/login': typeof PublicLoginRoute
   '/privacy': typeof PublicPrivacyRoute
@@ -335,6 +349,8 @@ export interface FileRoutesByTo {
   '/arenda-avto-s-pravym-rulem': typeof PublicArendaAvtoSPravymRulemRoute
   '/arenda-avto-vyhodnye': typeof PublicArendaAvtoVyhodnyeRoute
   '/arenda-probeg-i-platezhi': typeof PublicArendaProbegIPlatezhiRoute
+  '/consent': typeof PublicConsentRoute
+  '/cookies': typeof PublicCookiesRoute
   '/kei-cars': typeof PublicKeiCarsRoute
   '/login': typeof PublicLoginRoute
   '/privacy': typeof PublicPrivacyRoute
@@ -381,6 +397,8 @@ export interface FileRoutesById {
   '/_public/arenda-avto-s-pravym-rulem': typeof PublicArendaAvtoSPravymRulemRoute
   '/_public/arenda-avto-vyhodnye': typeof PublicArendaAvtoVyhodnyeRoute
   '/_public/arenda-probeg-i-platezhi': typeof PublicArendaProbegIPlatezhiRoute
+  '/_public/consent': typeof PublicConsentRoute
+  '/_public/cookies': typeof PublicCookiesRoute
   '/_public/kei-cars': typeof PublicKeiCarsRoute
   '/_public/login': typeof PublicLoginRoute
   '/_public/privacy': typeof PublicPrivacyRoute
@@ -426,6 +444,8 @@ export interface FileRouteTypes {
     | '/arenda-avto-s-pravym-rulem'
     | '/arenda-avto-vyhodnye'
     | '/arenda-probeg-i-platezhi'
+    | '/consent'
+    | '/cookies'
     | '/kei-cars'
     | '/login'
     | '/privacy'
@@ -469,6 +489,8 @@ export interface FileRouteTypes {
     | '/arenda-avto-s-pravym-rulem'
     | '/arenda-avto-vyhodnye'
     | '/arenda-probeg-i-platezhi'
+    | '/consent'
+    | '/cookies'
     | '/kei-cars'
     | '/login'
     | '/privacy'
@@ -514,6 +536,8 @@ export interface FileRouteTypes {
     | '/_public/arenda-avto-s-pravym-rulem'
     | '/_public/arenda-avto-vyhodnye'
     | '/_public/arenda-probeg-i-platezhi'
+    | '/_public/consent'
+    | '/_public/cookies'
     | '/_public/kei-cars'
     | '/_public/login'
     | '/_public/privacy'
@@ -641,6 +665,20 @@ declare module '@tanstack/react-router' {
       path: '/kei-cars'
       fullPath: '/kei-cars'
       preLoaderRoute: typeof PublicKeiCarsRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/cookies': {
+      id: '/_public/cookies'
+      path: '/cookies'
+      fullPath: '/cookies'
+      preLoaderRoute: typeof PublicCookiesRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/consent': {
+      id: '/_public/consent'
+      path: '/consent'
+      fullPath: '/consent'
+      preLoaderRoute: typeof PublicConsentRouteImport
       parentRoute: typeof PublicRoute
     }
     '/_public/arenda-probeg-i-platezhi': {
@@ -896,6 +934,8 @@ interface PublicRouteChildren {
   PublicArendaAvtoSPravymRulemRoute: typeof PublicArendaAvtoSPravymRulemRoute
   PublicArendaAvtoVyhodnyeRoute: typeof PublicArendaAvtoVyhodnyeRoute
   PublicArendaProbegIPlatezhiRoute: typeof PublicArendaProbegIPlatezhiRoute
+  PublicConsentRoute: typeof PublicConsentRoute
+  PublicCookiesRoute: typeof PublicCookiesRoute
   PublicKeiCarsRoute: typeof PublicKeiCarsRoute
   PublicLoginRoute: typeof PublicLoginRoute
   PublicPrivacyRoute: typeof PublicPrivacyRoute
@@ -925,6 +965,8 @@ const PublicRouteChildren: PublicRouteChildren = {
   PublicArendaAvtoSPravymRulemRoute: PublicArendaAvtoSPravymRulemRoute,
   PublicArendaAvtoVyhodnyeRoute: PublicArendaAvtoVyhodnyeRoute,
   PublicArendaProbegIPlatezhiRoute: PublicArendaProbegIPlatezhiRoute,
+  PublicConsentRoute: PublicConsentRoute,
+  PublicCookiesRoute: PublicCookiesRoute,
   PublicKeiCarsRoute: PublicKeiCarsRoute,
   PublicLoginRoute: PublicLoginRoute,
   PublicPrivacyRoute: PublicPrivacyRoute,
