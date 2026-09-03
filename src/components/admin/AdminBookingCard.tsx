@@ -28,6 +28,33 @@ const NEXT_STATUS: Partial<Record<BookingStatus, { label: string; value: Booking
   active: { label: "Завершить", value: "completed" },
 };
 
+/** Компактный маршрут аренды: оплата → договор → ключи → возврат. */
+function JourneyTrail({ booking }: { booking: Booking }) {
+  const steps = [
+    { label: "Оплата", done: ["paid", "active", "completed"].includes(booking.status) },
+    { label: "Договор", done: booking.contractStatus === "signed" },
+    { label: "Ключи", done: Boolean(booking.keysIssuedAt) },
+    { label: "Возврат", done: Boolean(booking.returnedAt) || booking.status === "completed" },
+  ];
+  return (
+    <div className="mt-2 flex flex-wrap gap-1">
+      {steps.map((step) => (
+        <span
+          key={step.label}
+          className={
+            step.done
+              ? "rounded-full bg-emerald-500/15 px-2 py-0.5 text-[10px] font-semibold text-emerald-600 public-dark:text-emerald-400"
+              : "rounded-full bg-muted px-2 py-0.5 text-[10px] font-medium text-muted-foreground"
+          }
+        >
+          {step.done ? "✓ " : ""}
+          {step.label}
+        </span>
+      ))}
+    </div>
+  );
+}
+
 export function AdminBookingCard({
   booking,
   car,
@@ -73,6 +100,7 @@ export function AdminBookingCard({
             <CalendarDays className="h-3.5 w-3.5 shrink-0" />
             {fmt(booking.startDate)} — {fmt(booking.endDate)}
           </div>
+          <JourneyTrail booking={booking} />
         </div>
       </div>
 

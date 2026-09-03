@@ -88,6 +88,46 @@ export async function fetchPublicBookings(): Promise<Booking[]> {
   }
 }
 
+/**
+ * Автопереводы статусов брони по календарю (без участия менеджера):
+ *  - оплаченная бронь, у которой наступила дата выдачи → «Активна», авто «занято»;
+ *  - активная бронь, у которой прошла дата возврата более чем на сутки и авто
+ *    принято (returned_at) → «Завершена».
+ * Вызывается перед чтением списков, чтобы админка и кабинет видели актуальное.
+ */
+export async function autoAdvanceBookings(): Promise<void> {
+  if (!hasDatabase()) return;
+  try {
+    await query(
+      `update bookings set status = 'active'
+        where status = 'confirmed' and date_from <= now() and date_to > now()`,
+    );
+    await query(
+      `update bookings set status = 'completed'
+        where status = 'active' and returned_at is not null`,
+    );
+    // Авто освобождается, если по нему не осталось действующих броней.
+    await query(
+      `update cars c set status = 'available'
+        where c.status = 'busy'
+          and not exists (
+            select 1 from bookings b
+             where b.car_id = c.id and b.status in ('confirmed','active')
+          )`,
+    );
+    await query(
+      `update cars c set status = 'busy'
+        where c.status = 'available'
+          and exists (
+            select 1 from bookings b
+             where b.car_id = c.id and b.status = 'active'
+          )`,
+    );
+  } catch (error) {
+    console.error("[bookings] autoAdvance failed", error);
+  }
+}
+
 export async function fetchBookings(): Promise<Booking[]> {
   if (!hasDatabase()) return mockBookings;
   const rows = await query<BookingRow>(`${SELECT_BOOKINGS} order by b.date_from desc`);
@@ -102,6 +142,7 @@ export async function fetchBookingById(id: string): Promise<Booking | null> {
 
 export async function fetchBookingsByPhone(phone: string): Promise<Booking[]> {
   if (!hasDatabase()) return mockBookings;
+  await autoAdvanceBookings();
   const rows = await query<BookingRow>(
     `${SELECT_BOOKINGS} join clients cl on cl.id = b.client_id
      where regexp_replace(cl.phone, '\\D', '', 'g') = regexp_replace($1, '\\D', '', 'g')
@@ -129,6 +170,7 @@ export async function fetchBookingsAdmin(filters?: {
   dateFrom?: string;
   dateTo?: string;
 }): Promise<AdminBookingRow[]> {
+  await autoAdvanceBookings();
   if (!hasDatabase()) {
     return mockBookings.map((b) => ({
       ...b,
