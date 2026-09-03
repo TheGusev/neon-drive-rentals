@@ -53,16 +53,22 @@ function applyTheme(theme: Theme) {
   meta.setAttribute("content", THEME_COLORS[theme]);
 }
 
-export function ThemeProvider({ children }: { children: ReactNode }) {
+/**
+ * `fixed` — жёстко заданная тема (публичная часть сайта всегда тёмная).
+ * Переключение темы доступно только в админке.
+ */
+export function ThemeProvider({ children, fixed }: { children: ReactNode; fixed?: Theme }) {
   // SSR renders the dark default; the inline boot script in <head> already set
   // the real class on <html>, so we read it synchronously on the client
   // (lazy initializer) — no flash of the wrong theme after hydration.
   const [theme, setThemeState] = useState<Theme>(() =>
-    typeof document === "undefined" ? "dark" : readInitialTheme(),
+    fixed ?? (typeof document === "undefined" ? "dark" : readInitialTheme()),
   );
 
+  const effective = fixed ?? theme;
+
   useEffect(() => {
-    applyTheme(theme);
+    applyTheme(effective);
     const root = document.documentElement;
     // Заглушаем переходы/анимации на момент смены темы — без «моргания».
     root.classList.add("theme-switching");
@@ -71,31 +77,37 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
       window.clearTimeout(id);
       root.classList.remove("theme-switching");
     };
-  }, [theme]);
+  }, [effective]);
 
-  const setTheme = useCallback((next: Theme) => {
-    window.localStorage.setItem(STORAGE_KEY, next);
-    setThemeState(next);
-  }, []);
+  const setTheme = useCallback(
+    (next: Theme) => {
+      if (fixed) return;
+      window.localStorage.setItem(STORAGE_KEY, next);
+      setThemeState(next);
+    },
+    [fixed],
+  );
 
   const toggle = useCallback(() => {
+    if (fixed) return;
     setThemeState((prev) => {
       const next: Theme = prev === "dark" ? "light" : "dark";
       window.localStorage.setItem(STORAGE_KEY, next);
       return next;
     });
-  }, []);
+  }, [fixed]);
 
   return (
     <Ctx.Provider
       value={{
-        theme,
+        theme: effective,
         toggle,
         setTheme,
-        themeClass: theme === "dark" ? "public-dark" : "clean-light",
+        themeClass: effective === "dark" ? "public-dark" : "clean-light",
       }}
     >
       {children}
     </Ctx.Provider>
   );
+
 }
