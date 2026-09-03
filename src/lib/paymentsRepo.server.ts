@@ -151,3 +151,139 @@ export async function updatePaymentStatusById(id: string, status: string): Promi
   if (!(await ready())) return;
   await query(`update payments set status = $2, updated_at = now() where id = $1::uuid`, [id, status]);
 }
+
+/** Сохраняет контакты покупателя для чека 54-ФЗ. */
+export async function savePaymentCustomer(
+  id: string,
+  customer: { email?: string | null; phone?: string | null; receiptRegistered?: boolean },
+): Promise<void> {
+  if (!(await ready())) return;
+  await query(
+    `update payments
+        set customer_email = coalesce($2, customer_email),
+            customer_phone = coalesce($3, customer_phone),
+            receipt_registered = coalesce($4, receipt_registered),
+            updated_at = now()
+      where id = $1::bigint`,
+    [id, customer.email ?? null, customer.phone ?? null, customer.receiptRegistered ?? null],
+  );
+}
+
+export type PaymentEventInput = {
+  providerId: string | null;
+  bookingId?: string | null;
+  event?: string | null;
+  status?: string | null;
+  amount?: number | null;
+  raw: unknown;
+};
+
+/**
+ * Пишет уведомление провайдера в журнал.
+ * Возвращает false, если такое событие уже обработано (идемпотентность webhook).
+ */
+export async function logPaymentEvent(input: PaymentEventInput): Promise<boolean> {
+  if (!(await ready())) return true;
+  try {
+    const rows = await query<{ id: string }>(
+      `insert into payment_events (provider, provider_id, booking_id, event, status, amount, raw)
+       values ('yookassa', $1, $2, $3, $4, $5, $6::jsonb)
+       on conflict do nothing
+       returning id`,
+      [
+        input.providerId,
+        input.bookingId ?? null,
+        input.event ?? null,
+        input.status ?? null,
+        input.amount ?? null,
+        JSON.stringify(input.raw ?? {}),
+      ],
+    );
+    return rows.length > 0;
+  } catch (error) {
+    console.error("[payments] event log failed", error);
+    return true;
+  }
+}
+
+export type PaymentEventRow = {
+  id: string;
+  providerId: string | null;
+  bookingId: string | null;
+  event: string | null;
+  status: string | null;
+  amount: number;
+  createdAt: string;
+};
+
+export async function fetchPaymentEvents(limit = 100): Promise<PaymentEventRow[]> {
+  if (!(await ready())) return [];
+  const rows = await query<{
+    id: string;
+    provider_id: string | null;
+    booking_id: string | null;
+    event: string | null;
+    status: string | null;
+    amount: string | number | null;
+    created_at: Date | string;
+  }>(
+    `select id, provider_id, booking_id, event, status, amount, created_at
+       from payment_events order by created_at desc limit $1`,
+    [limit],
+  );
+  return rows.map((r) => ({
+    id: String(r.id),
+    providerId: r.provider_id,
+    bookingId: r.booking_id,
+    event: r.event,
+    status: r.status,
+    amount: Number(r.amount ?? 0),
+    createdAt: new Date(r.created_at).toISOString(),
+  }));
+}
+
+/** Платёж по id — для админских действий (возврат, сверка). */
+export async function fetchPaymentById(id: string): Promise<
+  (BookingPaymentRow & { bookingId: string | null; refundedAmount: number }) | null
+> {
+  if (!(await ready())) return null;
+  const rows = await query<{
+    id: string;
+    booking_id: string | null;
+    amount: string | number | null;
+    refunded_amount: string | number | null;
+    status: string | null;
+    provider: string | null;
+    provider_id: string | null;
+    created_at: Date | string;
+  }>(
+    `select id, booking_id, amount, refunded_amount, status, provider, provider_id, created_at
+       from payments where id = $1::bigint limit 1`,
+    [id],
+  );
+  if (!rows.length) return null;
+  const row = rows[0];
+  return {
+    id: String(row.id),
+    bookingId: row.booking_id ? String(row.booking_id) : null,
+    amount: Number(row.amount ?? 0),
+    refundedAmount: Number(row.refunded_amount ?? 0),
+    status: String(row.status ?? "pending"),
+    provider: String(row.provider ?? "stub"),
+    providerId: row.provider_id ? String(row.provider_id) : null,
+    createdAt: new Date(row.created_at).toISOString(),
+  };
+}
+
+/** Отмечает возврат средств по платежу. */
+export async function markPaymentRefunded(id: string, amount: number): Promise<void> {
+  if (!(await ready())) return;
+  await query(
+    `update payments
+        set refunded_amount = least(amount, coalesce(refunded_amount, 0) + $2),
+            status = case when coalesce(refunded_amount, 0) + $2 >= amount then 'refunded' else status end,
+            updated_at = now()
+      where id = $1::bigint`,
+    [id, amount],
+  );
+}
