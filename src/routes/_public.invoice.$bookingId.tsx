@@ -36,15 +36,17 @@ function InvoicePage() {
   const [draft, setDraft] = useState<BookingDraft | null | undefined>(undefined);
   const [paying, setPaying] = useState(false);
 
+  const validBookingId = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(bookingId);
   const bookingQuery = useQuery({
     queryKey: ["invoice", "booking", bookingId],
     queryFn: () => getBooking({ data: { id: bookingId } }),
+    enabled: validBookingId,
     staleTime: 10_000,
   });
   const paymentQuery = useQuery({
     queryKey: ["invoice", "payment", bookingId],
     queryFn: () => getPayment({ data: { bookingId } }),
-    enabled: Boolean(bookingQuery.data),
+    enabled: validBookingId && Boolean(bookingQuery.data),
     staleTime: 10_000,
   });
 
@@ -58,7 +60,7 @@ function InvoicePage() {
   const paymentStatus = String(payment?.status ?? "pending").toLowerCase();
   const paid = paymentStatus === "succeeded" || paymentStatus === "success" || paymentStatus === "paid";
   const cancelled = paymentStatus === "cancelled" || paymentStatus === "canceled" || paymentStatus === "failed";
-  const loading = bookingQuery.isLoading || (Boolean(booking) && paymentQuery.isLoading) || draft === undefined;
+  const loading = validBookingId && (bookingQuery.isLoading || (Boolean(booking) && paymentQuery.isLoading)) || draft === undefined;
 
   const period = useMemo(() => {
     if (!booking) return "—";
