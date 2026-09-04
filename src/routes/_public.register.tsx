@@ -10,6 +10,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { SectionCard } from "@/components/checkout/SectionCard";
 import { registerWithPassword } from "@/lib/auth.functions";
+import { recordConsent } from "@/lib/consent.functions";
+import { Checkbox } from "@/components/ui/checkbox";
+import { LEGAL } from "@/lib/contacts";
 
 export const Route = createFileRoute("/_public/register")({
   head: () => ({
@@ -33,8 +36,10 @@ function RegisterPage() {
   const [phone, setPhone] = useState("+7 ");
   const [password, setPassword] = useState("");
   const [repeat, setRepeat] = useState("");
+  const [pdn, setPdn] = useState(false);
 
   const register = useServerFn(registerWithPassword);
+  const saveConsent = useServerFn(recordConsent);
 
   const problems: string[] = [];
   if (name.trim().length < 2) problems.push("Укажите имя");
@@ -42,6 +47,7 @@ function RegisterPage() {
   if (phone.replace(/\D/g, "").length < 10) problems.push("Укажите номер телефона");
   if (password.length < 8) problems.push("Пароль — минимум 8 символов");
   if (password !== repeat) problems.push("Пароли не совпадают");
+  if (!pdn) problems.push("Нужно согласие на обработку персональных данных");
 
   const mutation = useMutation({
     mutationFn: () => register({ data: { name: name.trim(), email: email.trim(), phone, password } }),
@@ -54,6 +60,17 @@ function RegisterPage() {
         );
         return;
       }
+      // Фиксируем согласие с указанием версии документов.
+      void saveConsent({
+        data: {
+          kind: "pdn_registration",
+          docVersion: LEGAL.docsVersion,
+          phone,
+          email: email.trim(),
+          page: "/register",
+          payload: { pdn: true },
+        },
+      }).catch(() => undefined);
       await queryClient.invalidateQueries({ queryKey: ["me"] });
       await queryClient.invalidateQueries({ queryKey: ["profile"] });
       toast.success("Аккаунт создан");
@@ -79,6 +96,29 @@ function RegisterPage() {
               <Field id="phone" label="Телефон" value={phone} onChange={setPhone} placeholder="+7 913 015-85-55" inputMode="tel" autoComplete="tel" />
               <Field id="password" label="Пароль" value={password} onChange={setPassword} placeholder="минимум 8 символов" type="password" autoComplete="new-password" />
               <Field id="repeat" label="Повторите пароль" value={repeat} onChange={setRepeat} placeholder="ещё раз" type="password" autoComplete="new-password" />
+
+              <label className="flex cursor-pointer items-start gap-3">
+                <Checkbox
+                  checked={pdn}
+                  onCheckedChange={(v) => setPdn(v === true)}
+                  className="mt-0.5 h-5 w-5 rounded-md border-border data-[state=checked]:border-accent data-[state=checked]:bg-accent"
+                />
+                <span className="text-xs leading-snug text-foreground/80">
+                  Даю{" "}
+                  <Link to="/consent" className="link-text">
+                    согласие на обработку персональных данных
+                  </Link>{" "}
+                  и принимаю{" "}
+                  <Link to="/privacy" className="link-text">
+                    политику конфиденциальности
+                  </Link>{" "}
+                  и{" "}
+                  <Link to="/terms" className="link-text">
+                    условия аренды
+                  </Link>
+                  .
+                </span>
+              </label>
 
               {problems.length > 0 && (password.length > 0 || email.length > 0) && (
                 <ul className="space-y-1 rounded-xl border border-destructive/30 bg-destructive/10 p-3 text-xs text-destructive">
