@@ -6,9 +6,9 @@ alter table bookings add column if not exists handled_by text;
 
 create table if not exists car_reviews (
   id uuid primary key default gen_random_uuid(),
-  booking_id uuid not null references bookings(id) on delete cascade,
-  car_id uuid not null references cars(id) on delete cascade,
-  client_id uuid not null references clients(id) on delete cascade,
+  booking_id integer not null references bookings(id) on delete cascade,
+  car_id integer not null references cars(id) on delete cascade,
+  client_id integer not null references clients(id) on delete cascade,
   rating smallint not null check (rating between 1 and 5),
   text text not null default '',
   service_comment text not null default '',
