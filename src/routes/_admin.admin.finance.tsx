@@ -6,7 +6,11 @@ import { AdminPaymentCard } from "@/components/admin/AdminPaymentCard";
 import { EntityGrid, EmptyState } from "@/components/admin/EntityCard";
 import { Button } from "@/components/ui/button";
 import { useSuspenseQuery } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
+import { useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { adminPaymentsQueryOptions } from "@/lib/queries";
+import { refundPayment } from "@/lib/payments.functions";
 import { useCarLookup } from "@/state/AppDataContext";
 import { exportPaymentsToExcel } from "@/lib/exportExcel";
 import { toast } from "sonner";
@@ -19,6 +23,28 @@ export const Route = createFileRoute("/_admin/admin/finance")({
 function AdminFinancePage() {
   const getCarById = useCarLookup();
   const { data: payments } = useSuspenseQuery(adminPaymentsQueryOptions());
+  const queryClient = useQueryClient();
+  const doRefund = useServerFn(refundPayment);
+  const [refundingId, setRefundingId] = useState<string | null>(null);
+
+  const handleRefund = async (paymentId: string, amount: number) => {
+    if (!window.confirm(`Вернуть клиенту ${amount.toLocaleString("ru-RU")} ₽?`)) return;
+    setRefundingId(paymentId);
+    try {
+      const res = await doRefund({ data: { paymentId, reason: "Возврат по решению администратора" } });
+      if (!res.ok) {
+        toast.error(res.error);
+        return;
+      }
+      toast.success(`Возврат оформлен: ${res.amount.toLocaleString("ru-RU")} ₽`);
+      await queryClient.invalidateQueries({ queryKey: ["admin", "payments"] });
+      await queryClient.invalidateQueries({ queryKey: ["bookings"] });
+    } catch {
+      toast.error("Не удалось оформить возврат");
+    } finally {
+      setRefundingId(null);
+    }
+  };
   const success = payments.filter((p) => p.status === "success");
   const revenue = success.reduce((s, p) => s + p.amount, 0);
   const avg = success.length ? Math.round(revenue / success.length) : 0;
@@ -76,6 +102,8 @@ function AdminFinancePage() {
               car={getCarById(p.carId)}
               client={{ id: p.clientId, name: p.clientName, phone: p.clientPhone, ordersCount: 0, rating: 5 }}
               index={i}
+              refunding={refundingId === p.id}
+              onRefund={(payment) => void handleRefund(payment.id, payment.amount)}
             />
           ))}
         </EntityGrid>

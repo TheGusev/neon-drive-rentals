@@ -15,6 +15,8 @@ import type { BookingDraft, PaymentMethod } from "@/types/domain";
 import { createBooking } from "@/lib/bookings.functions";
 import { getClientSessionStatus, loginWithOtp, requestOtp } from "@/lib/auth.functions";
 import { startPayment } from "@/lib/payments.functions";
+import { recordConsent } from "@/lib/consent.functions";
+import { LEGAL } from "@/lib/contacts";
 
 import { SectionCard } from "@/components/checkout/SectionCard";
 import { StickyBottomBar } from "@/components/checkout/StickyBottomBar";
@@ -48,6 +50,7 @@ function PaymentPage() {
   const [method, setMethod] = useState<PaymentMethod>("card");
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
+  const [pdn, setPdn] = useState(false);
   const [email, setEmail] = useState("");
   const [terms, setTerms] = useState(false);
   const [pep, setPep] = useState(false);
@@ -61,6 +64,7 @@ function PaymentPage() {
   const verifyCode = useServerFn(loginWithOtp);
   const submitBooking = useServerFn(createBooking);
   const beginPayment = useServerFn(startPayment);
+  const saveConsent = useServerFn(recordConsent);
   const sessionStatus = useServerFn(getClientSessionStatus);
 
   const { data: me } = useQuery({
@@ -104,6 +108,7 @@ function PaymentPage() {
   const errors: string[] = [];
   if (name.trim().length < 2) errors.push("Укажите имя и фамилию");
   if (phone.replace(/\D/g, "").length < 10) errors.push("Укажите номер телефона");
+  if (!pdn) errors.push("Нужно согласие на обработку персональных данных");
   if (email.trim() && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email.trim())) errors.push("E-mail указан с ошибкой");
   if (!terms) errors.push("Подтвердите согласие с условиями аренды");
   if (!pep) errors.push("Подтвердите согласие на подпись договора по SMS (ПЭП)");
@@ -182,11 +187,26 @@ function PaymentPage() {
       await queryClient.invalidateQueries({ queryKey: ["bookings"] });
       await queryClient.invalidateQueries({ queryKey: ["me"] });
 
+      // Фиксируем согласия клиента (ПДн + оферта) на стороне сервера.
+      void saveConsent({
+        data: {
+          kind: "pdn_booking",
+          docVersion: LEGAL.docsVersion,
+          phone,
+          email: email.trim() || undefined,
+          page: `/payment/${res.booking.id}`,
+          payload: { pdn: true, terms, pep, bookingId: res.booking.id },
+        },
+      }).catch(() => undefined);
+
       const payment = await beginPayment({
         data: {
           bookingId: res.booking.id,
           amount: total,
           description: `Аренда ${car.brand} ${car.model}, бронь ${res.booking.id}`,
+          itemName: `Аренда автомобиля ${car.brand} ${car.model}`,
+          customerEmail: email.trim() || undefined,
+          customerPhone: phone,
         },
       });
 
@@ -305,6 +325,26 @@ function PaymentPage() {
               onChange={setPep}
               text="Согласен на подписание договора простой электронной подписью (код из SMS)"
             />
+            <AgreeRow
+              checked={pdn}
+              onChange={setPdn}
+              text="Даю согласие на обработку персональных данных (152-ФЗ)"
+            />
+            <p className="text-xs leading-snug text-muted-foreground">
+              Подробнее:{" "}
+              <Link to="/consent" className="link-text">
+                текст согласия
+              </Link>
+              ,{" "}
+              <Link to="/privacy" className="link-text">
+                политика конфиденциальности
+              </Link>
+              ,{" "}
+              <Link to="/terms" className="link-text">
+                условия аренды
+              </Link>
+              .
+            </p>
           </div>
         </SectionCard>
 
