@@ -1,4 +1,5 @@
-import { CreditCard, Smartphone } from "lucide-react";
+import { CreditCard, RotateCcw, Smartphone } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { EntityCard } from "@/components/admin/EntityCard";
 import type { Car, Client, Payment } from "@/types/domain";
@@ -24,9 +25,12 @@ interface Props {
   car?: Car | undefined;
   client?: Client | undefined;
   index: number;
+  /** Возврат доступен только для успешных платежей. */
+  onRefund?: (payment: Payment) => void;
+  refunding?: boolean;
 }
 
-export function AdminPaymentCard({ payment, car, client, index }: Props) {
+export function AdminPaymentCard({ payment, car, client, index, onRefund, refunding }: Props) {
   const s = statusMap[payment.status];
   const Icon = payment.method === "sbp" ? Smartphone : CreditCard;
 
@@ -53,6 +57,19 @@ export function AdminPaymentCard({ payment, car, client, index }: Props) {
           {payment.amount.toLocaleString("ru-RU")} ₽
         </span>
       </div>
+
+      {onRefund && payment.status === "success" && (
+        <Button
+          variant="outline"
+          size="sm"
+          className="mt-3 w-full"
+          disabled={refunding}
+          onClick={() => onRefund(payment)}
+        >
+          <RotateCcw className="mr-2 h-3.5 w-3.5" />
+          {refunding ? "Возврат…" : "Оформить возврат"}
+        </Button>
+      )}
     </EntityCard>
   );
 }
