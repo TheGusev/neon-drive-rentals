@@ -160,6 +160,7 @@ export function toDbBookingStatus(status: BookingStatus): string {
 export type AdminBookingRow = Booking & {
   clientName: string;
   clientPhone: string;
+  clientEmail?: string;
   carName: string;
   carPlate: string;
   signedAt?: string;
