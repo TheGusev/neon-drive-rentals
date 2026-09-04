@@ -3,7 +3,7 @@
 
 create table if not exists client_documents (
   id uuid primary key default gen_random_uuid(),
-  client_id uuid not null references clients(id) on delete cascade,
+  client_id integer not null references clients(id) on delete cascade,
   type text not null default 'passport',
   number text,
   file_url text,
@@ -17,8 +17,8 @@ create index if not exists client_documents_client_idx on client_documents (clie
 
 create table if not exists client_reviews (
   id uuid primary key default gen_random_uuid(),
-  client_id uuid not null references clients(id) on delete cascade,
-  booking_id uuid references bookings(id) on delete set null,
+  client_id integer not null references clients(id) on delete cascade,
+  booking_id integer references bookings(id) on delete set null,
   author text not null default 'NSK-RENT',
   rating integer not null default 5,
   text text not null default '',
@@ -28,8 +28,8 @@ create table if not exists client_reviews (
 create index if not exists client_reviews_client_idx on client_reviews (client_id);
 
 create table if not exists client_favorites (
-  client_id uuid not null references clients(id) on delete cascade,
-  car_id uuid not null references cars(id) on delete cascade,
+  client_id integer not null references clients(id) on delete cascade,
+  car_id integer not null references cars(id) on delete cascade,
   created_at timestamptz not null default now(),
   primary key (client_id, car_id)
 );
