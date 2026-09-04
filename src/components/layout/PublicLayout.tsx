@@ -1,10 +1,12 @@
 import { Link, Outlet, useRouterState } from "@tanstack/react-router";
+import { useServerFn } from "@tanstack/react-start";
+import { useQuery } from "@tanstack/react-query";
+import { getClientSessionStatus } from "@/lib/auth.functions";
 import { Mail, Menu, MessageCircle, Phone, Send, User } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { ThemeProvider, useTheme } from "./ThemeProvider";
-import { ThemeToggle } from "./ThemeToggle";
 import { SiteFooter } from "./SiteFooter";
 import { CONTACTS, LEGAL } from "@/lib/contacts";
 import { FavoritesProvider } from "@/state/FavoritesContext";
@@ -28,7 +30,7 @@ const mobileNav = [
 
 export function PublicLayout() {
   return (
-    <ThemeProvider>
+    <ThemeProvider fixed="dark">
       <FavoritesProvider>
         <PublicShell />
       </FavoritesProvider>
@@ -40,6 +42,14 @@ function PublicShell() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const [open, setOpen] = useState(false);
   const { themeClass } = useTheme();
+  const sessionStatus = useServerFn(getClientSessionStatus);
+  const { data: me } = useQuery({
+    queryKey: ["me"],
+    queryFn: () => sessionStatus(),
+    staleTime: 60_000,
+  });
+  const signedIn = Boolean(me?.authenticated);
+
 
   // Close the mobile menu on route change so it never persists across pages.
   useEffect(() => {
@@ -47,7 +57,10 @@ function PublicShell() {
   }, [pathname]);
 
   return (
-    <div className={`${themeClass} min-h-screen bg-background text-foreground transition-colors duration-300`}>
+    <div
+      suppressHydrationWarning
+      className={`${themeClass} min-h-screen bg-background text-foreground transition-colors duration-300`}
+    >
       <header className="safe-top sticky top-0 z-40 border-b border-border/60 bg-background/85 backdrop-blur">
         <div className="mx-auto grid max-w-7xl grid-cols-[minmax(0,1fr)_auto] items-center gap-3 px-4 pb-3 pt-[max(env(safe-area-inset-top),0.75rem)] md:flex md:justify-between md:gap-4 md:px-6 md:py-4 md:pt-4">
           <Link to="/" className="flex min-w-0 items-center gap-2">
@@ -81,14 +94,15 @@ function PublicShell() {
               <Phone className="h-4 w-4 text-accent" />
               <span className="font-semibold">{CONTACTS.phone}</span>
             </a>
-            <ThemeToggle />
-            <Button variant="outline" size="sm" className="gap-2">
-              <User className="h-4 w-4" /> Войти
+            <Button asChild variant="outline" size="sm" className="gap-2">
+              <Link to={signedIn ? "/profile" : "/login"}>
+                <User className="h-4 w-4" />
+                {signedIn ? (me?.name?.split(" ")[0] ?? "Кабинет") : "Войти"}
+              </Link>
             </Button>
           </div>
 
           <div className="flex items-center gap-2 md:hidden">
-            <ThemeToggle className="h-14 w-14 rounded-2xl border-2 border-border/70" />
             <Sheet open={open} onOpenChange={setOpen}>
               <SheetTrigger asChild>
                 <button
@@ -120,10 +134,6 @@ function PublicShell() {
                     );
                   })}
                 </nav>
-
-                <div className="mt-6">
-                  <ThemeToggle withLabel className="w-full justify-center" />
-                </div>
 
                 <div className="mt-6 space-y-3 border-t border-border pt-4 text-sm">
                   <a href={CONTACTS.phoneHref} className="flex items-center gap-2 font-semibold">

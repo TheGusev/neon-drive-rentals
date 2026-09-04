@@ -7,7 +7,6 @@ import {
   FilePlus2,
   UserPlus,
   PlusCircle,
-  Droplets,
   BarChart3,
   Settings,
   Star,
@@ -20,9 +19,10 @@ import { StatusDot, fleetStatusLabels } from "@/components/admin/StatusDot";
 import { AdminBookingCard } from "@/components/admin/AdminBookingCard";
 import { EmptyState } from "@/components/admin/EntityCard";
 
-import { dashboardStats } from "@/mocks/dashboardStats";
-import { bookings } from "@/mocks/bookings";
-import { getCarById } from "@/mocks/cars";
+import { buildDashboardStats } from "@/mocks/dashboardStats";
+import { useSuspenseQuery } from "@tanstack/react-query";
+import { adminBookingsQueryOptions } from "@/lib/queries";
+import { useCarLookup, useCars } from "@/state/AppDataContext";
 import { clients, getClientById } from "@/mocks/clients";
 import type { CarFleetStatus } from "@/types/domain";
 
@@ -41,6 +41,10 @@ const fmtDate = (iso: string) =>
 const fmtRub = (n: number) => `${n.toLocaleString("ru-RU")} ₽`;
 
 function DashboardPage() {
+  const { data: bookings } = useSuspenseQuery(adminBookingsQueryOptions());
+  const getCarById = useCarLookup();
+  const cars = useCars();
+  const dashboardStats = buildDashboardStats(cars, bookings);
   const activeBookings = bookings.filter(
     (b) => b.status === "active" || b.status === "paid" || b.status === "pending",
   );
@@ -183,11 +187,6 @@ function DashboardPage() {
             icon={PlusCircle}
             label="Добавить авто"
             onClick={() => toast("Форма авто скоро появится")}
-          />
-          <QuickAction
-            icon={Droplets}
-            label="Календарь мойки"
-            onClick={() => toast("Календарь мойки скоро появится")}
           />
           <QuickAction
             icon={BarChart3}

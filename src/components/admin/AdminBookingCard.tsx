@@ -2,7 +2,8 @@ import { Eye, CalendarDays } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { EntityCard } from "@/components/admin/EntityCard";
 import { PaymentStatusBadge } from "@/components/admin/PaymentStatusBadge";
-import type { Booking, Car, Client } from "@/types/domain";
+import type { Booking, BookingStatus, Car, Client } from "@/types/domain";
+import { CarImage } from "@/components/car/CarImage";
 
 const fmt = (iso: string) =>
   new Date(iso).toLocaleDateString("ru-RU", { day: "2-digit", month: "short" });
@@ -13,9 +14,60 @@ interface Props {
   client?: Client | undefined;
   index: number;
   onView?: () => void;
+  onStatusChange?: (status: BookingStatus) => void;
+  statusPending?: boolean;
+  /** Маршрут аренды: выдачу ключей и приём возврата подтверждает администратор. */
+  onIssueKeys?: () => void;
+  onAcceptReturn?: () => void;
+  journeyPending?: boolean;
 }
 
-export function AdminBookingCard({ booking, car, client, index, onView }: Props) {
+const NEXT_STATUS: Partial<Record<BookingStatus, { label: string; value: BookingStatus }>> = {
+  pending: { label: "Подтвердить оплату", value: "paid" },
+  paid: { label: "Выдать авто", value: "active" },
+  active: { label: "Завершить", value: "completed" },
+};
+
+/** Компактный маршрут аренды: оплата → договор → ключи → возврат. */
+function JourneyTrail({ booking }: { booking: Booking }) {
+  const steps = [
+    { label: "Оплата", done: ["paid", "active", "completed"].includes(booking.status) },
+    { label: "Договор", done: booking.contractStatus === "signed" },
+    { label: "Ключи", done: Boolean(booking.keysIssuedAt) },
+    { label: "Возврат", done: Boolean(booking.returnedAt) || booking.status === "completed" },
+  ];
+  return (
+    <div className="mt-2 flex flex-wrap gap-1">
+      {steps.map((step) => (
+        <span
+          key={step.label}
+          className={
+            step.done
+              ? "rounded-full bg-emerald-500/15 px-2 py-0.5 text-[10px] font-semibold text-emerald-600 public-dark:text-emerald-400"
+              : "rounded-full bg-muted px-2 py-0.5 text-[10px] font-medium text-muted-foreground"
+          }
+        >
+          {step.done ? "✓ " : ""}
+          {step.label}
+        </span>
+      ))}
+    </div>
+  );
+}
+
+export function AdminBookingCard({
+  booking,
+  car,
+  client,
+  index,
+  onView,
+  onStatusChange,
+  statusPending,
+  onIssueKeys,
+  onAcceptReturn,
+  journeyPending,
+}: Props) {
+  const next = NEXT_STATUS[booking.status];
   return (
     <EntityCard
       index={index}
@@ -23,8 +75,13 @@ export function AdminBookingCard({ booking, car, client, index, onView }: Props)
     >
       <div className="flex min-w-0 items-start gap-3">
         <div className="aspect-[4/3] w-20 shrink-0 overflow-hidden rounded-lg bg-muted">
-          {car?.image && (
-            <img src={car.image} alt="" loading="lazy" className="h-full w-full object-cover" />
+          {car && (
+            <CarImage
+              src={car.image}
+              alt=""
+              loading="lazy"
+              className="h-full w-full object-cover"
+            />
           )}
         </div>
         <div className="min-w-0 flex-1">
@@ -43,6 +100,7 @@ export function AdminBookingCard({ booking, car, client, index, onView }: Props)
             <CalendarDays className="h-3.5 w-3.5 shrink-0" />
             {fmt(booking.startDate)} — {fmt(booking.endDate)}
           </div>
+          <JourneyTrail booking={booking} />
         </div>
       </div>
 
@@ -68,6 +126,73 @@ export function AdminBookingCard({ booking, car, client, index, onView }: Props)
           )}
         </div>
       </div>
+      {(onIssueKeys || onAcceptReturn) && booking.status !== "cancelled" && (
+        <div className="mt-3 flex flex-wrap items-center gap-2 rounded-xl bg-muted/50 p-2">
+          <span className="text-xs text-muted-foreground">
+            {booking.returnedAt
+              ? `Возврат принят ${new Date(booking.returnedAt).toLocaleString("ru-RU")}`
+              : booking.keysIssuedAt
+                ? `Ключи выданы ${new Date(booking.keysIssuedAt).toLocaleString("ru-RU")}`
+                : "Ключи ещё не выданы"}
+          </span>
+          {onIssueKeys && !booking.keysIssuedAt && (
+            <Button
+              size="sm"
+              variant="accent"
+              disabled={journeyPending}
+              onClick={(e) => {
+                e.stopPropagation();
+                onIssueKeys();
+              }}
+            >
+              Выдать ключи
+            </Button>
+          )}
+          {onAcceptReturn && booking.keysIssuedAt && !booking.returnedAt && (
+            <Button
+              size="sm"
+              variant="soft"
+              disabled={journeyPending}
+              onClick={(e) => {
+                e.stopPropagation();
+                onAcceptReturn();
+              }}
+            >
+              Принять возврат
+            </Button>
+          )}
+        </div>
+      )}
+      {onStatusChange && (next || booking.status !== "cancelled") && (
+        <div className="mt-3 flex flex-wrap gap-2">
+          {next && (
+            <Button
+              size="sm"
+              variant="accent"
+              disabled={statusPending}
+              onClick={(e) => {
+                e.stopPropagation();
+                onStatusChange(next.value);
+              }}
+            >
+              {next.label}
+            </Button>
+          )}
+          {booking.status !== "completed" && booking.status !== "cancelled" && (
+            <Button
+              size="sm"
+              variant="soft"
+              disabled={statusPending}
+              onClick={(e) => {
+                e.stopPropagation();
+                onStatusChange("cancelled");
+              }}
+            >
+              Отменить
+            </Button>
+          )}
+        </div>
+      )}
     </EntityCard>
   );
 }

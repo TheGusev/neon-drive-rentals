@@ -16,16 +16,33 @@ import { Route as AdminRouteImport } from './routes/_admin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminLoginRouteImport } from './routes/admin.login'
 import { Route as PublicTermsRouteImport } from './routes/_public.terms'
+import { Route as PublicRegisterRouteImport } from './routes/_public.register'
 import { Route as PublicProfileRouteImport } from './routes/_public.profile'
 import { Route as PublicPrivacyRouteImport } from './routes/_public.privacy'
+import { Route as PublicLoginRouteImport } from './routes/_public.login'
 import { Route as PublicKeiCarsRouteImport } from './routes/_public.kei-cars'
+import { Route as PublicCookiesRouteImport } from './routes/_public.cookies'
+import { Route as PublicConsentRouteImport } from './routes/_public.consent'
+import { Route as PublicArendaProbegIPlatezhiRouteImport } from './routes/_public.arenda-probeg-i-platezhi'
+import { Route as PublicArendaAvtoVyhodnyeRouteImport } from './routes/_public.arenda-avto-vyhodnye'
+import { Route as PublicArendaAvtoSPravymRulemRouteImport } from './routes/_public.arenda-avto-s-pravym-rulem'
+import { Route as PublicArendaAvtoPoezdkaAltayRouteImport } from './routes/_public.arenda-avto-poezdka-altay'
+import { Route as PublicArendaAvtoNaSutkiRouteImport } from './routes/_public.arenda-avto-na-sutki'
+import { Route as PublicArendaAvtoNaNedelyuRouteImport } from './routes/_public.arenda-avto-na-nedelyu'
+import { Route as PublicArendaAvtoNaMesyacRouteImport } from './routes/_public.arenda-avto-na-mesyac'
+import { Route as PublicArendaAvtoBezZalogaRouteImport } from './routes/_public.arenda-avto-bez-zaloga'
+import { Route as PublicArendaAvtoBezVoditelyaRouteImport } from './routes/_public.arenda-avto-bez-voditelya'
+import { Route as PublicArendaAvtoBezStazhaRouteImport } from './routes/_public.arenda-avto-bez-stazha'
 import { Route as PublicCarsIndexRouteImport } from './routes/_public.cars.index'
 import { Route as PublicBlogIndexRouteImport } from './routes/_public.blog.index'
 import { Route as AdminAdminIndexRouteImport } from './routes/_admin.admin.index'
+import { Route as ApiPublicYookassaWebhookRouteImport } from './routes/api/public/yookassa-webhook'
 import { Route as ApiPublicVersionRouteImport } from './routes/api/public/version'
+import { Route as ApiPublicHealthRouteImport } from './routes/api/public/health'
 import { Route as PublicRentNovosibirskRouteImport } from './routes/_public.rent.novosibirsk'
 import { Route as PublicRentBezZalogaRouteImport } from './routes/_public.rent.bez-zaloga'
 import { Route as PublicPaymentBookingIdRouteImport } from './routes/_public.payment.$bookingId'
+import { Route as PublicInvoiceBookingIdRouteImport } from './routes/_public.invoice.$bookingId'
 import { Route as PublicContractBookingIdRouteImport } from './routes/_public.contract.$bookingId'
 import { Route as PublicCarsCarIdRouteImport } from './routes/_public.cars.$carId'
 import { Route as PublicBookingCarIdRouteImport } from './routes/_public.booking.$carId'
@@ -35,6 +52,8 @@ import { Route as AdminAdminFinanceRouteImport } from './routes/_admin.admin.fin
 import { Route as AdminAdminClientsRouteImport } from './routes/_admin.admin.clients'
 import { Route as AdminAdminCarsRouteImport } from './routes/_admin.admin.cars'
 import { Route as AdminAdminBookingsRouteImport } from './routes/_admin.admin.bookings'
+import { Route as ApiPublicCarPhotoIdRouteImport } from './routes/api/public/car-photo.$id'
+import { Route as AdminAdminCarPhotosCarIdRouteImport } from './routes/_admin.admin.car-photos.$carId'
 
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
@@ -69,6 +88,11 @@ const PublicTermsRoute = PublicTermsRouteImport.update({
   path: '/terms',
   getParentRoute: () => PublicRoute,
 } as any)
+const PublicRegisterRoute = PublicRegisterRouteImport.update({
+  id: '/register',
+  path: '/register',
+  getParentRoute: () => PublicRoute,
+} as any)
 const PublicProfileRoute = PublicProfileRouteImport.update({
   id: '/profile',
   path: '/profile',
@@ -79,11 +103,85 @@ const PublicPrivacyRoute = PublicPrivacyRouteImport.update({
   path: '/privacy',
   getParentRoute: () => PublicRoute,
 } as any)
+const PublicLoginRoute = PublicLoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => PublicRoute,
+} as any)
 const PublicKeiCarsRoute = PublicKeiCarsRouteImport.update({
   id: '/kei-cars',
   path: '/kei-cars',
   getParentRoute: () => PublicRoute,
 } as any)
+const PublicCookiesRoute = PublicCookiesRouteImport.update({
+  id: '/cookies',
+  path: '/cookies',
+  getParentRoute: () => PublicRoute,
+} as any)
+const PublicConsentRoute = PublicConsentRouteImport.update({
+  id: '/consent',
+  path: '/consent',
+  getParentRoute: () => PublicRoute,
+} as any)
+const PublicArendaProbegIPlatezhiRoute =
+  PublicArendaProbegIPlatezhiRouteImport.update({
+    id: '/arenda-probeg-i-platezhi',
+    path: '/arenda-probeg-i-platezhi',
+    getParentRoute: () => PublicRoute,
+  } as any)
+const PublicArendaAvtoVyhodnyeRoute =
+  PublicArendaAvtoVyhodnyeRouteImport.update({
+    id: '/arenda-avto-vyhodnye',
+    path: '/arenda-avto-vyhodnye',
+    getParentRoute: () => PublicRoute,
+  } as any)
+const PublicArendaAvtoSPravymRulemRoute =
+  PublicArendaAvtoSPravymRulemRouteImport.update({
+    id: '/arenda-avto-s-pravym-rulem',
+    path: '/arenda-avto-s-pravym-rulem',
+    getParentRoute: () => PublicRoute,
+  } as any)
+const PublicArendaAvtoPoezdkaAltayRoute =
+  PublicArendaAvtoPoezdkaAltayRouteImport.update({
+    id: '/arenda-avto-poezdka-altay',
+    path: '/arenda-avto-poezdka-altay',
+    getParentRoute: () => PublicRoute,
+  } as any)
+const PublicArendaAvtoNaSutkiRoute = PublicArendaAvtoNaSutkiRouteImport.update({
+  id: '/arenda-avto-na-sutki',
+  path: '/arenda-avto-na-sutki',
+  getParentRoute: () => PublicRoute,
+} as any)
+const PublicArendaAvtoNaNedelyuRoute =
+  PublicArendaAvtoNaNedelyuRouteImport.update({
+    id: '/arenda-avto-na-nedelyu',
+    path: '/arenda-avto-na-nedelyu',
+    getParentRoute: () => PublicRoute,
+  } as any)
+const PublicArendaAvtoNaMesyacRoute =
+  PublicArendaAvtoNaMesyacRouteImport.update({
+    id: '/arenda-avto-na-mesyac',
+    path: '/arenda-avto-na-mesyac',
+    getParentRoute: () => PublicRoute,
+  } as any)
+const PublicArendaAvtoBezZalogaRoute =
+  PublicArendaAvtoBezZalogaRouteImport.update({
+    id: '/arenda-avto-bez-zaloga',
+    path: '/arenda-avto-bez-zaloga',
+    getParentRoute: () => PublicRoute,
+  } as any)
+const PublicArendaAvtoBezVoditelyaRoute =
+  PublicArendaAvtoBezVoditelyaRouteImport.update({
+    id: '/arenda-avto-bez-voditelya',
+    path: '/arenda-avto-bez-voditelya',
+    getParentRoute: () => PublicRoute,
+  } as any)
+const PublicArendaAvtoBezStazhaRoute =
+  PublicArendaAvtoBezStazhaRouteImport.update({
+    id: '/arenda-avto-bez-stazha',
+    path: '/arenda-avto-bez-stazha',
+    getParentRoute: () => PublicRoute,
+  } as any)
 const PublicCarsIndexRoute = PublicCarsIndexRouteImport.update({
   id: '/cars/',
   path: '/cars/',
@@ -99,9 +197,20 @@ const AdminAdminIndexRoute = AdminAdminIndexRouteImport.update({
   path: '/admin/',
   getParentRoute: () => AdminRoute,
 } as any)
+const ApiPublicYookassaWebhookRoute =
+  ApiPublicYookassaWebhookRouteImport.update({
+    id: '/api/public/yookassa-webhook',
+    path: '/api/public/yookassa-webhook',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ApiPublicVersionRoute = ApiPublicVersionRouteImport.update({
   id: '/api/public/version',
   path: '/api/public/version',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicHealthRoute = ApiPublicHealthRouteImport.update({
+  id: '/api/public/health',
+  path: '/api/public/health',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PublicRentNovosibirskRoute = PublicRentNovosibirskRouteImport.update({
@@ -117,6 +226,11 @@ const PublicRentBezZalogaRoute = PublicRentBezZalogaRouteImport.update({
 const PublicPaymentBookingIdRoute = PublicPaymentBookingIdRouteImport.update({
   id: '/payment/$bookingId',
   path: '/payment/$bookingId',
+  getParentRoute: () => PublicRoute,
+} as any)
+const PublicInvoiceBookingIdRoute = PublicInvoiceBookingIdRouteImport.update({
+  id: '/invoice/$bookingId',
+  path: '/invoice/$bookingId',
   getParentRoute: () => PublicRoute,
 } as any)
 const PublicContractBookingIdRoute = PublicContractBookingIdRouteImport.update({
@@ -164,14 +278,39 @@ const AdminAdminBookingsRoute = AdminAdminBookingsRouteImport.update({
   path: '/admin/bookings',
   getParentRoute: () => AdminRoute,
 } as any)
+const ApiPublicCarPhotoIdRoute = ApiPublicCarPhotoIdRouteImport.update({
+  id: '/api/public/car-photo/$id',
+  path: '/api/public/car-photo/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminAdminCarPhotosCarIdRoute =
+  AdminAdminCarPhotosCarIdRouteImport.update({
+    id: '/admin/car-photos/$carId',
+    path: '/admin/car-photos/$carId',
+    getParentRoute: () => AdminRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/robots.txt': typeof RobotsDottxtRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/arenda-avto-bez-stazha': typeof PublicArendaAvtoBezStazhaRoute
+  '/arenda-avto-bez-voditelya': typeof PublicArendaAvtoBezVoditelyaRoute
+  '/arenda-avto-bez-zaloga': typeof PublicArendaAvtoBezZalogaRoute
+  '/arenda-avto-na-mesyac': typeof PublicArendaAvtoNaMesyacRoute
+  '/arenda-avto-na-nedelyu': typeof PublicArendaAvtoNaNedelyuRoute
+  '/arenda-avto-na-sutki': typeof PublicArendaAvtoNaSutkiRoute
+  '/arenda-avto-poezdka-altay': typeof PublicArendaAvtoPoezdkaAltayRoute
+  '/arenda-avto-s-pravym-rulem': typeof PublicArendaAvtoSPravymRulemRoute
+  '/arenda-avto-vyhodnye': typeof PublicArendaAvtoVyhodnyeRoute
+  '/arenda-probeg-i-platezhi': typeof PublicArendaProbegIPlatezhiRoute
+  '/consent': typeof PublicConsentRoute
+  '/cookies': typeof PublicCookiesRoute
   '/kei-cars': typeof PublicKeiCarsRoute
+  '/login': typeof PublicLoginRoute
   '/privacy': typeof PublicPrivacyRoute
   '/profile': typeof PublicProfileRoute
+  '/register': typeof PublicRegisterRoute
   '/terms': typeof PublicTermsRoute
   '/admin/login': typeof AdminLoginRoute
   '/admin/bookings': typeof AdminAdminBookingsRoute
@@ -183,21 +322,40 @@ export interface FileRoutesByFullPath {
   '/booking/$carId': typeof PublicBookingCarIdRoute
   '/cars/$carId': typeof PublicCarsCarIdRoute
   '/contract/$bookingId': typeof PublicContractBookingIdRoute
+  '/invoice/$bookingId': typeof PublicInvoiceBookingIdRoute
   '/payment/$bookingId': typeof PublicPaymentBookingIdRoute
   '/rent/bez-zaloga': typeof PublicRentBezZalogaRoute
   '/rent/novosibirsk': typeof PublicRentNovosibirskRoute
+  '/api/public/health': typeof ApiPublicHealthRoute
   '/api/public/version': typeof ApiPublicVersionRoute
+  '/api/public/yookassa-webhook': typeof ApiPublicYookassaWebhookRoute
   '/admin/': typeof AdminAdminIndexRoute
   '/blog/': typeof PublicBlogIndexRoute
   '/cars/': typeof PublicCarsIndexRoute
+  '/admin/car-photos/$carId': typeof AdminAdminCarPhotosCarIdRoute
+  '/api/public/car-photo/$id': typeof ApiPublicCarPhotoIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/robots.txt': typeof RobotsDottxtRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/arenda-avto-bez-stazha': typeof PublicArendaAvtoBezStazhaRoute
+  '/arenda-avto-bez-voditelya': typeof PublicArendaAvtoBezVoditelyaRoute
+  '/arenda-avto-bez-zaloga': typeof PublicArendaAvtoBezZalogaRoute
+  '/arenda-avto-na-mesyac': typeof PublicArendaAvtoNaMesyacRoute
+  '/arenda-avto-na-nedelyu': typeof PublicArendaAvtoNaNedelyuRoute
+  '/arenda-avto-na-sutki': typeof PublicArendaAvtoNaSutkiRoute
+  '/arenda-avto-poezdka-altay': typeof PublicArendaAvtoPoezdkaAltayRoute
+  '/arenda-avto-s-pravym-rulem': typeof PublicArendaAvtoSPravymRulemRoute
+  '/arenda-avto-vyhodnye': typeof PublicArendaAvtoVyhodnyeRoute
+  '/arenda-probeg-i-platezhi': typeof PublicArendaProbegIPlatezhiRoute
+  '/consent': typeof PublicConsentRoute
+  '/cookies': typeof PublicCookiesRoute
   '/kei-cars': typeof PublicKeiCarsRoute
+  '/login': typeof PublicLoginRoute
   '/privacy': typeof PublicPrivacyRoute
   '/profile': typeof PublicProfileRoute
+  '/register': typeof PublicRegisterRoute
   '/terms': typeof PublicTermsRoute
   '/admin/login': typeof AdminLoginRoute
   '/admin/bookings': typeof AdminAdminBookingsRoute
@@ -209,13 +367,18 @@ export interface FileRoutesByTo {
   '/booking/$carId': typeof PublicBookingCarIdRoute
   '/cars/$carId': typeof PublicCarsCarIdRoute
   '/contract/$bookingId': typeof PublicContractBookingIdRoute
+  '/invoice/$bookingId': typeof PublicInvoiceBookingIdRoute
   '/payment/$bookingId': typeof PublicPaymentBookingIdRoute
   '/rent/bez-zaloga': typeof PublicRentBezZalogaRoute
   '/rent/novosibirsk': typeof PublicRentNovosibirskRoute
+  '/api/public/health': typeof ApiPublicHealthRoute
   '/api/public/version': typeof ApiPublicVersionRoute
+  '/api/public/yookassa-webhook': typeof ApiPublicYookassaWebhookRoute
   '/admin': typeof AdminAdminIndexRoute
   '/blog': typeof PublicBlogIndexRoute
   '/cars': typeof PublicCarsIndexRoute
+  '/admin/car-photos/$carId': typeof AdminAdminCarPhotosCarIdRoute
+  '/api/public/car-photo/$id': typeof ApiPublicCarPhotoIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -224,9 +387,23 @@ export interface FileRoutesById {
   '/_public': typeof PublicRouteWithChildren
   '/robots.txt': typeof RobotsDottxtRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/_public/arenda-avto-bez-stazha': typeof PublicArendaAvtoBezStazhaRoute
+  '/_public/arenda-avto-bez-voditelya': typeof PublicArendaAvtoBezVoditelyaRoute
+  '/_public/arenda-avto-bez-zaloga': typeof PublicArendaAvtoBezZalogaRoute
+  '/_public/arenda-avto-na-mesyac': typeof PublicArendaAvtoNaMesyacRoute
+  '/_public/arenda-avto-na-nedelyu': typeof PublicArendaAvtoNaNedelyuRoute
+  '/_public/arenda-avto-na-sutki': typeof PublicArendaAvtoNaSutkiRoute
+  '/_public/arenda-avto-poezdka-altay': typeof PublicArendaAvtoPoezdkaAltayRoute
+  '/_public/arenda-avto-s-pravym-rulem': typeof PublicArendaAvtoSPravymRulemRoute
+  '/_public/arenda-avto-vyhodnye': typeof PublicArendaAvtoVyhodnyeRoute
+  '/_public/arenda-probeg-i-platezhi': typeof PublicArendaProbegIPlatezhiRoute
+  '/_public/consent': typeof PublicConsentRoute
+  '/_public/cookies': typeof PublicCookiesRoute
   '/_public/kei-cars': typeof PublicKeiCarsRoute
+  '/_public/login': typeof PublicLoginRoute
   '/_public/privacy': typeof PublicPrivacyRoute
   '/_public/profile': typeof PublicProfileRoute
+  '/_public/register': typeof PublicRegisterRoute
   '/_public/terms': typeof PublicTermsRoute
   '/admin/login': typeof AdminLoginRoute
   '/_admin/admin/bookings': typeof AdminAdminBookingsRoute
@@ -238,13 +415,18 @@ export interface FileRoutesById {
   '/_public/booking/$carId': typeof PublicBookingCarIdRoute
   '/_public/cars/$carId': typeof PublicCarsCarIdRoute
   '/_public/contract/$bookingId': typeof PublicContractBookingIdRoute
+  '/_public/invoice/$bookingId': typeof PublicInvoiceBookingIdRoute
   '/_public/payment/$bookingId': typeof PublicPaymentBookingIdRoute
   '/_public/rent/bez-zaloga': typeof PublicRentBezZalogaRoute
   '/_public/rent/novosibirsk': typeof PublicRentNovosibirskRoute
+  '/api/public/health': typeof ApiPublicHealthRoute
   '/api/public/version': typeof ApiPublicVersionRoute
+  '/api/public/yookassa-webhook': typeof ApiPublicYookassaWebhookRoute
   '/_admin/admin/': typeof AdminAdminIndexRoute
   '/_public/blog/': typeof PublicBlogIndexRoute
   '/_public/cars/': typeof PublicCarsIndexRoute
+  '/_admin/admin/car-photos/$carId': typeof AdminAdminCarPhotosCarIdRoute
+  '/api/public/car-photo/$id': typeof ApiPublicCarPhotoIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -252,9 +434,23 @@ export interface FileRouteTypes {
     | '/'
     | '/robots.txt'
     | '/sitemap.xml'
+    | '/arenda-avto-bez-stazha'
+    | '/arenda-avto-bez-voditelya'
+    | '/arenda-avto-bez-zaloga'
+    | '/arenda-avto-na-mesyac'
+    | '/arenda-avto-na-nedelyu'
+    | '/arenda-avto-na-sutki'
+    | '/arenda-avto-poezdka-altay'
+    | '/arenda-avto-s-pravym-rulem'
+    | '/arenda-avto-vyhodnye'
+    | '/arenda-probeg-i-platezhi'
+    | '/consent'
+    | '/cookies'
     | '/kei-cars'
+    | '/login'
     | '/privacy'
     | '/profile'
+    | '/register'
     | '/terms'
     | '/admin/login'
     | '/admin/bookings'
@@ -266,21 +462,40 @@ export interface FileRouteTypes {
     | '/booking/$carId'
     | '/cars/$carId'
     | '/contract/$bookingId'
+    | '/invoice/$bookingId'
     | '/payment/$bookingId'
     | '/rent/bez-zaloga'
     | '/rent/novosibirsk'
+    | '/api/public/health'
     | '/api/public/version'
+    | '/api/public/yookassa-webhook'
     | '/admin/'
     | '/blog/'
     | '/cars/'
+    | '/admin/car-photos/$carId'
+    | '/api/public/car-photo/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/robots.txt'
     | '/sitemap.xml'
+    | '/arenda-avto-bez-stazha'
+    | '/arenda-avto-bez-voditelya'
+    | '/arenda-avto-bez-zaloga'
+    | '/arenda-avto-na-mesyac'
+    | '/arenda-avto-na-nedelyu'
+    | '/arenda-avto-na-sutki'
+    | '/arenda-avto-poezdka-altay'
+    | '/arenda-avto-s-pravym-rulem'
+    | '/arenda-avto-vyhodnye'
+    | '/arenda-probeg-i-platezhi'
+    | '/consent'
+    | '/cookies'
     | '/kei-cars'
+    | '/login'
     | '/privacy'
     | '/profile'
+    | '/register'
     | '/terms'
     | '/admin/login'
     | '/admin/bookings'
@@ -292,13 +507,18 @@ export interface FileRouteTypes {
     | '/booking/$carId'
     | '/cars/$carId'
     | '/contract/$bookingId'
+    | '/invoice/$bookingId'
     | '/payment/$bookingId'
     | '/rent/bez-zaloga'
     | '/rent/novosibirsk'
+    | '/api/public/health'
     | '/api/public/version'
+    | '/api/public/yookassa-webhook'
     | '/admin'
     | '/blog'
     | '/cars'
+    | '/admin/car-photos/$carId'
+    | '/api/public/car-photo/$id'
   id:
     | '__root__'
     | '/'
@@ -306,9 +526,23 @@ export interface FileRouteTypes {
     | '/_public'
     | '/robots.txt'
     | '/sitemap.xml'
+    | '/_public/arenda-avto-bez-stazha'
+    | '/_public/arenda-avto-bez-voditelya'
+    | '/_public/arenda-avto-bez-zaloga'
+    | '/_public/arenda-avto-na-mesyac'
+    | '/_public/arenda-avto-na-nedelyu'
+    | '/_public/arenda-avto-na-sutki'
+    | '/_public/arenda-avto-poezdka-altay'
+    | '/_public/arenda-avto-s-pravym-rulem'
+    | '/_public/arenda-avto-vyhodnye'
+    | '/_public/arenda-probeg-i-platezhi'
+    | '/_public/consent'
+    | '/_public/cookies'
     | '/_public/kei-cars'
+    | '/_public/login'
     | '/_public/privacy'
     | '/_public/profile'
+    | '/_public/register'
     | '/_public/terms'
     | '/admin/login'
     | '/_admin/admin/bookings'
@@ -320,13 +554,18 @@ export interface FileRouteTypes {
     | '/_public/booking/$carId'
     | '/_public/cars/$carId'
     | '/_public/contract/$bookingId'
+    | '/_public/invoice/$bookingId'
     | '/_public/payment/$bookingId'
     | '/_public/rent/bez-zaloga'
     | '/_public/rent/novosibirsk'
+    | '/api/public/health'
     | '/api/public/version'
+    | '/api/public/yookassa-webhook'
     | '/_admin/admin/'
     | '/_public/blog/'
     | '/_public/cars/'
+    | '/_admin/admin/car-photos/$carId'
+    | '/api/public/car-photo/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -336,7 +575,10 @@ export interface RootRouteChildren {
   RobotsDottxtRoute: typeof RobotsDottxtRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   AdminLoginRoute: typeof AdminLoginRoute
+  ApiPublicHealthRoute: typeof ApiPublicHealthRoute
   ApiPublicVersionRoute: typeof ApiPublicVersionRoute
+  ApiPublicYookassaWebhookRoute: typeof ApiPublicYookassaWebhookRoute
+  ApiPublicCarPhotoIdRoute: typeof ApiPublicCarPhotoIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -390,6 +632,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PublicTermsRouteImport
       parentRoute: typeof PublicRoute
     }
+    '/_public/register': {
+      id: '/_public/register'
+      path: '/register'
+      fullPath: '/register'
+      preLoaderRoute: typeof PublicRegisterRouteImport
+      parentRoute: typeof PublicRoute
+    }
     '/_public/profile': {
       id: '/_public/profile'
       path: '/profile'
@@ -404,11 +653,102 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PublicPrivacyRouteImport
       parentRoute: typeof PublicRoute
     }
+    '/_public/login': {
+      id: '/_public/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof PublicLoginRouteImport
+      parentRoute: typeof PublicRoute
+    }
     '/_public/kei-cars': {
       id: '/_public/kei-cars'
       path: '/kei-cars'
       fullPath: '/kei-cars'
       preLoaderRoute: typeof PublicKeiCarsRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/cookies': {
+      id: '/_public/cookies'
+      path: '/cookies'
+      fullPath: '/cookies'
+      preLoaderRoute: typeof PublicCookiesRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/consent': {
+      id: '/_public/consent'
+      path: '/consent'
+      fullPath: '/consent'
+      preLoaderRoute: typeof PublicConsentRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/arenda-probeg-i-platezhi': {
+      id: '/_public/arenda-probeg-i-platezhi'
+      path: '/arenda-probeg-i-platezhi'
+      fullPath: '/arenda-probeg-i-platezhi'
+      preLoaderRoute: typeof PublicArendaProbegIPlatezhiRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/arenda-avto-vyhodnye': {
+      id: '/_public/arenda-avto-vyhodnye'
+      path: '/arenda-avto-vyhodnye'
+      fullPath: '/arenda-avto-vyhodnye'
+      preLoaderRoute: typeof PublicArendaAvtoVyhodnyeRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/arenda-avto-s-pravym-rulem': {
+      id: '/_public/arenda-avto-s-pravym-rulem'
+      path: '/arenda-avto-s-pravym-rulem'
+      fullPath: '/arenda-avto-s-pravym-rulem'
+      preLoaderRoute: typeof PublicArendaAvtoSPravymRulemRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/arenda-avto-poezdka-altay': {
+      id: '/_public/arenda-avto-poezdka-altay'
+      path: '/arenda-avto-poezdka-altay'
+      fullPath: '/arenda-avto-poezdka-altay'
+      preLoaderRoute: typeof PublicArendaAvtoPoezdkaAltayRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/arenda-avto-na-sutki': {
+      id: '/_public/arenda-avto-na-sutki'
+      path: '/arenda-avto-na-sutki'
+      fullPath: '/arenda-avto-na-sutki'
+      preLoaderRoute: typeof PublicArendaAvtoNaSutkiRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/arenda-avto-na-nedelyu': {
+      id: '/_public/arenda-avto-na-nedelyu'
+      path: '/arenda-avto-na-nedelyu'
+      fullPath: '/arenda-avto-na-nedelyu'
+      preLoaderRoute: typeof PublicArendaAvtoNaNedelyuRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/arenda-avto-na-mesyac': {
+      id: '/_public/arenda-avto-na-mesyac'
+      path: '/arenda-avto-na-mesyac'
+      fullPath: '/arenda-avto-na-mesyac'
+      preLoaderRoute: typeof PublicArendaAvtoNaMesyacRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/arenda-avto-bez-zaloga': {
+      id: '/_public/arenda-avto-bez-zaloga'
+      path: '/arenda-avto-bez-zaloga'
+      fullPath: '/arenda-avto-bez-zaloga'
+      preLoaderRoute: typeof PublicArendaAvtoBezZalogaRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/arenda-avto-bez-voditelya': {
+      id: '/_public/arenda-avto-bez-voditelya'
+      path: '/arenda-avto-bez-voditelya'
+      fullPath: '/arenda-avto-bez-voditelya'
+      preLoaderRoute: typeof PublicArendaAvtoBezVoditelyaRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/arenda-avto-bez-stazha': {
+      id: '/_public/arenda-avto-bez-stazha'
+      path: '/arenda-avto-bez-stazha'
+      fullPath: '/arenda-avto-bez-stazha'
+      preLoaderRoute: typeof PublicArendaAvtoBezStazhaRouteImport
       parentRoute: typeof PublicRoute
     }
     '/_public/cars/': {
@@ -432,11 +772,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminAdminIndexRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/api/public/yookassa-webhook': {
+      id: '/api/public/yookassa-webhook'
+      path: '/api/public/yookassa-webhook'
+      fullPath: '/api/public/yookassa-webhook'
+      preLoaderRoute: typeof ApiPublicYookassaWebhookRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/version': {
       id: '/api/public/version'
       path: '/api/public/version'
       fullPath: '/api/public/version'
       preLoaderRoute: typeof ApiPublicVersionRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/health': {
+      id: '/api/public/health'
+      path: '/api/public/health'
+      fullPath: '/api/public/health'
+      preLoaderRoute: typeof ApiPublicHealthRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_public/rent/novosibirsk': {
@@ -458,6 +812,13 @@ declare module '@tanstack/react-router' {
       path: '/payment/$bookingId'
       fullPath: '/payment/$bookingId'
       preLoaderRoute: typeof PublicPaymentBookingIdRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/invoice/$bookingId': {
+      id: '/_public/invoice/$bookingId'
+      path: '/invoice/$bookingId'
+      fullPath: '/invoice/$bookingId'
+      preLoaderRoute: typeof PublicInvoiceBookingIdRouteImport
       parentRoute: typeof PublicRoute
     }
     '/_public/contract/$bookingId': {
@@ -523,6 +884,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminAdminBookingsRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/api/public/car-photo/$id': {
+      id: '/api/public/car-photo/$id'
+      path: '/api/public/car-photo/$id'
+      fullPath: '/api/public/car-photo/$id'
+      preLoaderRoute: typeof ApiPublicCarPhotoIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_admin/admin/car-photos/$carId': {
+      id: '/_admin/admin/car-photos/$carId'
+      path: '/admin/car-photos/$carId'
+      fullPath: '/admin/car-photos/$carId'
+      preLoaderRoute: typeof AdminAdminCarPhotosCarIdRouteImport
+      parentRoute: typeof AdminRoute
+    }
   }
 }
 
@@ -533,6 +908,7 @@ interface AdminRouteChildren {
   AdminAdminFinanceRoute: typeof AdminAdminFinanceRoute
   AdminAdminSettingsRoute: typeof AdminAdminSettingsRoute
   AdminAdminIndexRoute: typeof AdminAdminIndexRoute
+  AdminAdminCarPhotosCarIdRoute: typeof AdminAdminCarPhotosCarIdRoute
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
@@ -542,19 +918,35 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminAdminFinanceRoute: AdminAdminFinanceRoute,
   AdminAdminSettingsRoute: AdminAdminSettingsRoute,
   AdminAdminIndexRoute: AdminAdminIndexRoute,
+  AdminAdminCarPhotosCarIdRoute: AdminAdminCarPhotosCarIdRoute,
 }
 
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
 interface PublicRouteChildren {
+  PublicArendaAvtoBezStazhaRoute: typeof PublicArendaAvtoBezStazhaRoute
+  PublicArendaAvtoBezVoditelyaRoute: typeof PublicArendaAvtoBezVoditelyaRoute
+  PublicArendaAvtoBezZalogaRoute: typeof PublicArendaAvtoBezZalogaRoute
+  PublicArendaAvtoNaMesyacRoute: typeof PublicArendaAvtoNaMesyacRoute
+  PublicArendaAvtoNaNedelyuRoute: typeof PublicArendaAvtoNaNedelyuRoute
+  PublicArendaAvtoNaSutkiRoute: typeof PublicArendaAvtoNaSutkiRoute
+  PublicArendaAvtoPoezdkaAltayRoute: typeof PublicArendaAvtoPoezdkaAltayRoute
+  PublicArendaAvtoSPravymRulemRoute: typeof PublicArendaAvtoSPravymRulemRoute
+  PublicArendaAvtoVyhodnyeRoute: typeof PublicArendaAvtoVyhodnyeRoute
+  PublicArendaProbegIPlatezhiRoute: typeof PublicArendaProbegIPlatezhiRoute
+  PublicConsentRoute: typeof PublicConsentRoute
+  PublicCookiesRoute: typeof PublicCookiesRoute
   PublicKeiCarsRoute: typeof PublicKeiCarsRoute
+  PublicLoginRoute: typeof PublicLoginRoute
   PublicPrivacyRoute: typeof PublicPrivacyRoute
   PublicProfileRoute: typeof PublicProfileRoute
+  PublicRegisterRoute: typeof PublicRegisterRoute
   PublicTermsRoute: typeof PublicTermsRoute
   PublicBlogSlugRoute: typeof PublicBlogSlugRoute
   PublicBookingCarIdRoute: typeof PublicBookingCarIdRoute
   PublicCarsCarIdRoute: typeof PublicCarsCarIdRoute
   PublicContractBookingIdRoute: typeof PublicContractBookingIdRoute
+  PublicInvoiceBookingIdRoute: typeof PublicInvoiceBookingIdRoute
   PublicPaymentBookingIdRoute: typeof PublicPaymentBookingIdRoute
   PublicRentBezZalogaRoute: typeof PublicRentBezZalogaRoute
   PublicRentNovosibirskRoute: typeof PublicRentNovosibirskRoute
@@ -563,14 +955,29 @@ interface PublicRouteChildren {
 }
 
 const PublicRouteChildren: PublicRouteChildren = {
+  PublicArendaAvtoBezStazhaRoute: PublicArendaAvtoBezStazhaRoute,
+  PublicArendaAvtoBezVoditelyaRoute: PublicArendaAvtoBezVoditelyaRoute,
+  PublicArendaAvtoBezZalogaRoute: PublicArendaAvtoBezZalogaRoute,
+  PublicArendaAvtoNaMesyacRoute: PublicArendaAvtoNaMesyacRoute,
+  PublicArendaAvtoNaNedelyuRoute: PublicArendaAvtoNaNedelyuRoute,
+  PublicArendaAvtoNaSutkiRoute: PublicArendaAvtoNaSutkiRoute,
+  PublicArendaAvtoPoezdkaAltayRoute: PublicArendaAvtoPoezdkaAltayRoute,
+  PublicArendaAvtoSPravymRulemRoute: PublicArendaAvtoSPravymRulemRoute,
+  PublicArendaAvtoVyhodnyeRoute: PublicArendaAvtoVyhodnyeRoute,
+  PublicArendaProbegIPlatezhiRoute: PublicArendaProbegIPlatezhiRoute,
+  PublicConsentRoute: PublicConsentRoute,
+  PublicCookiesRoute: PublicCookiesRoute,
   PublicKeiCarsRoute: PublicKeiCarsRoute,
+  PublicLoginRoute: PublicLoginRoute,
   PublicPrivacyRoute: PublicPrivacyRoute,
   PublicProfileRoute: PublicProfileRoute,
+  PublicRegisterRoute: PublicRegisterRoute,
   PublicTermsRoute: PublicTermsRoute,
   PublicBlogSlugRoute: PublicBlogSlugRoute,
   PublicBookingCarIdRoute: PublicBookingCarIdRoute,
   PublicCarsCarIdRoute: PublicCarsCarIdRoute,
   PublicContractBookingIdRoute: PublicContractBookingIdRoute,
+  PublicInvoiceBookingIdRoute: PublicInvoiceBookingIdRoute,
   PublicPaymentBookingIdRoute: PublicPaymentBookingIdRoute,
   PublicRentBezZalogaRoute: PublicRentBezZalogaRoute,
   PublicRentNovosibirskRoute: PublicRentNovosibirskRoute,
@@ -588,7 +995,10 @@ const rootRouteChildren: RootRouteChildren = {
   RobotsDottxtRoute: RobotsDottxtRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   AdminLoginRoute: AdminLoginRoute,
+  ApiPublicHealthRoute: ApiPublicHealthRoute,
   ApiPublicVersionRoute: ApiPublicVersionRoute,
+  ApiPublicYookassaWebhookRoute: ApiPublicYookassaWebhookRoute,
+  ApiPublicCarPhotoIdRoute: ApiPublicCarPhotoIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

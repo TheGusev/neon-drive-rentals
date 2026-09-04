@@ -1,8 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { LandingPage } from "@/components/seo/LandingPage";
-import { cars } from "@/mocks/cars";
+import { useCars } from "@/state/AppDataContext";
 import { faqItems } from "@/mocks/faq";
-import { SITE_URL, breadcrumbJsonLd, jsonLdScript } from "@/lib/seo";
+import { SITE_URL, breadcrumbJsonLd, jsonLdScript, socialMeta } from "@/lib/seo";
 
 const URL = `${SITE_URL}/rent/bez-zaloga`;
 const TITLE = "Аренда авто без залога в Новосибирске | NSK-RENT";
@@ -20,6 +20,7 @@ export const Route = createFileRoute("/_public/rent/bez-zaloga")({
       { property: "og:type", content: "website" },
       { property: "og:url", content: URL },
       { name: "twitter:card", content: "summary_large_image" },
+      ...socialMeta("/assets/cars/nissan-dayz-white.jpg"),
     ],
     links: [{ rel: "canonical", href: URL }],
     scripts: [
@@ -34,6 +35,8 @@ export const Route = createFileRoute("/_public/rent/bez-zaloga")({
 });
 
 function Page() {
+  const cars = useCars();
+
   return (
     <LandingPage
       breadcrumb="Аренда без залога"

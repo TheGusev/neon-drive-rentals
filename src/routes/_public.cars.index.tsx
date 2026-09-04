@@ -1,15 +1,17 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { Search, SlidersHorizontal } from "lucide-react";
-import { mockCars } from "@/data/mockCars";
-import type { Car } from "@/types/domain";
+import type { Booking, Car } from "@/types/domain";
 import { isCarAvailable } from "@/lib/availability";
+import { useBookings, useCars } from "@/state/AppDataContext";
 import { CarCard } from "@/components/catalog/CarCard";
 import { CatalogFilters, type CatalogFiltersState } from "@/components/catalog/CatalogFilters";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { Breadcrumbs } from "@/components/seo/Breadcrumbs";
+import { SITE_URL, breadcrumbJsonLd, jsonLdScript, socialMeta } from "@/lib/seo";
 
 export const Route = createFileRoute("/_public/cars/")({
   validateSearch: (search: Record<string, unknown>): { from?: string; to?: string } => ({
@@ -18,27 +20,36 @@ export const Route = createFileRoute("/_public/cars/")({
   }),
   head: () => ({
     meta: [
-      { title: "Автопарк японских кей-каров в аренду — NSK-RENT" },
+      { title: "Автопарк японских кей-каров в аренду в Новосибирске — NSK-RENT" },
       { name: "description", content: "21 японский кей-кар в аренду в Новосибирске: фильтры по марке, модели, году, цвету, цене и датам. От 1 800 ₽ в сутки." },
       { property: "og:title", content: "Автопарк японских кей-каров в аренду — NSK-RENT" },
       { property: "og:description", content: "Выберите автомобиль и забронируйте онлайн за 3 минуты." },
       { property: "og:type", content: "website" },
-      { property: "og:url", content: "https://nsk-rent.ru/cars" },
+      { property: "og:url", content: `${SITE_URL}/cars` },
       { name: "twitter:card", content: "summary_large_image" },
+      ...socialMeta("/assets/cars/hero-drive.jpg"),
     ],
-    links: [{ rel: "canonical", href: "https://nsk-rent.ru/cars" }],
+    links: [{ rel: "canonical", href: `${SITE_URL}/cars` }],
+    scripts: [
+      jsonLdScript(
+        breadcrumbJsonLd([
+          { name: "Главная", url: "/" },
+          { name: "Автопарк", url: "/cars" },
+        ]),
+      ),
+    ],
   }),
   component: CatalogPage,
 });
 
 type SortKey = "price-asc" | "price-desc" | "rating";
 
-const priceBounds: [number, number] = [
-  Math.min(...mockCars.map((c) => c.pricePerDay)),
-  Math.max(...mockCars.map((c) => c.pricePerDay)),
-];
+const computeBounds = (list: Car[]): [number, number] =>
+  list.length
+    ? [Math.min(...list.map((c) => c.pricePerDay)), Math.max(...list.map((c) => c.pricePerDay))]
+    : [0, 10000];
 
-const emptyFilters = (pickup?: Date, ret?: Date): CatalogFiltersState => ({
+const emptyFilters = (priceBounds: [number, number], pickup?: Date, ret?: Date): CatalogFiltersState => ({
   brands: [],
   models: [],
   colors: [],
@@ -56,7 +67,13 @@ const parseDate = (v?: string) => {
   return Number.isNaN(d.getTime()) ? undefined : d;
 };
 
-function applyFilters(list: Car[], f: CatalogFiltersState, sort: SortKey, query: string): Car[] {
+function applyFilters(
+  list: Car[],
+  f: CatalogFiltersState,
+  sort: SortKey,
+  query: string,
+  bookings: Booking[],
+): Car[] {
   const q = query.trim().toLowerCase();
   const filtered = list.filter((c) => {
     if (q && !`${c.brand} ${c.model} ${c.color}`.toLowerCase().includes(q)) return false;
@@ -67,7 +84,7 @@ function applyFilters(list: Car[], f: CatalogFiltersState, sort: SortKey, query:
     if (f.transmissions.length && !f.transmissions.includes(c.transmission)) return false;
     if (f.statuses.length && !f.statuses.includes(c.status ?? "free")) return false;
     if (c.pricePerDay < f.price[0] || c.pricePerDay > f.price[1]) return false;
-    if (f.pickup && f.ret && !isCarAvailable(c, f.pickup.toISOString(), f.ret.toISOString())) return false;
+    if (f.pickup && f.ret && !isCarAvailable(c, f.pickup.toISOString(), f.ret.toISOString(), bookings)) return false;
     return true;
   });
   const sorted = [...filtered];
@@ -79,28 +96,52 @@ function applyFilters(list: Car[], f: CatalogFiltersState, sort: SortKey, query:
 
 function CatalogPage() {
   const search = Route.useSearch();
+  const navigate = useNavigate();
+  const allCars = useCars();
+  const bookings = useBookings();
+  const priceBounds = useMemo(() => computeBounds(allCars), [allCars]);
   const [filters, setFilters] = useState<CatalogFiltersState>(() =>
-    emptyFilters(parseDate(search.from), parseDate(search.to)),
+    emptyFilters(computeBounds(allCars), parseDate(search.from), parseDate(search.to)),
   );
   const [query, setQuery] = useState("");
   const [sort, setSort] = useState<SortKey>("price-asc");
   const [sheetOpen, setSheetOpen] = useState(false);
 
-  const list = useMemo(() => applyFilters(mockCars, filters, sort, query), [filters, sort, query]);
+  const list = useMemo(
+    () => applyFilters(allCars, filters, sort, query, bookings),
+    [allCars, filters, sort, query, bookings],
+  );
 
   const reset = () => {
-    setFilters(emptyFilters());
+    setFilters(emptyFilters(priceBounds));
     setQuery("");
+    void navigate({ to: "/cars", search: {} });
   };
+
+  const toInput = (d?: Date) => (d ? d.toISOString().slice(0, 10) : "");
+  const setDates = (next: { pickup?: Date; ret?: Date }) => {
+    const merged = { ...filters, ...next };
+    setFilters(merged);
+    void navigate({
+      to: "/cars",
+      search: {
+        from: merged.pickup ? merged.pickup.toISOString() : undefined,
+        to: merged.ret ? merged.ret.toISOString() : undefined,
+      },
+    });
+  };
+  const bookingFrom = filters.pickup?.toISOString();
+  const bookingTo = filters.ret?.toISOString();
 
   return (
     <div className="space-y-6">
+      <Breadcrumbs items={[{ name: "Главная", to: "/" }, { name: "Автопарк" }]} />
       <header className="space-y-4">
         <div>
           <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">NSK-RENT</p>
-          <h1 className="mt-1 font-display text-3xl font-black md:text-4xl md:neon-text">Автопарк</h1>
+          <h1 className="mt-1 font-display text-3xl font-black md:text-4xl md:neon-text">Автопарк японских кей-каров в аренду в Новосибирске</h1>
           <p className="mt-2 text-sm text-muted-foreground">
-            Японские кей-кары для города и поездок по области. Найдено {list.length} из {mockCars.length} авто.
+            Японские кей-кары для города и поездок по области. Найдено {list.length} из {allCars.length} авто.
           </p>
         </div>
 
@@ -148,6 +189,32 @@ function CatalogPage() {
             </Select>
           </div>
         </div>
+
+        <div className="grid gap-2 rounded-2xl border border-border bg-card p-3 sm:grid-cols-[1fr_1fr_auto] sm:items-end">
+          <label className="text-xs font-semibold text-muted-foreground">
+            Дата получения
+            <Input
+              type="date"
+              className="mt-1 h-11 rounded-xl"
+              value={toInput(filters.pickup)}
+              onChange={(e) => setDates({ pickup: parseDate(e.target.value) })}
+            />
+          </label>
+          <label className="text-xs font-semibold text-muted-foreground">
+            Дата возврата
+            <Input
+              type="date"
+              className="mt-1 h-11 rounded-xl"
+              value={toInput(filters.ret)}
+              onChange={(e) => setDates({ ret: parseDate(e.target.value) })}
+            />
+          </label>
+          <p className="text-xs text-muted-foreground sm:pb-3">
+            {bookingFrom && bookingTo
+              ? `Свободно на выбранные даты: ${list.length}`
+              : "Выберите даты — покажем только свободные авто"}
+          </p>
+        </div>
       </header>
 
       <div className="grid gap-6 md:grid-cols-[280px_minmax(0,1fr)]">
@@ -160,7 +227,7 @@ function CatalogPage() {
 
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3">
           {list.map((c) => (
-            <CarCard key={c.id} car={c} />
+            <CarCard key={c.id} car={c} from={bookingFrom} to={bookingTo} />
           ))}
           {list.length === 0 && (
             <div className="col-span-full rounded-3xl border border-dashed border-border p-10 text-center text-sm text-muted-foreground">
@@ -170,6 +237,20 @@ function CatalogPage() {
           )}
         </div>
       </div>
+
+      <section className="rounded-2xl border border-border bg-card p-5 text-sm leading-relaxed text-muted-foreground">
+        <h2 className="font-display text-xl font-bold text-foreground">Аренда японских кей-каров в Новосибирске</h2>
+        <p className="mt-2">
+          В автопарке NSK-RENT — компактные японские автомобили с расходом 4–6 л/100 км: они экономичны в городе и
+          спокойно идут по трассе в область. Выдача одна — Новосибирск, ул. Доватора, 11, круглосуточно.
+        </p>
+        <div className="mt-3 flex flex-wrap gap-2">
+          <Link to="/rent/novosibirsk" className="dash-chip hover:text-accent">Аренда авто в Новосибирске</Link>
+          <Link to="/rent/bez-zaloga" className="dash-chip hover:text-accent">Аренда без залога</Link>
+          <Link to="/kei-cars" className="dash-chip hover:text-accent">Что такое кей-кары</Link>
+          <Link to="/blog" className="dash-chip hover:text-accent">Блог об аренде</Link>
+        </div>
+      </section>
     </div>
   );
 }

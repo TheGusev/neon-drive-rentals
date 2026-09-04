@@ -4,16 +4,30 @@ import type { Car } from "@/types/domain";
 import { Button } from "@/components/ui/button";
 import { useFavorites } from "@/state/FavoritesContext";
 import { cn } from "@/lib/utils";
-import heroCar from "@/assets/hero-car.jpg";
+import { CarImage } from "@/components/car/CarImage";
 
-export const fleetStatusMeta: Record<NonNullable<Car["status"]>, { label: string; className: string }> = {
-  free: { label: "Свободен", className: "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400" },
+export const fleetStatusMeta: Record<
+  NonNullable<Car["status"]>,
+  { label: string; className: string }
+> = {
+  free: {
+    label: "Свободен",
+    className: "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400",
+  },
   busy: { label: "В аренде", className: "bg-orange-500/15 text-orange-600 dark:text-orange-400" },
-  washing: { label: "На мойке", className: "bg-sky-500/15 text-sky-600 dark:text-sky-400" },
   maintenance: { label: "На ТО", className: "bg-muted text-muted-foreground" },
 };
 
-export function CarCard({ car }: { car: Car }) {
+export function CarCard({
+  car,
+  from,
+  to,
+}: {
+  car: Car;
+  /** Даты из фильтров каталога — переносим их прямо в бронирование. */
+  from?: string;
+  to?: string;
+}) {
   const { isFavorite, toggleFavorite } = useFavorites();
   const fav = isFavorite(car.id);
   const status = fleetStatusMeta[car.status ?? "free"];
@@ -22,15 +36,20 @@ export function CarCard({ car }: { car: Car }) {
   return (
     <article className="group flex h-full flex-col overflow-hidden rounded-3xl border border-border bg-card transition hover:-translate-y-1 hover:shadow-lg md:hover:neon-glow">
       <div className="relative aspect-[4/3] overflow-hidden bg-muted">
-        <img
-          src={car.image ?? heroCar}
+        <CarImage
+          src={car.image}
           alt={`${car.brand} ${car.model}, ${car.color}`}
           loading="lazy"
           width={1024}
           height={640}
           className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
         />
-        <span className={cn("absolute left-3 top-3 rounded-full px-3 py-1 text-[11px] font-bold backdrop-blur", status.className)}>
+        <span
+          className={cn(
+            "absolute left-3 top-3 rounded-full px-3 py-1 text-[11px] font-bold backdrop-blur",
+            status.className,
+          )}
+        >
           {status.label}
         </span>
         <button
@@ -39,7 +58,9 @@ export function CarCard({ car }: { car: Car }) {
           onClick={() => toggleFavorite(car.id)}
           className="absolute right-3 top-3 inline-flex h-9 w-9 items-center justify-center rounded-full bg-background/85 backdrop-blur transition hover:scale-110"
         >
-          <Heart className={cn("h-4 w-4", fav ? "fill-red-500 text-red-500" : "text-muted-foreground")} />
+          <Heart
+            className={cn("h-4 w-4", fav ? "fill-red-500 text-red-500" : "text-muted-foreground")}
+          />
         </button>
       </div>
 
@@ -58,7 +79,8 @@ export function CarCard({ car }: { car: Car }) {
 
         <dl className="mt-3 grid grid-cols-2 gap-2 text-xs text-muted-foreground">
           <div className="inline-flex items-center gap-1">
-            <span className="font-semibold text-foreground">{car.engineVolume.toFixed(2)} л</span> двигатель
+            <span className="font-semibold text-foreground">{car.engineVolume.toFixed(2)} л</span>{" "}
+            двигатель
           </div>
           <div className="inline-flex items-center gap-1">
             <Gauge className="h-3.5 w-3.5" /> {car.power} л.с.
@@ -80,10 +102,18 @@ export function CarCard({ car }: { car: Car }) {
           </div>
           <div className="grid grid-cols-2 gap-2">
             <Button asChild variant="outline" size="sm">
-              <Link to="/cars/$carId" params={{ carId: car.id }}>Подробнее</Link>
+              <Link to="/cars/$carId" params={{ carId: car.id }}>
+                Подробнее
+              </Link>
             </Button>
             <Button asChild size="sm" disabled={!canBook}>
-              <Link to="/booking/$carId" params={{ carId: car.id }}>Выбрать</Link>
+              <Link
+                to="/booking/$carId"
+                params={{ carId: car.id }}
+                search={from && to ? { from, to } : {}}
+              >
+                {from && to ? "Забронировать" : "Выбрать даты"}
+              </Link>
             </Button>
           </div>
         </div>

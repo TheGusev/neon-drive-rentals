@@ -7,8 +7,23 @@
 import { defineConfig } from "@lovable.dev/vite-tanstack-config";
 
 export default defineConfig({
+  nitro: {
+    preset: "node-server",
+  },
   tanstackStart: {
     // Redirect TanStack Start's bundled server entry to src/server.ts (our SSR error wrapper).
     server: { entry: "server" },
   },
+  vite: {
+    build: {
+      // Сайт отдаётся по HTTP/1.1: десятки мелких чанков = очередь из запросов
+      // на мобильной сети. Склеиваем всё, что меньше 24 КБ.
+      rollupOptions: {
+        output: {
+          experimentalMinChunkSize: 24_000,
+        } as Record<string, unknown>,
+      },
+    },
+  },
+
 });

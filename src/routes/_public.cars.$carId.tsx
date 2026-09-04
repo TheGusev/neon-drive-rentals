@@ -1,37 +1,64 @@
 import { createFileRoute, Link, notFound, useRouter } from "@tanstack/react-router";
 import { ArrowLeft, ArrowRight, Fuel, Gauge, Star, Users, Wrench, Car as CarIcon, Coins, Route as RouteIcon, Droplet } from "lucide-react";
 
-import { getCarById } from "@/mocks/cars";
+import { carQueryOptions } from "@/lib/queries";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { CarGallery } from "@/components/car/CarGallery";
 import { AvailabilityCalendar } from "@/components/car/AvailabilityCalendar";
+import { SimilarCars } from "@/components/car/SimilarCars";
+import { Breadcrumbs } from "@/components/seo/Breadcrumbs";
+import { breadcrumbJsonLd, canonical, jsonLdScript, socialMeta, vehicleJsonLd } from "@/lib/seo";
 
 export const Route = createFileRoute("/_public/cars/$carId")({
-  loader: ({ params }) => {
-    const car = getCarById(params.carId);
+  loader: async ({ params, context }) => {
+    const car = await context.queryClient.ensureQueryData(carQueryOptions(params.carId));
     if (!car) throw notFound();
     return { car };
   },
   head: ({ params, loaderData }) => {
     const c = loaderData?.car;
-    const title = c
-      ? `${c.brand} ${c.model} ${c.year} — аренда в Новосибирске`
-      : "Авто не найдено — NSK-RENT";
-    const description = c
-      ? `Аренда ${c.brand} ${c.model} ${c.year} в Новосибирске от ${c.pricePerDay.toLocaleString("ru-RU")} ₽ / сутки. Онлайн-бронирование.`
-      : "Автомобиль не найден.";
+    if (!c) {
+      return {
+        meta: [{ title: "Авто не найдено — NSK-RENT" }, { name: "robots", content: "noindex" }],
+      };
+    }
+    const url = canonical(`/cars/${c.slug ?? params.carId}`);
+    const title = `Аренда ${c.brand} ${c.model} в Новосибирске — от ${c.pricePerDay.toLocaleString("ru-RU")} ₽/сутки | NSK-RENT`;
+    const description = `${c.brand} ${c.model} ${c.year}, ${c.color}, ${c.transmission}, расход ${c.consumption} л/100 км. Аренда в Новосибирске от ${c.pricePerDay.toLocaleString("ru-RU")} ₽/сутки, залог ${(c.deposit ?? 0).toLocaleString("ru-RU")} ₽, выдача на Доватора, 11.`;
     return {
       meta: [
         { title },
-        { name: "description", content: description },
+        { name: "description", content: description.slice(0, 300) },
         { property: "og:title", content: title },
-        { property: "og:description", content: description },
+        { property: "og:description", content: description.slice(0, 300) },
         { property: "og:type", content: "product" },
-        { property: "og:url", content: `/cars/${params.carId}` },
+        { property: "og:url", content: url },
         { name: "twitter:card", content: "summary_large_image" },
+        ...socialMeta(c.gallery?.[0] ?? c.image ?? "/assets/cars/hero-garage.jpg"),
       ],
-      links: [{ rel: "canonical", href: `/cars/${params.carId}` }],
+      links: [{ rel: "canonical", href: url }],
+      scripts: [
+        jsonLdScript(
+          vehicleJsonLd({
+            brand: c.brand,
+            model: c.model,
+            year: c.year,
+            color: c.color,
+            pricePerDay: c.pricePerDay,
+            slug: c.slug ?? params.carId,
+            image: c.image,
+            status: c.status,
+          }),
+        ),
+        jsonLdScript(
+          breadcrumbJsonLd([
+            { name: "Главная", url: "/" },
+            { name: "Автопарк", url: "/cars" },
+            { name: `${c.brand} ${c.model}`, url: `/cars/${c.slug ?? params.carId}` },
+          ]),
+        ),
+      ],
     };
   },
   component: CarPage,
@@ -74,7 +101,7 @@ function CarPage() {
     { icon: RouteIcon, label: "Пробег", value: car.mileageLimit ? `${car.mileageLimit} км/сутки` : "Без лимита" },
     { icon: Coins, label: "Залог", value: `${(car.deposit ?? 0).toLocaleString("ru-RU")} ₽` },
     { icon: Droplet, label: "Топливо", value: car.fuelPolicy ?? "полный → полный" },
-    { icon: Users, label: "Возраст / стаж", value: "от 21 года / 2 года" },
+    { icon: Users, label: "Возраст / стаж", value: "от 21 года / стаж 3 года" },
   ];
 
   return (
@@ -88,9 +115,20 @@ function CarPage() {
         <ArrowLeft className="h-4 w-4" /> Назад
       </button>
 
+      <Breadcrumbs
+        items={[
+          { name: "Главная", to: "/" },
+          { name: "Автопарк", to: "/cars" },
+          { name: `${car.brand} ${car.model}` },
+        ]}
+      />
+
       <div className="grid gap-8 lg:grid-cols-[1.1fr_1fr]">
 
-        <CarGallery alt={`${car.brand} ${car.model}`} />
+        <CarGallery
+          alt={`Аренда ${car.brand} ${car.model} ${car.year}, ${car.color}, в Новосибирске`}
+          images={car.gallery?.length ? car.gallery : car.image ? [car.image] : []}
+        />
 
         <div className="space-y-6">
           <div>
@@ -103,7 +141,7 @@ function CarPage() {
               </div>
             </div>
             <h1 className="mt-3 font-display text-3xl font-black md:text-4xl md:neon-text">
-              {car.brand} {car.model}
+              Аренда {car.brand} {car.model} в Новосибирске
             </h1>
             <p className="mt-1 text-sm text-muted-foreground">{car.year} год · правый руль</p>
           </div>
@@ -158,6 +196,39 @@ function CarPage() {
                 <p className="mt-1 font-semibold">{t.value}</p>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      <SimilarCars car={car} />
+
+      <section aria-labelledby="car-faq-heading" className="rounded-2xl border border-border bg-card p-5">
+        <h2 id="car-faq-heading" className="font-display text-xl font-bold">
+          Частые вопросы про аренду {car.brand} {car.model}
+        </h2>
+        <div className="mt-4 space-y-4 text-sm leading-relaxed text-muted-foreground">
+          <div>
+            <h3 className="font-semibold text-foreground">
+              Сколько стоит аренда {car.brand} {car.model} на выходные в Новосибирске?
+            </h3>
+            <p>
+              Двое суток — от {(car.pricePerDay * 2).toLocaleString("ru-RU")} ₽ по городскому тарифу. При аренде от
+              3 суток действует пониженная ставка, точная сумма считается в форме бронирования.
+            </p>
+          </div>
+          <div>
+            <h3 className="font-semibold text-foreground">Можно ли арендовать этот кей-кар без крупного депозита?</h3>
+            <p>
+              Да, залог по этой машине — {(car.deposit ?? 0).toLocaleString("ru-RU")} ₽ и возвращается после сдачи авто.
+              Подробные условия — на странице <a className="link-quiet underline" href="/rent/bez-zaloga">аренды без залога</a>.
+            </p>
+          </div>
+          <div>
+            <h3 className="font-semibold text-foreground">Где забрать {car.brand} {car.model} после прилёта в Толмачёво?</h3>
+            <p>
+              Выдача одна — Новосибирск, ул. Доватора, 11, круглосуточно. От аэропорта — около 30 минут на такси или
+              маршрутке; оформление занимает 5 минут, договор подписывается онлайн.
+            </p>
           </div>
         </div>
       </section>

@@ -7,9 +7,11 @@ import { AdminBookingCard } from "@/components/admin/AdminBookingCard";
 import { EntityGrid, EmptyState } from "@/components/admin/EntityCard";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { bookings } from "@/mocks/bookings";
-import { getCarById } from "@/mocks/cars";
-import { getClientById } from "@/mocks/clients";
+import { useMutation, useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
+import { updateBookingStatus, issueKeys, acceptReturn } from "@/lib/bookings.functions";
+import { adminBookingRowsQueryOptions } from "@/lib/queries";
+import { useCarLookup } from "@/state/AppDataContext";
 import type { BookingStatus } from "@/types/domain";
 
 export const Route = createFileRoute("/_admin/admin/bookings")({
@@ -18,6 +20,43 @@ export const Route = createFileRoute("/_admin/admin/bookings")({
 });
 
 function AdminBookingsPage() {
+  const { data: bookings } = useSuspenseQuery(adminBookingRowsQueryOptions());
+  const getCarById = useCarLookup();
+  const queryClient = useQueryClient();
+  const changeStatus = useServerFn(updateBookingStatus);
+  const statusMutation = useMutation({
+    mutationFn: (vars: { id: string; status: BookingStatus }) => changeStatus({ data: vars }),
+    onSuccess: async (res) => {
+      if (!res.ok) {
+        toast.error("Не удалось изменить статус");
+        return;
+      }
+      await queryClient.invalidateQueries({ queryKey: ["bookings"] });
+      await queryClient.invalidateQueries({ queryKey: ["admin"] });
+      toast.success("Статус обновлён");
+    },
+    onError: () => toast.error("Сервис временно недоступен"),
+  });
+  const runIssueKeys = useServerFn(issueKeys);
+  const runAcceptReturn = useServerFn(acceptReturn);
+  const journeyMutation = useMutation({
+    mutationFn: (vars: { id: string; action: "keys" | "return" }) =>
+      vars.action === "keys"
+        ? runIssueKeys({ data: { id: vars.id } })
+        : runAcceptReturn({ data: { id: vars.id } }),
+    onSuccess: async (res, vars) => {
+      if (!res.ok) {
+        toast.error("Не удалось обновить маршрут аренды");
+        return;
+      }
+      await queryClient.invalidateQueries({ queryKey: ["bookings"] });
+      await queryClient.invalidateQueries({ queryKey: ["admin"] });
+      await queryClient.invalidateQueries({ queryKey: ["cars"] });
+      toast.success(vars.action === "keys" ? "Ключи выданы" : "Возврат принят");
+    },
+    onError: () => toast.error("Сервис временно недоступен"),
+  });
+
   const [q, setQ] = useState("");
   const [tab, setTab] = useState<"all" | BookingStatus>("all");
 
@@ -26,17 +65,32 @@ function AdminBookingsPage() {
       if (tab !== "all" && b.status !== tab) return false;
       if (q) {
         const car = getCarById(b.carId);
-        const client = getClientById(b.clientId);
-        const hay = `${b.id} ${car?.brand} ${car?.model} ${client?.name}`.toLowerCase();
+        const hay = `${b.id} ${car?.brand ?? ""} ${car?.model ?? ""} ${b.carName} ${b.clientName} ${b.clientPhone}`.toLowerCase();
         if (!hay.includes(q.toLowerCase())) return false;
       }
       return true;
     });
-  }, [q, tab]);
+  }, [q, tab, bookings, getCarById]);
+
+  const counts = useMemo(() => {
+    const base: Record<string, number> = {
+      all: bookings.length,
+      pending: 0,
+      paid: 0,
+      active: 0,
+      completed: 0,
+      cancelled: 0,
+    };
+    for (const b of bookings) base[b.status] = (base[b.status] ?? 0) + 1;
+    return base;
+  }, [bookings]);
 
   return (
     <div className="w-full">
-      <PageHeader title="Бронирования" description={`${filtered.length} заявок и аренд`} />
+      <PageHeader
+        title="Брони"
+        description={`${counts.active} активных аренд · ${counts.pending} ожидают оплаты · всего ${bookings.length}`}
+      />
 
       <div className="mb-4 w-full space-y-3">
         <div className="relative">
@@ -50,12 +104,12 @@ function AdminBookingsPage() {
         </div>
         <Tabs value={tab} onValueChange={(v) => setTab(v as typeof tab)}>
           <TabsList className="flex w-full flex-wrap justify-start">
-            <TabsTrigger value="all">Все</TabsTrigger>
-            <TabsTrigger value="pending">Ожидают</TabsTrigger>
-            <TabsTrigger value="paid">Оплачены</TabsTrigger>
-            <TabsTrigger value="active">Активные</TabsTrigger>
-            <TabsTrigger value="completed">Завершены</TabsTrigger>
-            <TabsTrigger value="cancelled">Отменены</TabsTrigger>
+            <TabsTrigger value="all">Все · {counts.all}</TabsTrigger>
+            <TabsTrigger value="pending">Ожидают · {counts.pending}</TabsTrigger>
+            <TabsTrigger value="paid">Оплачены · {counts.paid}</TabsTrigger>
+            <TabsTrigger value="active">Активные · {counts.active}</TabsTrigger>
+            <TabsTrigger value="completed">Завершены · {counts.completed}</TabsTrigger>
+            <TabsTrigger value="cancelled">Отменены · {counts.cancelled}</TabsTrigger>
           </TabsList>
         </Tabs>
       </div>
@@ -69,9 +123,14 @@ function AdminBookingsPage() {
               key={b.id}
               booking={b}
               car={getCarById(b.carId)}
-              client={getClientById(b.clientId)}
+              client={{ id: b.clientId, name: b.clientName, phone: b.clientPhone, ordersCount: 0, rating: 5 }}
               index={i}
               onView={() => toast(`Просмотр брони ${b.id}`)}
+              onStatusChange={(status) => statusMutation.mutate({ id: b.id, status })}
+              statusPending={statusMutation.isPending}
+              onIssueKeys={() => journeyMutation.mutate({ id: b.id, action: "keys" })}
+              onAcceptReturn={() => journeyMutation.mutate({ id: b.id, action: "return" })}
+              journeyPending={journeyMutation.isPending}
             />
           ))}
         </EntityGrid>

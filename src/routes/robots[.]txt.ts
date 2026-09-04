@@ -9,12 +9,25 @@ export const Route = createFileRoute("/robots.txt")({
         const body = [
           "User-agent: *",
           "Allow: /",
+          "Allow: /cars",
+          "Allow: /blog",
+          "Allow: /rent/",
+          "Allow: /kei-cars",
+          "Allow: /terms",
+          "Allow: /privacy",
           "Disallow: /admin",
+          "Disallow: /api/",
+          "Disallow: /booking/",
+          "Disallow: /payment/",
+          "Disallow: /contract/",
+          "Disallow: /profile",
+          "Disallow: /login",
           "Disallow: /lovable/",
           "",
           `Sitemap: ${SITE_URL}/sitemap.xml`,
           "",
         ].join("\n");
+
 
         return new Response(body, {
           headers: {

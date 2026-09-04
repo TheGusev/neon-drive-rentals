@@ -3,11 +3,12 @@ import { Car, Clock, MapPin, ShieldCheck, Zap } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { useCoarsePointer } from "@/hooks/useCoarsePointer";
+import { useCars } from "@/state/AppDataContext";
 
-const items = [
+const buildItems = (fleetSize: number) => [
   {
     icon: Car,
-    title: "8 JDM кей-каров",
+    title: `${fleetSize} JDM кей-каров`,
     sub: "весь парк из Японии",
     hint: "Весь парк — японские кей-кары: компактные, экономичные, идеальны для города и парковки во дворах.",
   },
@@ -49,6 +50,8 @@ export function NfsSideMenu({
   const horizontal = orientation === "horizontal";
 
   const coarse = useCoarsePointer();
+  const cars = useCars();
+  const items = buildItems(cars.length);
 
   return (
     <TooltipProvider delayDuration={150}>
@@ -67,7 +70,7 @@ export function NfsSideMenu({
               type="button"
               aria-label={`${it.title} — подробнее`}
               className={cn(
-                "group flex items-center gap-3 rounded-r-xl border border-l-2 border-border/50 border-l-[color:var(--neon-blue)]/70 bg-background/55 py-2.5 pl-3 pr-4 text-left backdrop-blur-md transition hover:border-accent/70",
+                "glass-surface group flex items-center gap-3 rounded-r-xl border-l-2 border-l-[color:var(--neon-blue)]/70 py-2.5 pl-3 pr-4 text-left transition hover:border-accent/70",
                 horizontal && "shrink-0 rounded-xl py-2 pr-3",
                 animate && "garage-in",
               )}
@@ -77,14 +80,21 @@ export function NfsSideMenu({
                 <it.icon className="h-4 w-4" />
               </span>
               <div className="min-w-0">
-                <p className="truncate font-display text-sm font-bold text-foreground">{it.title}</p>
+                <p className="truncate font-display text-sm font-bold text-foreground">
+                  {it.title}
+                </p>
                 <p className="truncate text-[11px] text-foreground/70">{it.sub}</p>
               </div>
             </button>
           );
 
           // На сенсорных устройствах подсказки не показываем — они перекрывают контент.
-          if (coarse) return <div key={it.title} className="contents">{tile}</div>;
+          if (coarse)
+            return (
+              <div key={it.title} className="contents">
+                {tile}
+              </div>
+            );
 
           return (
             <Tooltip key={it.title}>
@@ -103,4 +113,3 @@ export function NfsSideMenu({
     </TooltipProvider>
   );
 }
-

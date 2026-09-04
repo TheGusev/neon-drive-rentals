@@ -1,15 +1,17 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
-import { Plus, Ban } from "lucide-react";
+import { Ban } from "lucide-react";
 import { toast } from "sonner";
 import { PageHeader } from "@/components/admin/PageHeader";
 import { AdminClientCard } from "@/components/admin/AdminClientCard";
+import { AdminDocumentsPanel } from "@/components/admin/AdminDocumentsPanel";
 import { EntityGrid, EmptyState } from "@/components/admin/EntityCard";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { clients as seedClients } from "@/mocks/clients";
-import type { Client } from "@/types/domain";
+import { useMutation, useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
+import { adminClientsQueryOptions } from "@/lib/queries";
+import { toggleClientBlock } from "@/lib/admin.functions";
 
 export const Route = createFileRoute("/_admin/admin/clients")({
   head: () => ({ meta: [{ title: "Клиенты — Панель управления" }] }),
@@ -17,7 +19,21 @@ export const Route = createFileRoute("/_admin/admin/clients")({
 });
 
 function AdminClientsPage() {
-  const [rows, setRows] = useState<Client[]>(seedClients);
+  const { data: rows } = useSuspenseQuery(adminClientsQueryOptions());
+  const queryClient = useQueryClient();
+  const blockFn = useServerFn(toggleClientBlock);
+  const blockMutation = useMutation({
+    mutationFn: (vars: { id: string; blocked: boolean }) => blockFn({ data: vars }),
+    onSuccess: async (res, vars) => {
+      if (!res.ok) {
+        toast.error("Не удалось изменить статус клиента");
+        return;
+      }
+      await queryClient.invalidateQueries({ queryKey: ["admin", "clients"] });
+      toast.success(vars.blocked ? "Клиент в чёрном списке" : "Клиент разблокирован");
+    },
+    onError: () => toast.error("Сервис временно недоступен"),
+  });
   const [q, setQ] = useState("");
   const [tab, setTab] = useState<"all" | "blacklist">("all");
 
@@ -30,22 +46,16 @@ function AdminClientsPage() {
     });
   }, [rows, q, tab]);
 
-  const toggleBlacklist = (id: string, val: boolean) => {
-    setRows((prev) => prev.map((c) => (c.id === id ? { ...c, blacklisted: val } : c)));
-    toast(val ? "Клиент добавлен в чёрный список" : "Клиент удалён из чёрного списка");
-  };
+  const toggleBlacklist = (id: string, val: boolean) => blockMutation.mutate({ id, blocked: val });
 
   return (
     <div className="w-full">
       <PageHeader
         title="Клиенты"
         description="CRM: контакты, история и чёрный список"
-        actions={
-          <Button onClick={() => toast("Форма клиента скоро появится")}>
-            <Plus className="mr-2 h-4 w-4" /> Новый клиент
-          </Button>
-        }
       />
+
+      <AdminDocumentsPanel />
 
       <div className="mb-4 w-full space-y-3">
         <Input

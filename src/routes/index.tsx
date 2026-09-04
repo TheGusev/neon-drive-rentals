@@ -1,13 +1,17 @@
+import { useEffect, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import heroDrive from "@/assets/cars/hero-drive.jpg";
+import { getIsMobileDevice } from "@/lib/device.functions";
 import { HomeDesktop, HomeMobile } from "@/components/home/HomeStage";
 import { FaqBlock } from "@/components/home/FaqBlock";
 import { HomeIntro } from "@/components/home/HomeIntro";
-import { SITE_URL, faqJsonLd, jsonLdScript, localBusinessJsonLd } from "@/lib/seo";
+import { RealPhotoStrip } from "@/components/home/RealPhotoStrip";
+import { SITE_URL, faqJsonLd, jsonLdScript, localBusinessJsonLd, socialMeta } from "@/lib/seo";
 import { ThemeProvider, useTheme } from "@/components/layout/ThemeProvider";
 import { HomeControls } from "@/components/home/HomeControls";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { FavoritesProvider } from "@/state/FavoritesContext";
+import { LazyMount } from "@/components/common/LazyMount";
 
 const TITLE = "Аренда авто в Новосибирске от 1 800 ₽/сутки — японские кей-кары | NSK-RENT";
 const DESC =
@@ -15,6 +19,7 @@ const DESC =
 
 export const Route = createFileRoute("/")({
   component: Home,
+  loader: async () => await getIsMobileDevice(),
   head: () => ({
     meta: [
       { title: TITLE },
@@ -24,6 +29,7 @@ export const Route = createFileRoute("/")({
       { property: "og:type", content: "website" },
       { property: "og:url", content: SITE_URL },
       { name: "twitter:card", content: "summary_large_image" },
+      ...socialMeta("/assets/cars/hero-garage.jpg"),
     ],
     links: [{ rel: "canonical", href: SITE_URL }],
     scripts: [jsonLdScript(localBusinessJsonLd()), jsonLdScript(faqJsonLd())],
@@ -32,7 +38,7 @@ export const Route = createFileRoute("/")({
 
 function Home() {
   return (
-    <ThemeProvider>
+    <ThemeProvider fixed="dark">
       <FavoritesProvider>
         <HomeShell />
       </FavoritesProvider>
@@ -40,29 +46,49 @@ function Home() {
   );
 }
 
+/**
+ * Ширина экрана после гидратации; до неё используется догадка по User-Agent.
+ * Первый клиентский рендер обязан совпадать с серверным, поэтому реальная
+ * ширина читается только в эффекте и только если она отличается от догадки.
+ */
+function useIsMobileViewport(initial: boolean) {
+  const [isMobile, setIsMobile] = useState(initial);
+
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 767px)");
+    const sync = () => setIsMobile((prev) => (prev === mq.matches ? prev : mq.matches));
+    sync();
+    mq.addEventListener("change", sync);
+    return () => mq.removeEventListener("change", sync);
+  }, []);
+
+  return isMobile;
+}
+
 function HomeShell() {
   const { themeClass } = useTheme();
+  const { isMobile: ssrIsMobile } = Route.useLoaderData();
+  const isMobile = useIsMobileViewport(ssrIsMobile);
 
   return (
     <div className={`${themeClass} min-h-screen bg-background text-foreground transition-colors duration-300`}>
       <HomeControls />
 
-
-      <div className="hidden md:block">
-        <HomeDesktop heroImage={heroDrive} />
-      </div>
-      <div className="md:hidden">
-        <HomeMobile heroImage={heroDrive} />
-      </div>
+      {isMobile ? <HomeMobile heroImage={heroDrive} /> : <HomeDesktop heroImage={heroDrive} />}
 
       {/* SEO content below hero (both viewports scroll to reach it) */}
       <div className="bg-background text-foreground">
         <HomeIntro />
-        <FaqBlock />
+        <LazyMount minHeight={420}>
+          <RealPhotoStrip />
+        </LazyMount>
+        <LazyMount minHeight={360}>
+          <FaqBlock />
+        </LazyMount>
       </div>
 
       <SiteFooter />
     </div>
   );
-
 }
+

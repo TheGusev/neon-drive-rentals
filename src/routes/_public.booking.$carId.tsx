@@ -1,10 +1,11 @@
+import { toast } from "sonner";
 import { createFileRoute, Link, notFound, useNavigate } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import { CalendarIcon, MapPin } from "lucide-react";
 import { format, parseISO } from "date-fns";
 import { ru } from "date-fns/locale";
 
-import { getCarById } from "@/mocks/cars";
+import { carQueryOptions } from "@/lib/queries";
 import { PICKUP_POINT } from "@/mocks/pickupPoints";
 import { tariffs, getTariff } from "@/mocks/tariffs";
 import {
@@ -35,8 +36,8 @@ export const Route = createFileRoute("/_public/booking/$carId")({
         ? (search.tariff as BookingTariff)
         : undefined,
   }),
-  loader: ({ params }) => {
-    const car = getCarById(params.carId);
+  loader: async ({ params, context }) => {
+    const car = await context.queryClient.ensureQueryData(carQueryOptions(params.carId));
     if (!car) throw notFound();
     return { car };
   },
@@ -51,6 +52,7 @@ export const Route = createFileRoute("/_public/booking/$carId")({
         { name: "description", content: "Выберите даты и тариф — расчёт стоимости в реальном времени. Выдача на ул. Доватора, 11." },
         { property: "og:title", content: title },
         { property: "og:description", content: "Онлайн-бронирование авто в Новосибирске: даты, тариф, выдача на Доватора, 11." },
+        { name: "robots", content: "noindex, nofollow" },
       ],
     };
   },
@@ -95,7 +97,7 @@ function BookingPage() {
     if (!draft) return null;
     return calcPrice({
       pricePerDay: car.pricePerDay,
-      deposit: car.deposit ?? 5000,
+      deposit: car.deposit ?? 2000,
       draft,
       tariffMultiplier: tariff.multiplier,
     });
@@ -146,8 +148,10 @@ function BookingPage() {
       setShowErrors(true);
       const first = errors[0];
       if (first) requestAnimationFrame(() => focusSection(first.anchor));
+      toast.error("Проверьте форму", { description: first?.message ?? "Заполните обязательные поля" });
       return;
     }
+    toast.success("Бронь сохранена", { description: "Переходим к оплате" });
     navigate({ to: "/payment/$bookingId", params: { bookingId: draft.id } });
   };
 
@@ -262,7 +266,7 @@ function BookingPage() {
         </div>
 
         <StickyBottomBar
-          label="Итого"
+          label="Итого с залогом"
           value={breakdown ? formatRub(breakdown.total) : "—"}
         >
           {showErrors && !valid ? (

@@ -4,7 +4,7 @@ import { format } from "date-fns";
 import { ArrowRight, ChevronLeft, ChevronRight, Eye, Fuel } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { cars } from "@/mocks/cars";
+import { useBookings, useCars } from "@/state/AppDataContext";
 import { getTariff } from "@/mocks/tariffs";
 import type { Car } from "@/types/domain";
 import { isCarAvailable, nextBusyUntil, splitAvailability } from "@/lib/availability";
@@ -16,9 +16,7 @@ import { useCoarsePointer } from "@/hooks/useCoarsePointer";
 import { useHydrated } from "@/hooks/useHydrated";
 import { usePrefetchCar } from "@/hooks/usePrefetchCar";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
-
-
-const garageCars = cars.slice(0, 10);
+import { CarImage } from "@/components/car/CarImage";
 
 /**
  * "Гараж" — NFS-style car picker: benefit tiles on the side,
@@ -34,7 +32,22 @@ export function GarageShowcase({ compact = false }: { compact?: boolean }) {
   const [progress, setProgress] = useState(0);
   const reducedMotion = useReducedMotion();
   const { from, to } = useHomeBooking();
-  const { available } = useMemo(() => splitAvailability(cars, from, to), [from, to]);
+  const cars = useCars();
+  const bookings = useBookings();
+  // Показываем весь парк из базы, но на первый рендер отдаём часть карточек:
+  // на 4G лента из 21 фото блокирует загрузку страницы. Остальные подключаем
+  // сразу после первой отрисовки.
+  const [fullList, setFullList] = useState(false);
+  useEffect(() => {
+    const id = window.setTimeout(() => setFullList(true), 1200);
+    return () => window.clearTimeout(id);
+  }, []);
+  const garageCars = fullList ? cars : cars.slice(0, 6);
+
+  const { available } = useMemo(
+    () => splitAvailability(cars, from, to, bookings),
+    [cars, from, to, bookings],
+  );
 
   const measure = useCallback(() => {
     const el = stripRef.current;
@@ -100,90 +113,96 @@ export function GarageShowcase({ compact = false }: { compact?: boolean }) {
     el.scrollBy({ left: dir * (step + 12), behavior: reducedMotion ? "auto" : "smooth" });
   };
 
-
   return (
     <TooltipProvider delayDuration={150}>
-    <section ref={sectionRef} aria-label="Гараж — выбор автомобиля" className="relative">
+      <section ref={sectionRef} aria-label="Гараж — выбор автомобиля" className="relative">
+        <div className={cn("mx-auto w-full max-w-7xl px-4 md:px-6", compact && "px-4")}>
+          <div className="flex items-end justify-between gap-3">
+            <div className="min-w-0">
+              <p className="text-[10px] uppercase tracking-[0.5em] text-[color:var(--neon-blue)]">
+                Garage · 車庫
+              </p>
+              <h2 className="mt-0.5 font-display text-xl font-black uppercase tracking-widest text-foreground md:text-3xl">
+                Гараж <span className="text-[color:var(--neon-blue)]">выбора</span>
+              </h2>
+              <p className="mt-1 text-xs text-foreground/75 md:text-sm">
+                {available.length} авто свободно · выберите машину и посмотрите цену
+              </p>
+            </div>
+            <div className="flex shrink-0 items-center gap-1.5">
+              <Button
+                size="icon"
+                variant="outline"
+                aria-label="Влево"
+                onClick={() => scrollByCards(-1)}
+                className="glass-surface h-9 w-9 hover:border-accent"
+              >
+                <ChevronLeft className="h-4 w-4" />
+              </Button>
+              <Button
+                size="icon"
+                variant="outline"
+                aria-label="Вправо"
+                onClick={() => scrollByCards(1)}
+                className="glass-surface h-9 w-9 hover:border-accent"
+              >
+                <ChevronRight className="h-4 w-4" />
+              </Button>
+              <Button
+                asChild
+                variant="ghost"
+                size="sm"
+                className="ml-1 gap-1 text-accent hover:text-accent"
+              >
+                <Link to="/cars">
+                  Все <ArrowRight className="h-3.5 w-3.5" />
+                </Link>
+              </Button>
+            </div>
+          </div>
 
-      <div className={cn("mx-auto w-full max-w-7xl px-4 md:px-6", compact && "px-4")}>
-        <div className="flex items-end justify-between gap-3">
+          <div className="road-line road-line-run mt-3 w-full opacity-70" />
+        </div>
+
+        <div className="mx-auto mt-4 grid w-full max-w-7xl gap-4 px-4 md:px-6 xl:grid-cols-[280px_minmax(0,1fr)] xl:gap-6">
+          <NfsSideMenu animate={entered} className="hidden xl:flex" />
+          <NfsSideMenu
+            animate={entered}
+            orientation="horizontal"
+            className="-mx-4 px-4 xl:hidden"
+          />
+
           <div className="min-w-0">
-            <p className="text-[10px] uppercase tracking-[0.5em] text-[color:var(--neon-blue)]">Garage · 車庫</p>
-            <h2
-              className="mt-0.5 font-display text-xl font-black uppercase tracking-widest text-foreground md:text-3xl"
-            >
-              Гараж <span className="text-[color:var(--neon-blue)]">выбора</span>
-            </h2>
-            <p className="mt-1 text-xs text-foreground/75 md:text-sm">
-              {available.length} авто свободно · выберите машину и посмотрите цену
-            </p>
-          </div>
-          <div className="flex shrink-0 items-center gap-1.5">
-            <Button
-              size="icon"
-              variant="outline"
-              aria-label="Влево"
-              onClick={() => scrollByCards(-1)}
-              className="h-9 w-9 border-border/70 bg-background/60 backdrop-blur hover:border-accent"
-            >
-              <ChevronLeft className="h-4 w-4" />
-            </Button>
-            <Button
-              size="icon"
-              variant="outline"
-              aria-label="Вправо"
-              onClick={() => scrollByCards(1)}
-              className="h-9 w-9 border-border/70 bg-background/60 backdrop-blur hover:border-accent"
-            >
-              <ChevronRight className="h-4 w-4" />
-            </Button>
-            <Button asChild variant="ghost" size="sm" className="ml-1 gap-1 text-accent hover:text-accent">
-              <Link to="/cars">
-                Все <ArrowRight className="h-3.5 w-3.5" />
-              </Link>
-            </Button>
-          </div>
-        </div>
-
-        <div className="road-line road-line-run mt-3 w-full opacity-70" />
-      </div>
-
-      <div className="mx-auto mt-4 grid w-full max-w-7xl gap-4 px-4 md:px-6 xl:grid-cols-[280px_minmax(0,1fr)] xl:gap-6">
-        <NfsSideMenu animate={entered} className="hidden xl:flex" />
-        <NfsSideMenu animate={entered} orientation="horizontal" className="-mx-4 px-4 xl:hidden" />
-
-        <div className="min-w-0">
-          <div
-            ref={stripRef}
-            onScroll={sync}
-            className="garage-strip no-scrollbar -mx-4 flex gap-3 overflow-x-auto px-4 pb-3 pt-1 md:-mx-6 md:px-6"
-          >
-            {garageCars.map((car, i) => (
-              <GarageCard
-                key={car.id}
-                car={car}
-                index={i}
-                entered={entered}
-                active={i === active}
-                onQuickView={() => setQuickCar(car)}
-              />
-            ))}
-          </div>
-
-          {/* Dashboard-like position indicator */}
-          <div className="mt-1 h-[3px] w-full overflow-hidden rounded-full bg-border/60">
             <div
-              className="h-full w-[28%] origin-left rounded-full bg-[color:var(--neon-blue)] shadow-[0_0_12px_var(--neon-blue)] transition-transform duration-300 ease-out will-change-transform"
-              style={{ transform: `translateX(${(progress * 72 * 100) / 28}%)` }}
-            />
+              ref={stripRef}
+              onScroll={sync}
+              className="garage-strip no-scrollbar -mx-4 flex gap-3 overflow-x-auto px-4 pb-3 pt-1 md:-mx-6 md:px-6"
+            >
+              {garageCars.map((car, i) => (
+                <GarageCard
+                  key={car.id}
+                  car={car}
+                  index={i}
+                  entered={entered}
+                  active={i === active}
+                  onQuickView={() => setQuickCar(car)}
+                />
+              ))}
+            </div>
+
+            {/* Dashboard-like position indicator */}
+            <div className="mt-1 h-[3px] w-full overflow-hidden rounded-full bg-border/60">
+              <div
+                className="h-full w-[28%] origin-left rounded-full bg-[color:var(--neon-blue)] shadow-[0_0_12px_var(--neon-blue)] transition-transform duration-300 ease-out will-change-transform"
+                style={{ transform: `translateX(${(progress * 72 * 100) / 28}%)` }}
+              />
+            </div>
           </div>
         </div>
-      </div>
 
-      <CarQuickView car={quickCar} onClose={() => setQuickCar(null)} />
-    </section>
+        <CarQuickView car={quickCar} onClose={() => setQuickCar(null)} />
+      </section>
     </TooltipProvider>
-
   );
 }
 
@@ -201,11 +220,12 @@ function GarageCard({
   onQuickView: () => void;
 }) {
   const { from, to, tariff } = useHomeBooking();
-  const free = isCarAvailable(car, from, to);
+  const bookings = useBookings();
+  const free = isCarAvailable(car, from, to, bookings);
   const hydrated = useHydrated();
   // Date-dependent availability label is rendered only after hydration to avoid
   // server/client mismatches caused by different timezones or render moments.
-  const busyUntil = !free && hydrated ? nextBusyUntil(car) : null;
+  const busyUntil = !free && hydrated ? nextBusyUntil(car, bookings) : null;
   const price = Math.round(car.pricePerDay * getTariff(tariff).multiplier);
   const coarse = useCoarsePointer();
 
@@ -239,18 +259,22 @@ function GarageCard({
       className={cn(
         "garage-card group relative flex h-[200px] w-[240px] shrink-0 snap-center flex-col overflow-hidden rounded-2xl border text-left backdrop-blur sm:h-[220px] sm:w-[280px] xl:h-[250px] xl:w-[320px]",
         entered && "garage-in",
+        "glass-surface",
         active
-          ? "border-accent bg-card/85 shadow-[0_18px_40px_-18px_color-mix(in_oklab,var(--neon-blue)_75%,transparent)]"
-          : "border-border/60 bg-card/60",
+          ? "border-accent shadow-[0_18px_40px_-18px_color-mix(in_oklab,var(--neon-blue)_75%,transparent)]"
+          : "",
         !free && "grayscale-[0.35]",
       )}
     >
-
-      <div className="relative flex-1 overflow-hidden bg-muted">
-        <img
+      <div className="soft-skeleton relative flex-1 overflow-hidden">
+        <CarImage
           src={car.image}
           alt={`${car.brand} ${car.model} — аренда в Новосибирске`}
-          loading="lazy"
+          loading={index === 0 ? "eager" : "lazy"}
+          fetchPriority={index === 0 ? "high" : "auto"}
+          decoding="async"
+          width={320}
+          height={250}
           className="h-full w-full object-cover transition duration-700 group-hover:scale-110"
         />
         <span className="garage-sweep pointer-events-none absolute inset-0" aria-hidden />
@@ -275,7 +299,6 @@ function GarageCard({
           }}
           className="absolute right-2 top-2 grid h-7 w-7 place-items-center rounded-md border border-border/60 bg-background/75 text-foreground backdrop-blur transition hover:border-accent hover:text-[color:var(--neon-blue)]"
         >
-
           <Eye className="h-3.5 w-3.5" />
         </button>
       </div>
@@ -295,7 +318,6 @@ function GarageCard({
       </div>
     </Link>
   );
-
 
   // На сенсорных устройствах подсказки не показываем — они перекрывали контент при скролле.
   if (coarse) return card;
@@ -344,4 +366,3 @@ function GarageCard({
     </Tooltip>
   );
 }
-

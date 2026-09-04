@@ -33,7 +33,7 @@ export interface Car {
 }
 
 
-export type CarFleetStatus = "free" | "busy" | "washing" | "maintenance";
+export type CarFleetStatus = "free" | "busy" | "maintenance";
 
 export type BookingStatus = "paid" | "pending" | "active" | "completed" | "cancelled";
 export type BookingTariff = "city" | "region" | "outside";
@@ -79,6 +79,24 @@ export interface Booking {
   pickupAddress?: string;
   contractStatus?: ContractStatus;
   status: BookingStatus;
+  /** Маршрут аренды: подтверждает администратор. */
+  keysIssuedAt?: string;
+  returnedAt?: string;
+  handledBy?: string;
+}
+
+/** Публичный отзыв об автомобиле, оставленный после завершённой аренды. */
+export interface CarReview {
+  id: string;
+  bookingId: string;
+  carId: string;
+  author: string;
+  rating: number;
+  text: string;
+  /** Комментарий сервису — виден только клиенту и админке. */
+  serviceComment?: string;
+  hidden?: boolean;
+  date: string;
 }
 
 export interface BookingDraft {
@@ -93,6 +111,9 @@ export interface BookingDraft {
   paymentMethod?: PaymentMethod;
   signed?: boolean;
   phone: string;
+  name?: string;
+  email?: string;
+  bookingId?: string;
 }
 
 export interface Client {
@@ -136,7 +157,6 @@ export interface DashboardStats {
   fleetStatus: {
     free: number;
     busy: number;
-    washing: number;
     maintenance: number;
   };
 }

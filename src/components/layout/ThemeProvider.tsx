@@ -29,12 +29,15 @@ export function useTheme() {
 
 function readInitialTheme(): Theme {
   if (typeof document === "undefined") return "dark";
-  if (document.documentElement.classList.contains("clean-light")) return "light";
-  if (document.documentElement.classList.contains("public-dark")) return "dark";
+  // Сохранённый выбор пользователя важнее класса на <html>: при гидратации
+  // React может вернуть серверный класс и «сбросить» тему.
   const stored = window.localStorage.getItem(STORAGE_KEY);
   if (stored === "light" || stored === "dark") return stored;
-  return window.matchMedia("(max-width: 767px)").matches ? "light" : "dark";
+  if (document.documentElement.classList.contains("clean-light")) return "light";
+  return "dark";
 }
+
+
 
 function applyTheme(theme: Theme) {
   const root = document.documentElement;
@@ -50,17 +53,22 @@ function applyTheme(theme: Theme) {
   meta.setAttribute("content", THEME_COLORS[theme]);
 }
 
-export function ThemeProvider({ children }: { children: ReactNode }) {
+/**
+ * `fixed` — жёстко заданная тема (публичная часть сайта всегда тёмная).
+ * Переключение темы доступно только в админке.
+ */
+export function ThemeProvider({ children, fixed }: { children: ReactNode; fixed?: Theme }) {
   // SSR renders the dark default; the inline boot script in <head> already set
-  // the real class on <html>, so we sync to it right after hydration.
-  const [theme, setThemeState] = useState<Theme>("dark");
+  // the real class on <html>, so we read it synchronously on the client
+  // (lazy initializer) — no flash of the wrong theme after hydration.
+  const [theme, setThemeState] = useState<Theme>(() =>
+    fixed ?? (typeof document === "undefined" ? "dark" : readInitialTheme()),
+  );
+
+  const effective = fixed ?? theme;
 
   useEffect(() => {
-    setThemeState(readInitialTheme());
-  }, []);
-
-  useEffect(() => {
-    applyTheme(theme);
+    applyTheme(effective);
     const root = document.documentElement;
     // Заглушаем переходы/анимации на момент смены темы — без «моргания».
     root.classList.add("theme-switching");
@@ -69,31 +77,37 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
       window.clearTimeout(id);
       root.classList.remove("theme-switching");
     };
-  }, [theme]);
+  }, [effective]);
 
-  const setTheme = useCallback((next: Theme) => {
-    window.localStorage.setItem(STORAGE_KEY, next);
-    setThemeState(next);
-  }, []);
+  const setTheme = useCallback(
+    (next: Theme) => {
+      if (fixed) return;
+      window.localStorage.setItem(STORAGE_KEY, next);
+      setThemeState(next);
+    },
+    [fixed],
+  );
 
   const toggle = useCallback(() => {
+    if (fixed) return;
     setThemeState((prev) => {
       const next: Theme = prev === "dark" ? "light" : "dark";
       window.localStorage.setItem(STORAGE_KEY, next);
       return next;
     });
-  }, []);
+  }, [fixed]);
 
   return (
     <Ctx.Provider
       value={{
-        theme,
+        theme: effective,
         toggle,
         setTheme,
-        themeClass: theme === "dark" ? "public-dark" : "clean-light",
+        themeClass: effective === "dark" ? "public-dark" : "clean-light",
       }}
     >
       {children}
     </Ctx.Provider>
   );
+
 }

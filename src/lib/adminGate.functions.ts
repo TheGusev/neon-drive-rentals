@@ -30,12 +30,17 @@ export const adminLogin = createServerFn({ method: "POST" })
   }))
   .handler(async ({ data }) => {
     const expected = process.env["ADMIN_PASSWORD"];
-    if (!expected) return { ok: false as const };
-    if (!passwordMatches(data.password, expected)) return { ok: false as const };
+    const secret = process.env["SESSION_SECRET"];
+    if (!expected || !secret || secret.length < 32) {
+      return { ok: false as const, reason: "not-configured" as const };
+    }
+    if (!passwordMatches(data.password, expected)) {
+      return { ok: false as const, reason: "bad-password" as const };
+    }
 
     const session = await useSession<GateSession>(sessionConfig());
     await session.update({ unlocked: true });
-    return { ok: true as const };
+    return { ok: true as const, reason: "ok" as const };
   });
 
 export const adminLogout = createServerFn({ method: "POST" }).handler(async () => {
