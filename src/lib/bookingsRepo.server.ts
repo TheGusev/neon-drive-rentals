@@ -157,14 +157,8 @@ export function toDbBookingStatus(status: BookingStatus): string {
   return status === "paid" ? "confirmed" : status;
 }
 
-export type AdminBookingRow = Booking & {
-  clientName: string;
-  clientPhone: string;
-  clientEmail?: string;
-  carName: string;
-  carPlate: string;
-  signedAt?: string;
-};
+export type { AdminBookingRow } from "@/types/domain";
+import type { AdminBookingRow } from "@/types/domain";
 
 export async function fetchBookingsAdmin(filters?: {
   status?: BookingStatus;
@@ -201,6 +195,7 @@ export async function fetchBookingsAdmin(filters?: {
     BookingRow & {
       client_name: string | null;
       client_phone: string | null;
+      client_email: string | null;
       brand: string | null;
       model: string | null;
       plate: string | null;
@@ -208,7 +203,8 @@ export async function fetchBookingsAdmin(filters?: {
     }
   >(
     `select b.id, b.car_id, c.slug as car_slug, b.client_id, b.date_from, b.date_to, b.total, b.status,
-            b.signed_at, b.keys_issued_at, b.returned_at, b.handled_by, cl.name as client_name, cl.phone as client_phone, c.brand, c.model, c.plate
+            b.signed_at, b.keys_issued_at, b.returned_at, b.handled_by, cl.name as client_name, cl.phone as client_phone,
+            cl.email as client_email, c.brand, c.model, c.plate
      from bookings b
      left join cars c on c.id = b.car_id
      left join clients cl on cl.id = b.client_id
@@ -221,6 +217,7 @@ export async function fetchBookingsAdmin(filters?: {
     ...mapBookingRow(row),
     clientName: row.client_name?.trim() || "Клиент",
     clientPhone: row.client_phone ?? "",
+    clientEmail: row.client_email?.trim() || undefined,
     carName: [row.brand, row.model].filter(Boolean).join(" ") || String(row.car_slug ?? ""),
     carPlate: row.plate ?? "",
     signedAt: row.signed_at ? new Date(row.signed_at).toISOString() : undefined,
@@ -255,6 +252,24 @@ export async function updateBookingStatusInDb(
   if (!rows.length) return null;
   await syncCarStatus(String(rows[0].car_id));
   return fetchBookingById(id);
+}
+
+/** Полное удаление брони: исчезает из админки, кабинета клиента и календаря авто. */
+export async function deleteBookingInDb(id: string): Promise<boolean> {
+  if (!hasDatabase()) return false;
+  const found = await query<{ id: string; car_id: string }>(
+    `select id, car_id from bookings where id::text = $1`,
+    [id],
+  );
+  if (!found.length) return false;
+  const carDbId = String(found[0].car_id);
+
+  // Связанные записи без каскада чистим вручную.
+  await query(`delete from payments where booking_id::text = $1`, [id]).catch(() => undefined);
+  await query(`delete from payment_events where booking_id = $1`, [id]).catch(() => undefined);
+  await query(`delete from bookings where id::text = $1`, [id]);
+  await syncCarStatus(carDbId);
+  return true;
 }
 
 export async function markBookingSigned(id: string, ip: string): Promise<Booking | null> {

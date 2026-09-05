@@ -9,10 +9,11 @@ import { Input } from "@/components/ui/input";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useMutation, useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { updateBookingStatus, issueKeys, acceptReturn } from "@/lib/bookings.functions";
+import { updateBookingStatus, issueKeys, acceptReturn, deleteBooking } from "@/lib/bookings.functions";
+import { AdminBookingDetailSheet } from "@/components/admin/AdminBookingDetailSheet";
 import { adminBookingRowsQueryOptions } from "@/lib/queries";
 import { useCarLookup } from "@/state/AppDataContext";
-import type { BookingStatus } from "@/types/domain";
+import type { AdminBookingRow, BookingStatus } from "@/types/domain";
 
 export const Route = createFileRoute("/_admin/admin/bookings")({
   head: () => ({ meta: [{ title: "Бронирования — Панель управления" }] }),
@@ -57,6 +58,25 @@ function AdminBookingsPage() {
     onError: () => toast.error("Сервис временно недоступен"),
   });
 
+  const runDelete = useServerFn(deleteBooking);
+  const deleteMutation = useMutation({
+    mutationFn: (vars: { id: string }) => runDelete({ data: vars }),
+    onSuccess: async (res) => {
+      if (!res.ok) {
+        toast.error("Не удалось удалить бронь");
+        return;
+      }
+      setSelectedId(null);
+      await queryClient.invalidateQueries({ queryKey: ["bookings"] });
+      await queryClient.invalidateQueries({ queryKey: ["admin"] });
+      await queryClient.invalidateQueries({ queryKey: ["cars"] });
+      await queryClient.invalidateQueries({ queryKey: ["me"] });
+      toast.success("Бронь удалена");
+    },
+    onError: () => toast.error("Сервис временно недоступен"),
+  });
+
+  const [selectedId, setSelectedId] = useState<string | null>(null);
   const [q, setQ] = useState("");
   const [tab, setTab] = useState<"all" | BookingStatus>("all");
 
@@ -125,7 +145,7 @@ function AdminBookingsPage() {
               car={getCarById(b.carId)}
               client={{ id: b.clientId, name: b.clientName, phone: b.clientPhone, ordersCount: 0, rating: 5 }}
               index={i}
-              onView={() => toast(`Просмотр брони ${b.id}`)}
+              onView={() => setSelectedId(b.id)}
               onStatusChange={(status) => statusMutation.mutate({ id: b.id, status })}
               statusPending={statusMutation.isPending}
               onIssueKeys={() => journeyMutation.mutate({ id: b.id, action: "keys" })}
@@ -135,6 +155,18 @@ function AdminBookingsPage() {
           ))}
         </EntityGrid>
       )}
+
+      <AdminBookingDetailSheet
+        booking={(bookings.find((b) => b.id === selectedId) as AdminBookingRow | undefined) ?? null}
+        car={getCarById(bookings.find((b) => b.id === selectedId)?.carId ?? "")}
+        open={Boolean(selectedId)}
+        onOpenChange={(open) => setSelectedId(open ? selectedId : null)}
+        onIssueKeys={() => selectedId && journeyMutation.mutate({ id: selectedId, action: "keys" })}
+        onAcceptReturn={() => selectedId && journeyMutation.mutate({ id: selectedId, action: "return" })}
+        onStatusChange={(status) => selectedId && statusMutation.mutate({ id: selectedId, status })}
+        onDelete={() => selectedId && deleteMutation.mutate({ id: selectedId })}
+        pending={journeyMutation.isPending || statusMutation.isPending || deleteMutation.isPending}
+      />
     </div>
   );
 }

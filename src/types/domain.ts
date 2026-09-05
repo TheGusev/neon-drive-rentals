@@ -160,3 +160,13 @@ export interface DashboardStats {
     maintenance: number;
   };
 }
+
+/** Строка списка броней в админке (клиентобезопасный тип). */
+export interface AdminBookingRow extends Booking {
+  clientName: string;
+  clientPhone: string;
+  clientEmail?: string;
+  carName: string;
+  carPlate: string;
+  signedAt?: string;
+}
