@@ -201,6 +201,7 @@ export async function fetchBookingsAdmin(filters?: {
     BookingRow & {
       client_name: string | null;
       client_phone: string | null;
+      client_email: string | null;
       brand: string | null;
       model: string | null;
       plate: string | null;
@@ -208,7 +209,8 @@ export async function fetchBookingsAdmin(filters?: {
     }
   >(
     `select b.id, b.car_id, c.slug as car_slug, b.client_id, b.date_from, b.date_to, b.total, b.status,
-            b.signed_at, b.keys_issued_at, b.returned_at, b.handled_by, cl.name as client_name, cl.phone as client_phone, c.brand, c.model, c.plate
+            b.signed_at, b.keys_issued_at, b.returned_at, b.handled_by, cl.name as client_name, cl.phone as client_phone,
+            cl.email as client_email, c.brand, c.model, c.plate
      from bookings b
      left join cars c on c.id = b.car_id
      left join clients cl on cl.id = b.client_id
