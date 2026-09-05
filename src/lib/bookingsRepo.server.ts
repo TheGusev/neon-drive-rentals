@@ -223,6 +223,7 @@ export async function fetchBookingsAdmin(filters?: {
     ...mapBookingRow(row),
     clientName: row.client_name?.trim() || "Клиент",
     clientPhone: row.client_phone ?? "",
+    clientEmail: row.client_email?.trim() || undefined,
     carName: [row.brand, row.model].filter(Boolean).join(" ") || String(row.car_slug ?? ""),
     carPlate: row.plate ?? "",
     signedAt: row.signed_at ? new Date(row.signed_at).toISOString() : undefined,
