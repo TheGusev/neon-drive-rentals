@@ -96,3 +96,13 @@ export const acceptReturn = createServerFn({ method: "POST" })
     const booking = await markReturned(data.id, data.manager?.trim() || "Менеджер NSK-RENT");
     return { ok: Boolean(booking), booking };
   });
+
+/** Полное удаление брони администратором. */
+export const deleteBooking = createServerFn({ method: "POST" })
+  .inputValidator((data: unknown) => z.object({ id: z.string().min(1).max(100) }).parse(data))
+  .handler(async ({ data }): Promise<{ ok: boolean }> => {
+    const { requireAdmin } = await import("@/lib/adminGuard.server");
+    await requireAdmin();
+    const { deleteBookingInDb } = await import("@/lib/bookingsRepo.server");
+    return { ok: await deleteBookingInDb(data.id) };
+  });
