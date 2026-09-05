@@ -20,7 +20,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { CarImage } from "@/components/car/CarImage";
-import type { AdminBookingRow } from "@/lib/bookingsRepo.server.types";
+import type { AdminBookingRow } from "@/types/domain";
 import type { BookingStatus, Car } from "@/types/domain";
 
 const STATUS_LABEL: Record<BookingStatus, string> = {

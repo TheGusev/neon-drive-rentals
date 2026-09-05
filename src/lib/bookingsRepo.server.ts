@@ -157,14 +157,8 @@ export function toDbBookingStatus(status: BookingStatus): string {
   return status === "paid" ? "confirmed" : status;
 }
 
-export type AdminBookingRow = Booking & {
-  clientName: string;
-  clientPhone: string;
-  clientEmail?: string;
-  carName: string;
-  carPlate: string;
-  signedAt?: string;
-};
+export type { AdminBookingRow } from "@/types/domain";
+import type { AdminBookingRow } from "@/types/domain";
 
 export async function fetchBookingsAdmin(filters?: {
   status?: BookingStatus;
