@@ -260,6 +260,24 @@ export async function updateBookingStatusInDb(
   return fetchBookingById(id);
 }
 
+/** Полное удаление брони: исчезает из админки, кабинета клиента и календаря авто. */
+export async function deleteBookingInDb(id: string): Promise<boolean> {
+  if (!hasDatabase()) return false;
+  const found = await query<{ id: string; car_id: string }>(
+    `select id, car_id from bookings where id::text = $1`,
+    [id],
+  );
+  if (!found.length) return false;
+  const carDbId = String(found[0].car_id);
+
+  // Связанные записи без каскада чистим вручную.
+  await query(`delete from payments where booking_id::text = $1`, [id]).catch(() => undefined);
+  await query(`delete from payment_events where booking_id = $1`, [id]).catch(() => undefined);
+  await query(`delete from bookings where id::text = $1`, [id]);
+  await syncCarStatus(carDbId);
+  return true;
+}
+
 export async function markBookingSigned(id: string, ip: string): Promise<Booking | null> {
   if (!hasDatabase()) return fetchBookingById(id);
   const rows = await query<{ id: string; car_id: string }>(
