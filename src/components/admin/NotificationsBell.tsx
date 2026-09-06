@@ -58,7 +58,7 @@ export function NotificationsBell() {
     setOpen(false);
     await readOne({ data: { id } }).catch(() => undefined);
     void queryClient.invalidateQueries({ queryKey: ["admin", "notifications"] });
-    if (link) void navigate({ to: link });
+    if (link) void navigate({ to: link as never });
   }
 
   async function enablePush() {
