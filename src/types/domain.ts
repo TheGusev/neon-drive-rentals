@@ -147,6 +147,26 @@ export interface NotificationItem {
   unread?: boolean;
 }
 
+export type AdminNotificationKind =
+  | "booking_created"
+  | "payment_succeeded"
+  | "booking_cancelled"
+  | "payment_refunded"
+  | "return_overdue"
+  | "client_registered";
+
+export interface AdminNotification {
+  id: string;
+  kind: AdminNotificationKind;
+  title: string;
+  body: string;
+  link: string | null;
+  entityId: string | null;
+  unread: boolean;
+  createdAt: string;
+}
+
+
 export interface DashboardStats {
   bookingsToday: number;
   bookingsDelta: number;
