@@ -74,6 +74,15 @@ export const Route = createFileRoute("/api/public/yookassa-webhook")({
             const { updateBookingStatusInDb } = await import("@/lib/bookingsRepo.server");
             await updateBookingStatusInDb(bookingId, "cancelled");
           }
+          const { notifyAdmins } = await import("@/lib/notificationsRepo.server");
+          await notifyAdmins({
+            kind: "payment_refunded",
+            title: "Возврат средств",
+            body: `${amount ? `${amount.toLocaleString("ru-RU")} ₽ · ` : ""}бронь ${bookingId ?? "—"}`,
+            link: "/admin/finance",
+            entityId: bookingId,
+            dedupeKey: `refund:${providerId}`,
+          });
           return new Response("ok");
         }
 
@@ -92,8 +101,28 @@ export const Route = createFileRoute("/api/public/yookassa-webhook")({
               return new Response("ok");
             }
             await updateBookingStatusInDb(bookingId, "active");
+            const { notifyAdmins } = await import("@/lib/notificationsRepo.server");
+            await notifyAdmins({
+              kind: "payment_succeeded",
+              title: "Оплата получена",
+              body: `${(amount ?? expected).toLocaleString("ru-RU")} ₽ · бронь ${bookingId}`,
+              link: "/admin/finance",
+              entityId: bookingId,
+              dedupeKey: `paid:${providerId}`,
+            });
           }
-          if (status === "canceled") await updateBookingStatusInDb(bookingId, "cancelled");
+          if (status === "canceled") {
+            await updateBookingStatusInDb(bookingId, "cancelled");
+            const { notifyAdmins } = await import("@/lib/notificationsRepo.server");
+            await notifyAdmins({
+              kind: "booking_cancelled",
+              title: "Платёж отменён",
+              body: `Бронь ${bookingId} — оплата не прошла`,
+              link: "/admin/bookings",
+              entityId: bookingId,
+              dedupeKey: `canceled:${providerId}`,
+            });
+          }
         }
 
         return new Response("ok");

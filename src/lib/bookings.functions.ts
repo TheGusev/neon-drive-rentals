@@ -56,11 +56,25 @@ export const createBooking = createServerFn({ method: "POST" })
     if (!carDbId) return { ok: false as const, reason: "car_not_found" as const };
 
     // Код из SMS подтверждает договор — фиксируем подпись сразу при создании брони.
-    return insertBooking({
+    const result = await insertBooking({
       ...data,
       carDbId,
       signatureIp: data.signed ? (getRequestIP({ xForwardedFor: true }) ?? "") : undefined,
     });
+
+    if (result.ok) {
+      const { notifyAdmins } = await import("@/lib/notificationsRepo.server");
+      const period = `${new Date(data.startDate).toLocaleDateString("ru-RU")} — ${new Date(data.endDate).toLocaleDateString("ru-RU")}`;
+      await notifyAdmins({
+        kind: "booking_created",
+        title: "Новая бронь",
+        body: `${data.clientName?.trim() || data.clientPhone} · ${data.carId} · ${period} · ${data.totalPrice.toLocaleString("ru-RU")} ₽`,
+        link: "/admin/bookings",
+        entityId: result.booking.id,
+      });
+    }
+
+    return result;
   });
 
 export const updateBookingStatus = createServerFn({ method: "POST" })
@@ -70,6 +84,16 @@ export const updateBookingStatus = createServerFn({ method: "POST" })
     await requireAdmin();
     const { updateBookingStatusInDb } = await import("@/lib/bookingsRepo.server");
     const booking = await updateBookingStatusInDb(data.id, data.status as BookingStatus);
+    if (booking && data.status === "cancelled") {
+      const { notifyAdmins } = await import("@/lib/notificationsRepo.server");
+      await notifyAdmins({
+        kind: "booking_cancelled",
+        title: "Бронь отменена",
+        body: `Бронь ${booking.id} · ${booking.carId}`,
+        link: "/admin/bookings",
+        entityId: booking.id,
+      });
+    }
     return { ok: Boolean(booking), booking };
   });
 

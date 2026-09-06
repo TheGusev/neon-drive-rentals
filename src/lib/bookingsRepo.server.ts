@@ -123,6 +123,26 @@ export async function autoAdvanceBookings(): Promise<void> {
              where b.car_id = c.id and b.status = 'active'
           )`,
     );
+
+    // Не возвращённые вовремя авто — по одному оповещению на бронь.
+    const overdue = await query<{ id: string; title: string }>(
+      `select b.id, coalesce(c.brand || ' ' || c.model, 'Автомобиль') as title
+         from bookings b join cars c on c.id = b.car_id
+        where b.status = 'active' and b.returned_at is null and b.date_to < now()`,
+    );
+    if (overdue.length) {
+      const { notifyAdmins } = await import("@/lib/notificationsRepo.server");
+      for (const row of overdue) {
+        await notifyAdmins({
+          kind: "return_overdue",
+          title: "Авто не возвращено вовремя",
+          body: `${row.title} · бронь ${row.id}`,
+          link: "/admin/bookings",
+          entityId: row.id,
+          dedupeKey: `overdue:${row.id}`,
+        });
+      }
+    }
   } catch (error) {
     console.error("[bookings] autoAdvance failed", error);
   }

@@ -98,6 +98,17 @@ export const registerWithPassword = createServerFn({ method: "POST" })
 
     if (!result.ok) return { ok: false as const, reason: result.reason };
     await setClientSession(result.client.id, result.client.phone || data.phone);
+
+    const { notifyAdmins } = await import("@/lib/notificationsRepo.server");
+    await notifyAdmins({
+      kind: "client_registered",
+      title: "Новый клиент",
+      body: `${data.name} · ${data.phone} · ${data.email}`,
+      link: "/admin/clients",
+      entityId: result.client.id,
+      dedupeKey: `client:${result.client.id}`,
+    });
+
     return { ok: true as const };
   });
 
