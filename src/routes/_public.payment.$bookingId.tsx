@@ -382,7 +382,13 @@ function PaymentPage() {
             </ul>
           </div>
         )}
-        <Button onClick={() => void pay()} disabled={saving} variant="accent" size="xl" className="w-full">
+        <Button
+          onClick={() => void pay()}
+          disabled={saving}
+          variant="accent"
+          size="xl"
+          className="w-full md:mx-auto md:w-auto md:min-w-72"
+        >
           <ShieldCheck className="mr-2 h-4 w-4" />
           {saving ? "Оформляем…" : `Оплатить ${formatRub(breakdown.total)}`}
         </Button>
