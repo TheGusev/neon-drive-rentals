@@ -9,7 +9,13 @@ import { Input } from "@/components/ui/input";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useMutation, useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { updateBookingStatus, issueKeys, acceptReturn, deleteBooking } from "@/lib/bookings.functions";
+import {
+  updateBookingStatus,
+  issueKeys,
+  acceptReturn,
+  deleteBooking,
+  setBookingMileage,
+} from "@/lib/bookings.functions";
 import { AdminBookingDetailSheet } from "@/components/admin/AdminBookingDetailSheet";
 import { adminBookingRowsQueryOptions } from "@/lib/queries";
 import { useCarLookup } from "@/state/AppDataContext";
@@ -41,10 +47,12 @@ function AdminBookingsPage() {
   const runIssueKeys = useServerFn(issueKeys);
   const runAcceptReturn = useServerFn(acceptReturn);
   const journeyMutation = useMutation({
-    mutationFn: (vars: { id: string; action: "keys" | "return" }) =>
+    mutationFn: (vars: { id: string; action: "keys" | "return"; mileage?: number }) =>
       vars.action === "keys"
         ? runIssueKeys({ data: { id: vars.id } })
-        : runAcceptReturn({ data: { id: vars.id } }),
+        : runAcceptReturn({
+            data: vars.mileage === undefined ? { id: vars.id } : { id: vars.id, mileage: vars.mileage },
+          }),
     onSuccess: async (res, vars) => {
       if (!res.ok) {
         toast.error("Не удалось обновить маршрут аренды");
@@ -54,6 +62,22 @@ function AdminBookingsPage() {
       await queryClient.invalidateQueries({ queryKey: ["admin"] });
       await queryClient.invalidateQueries({ queryKey: ["cars"] });
       toast.success(vars.action === "keys" ? "Ключи выданы" : "Возврат принят");
+    },
+    onError: () => toast.error("Сервис временно недоступен"),
+  });
+
+  const runMileage = useServerFn(setBookingMileage);
+  const mileageMutation = useMutation({
+    mutationFn: (vars: { id: string; mileage: number }) => runMileage({ data: vars }),
+    onSuccess: async (res) => {
+      if (!res.ok) {
+        toast.error("Не удалось сохранить пробег");
+        return;
+      }
+      await queryClient.invalidateQueries({ queryKey: ["bookings"] });
+      await queryClient.invalidateQueries({ queryKey: ["admin"] });
+      await queryClient.invalidateQueries({ queryKey: ["cars"] });
+      toast.success("Пробег сохранён");
     },
     onError: () => toast.error("Сервис временно недоступен"),
   });
@@ -162,10 +186,23 @@ function AdminBookingsPage() {
         open={Boolean(selectedId)}
         onOpenChange={(open) => setSelectedId(open ? selectedId : null)}
         onIssueKeys={() => selectedId && journeyMutation.mutate({ id: selectedId, action: "keys" })}
-        onAcceptReturn={() => selectedId && journeyMutation.mutate({ id: selectedId, action: "return" })}
+        onAcceptReturn={(mileage) =>
+          selectedId &&
+          journeyMutation.mutate(
+            mileage === undefined
+              ? { id: selectedId, action: "return" }
+              : { id: selectedId, action: "return", mileage },
+          )
+        }
+        onSaveMileage={(mileage) => selectedId && mileageMutation.mutate({ id: selectedId, mileage })}
         onStatusChange={(status) => selectedId && statusMutation.mutate({ id: selectedId, status })}
         onDelete={() => selectedId && deleteMutation.mutate({ id: selectedId })}
-        pending={journeyMutation.isPending || statusMutation.isPending || deleteMutation.isPending}
+        pending={
+          journeyMutation.isPending ||
+          statusMutation.isPending ||
+          deleteMutation.isPending ||
+          mileageMutation.isPending
+        }
       />
     </div>
   );
