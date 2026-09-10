@@ -29,6 +29,8 @@ export interface Car {
   vin?: string;
   plate?: string;
   status?: CarFleetStatus;
+  /** Текущий пробег авто, км (обновляется при приёме возврата). */
+  mileage?: number;
   bookedDates?: string[]; // ISO yyyy-mm-dd
 }
 
@@ -83,6 +85,10 @@ export interface Booking {
   keysIssuedAt?: string;
   returnedAt?: string;
   handledBy?: string;
+  /** Показания одометра при возврате, км. */
+  returnMileage?: number;
+  /** Кто внёс пробег: клиент или администратор. */
+  returnMileageSource?: "client" | "admin";
 }
 
 /** Публичный отзыв об автомобиле, оставленный после завершённой аренды. */
