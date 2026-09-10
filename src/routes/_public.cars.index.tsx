@@ -147,8 +147,8 @@ function CatalogPage() {
           </p>
         </div>
 
-        <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-2 md:flex md:justify-between">
-          <div className="relative min-w-0">
+        <div className="flex flex-wrap items-center gap-2 md:justify-between">
+          <div className="relative min-w-0 basis-full md:basis-auto md:flex-1 md:max-w-sm">
             <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <Input
               value={query}
