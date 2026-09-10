@@ -146,3 +146,43 @@ export const getPaymentEvents = createServerFn({ method: "GET" }).handler(async 
   const { fetchPaymentEvents } = await import("@/lib/paymentsRepo.server");
   return fetchPaymentEvents();
 });
+
+const cashSchema = z.object({
+  bookingId: z.string().min(1).max(80),
+  amount: z.number().int().min(1).max(5_000_000),
+  manager: z.string().max(80).optional(),
+});
+
+/** Администратор фиксирует выдачу авто за наличные: платёж и бронь становятся оплаченными. */
+export const recordCashPayment = createServerFn({ method: "POST" })
+  .inputValidator((data: unknown) => cashSchema.parse(data))
+  .handler(async ({ data }) => {
+    const { requireAdmin } = await import("@/lib/adminGuard.server");
+    await requireAdmin();
+    const { insertPayment } = await import("@/lib/paymentsRepo.server");
+    const paymentId = await insertPayment({
+      bookingId: data.bookingId,
+      amount: data.amount,
+      provider: "cash",
+      status: "succeeded",
+    });
+    if (!paymentId) return { ok: false as const, error: "Не удалось записать платёж" };
+
+    const { updateBookingStatusInDb } = await import("@/lib/bookingsRepo.server");
+    await updateBookingStatusInDb(data.bookingId, "paid");
+
+    const { notifyAdmins } = await import("@/lib/notificationsRepo.server");
+    await notifyAdmins({
+      kind: "payment_succeeded",
+      title: "Оплата наличными",
+      body: `Бронь № ${data.bookingId}: принято ${data.amount.toLocaleString("ru-RU")} ₽ наличными${
+        data.manager ? ` (${data.manager})` : ""
+      }`,
+      link: "/admin/finance",
+      entityId: data.bookingId,
+      dedupeKey: `cash:${paymentId}`,
+      push: false,
+    });
+
+    return { ok: true as const, paymentId };
+  });

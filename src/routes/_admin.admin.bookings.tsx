@@ -16,6 +16,7 @@ import {
   deleteBooking,
   setBookingMileage,
 } from "@/lib/bookings.functions";
+import { recordCashPayment } from "@/lib/payments.functions";
 import { AdminBookingDetailSheet } from "@/components/admin/AdminBookingDetailSheet";
 import { adminBookingRowsQueryOptions } from "@/lib/queries";
 import { useCarLookup } from "@/state/AppDataContext";
@@ -78,6 +79,22 @@ function AdminBookingsPage() {
       await queryClient.invalidateQueries({ queryKey: ["admin"] });
       await queryClient.invalidateQueries({ queryKey: ["cars"] });
       toast.success("Пробег сохранён");
+    },
+    onError: () => toast.error("Сервис временно недоступен"),
+  });
+
+  const runCash = useServerFn(recordCashPayment);
+  const cashMutation = useMutation({
+    mutationFn: (vars: { bookingId: string; amount: number }) => runCash({ data: vars }),
+    onSuccess: async (res) => {
+      if (!res.ok) {
+        toast.error(res.error);
+        return;
+      }
+      await queryClient.invalidateQueries({ queryKey: ["bookings"] });
+      await queryClient.invalidateQueries({ queryKey: ["admin"] });
+      await queryClient.invalidateQueries({ queryKey: ["me"] });
+      toast.success("Оплата наличными зафиксирована");
     },
     onError: () => toast.error("Сервис временно недоступен"),
   });
@@ -195,13 +212,15 @@ function AdminBookingsPage() {
           )
         }
         onSaveMileage={(mileage) => selectedId && mileageMutation.mutate({ id: selectedId, mileage })}
+        onCashPayment={(amount) => selectedId && cashMutation.mutate({ bookingId: selectedId, amount })}
         onStatusChange={(status) => selectedId && statusMutation.mutate({ id: selectedId, status })}
         onDelete={() => selectedId && deleteMutation.mutate({ id: selectedId })}
         pending={
           journeyMutation.isPending ||
           statusMutation.isPending ||
           deleteMutation.isPending ||
-          mileageMutation.isPending
+          mileageMutation.isPending ||
+          cashMutation.isPending
         }
       />
     </div>

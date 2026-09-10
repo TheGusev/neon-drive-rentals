@@ -1,6 +1,7 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
-import { Search, SlidersHorizontal } from "lucide-react";
+import { Moon, Search, SlidersHorizontal, Sun } from "lucide-react";
+import { useProfileTheme } from "@/hooks/useProfileTheme";
 import type { Booking, Car } from "@/types/domain";
 import { isCarAvailable } from "@/lib/availability";
 import { useBookings, useCars } from "@/state/AppDataContext";
@@ -130,11 +131,12 @@ function CatalogPage() {
       },
     });
   };
+  const { theme, toggle, themeClass } = useProfileTheme("nsk-rent-catalog-theme");
   const bookingFrom = filters.pickup?.toISOString();
   const bookingTo = filters.ret?.toISOString();
 
   return (
-    <div className="space-y-6">
+    <div className={`${themeClass} space-y-6 bg-background text-foreground md:!bg-transparent`}>
       <Breadcrumbs items={[{ name: "Главная", to: "/" }, { name: "Автопарк" }]} />
       <header className="space-y-4">
         <div>
@@ -145,18 +147,27 @@ function CatalogPage() {
           </p>
         </div>
 
-        <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-2 md:flex md:justify-between">
-          <div className="relative min-w-0">
+        <div className="flex flex-wrap items-center gap-2 md:justify-between">
+          <div className="relative min-w-0 basis-full md:basis-auto md:flex-1 md:max-w-sm">
             <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <Input
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Поиск по модели или цвету"
-              className="h-11 rounded-2xl pl-9"
+              className="h-11 w-full rounded-2xl pl-9"
             />
           </div>
 
           <div className="flex shrink-0 items-center gap-2">
+            <Button
+              variant="outline"
+              size="icon"
+              aria-label="Переключить тему каталога"
+              className="h-11 w-11 rounded-2xl md:hidden"
+              onClick={toggle}
+            >
+              {theme === "light" ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
+            </Button>
             <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
               <SheetTrigger asChild>
                 <Button variant="outline" className="h-11 gap-2 rounded-2xl md:hidden">

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { CalendarDays, Gauge, KeyRound, Phone, Mail, MapPin, Trash2, User } from "lucide-react";
+import { Banknote, CalendarDays, Gauge, KeyRound, Phone, Mail, MapPin, Trash2, User } from "lucide-react";
 import {
   Sheet,
   SheetContent,
@@ -66,6 +66,7 @@ interface Props {
   onIssueKeys: () => void;
   onAcceptReturn: (mileage?: number) => void;
   onSaveMileage: (mileage: number) => void;
+  onCashPayment: (amount: number) => void;
   onStatusChange: (status: BookingStatus) => void;
   onDelete: () => void;
   pending?: boolean;
@@ -79,12 +80,16 @@ export function AdminBookingDetailSheet({
   onIssueKeys,
   onAcceptReturn,
   onSaveMileage,
+  onCashPayment,
   onStatusChange,
   onDelete,
   pending,
 }: Props) {
   const [mileage, setMileage] = useState("");
+  const [cash, setCash] = useState("");
   if (!booking) return null;
+  const cashValue = Number((cash || String(booking.totalPrice)).replace(/\D/g, ""));
+  const cashValid = Number.isFinite(cashValue) && cashValue > 0;
   const mileageValue = Number(mileage.replace(/\D/g, ""));
   const mileageValid = Number.isFinite(mileageValue) && mileageValue > 0;
   const journey = [
@@ -214,6 +219,36 @@ export function AdminBookingDetailSheet({
             </Button>
           </div>
         </section>
+
+        {booking.status !== "cancelled" && (
+          <section className="mt-5">
+            <h3 className="mb-1 flex items-center gap-2 text-sm font-semibold">
+              <Banknote className="h-4 w-4 text-muted-foreground" /> Оплата наличными
+            </h3>
+            <p className="mb-2 text-xs text-muted-foreground">
+              Выдача за наличные: сумма попадёт в «Финансы», бронь станет оплаченной.
+            </p>
+            <div className="flex gap-2">
+              <Input
+                inputMode="numeric"
+                placeholder={`${booking.totalPrice.toLocaleString("ru-RU")} \u20bd`}
+                value={cash}
+                onChange={(e) => setCash(e.target.value)}
+              />
+              <Button
+                variant="outline"
+                className="shrink-0"
+                disabled={!cashValid || pending}
+                onClick={() => {
+                  onCashPayment(cashValue);
+                  setCash("");
+                }}
+              >
+                Принять
+              </Button>
+            </div>
+          </section>
+        )}
 
         <div className="mt-6 grid gap-2">
           {!booking.keysIssuedAt && (

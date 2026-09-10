@@ -6,6 +6,7 @@ import { useMutation, useQueryClient, useSuspenseQuery } from "@tanstack/react-q
 import { useServerFn } from "@tanstack/react-start";
 import { PageHeader } from "@/components/admin/PageHeader";
 import { AdminCarCard } from "@/components/admin/AdminCarCard";
+import { CarAvailabilityPanel } from "@/components/admin/CarAvailabilityPanel";
 import { EntityGrid, EmptyState } from "@/components/admin/EntityCard";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -45,6 +46,7 @@ type FormState = {
   engineVolume: string;
   deposit: string;
   vin: string;
+  mileage: string;
 };
 
 const emptyForm: FormState = {
@@ -64,6 +66,7 @@ const emptyForm: FormState = {
   engineVolume: "0.66",
   deposit: "2000",
   vin: "",
+  mileage: "",
 };
 
 function toForm(car: Car): FormState {
@@ -84,6 +87,7 @@ function toForm(car: Car): FormState {
     engineVolume: String(car.engineVolume || 0.66),
     deposit: String(car.deposit ?? 2000),
     vin: car.vin ?? "",
+    mileage: car.mileage ? String(car.mileage) : "",
   };
 }
 
@@ -125,6 +129,7 @@ function AdminCarsPage() {
         engineVolume: Number(form.engineVolume) || undefined,
         deposit: Number(form.deposit) || undefined,
         vin: form.vin.trim() || undefined,
+        mileage: form.mileage.trim() ? Number(form.mileage.replace(/\D/g, "")) : undefined,
       };
       return editing
         ? updateFn({ data: { id: editing.id, patch: payload } })
@@ -293,7 +298,14 @@ function AdminCarsPage() {
             <Field label="Расход, л/100" value={form.consumption} onChange={(v) => setForm({ ...form, consumption: v })} />
             <Field label="Объём, л" value={form.engineVolume} onChange={(v) => setForm({ ...form, engineVolume: v })} />
             <Field label="VIN" value={form.vin} onChange={(v) => setForm({ ...form, vin: v })} />
+            <Field
+              label="Текущий пробег, км"
+              value={form.mileage}
+              onChange={(v) => setForm({ ...form, mileage: v })}
+            />
           </FormSection>
+
+          {editing && <CarAvailabilityPanel car={editing} />}
 
           <section className="space-y-2">
             <h3 className="text-sm font-semibold">Фотографии</h3>

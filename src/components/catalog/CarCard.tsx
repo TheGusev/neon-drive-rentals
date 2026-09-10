@@ -28,6 +28,12 @@ export function CarCard({
   from?: string;
   to?: string;
 }) {
+  const dateLabel =
+    from && to
+      ? `${new Date(from).toLocaleDateString("ru-RU", { day: "2-digit", month: "short" })} — ${new Date(
+          to,
+        ).toLocaleDateString("ru-RU", { day: "2-digit", month: "short" })}`
+      : null;
   const { isFavorite, toggleFavorite } = useFavorites();
   const fav = isFavorite(car.id);
   const status = fleetStatusMeta[car.status ?? "free"];
@@ -35,7 +41,7 @@ export function CarCard({
 
   return (
     <article className="group flex h-full flex-col overflow-hidden rounded-3xl border border-border bg-card transition hover:-translate-y-1 hover:shadow-lg md:hover:neon-glow">
-      <div className="relative aspect-[4/3] overflow-hidden bg-muted">
+      <div className="relative aspect-[16/10] overflow-hidden bg-muted md:aspect-[4/3]">
         <CarImage
           src={car.image}
           alt={`${car.brand} ${car.model}, ${car.color}`}
@@ -64,20 +70,20 @@ export function CarCard({
         </button>
       </div>
 
-      <div className="flex flex-1 flex-col p-5">
+      <div className="flex flex-1 flex-col p-3 md:p-5">
         <div className="flex items-baseline justify-between gap-2">
-          <h3 className="min-w-0 truncate font-display text-lg font-bold">
+          <h3 className="min-w-0 truncate font-display text-base font-bold md:text-lg">
             {car.brand} {car.model}
           </h3>
           <span className="shrink-0 text-xs text-muted-foreground">{car.year}</span>
         </div>
 
-        <p className="mt-1 inline-flex items-center gap-1 text-xs text-muted-foreground">
+        <p className="mt-1 hidden items-center gap-1 text-xs text-muted-foreground md:inline-flex">
           <Star className="h-3.5 w-3.5 fill-current text-[color:var(--neon-orange)]" />
           {car.rating.toFixed(1)} · {car.reviewsCount ?? 0} отзывов · {car.color}
         </p>
 
-        <dl className="mt-3 grid grid-cols-2 gap-2 text-xs text-muted-foreground">
+        <dl className="mt-3 hidden grid-cols-2 gap-2 text-xs text-muted-foreground md:grid">
           <div className="inline-flex items-center gap-1">
             <span className="font-semibold text-foreground">{car.engineVolume.toFixed(2)} л</span>{" "}
             двигатель
@@ -93,15 +99,19 @@ export function CarCard({
           </div>
         </dl>
 
-        <div className="mt-auto space-y-3 pt-5">
+        {dateLabel && (
+          <p className="mt-1 text-xs text-muted-foreground md:hidden">{dateLabel}</p>
+        )}
+
+        <div className="mt-auto space-y-2 pt-3 md:space-y-3 md:pt-5">
           <div>
             <span className="font-display text-xl font-black text-foreground md:text-[color:var(--neon-orange)]">
               {car.pricePerDay.toLocaleString("ru-RU")} ₽
             </span>
             <span className="ml-1 text-xs text-muted-foreground">/ сутки</span>
           </div>
-          <div className="grid grid-cols-2 gap-2">
-            <Button asChild variant="outline" size="sm">
+          <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
+            <Button asChild variant="outline" size="sm" className="hidden md:inline-flex">
               <Link to="/cars/$carId" params={{ carId: car.id }}>
                 Подробнее
               </Link>

@@ -296,6 +296,8 @@ export type CarInput = {
   vin?: string;
   image?: string;
   images?: string[];
+  /** Текущий пробег авто, км. */
+  mileage?: number;
 };
 
 const translit: Record<string, string> = {
@@ -384,8 +386,8 @@ export async function insertCar(input: CarInput): Promise<Car | null> {
   }
 
   const rows = await query<CarRow>(
-    `insert into cars (slug, brand, model, year, class, transmission, seats, price_city, price_out, status, images, images_managed, specs, plate)
-     values ($1,$2,$3,$4,'Econom',$5,$6,$7,$8,$9,$10::jsonb,$13,$11::jsonb,$12)
+    `insert into cars (slug, brand, model, year, class, transmission, seats, price_city, price_out, status, images, images_managed, specs, plate, mileage)
+     values ($1,$2,$3,$4,'Econom',$5,$6,$7,$8,$9,$10::jsonb,$13,$11::jsonb,$12,$14)
      returning id, slug, brand, model, year, class, transmission, seats, price_city, price_out, status, images, specs, plate, mileage`,
     [
       slug,
@@ -401,6 +403,7 @@ export async function insertCar(input: CarInput): Promise<Car | null> {
       JSON.stringify(specsFrom(input)),
       input.plate,
       inputImages(input).length > 0,
+      input.mileage ?? null,
     ],
   );
   return rows.length ? mapCarRow(rows[0], false) : null;
@@ -418,7 +421,8 @@ export async function updateCarInDb(slug: string, input: CarInput): Promise<Car 
   const rows = await query<CarRow>(
     `update cars set brand=$2, model=$3, year=$4, transmission=$5, seats=$6,
              price_city=$7, price_out=$8, status=$9, images=$10::jsonb, images_managed=true,
-            specs = coalesce(specs, '{}'::jsonb) || $11::jsonb, plate=$12
+            specs = coalesce(specs, '{}'::jsonb) || $11::jsonb, plate=$12,
+            mileage = coalesce($13::integer, mileage)
      where slug = $1 or id::text = $1
      returning id, slug, brand, model, year, class, transmission, seats, price_city, price_out, status, images, specs, plate, mileage`,
     [
@@ -434,6 +438,7 @@ export async function updateCarInDb(slug: string, input: CarInput): Promise<Car 
       JSON.stringify(images),
       JSON.stringify(specsFrom(input)),
       input.plate,
+      input.mileage ?? null,
     ],
   );
   return rows.length ? mapCarRow(rows[0], false) : null;

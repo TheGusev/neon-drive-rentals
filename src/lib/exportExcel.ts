@@ -3,7 +3,7 @@ import { payments } from "@/mocks/payments";
 import { getClientById } from "@/mocks/clients";
 import type { Car } from "@/types/domain";
 
-const methodLabel = { card: "Карта", sbp: "СБП" } as const;
+const methodLabel = { card: "Карта", sbp: "СБП", cash: "Наличные" } as const;
 const statusLabel = { success: "Успешно", pending: "Ожидает", refunded: "Возврат", failed: "Ошибка" } as const;
 
 export function exportPaymentsToExcel(getCarById: (id: string) => Car | undefined) {
