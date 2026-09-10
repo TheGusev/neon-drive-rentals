@@ -56,10 +56,9 @@ function DashboardPage() {
   const today = todayKey();
   const yesterday = yesterdayKey();
 
-  const bookingsToday = bookings.filter((b) => b.createdAt && dayKey(b.createdAt) === today).length;
-  const bookingsYesterday = bookings.filter(
-    (b) => b.createdAt && dayKey(b.createdAt) === yesterday,
-  ).length;
+  // Брони считаем по дате начала аренды — она есть у каждой записи.
+  const bookingsToday = bookings.filter((b) => dayKey(b.startDate) === today).length;
+  const bookingsYesterday = bookings.filter((b) => dayKey(b.startDate) === yesterday).length;
   const successToday = payments.filter((p) => p.status === "success" && dayKey(p.date) === today);
   const successYesterday = payments.filter(
     (p) => p.status === "success" && dayKey(p.date) === yesterday,
