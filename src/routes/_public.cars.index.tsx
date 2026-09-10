@@ -154,7 +154,7 @@ function CatalogPage() {
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Поиск по модели или цвету"
-              className="h-11 rounded-2xl pl-9"
+              className="h-11 w-full rounded-2xl pl-9"
             />
           </div>
 
