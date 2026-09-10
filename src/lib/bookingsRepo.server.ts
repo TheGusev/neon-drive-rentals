@@ -16,6 +16,8 @@ type BookingRow = {
   keys_issued_at?: Date | string | null;
   returned_at?: Date | string | null;
   handled_by?: string | null;
+  return_mileage?: number | string | null;
+  return_mileage_source?: string | null;
 };
 
 const BOOKING_STATUSES: BookingStatus[] = ["paid", "pending", "active", "completed", "cancelled"];
@@ -57,13 +59,20 @@ function mapBookingRow(row: BookingRow): Booking {
     keysIssuedAt: row.keys_issued_at ? iso(row.keys_issued_at) : undefined,
     returnedAt: row.returned_at ? iso(row.returned_at) : undefined,
     handledBy: row.handled_by ?? undefined,
+    ...(row.return_mileage === null || row.return_mileage === undefined
+      ? {}
+      : { returnMileage: Number(row.return_mileage) }),
+    ...(row.return_mileage_source === "client" || row.return_mileage_source === "admin"
+      ? { returnMileageSource: row.return_mileage_source }
+      : {}),
   };
 }
 
 const SELECT_BOOKINGS = `
   select b.id, b.car_id, c.slug as car_slug, b.client_id,
          b.date_from, b.date_to, b.total, b.status, b.signed_at,
-         b.keys_issued_at, b.returned_at, b.handled_by
+         b.keys_issued_at, b.returned_at, b.handled_by,
+         b.return_mileage, b.return_mileage_source
   from bookings b
   left join cars c on c.id = b.car_id
 `;
