@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { FileSpreadsheet, Wallet, TrendingUp, Hash } from "lucide-react";
+import { Banknote, FileSpreadsheet, Wallet, TrendingUp, Hash } from "lucide-react";
 import { PageHeader } from "@/components/admin/PageHeader";
 import { StatCard } from "@/components/admin/StatCard";
 import { AdminPaymentCard } from "@/components/admin/AdminPaymentCard";
@@ -48,6 +48,8 @@ function AdminFinancePage() {
   const success = payments.filter((p) => p.status === "success");
   const revenue = success.reduce((s, p) => s + p.amount, 0);
   const avg = success.length ? Math.round(revenue / success.length) : 0;
+  const cashRevenue = success.filter((p) => p.method === "cash").reduce((s, p) => s + p.amount, 0);
+  const onlineRevenue = revenue - cashRevenue;
 
   const handleExport = () => {
     try {
@@ -70,7 +72,7 @@ function AdminFinancePage() {
         }
       />
 
-      <div className="mb-6 grid w-full grid-cols-2 gap-3 lg:grid-cols-3">
+      <div className="mb-6 grid w-full grid-cols-2 gap-3 lg:grid-cols-4">
         <StatCard
           label="Всего платежей"
           value={String(payments.length)}
@@ -82,6 +84,12 @@ function AdminFinancePage() {
           value={`${revenue.toLocaleString("ru-RU")} ₽`}
           icon={Wallet}
           iconTone="bg-emerald-500/15 text-emerald-600 public-dark:text-emerald-400"
+        />
+        <StatCard
+          label="Онлайн / наличные"
+          value={`${onlineRevenue.toLocaleString("ru-RU")} / ${cashRevenue.toLocaleString("ru-RU")} ₽`}
+          icon={Banknote}
+          iconTone="bg-amber-500/15 text-amber-600 public-dark:text-amber-400"
         />
         <StatCard
           label="Средний чек"
