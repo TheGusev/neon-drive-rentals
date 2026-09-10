@@ -1,10 +1,11 @@
-import { CalendarDays, MapPin, Navigation, ShieldCheck } from "lucide-react";
+import { CalendarDays, Gauge, MapPin, Navigation, ShieldCheck } from "lucide-react";
 import { toast } from "sonner";
 import { SectionCard } from "@/components/checkout/SectionCard";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import type { Booking, Car } from "@/types/domain";
 import { CarImage } from "@/components/car/CarImage";
+import { MileageForm } from "./MileageForm";
 
 const fmt = (iso: string) =>
   new Date(iso).toLocaleDateString("ru-RU", {
@@ -29,8 +30,8 @@ export function CurrentRentalCard({ booking, car }: { booking: Booking; car: Car
   const cs = booking.contractStatus ?? "none";
   return (
     <SectionCard title="Текущая аренда" className="bg-card ring-1 ring-border">
-      <div className="flex gap-4">
-        <div className="h-20 w-28 flex-shrink-0 overflow-hidden rounded-2xl bg-muted">
+      <div className="flex gap-3">
+        <div className="h-16 w-24 flex-shrink-0 overflow-hidden rounded-xl bg-muted">
           <CarImage
             src={car.image}
             alt={`${car.brand} ${car.model}`}
@@ -39,7 +40,7 @@ export function CurrentRentalCard({ booking, car }: { booking: Booking; car: Car
         </div>
         <div className="min-w-0 flex-1">
           <div className="flex min-w-0 items-center gap-2">
-            <div className="truncate text-base font-semibold text-foreground">
+            <div className="truncate text-sm font-semibold text-foreground">
               {car.brand} {car.model}
             </div>
             <Badge className="shrink-0 border-0 bg-emerald-500/15 font-medium text-emerald-600 public-dark:text-emerald-400">
@@ -61,7 +62,7 @@ export function CurrentRentalCard({ booking, car }: { booking: Booking; car: Car
         </div>
       </div>
 
-      <div className="mt-4 space-y-2 rounded-2xl bg-muted p-3 text-sm">
+      <div className="mt-3 space-y-1.5 rounded-2xl bg-muted p-3 text-xs">
         <div className="flex items-start gap-2 text-foreground/80">
           <CalendarDays className="mt-0.5 h-4 w-4 text-muted-foreground" />
           <div>
@@ -95,10 +96,23 @@ export function CurrentRentalCard({ booking, car }: { booking: Booking; car: Car
         </div>
       </div>
 
+      {booking.returnMileage !== undefined && booking.returnMileage !== null ? (
+        <div className="mt-3 flex items-center justify-between rounded-2xl bg-muted px-3 py-2 text-xs text-foreground/80">
+          <span className="flex items-center gap-1.5">
+            <Gauge className="h-3.5 w-3.5 text-muted-foreground" /> Пробег при возврате
+          </span>
+          <span className="font-semibold text-foreground">
+            {booking.returnMileage.toLocaleString("ru-RU")} км
+          </span>
+        </div>
+      ) : (
+        booking.keysIssuedAt && <MileageForm bookingId={booking.id} />
+      )}
+
       <Button
         variant="accent"
-        size="xl"
-        className="mt-4 w-full"
+        size="lg"
+        className="mt-3 w-full"
         onClick={() => toast("Продление аренды скоро появится")}
       >
         Продлить аренду
