@@ -57,6 +57,23 @@ export async function fetchClientsAdmin(): Promise<AdminClient[]> {
   return rows.map(mapClient);
 }
 
+/** Создание клиента вручную из админки. */
+export async function insertClientAdmin(input: {
+  name: string;
+  phone: string;
+  email?: string | undefined;
+}): Promise<AdminClient | null> {
+  if (!(await ready())) return null;
+  const rows = await query<ClientRow>(
+    `insert into clients (name, phone, email)
+     values ($1, $2, $3)
+     returning id, name, phone, email, blocked, created_at,
+               0 as orders_count, null as last_booking_at, 0 as paid_total`,
+    [input.name, input.phone, input.email ?? null],
+  );
+  return rows.length ? mapClient(rows[0]) : null;
+}
+
 export async function setClientBlocked(id: string, blocked: boolean): Promise<boolean> {
   if (!(await ready())) return false;
   const rows = await query<{ id: string }>(

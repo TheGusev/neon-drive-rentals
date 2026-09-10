@@ -26,6 +26,8 @@ import type { Car, CarFleetStatus } from "@/types/domain";
 
 export const Route = createFileRoute("/_admin/admin/cars")({
   head: () => ({ meta: [{ title: "Автопарк — Панель управления" }] }),
+  // ?new=1 открывает форму добавления сразу (быстрое действие на дашборде).
+  validateSearch: (search: Record<string, unknown>) => ({ new: search['new'] === true || search['new'] === "true" || search['new'] === "1" }),
   component: AdminCarsPage,
 });
 
@@ -180,6 +182,15 @@ function AdminCarsPage() {
     setForm(emptyForm);
     setOpen(true);
   };
+
+  const { new: openNew } = Route.useSearch();
+  const navigate = Route.useNavigate();
+  useEffect(() => {
+    if (!openNew) return;
+    openCreate();
+    void navigate({ search: { new: false }, replace: true });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [openNew]);
 
   const openEdit = (car: Car) => {
     setEditing(car);

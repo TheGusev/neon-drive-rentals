@@ -1,25 +1,32 @@
 import * as XLSX from "xlsx";
-import { payments } from "@/mocks/payments";
-import { getClientById } from "@/mocks/clients";
-import type { Car } from "@/types/domain";
+import type { Car, Payment } from "@/types/domain";
 
 const methodLabel = { card: "Карта", sbp: "СБП", cash: "Наличные" } as const;
 const statusLabel = { success: "Успешно", pending: "Ожидает", refunded: "Возврат", failed: "Ошибка" } as const;
 
-export function exportPaymentsToExcel(getCarById: (id: string) => Car | undefined) {
+export type ExportablePayment = Payment & {
+  clientName?: string;
+  clientPhone?: string;
+  carName?: string;
+};
+
+/** Выгрузка реальных платежей из базы: онлайн и наличные с методом оплаты. */
+export function exportPaymentsToExcel(
+  payments: ExportablePayment[],
+  getCarById: (id: string) => Car | undefined,
+) {
   const rows = payments.map((p) => {
-    const client = getClientById(p.clientId);
     const car = getCarById(p.carId);
     return {
       "Дата": new Date(p.date).toLocaleString("ru-RU"),
       "№ брони": p.bookingId,
-      "Клиент": client?.name ?? p.clientId,
-      "Телефон": client?.phone ?? "",
-      "Автомобиль": car ? `${car.brand} ${car.model}` : p.carId,
+      "Клиент": p.clientName ?? p.clientId,
+      "Телефон": p.clientPhone ?? "",
+      "Автомобиль": car ? `${car.brand} ${car.model}` : (p.carName ?? p.carId),
       "Госномер": car?.plate ?? "",
       "Сумма, ₽": p.amount,
-      "Метод": methodLabel[p.method],
-      "Статус": statusLabel[p.status],
+      "Способ оплаты": methodLabel[p.method] ?? p.method,
+      "Статус": statusLabel[p.status] ?? p.status,
     };
   });
 
