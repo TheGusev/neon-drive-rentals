@@ -232,7 +232,9 @@ export async function fetchBookingsAdmin(filters?: {
     }
   >(
     `select b.id, b.car_id, c.slug as car_slug, b.client_id, b.date_from, b.date_to, b.total, b.status,
-            b.signed_at, b.keys_issued_at, b.returned_at, b.handled_by, cl.name as client_name, cl.phone as client_phone,
+            b.signed_at, b.keys_issued_at, b.returned_at, b.handled_by,
+            b.return_mileage, b.return_mileage_source,
+            cl.name as client_name, cl.phone as client_phone,
             cl.email as client_email, c.brand, c.model, c.plate
      from bookings b
      left join cars c on c.id = b.car_id
