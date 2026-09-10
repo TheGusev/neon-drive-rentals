@@ -19,6 +19,7 @@ type CarRow = {
   images: unknown;
   specs: unknown;
   plate: string | null;
+  mileage?: number | string | null;
 };
 
 const num = (value: unknown, fallback: number): number => {
@@ -202,6 +203,7 @@ export function mapCarRow(row: CarRow, useStableFallback = true): Car {
     fuelPolicy: str(specs["fuelPolicy"], "полный → полный"),
     vin: typeof specs["vin"] === "string" ? (specs["vin"] as string) : undefined,
     plate: str(row.plate, ""),
+    ...(row.mileage === null || row.mileage === undefined ? {} : { mileage: Number(row.mileage) }),
     status: normalizeFleetStatus(row.status),
     bookedDates: [],
   };
@@ -209,7 +211,7 @@ export function mapCarRow(row: CarRow, useStableFallback = true): Car {
 
 const SELECT_CARS = `
   select id, slug, brand, model, year, class, transmission, seats,
-         price_city, price_out, status, images, specs, plate
+         price_city, price_out, status, images, specs, plate, mileage
   from cars
 `;
 
@@ -384,7 +386,7 @@ export async function insertCar(input: CarInput): Promise<Car | null> {
   const rows = await query<CarRow>(
     `insert into cars (slug, brand, model, year, class, transmission, seats, price_city, price_out, status, images, images_managed, specs, plate)
      values ($1,$2,$3,$4,'Econom',$5,$6,$7,$8,$9,$10::jsonb,$13,$11::jsonb,$12)
-     returning id, slug, brand, model, year, class, transmission, seats, price_city, price_out, status, images, specs, plate`,
+     returning id, slug, brand, model, year, class, transmission, seats, price_city, price_out, status, images, specs, plate, mileage`,
     [
       slug,
       input.brand,
@@ -418,7 +420,7 @@ export async function updateCarInDb(slug: string, input: CarInput): Promise<Car 
              price_city=$7, price_out=$8, status=$9, images=$10::jsonb, images_managed=true,
             specs = coalesce(specs, '{}'::jsonb) || $11::jsonb, plate=$12
      where slug = $1 or id::text = $1
-     returning id, slug, brand, model, year, class, transmission, seats, price_city, price_out, status, images, specs, plate`,
+     returning id, slug, brand, model, year, class, transmission, seats, price_city, price_out, status, images, specs, plate, mileage`,
     [
       slug,
       input.brand,
@@ -444,7 +446,7 @@ export async function updateCarStatusInDb(
   if (!(await ready())) return null;
   const rows = await query<CarRow>(
     `update cars set status = $2 where slug = $1 or id::text = $1
-     returning id, slug, brand, model, year, class, transmission, seats, price_city, price_out, status, images, specs, plate`,
+     returning id, slug, brand, model, year, class, transmission, seats, price_city, price_out, status, images, specs, plate, mileage`,
     [slug, toDbFleetStatus(status)],
   );
   return rows.length ? mapCarRow(rows[0], false) : null;
@@ -490,7 +492,7 @@ export async function updateCarImagesInDb(slug: string, images: string[]): Promi
   if (!(await ready())) return null;
   const rows = await query<CarRow>(
     `update cars set images = $2::jsonb, images_managed=true where slug = $1 or id::text = $1
-     returning id, slug, brand, model, year, class, transmission, seats, price_city, price_out, status, images, specs, plate`,
+     returning id, slug, brand, model, year, class, transmission, seats, price_city, price_out, status, images, specs, plate, mileage`,
     [slug, JSON.stringify(images)],
   );
   return rows.length ? mapCarRow(rows[0], false) : null;
