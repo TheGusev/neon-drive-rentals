@@ -1,5 +1,5 @@
 import { useNavigate } from "@tanstack/react-router";
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { CalendarRange } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { adminBookingRowsQueryOptions } from "@/lib/queries";
@@ -40,7 +40,7 @@ const toInput = (d: Date) => d.toISOString().slice(0, 10);
 /** Занятость авто: список броней «с какого по какое» и свободные окна. */
 export function CarAvailabilityPanel({ car }: { car: Car }) {
   const navigate = useNavigate();
-  const { data: bookings } = useSuspenseQuery(adminBookingRowsQueryOptions());
+  const { data: bookings = [] } = useQuery(adminBookingRowsQueryOptions());
 
   const busy = bookings
     .filter(
