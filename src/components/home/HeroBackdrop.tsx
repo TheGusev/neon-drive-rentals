@@ -7,8 +7,9 @@ import { useReducedMotion } from "@/hooks/useReducedMotion";
  * интернета: первый кадр ~44 КБ вместо ~140 КБ.
  */
 const frames = [
-  "/assets/cars/hero-drive.webp",
+  // Первый кадр — фиолетовый неоновый тоннель: именно он виден при открытии сайта.
   "/assets/cars/hero-tunnel.webp",
+  "/assets/cars/hero-drive.webp",
   "/assets/cars/hero-garage.webp",
 ];
 
