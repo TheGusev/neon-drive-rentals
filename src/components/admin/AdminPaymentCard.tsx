@@ -1,10 +1,10 @@
-import { CreditCard, RotateCcw, Smartphone } from "lucide-react";
+import { Banknote, CreditCard, RotateCcw, Smartphone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { EntityCard } from "@/components/admin/EntityCard";
 import type { Car, Client, Payment } from "@/types/domain";
 
-const methodLabel = { card: "Карта", sbp: "СБП" } as const;
+const methodLabel = { card: "Карта", sbp: "СБП", cash: "Наличные" } as const;
 const statusMap: Record<Payment["status"], { label: string; cls: string }> = {
   success: { label: "Успешно", cls: "bg-emerald-500/15 text-emerald-500" },
   pending: { label: "Ожидает", cls: "bg-amber-500/15 text-amber-500" },
@@ -32,7 +32,8 @@ interface Props {
 
 export function AdminPaymentCard({ payment, car, client, index, onRefund, refunding }: Props) {
   const s = statusMap[payment.status];
-  const Icon = payment.method === "sbp" ? Smartphone : CreditCard;
+  const Icon =
+    payment.method === "sbp" ? Smartphone : payment.method === "cash" ? Banknote : CreditCard;
 
   return (
     <EntityCard index={index}>

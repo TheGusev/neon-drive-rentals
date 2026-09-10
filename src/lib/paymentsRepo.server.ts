@@ -36,7 +36,7 @@ function mapPayment(row: PaymentRow): AdminPayment {
     clientId: String(row.client_id ?? ""),
     carId: String(row.car_slug ?? ""),
     amount: Number(row.amount ?? 0),
-    method: "card",
+    method: String(row.provider ?? "").toLowerCase() === "cash" ? "cash" : "card",
     status: mapStatus(row.status),
     clientName: row.client_name?.trim() || "Клиент",
     clientPhone: row.client_phone ?? "",

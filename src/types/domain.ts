@@ -39,7 +39,7 @@ export type CarFleetStatus = "free" | "busy" | "maintenance";
 
 export type BookingStatus = "paid" | "pending" | "active" | "completed" | "cancelled";
 export type BookingTariff = "city" | "region" | "outside";
-export type PaymentMethod = "card" | "sbp";
+export type PaymentMethod = "card" | "sbp" | "cash";
 export type ContractStatus = "signed" | "pending" | "none";
 
 export type DocumentType = "passport" | "license";
