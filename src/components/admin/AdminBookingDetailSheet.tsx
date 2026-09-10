@@ -1,4 +1,5 @@
-import { CalendarDays, KeyRound, Phone, Mail, MapPin, Trash2, User } from "lucide-react";
+import { useState } from "react";
+import { CalendarDays, Gauge, KeyRound, Phone, Mail, MapPin, Trash2, User } from "lucide-react";
 import {
   Sheet,
   SheetContent,
@@ -18,6 +19,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { CarImage } from "@/components/car/CarImage";
 import type { AdminBookingRow } from "@/types/domain";
@@ -62,7 +64,8 @@ interface Props {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onIssueKeys: () => void;
-  onAcceptReturn: () => void;
+  onAcceptReturn: (mileage?: number) => void;
+  onSaveMileage: (mileage: number) => void;
   onStatusChange: (status: BookingStatus) => void;
   onDelete: () => void;
   pending?: boolean;
@@ -75,11 +78,15 @@ export function AdminBookingDetailSheet({
   onOpenChange,
   onIssueKeys,
   onAcceptReturn,
+  onSaveMileage,
   onStatusChange,
   onDelete,
   pending,
 }: Props) {
+  const [mileage, setMileage] = useState("");
   if (!booking) return null;
+  const mileageValue = Number(mileage.replace(/\D/g, ""));
+  const mileageValid = Number.isFinite(mileageValue) && mileageValue > 0;
   const journey = [
     { label: "Оплата", at: ["paid", "active", "completed"].includes(booking.status) ? "Подтверждена" : "Ожидается" },
     { label: "Договор", at: booking.signedAt ? fmtDateTime(booking.signedAt) : "Не подписан" },
@@ -173,6 +180,41 @@ export function AdminBookingDetailSheet({
           {booking.handledBy && <Row label="Ответственный" value={booking.handledBy} />}
         </section>
 
+        <section className="mt-5">
+          <h3 className="mb-1 flex items-center gap-2 text-sm font-semibold">
+            <Gauge className="h-4 w-4 text-muted-foreground" /> Пробег
+          </h3>
+          <Row
+            label="Показания одометра"
+            value={
+              booking.returnMileage !== undefined && booking.returnMileage !== null
+                ? `${booking.returnMileage.toLocaleString("ru-RU")} км${
+                    booking.returnMileageSource === "client" ? " (от клиента)" : ""
+                  }`
+                : "Не внесён"
+            }
+          />
+          <div className="mt-2 flex gap-2">
+            <Input
+              inputMode="numeric"
+              placeholder="Пробег при возврате, км"
+              value={mileage}
+              onChange={(e) => setMileage(e.target.value)}
+            />
+            <Button
+              variant="outline"
+              className="shrink-0"
+              disabled={!mileageValid || pending}
+              onClick={() => {
+                onSaveMileage(mileageValue);
+                setMileage("");
+              }}
+            >
+              Сохранить
+            </Button>
+          </div>
+        </section>
+
         <div className="mt-6 grid gap-2">
           {!booking.keysIssuedAt && (
             <Button onClick={onIssueKeys} disabled={pending}>
@@ -180,7 +222,13 @@ export function AdminBookingDetailSheet({
             </Button>
           )}
           {booking.keysIssuedAt && !booking.returnedAt && (
-            <Button onClick={onAcceptReturn} disabled={pending}>
+            <Button
+              onClick={() => {
+                onAcceptReturn(mileageValid ? mileageValue : undefined);
+                setMileage("");
+              }}
+              disabled={pending}
+            >
               Принять возврат
             </Button>
           )}

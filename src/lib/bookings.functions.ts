@@ -110,14 +110,52 @@ export const issueKeys = createServerFn({ method: "POST" })
     return { ok: Boolean(booking), booking };
   });
 
-/** Админ принимает возврат авто — аренда завершается. */
+const returnSchema = journeySchema.extend({
+  mileage: z.number().int().min(0).max(3_000_000).optional(),
+});
+
+/** Админ принимает возврат авто — аренда завершается, пробег фиксируется. */
 export const acceptReturn = createServerFn({ method: "POST" })
-  .inputValidator((data: unknown) => journeySchema.parse(data))
+  .inputValidator((data: unknown) => returnSchema.parse(data))
   .handler(async ({ data }): Promise<{ ok: boolean; booking: Booking | null }> => {
     const { requireAdmin } = await import("@/lib/adminGuard.server");
     await requireAdmin();
     const { markReturned } = await import("@/lib/bookingsRepo.server");
-    const booking = await markReturned(data.id, data.manager?.trim() || "Менеджер NSK-RENT");
+    const booking = await markReturned(
+      data.id,
+      data.manager?.trim() || "Менеджер NSK-RENT",
+      data.mileage,
+    );
+    return { ok: Boolean(booking), booking };
+  });
+
+const mileageSchema = z.object({
+  id: z.string().min(1).max(100),
+  mileage: z.number().int().min(0).max(3_000_000),
+});
+
+/** Клиент вносит показания одометра при завершении аренды (один раз). */
+export const submitReturnMileage = createServerFn({ method: "POST" })
+  .inputValidator((data: unknown) => mileageSchema.parse(data))
+  .handler(async ({ data }) => {
+    const { getClientSession } = await import("@/lib/clientSession.server");
+    const session = await getClientSession();
+    if (!session.phone) return { ok: false as const, reason: "unauthorized" as const };
+    const { submitClientMileage } = await import("@/lib/bookingsRepo.server");
+    const result = await submitClientMileage(data.id, session.phone, data.mileage);
+    return result.ok
+      ? { ok: true as const }
+      : { ok: false as const, reason: result.reason ?? ("not_found" as const) };
+  });
+
+/** Админ вносит или исправляет пробег по брони. */
+export const setBookingMileage = createServerFn({ method: "POST" })
+  .inputValidator((data: unknown) => mileageSchema.parse(data))
+  .handler(async ({ data }): Promise<{ ok: boolean; booking: Booking | null }> => {
+    const { requireAdmin } = await import("@/lib/adminGuard.server");
+    await requireAdmin();
+    const { setAdminMileage } = await import("@/lib/bookingsRepo.server");
+    const booking = await setAdminMileage(data.id, data.mileage);
     return { ok: Boolean(booking), booking };
   });
 
