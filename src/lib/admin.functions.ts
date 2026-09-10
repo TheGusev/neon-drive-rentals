@@ -132,6 +132,35 @@ export const getClientsAdmin = createServerFn({ method: "GET" }).handler(async (
   return fetchClientsAdmin();
 });
 
+export const createClientAdmin = createServerFn({ method: "POST" })
+  .inputValidator((data: unknown) =>
+    z
+      .object({
+        name: z.string().min(2).max(120),
+        phone: z.string().min(6).max(30),
+        email: z.string().email().max(160).optional().or(z.literal("")),
+      })
+      .parse(data),
+  )
+  .handler(async ({ data }) => {
+    const { requireAdmin } = await import("@/lib/adminGuard.server");
+    await requireAdmin();
+    const { hasDatabase } = await import("@/lib/db.server");
+    if (!hasDatabase()) return { ok: false as const, error: "База данных не настроена" };
+    const { insertClientAdmin } = await import("@/lib/clientsRepo.server");
+    try {
+      const client = await insertClientAdmin({
+        name: data.name.trim(),
+        phone: data.phone.trim(),
+        email: data.email ? data.email.trim() : undefined,
+      });
+      return client ? { ok: true as const, client } : { ok: false as const, error: "Клиент не был создан" };
+    } catch (error) {
+      console.error("[admin] create client failed", error);
+      return { ok: false as const, error: "Ошибка записи клиента в базу" };
+    }
+  });
+
 export const toggleClientBlock = createServerFn({ method: "POST" })
   .inputValidator((data: unknown) => z.object({ id: z.string().min(1).max(80), blocked: z.boolean() }).parse(data))
   .handler(async ({ data }) => {
