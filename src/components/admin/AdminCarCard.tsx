@@ -85,6 +85,13 @@ export function AdminCarCard({ car, index, onEdit, onDelete }: Props) {
               <Users className="h-3.5 w-3.5 shrink-0" />
               <span className="truncate">{car.seats ?? 4} мест</span>
             </span>
+            <span className="col-span-2 flex min-w-0 items-center gap-1">
+              <Gauge className="h-3.5 w-3.5 shrink-0" />
+              <span className="truncate">
+                Пробег:{" "}
+                {car.mileage ? `${car.mileage.toLocaleString("ru-RU")} км` : "не указан"}
+              </span>
+            </span>
           </div>
         </div>
       </div>
