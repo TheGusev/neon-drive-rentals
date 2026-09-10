@@ -430,19 +430,80 @@ export async function markKeysIssued(id: string, manager: string): Promise<Booki
   return fetchBookingById(id);
 }
 
-/** Приём возврата: бронь завершается, авто освобождается. */
-export async function markReturned(id: string, manager: string): Promise<Booking | null> {
+/** Приём возврата: бронь завершается, авто освобождается, пробег фиксируется. */
+export async function markReturned(
+  id: string,
+  manager: string,
+  mileage?: number,
+): Promise<Booking | null> {
   if (!hasDatabase()) return fetchBookingById(id);
   const rows = await query<{ id: string; car_id: string }>(
     `update bookings
         set returned_at = coalesce(returned_at, now()),
             handled_by = $2,
+            return_mileage = coalesce($3::integer, return_mileage),
+            return_mileage_source = case when $3::integer is null
+                                         then return_mileage_source else 'admin' end,
             status = 'completed'
       where id::text = $1
       returning id, car_id`,
-    [id, manager],
+    [id, manager, mileage ?? null],
   );
   if (!rows.length) return null;
   await syncCarStatus(String(rows[0].car_id));
+  await syncCarMileage(String(rows[0].car_id), id);
   return fetchBookingById(id);
+}
+
+/** Переносит зафиксированный пробег брони в карточку авто (только вверх). */
+async function syncCarMileage(carDbId: string, bookingId: string): Promise<void> {
+  await query(
+    `update cars c
+        set mileage = b.return_mileage
+       from bookings b
+      where b.id::text = $2
+        and c.id = $1
+        and b.return_mileage is not null
+        and (c.mileage is null or c.mileage < b.return_mileage)`,
+    [carDbId, bookingId],
+  ).catch(() => undefined);
+}
+
+/** Клиент вносит показания одометра — один раз, только для своей брони. */
+export async function submitClientMileage(
+  bookingId: string,
+  phone: string,
+  mileage: number,
+): Promise<{ ok: boolean; reason?: "not_found" | "already_set" }> {
+  if (!hasDatabase()) return { ok: false, reason: "not_found" };
+  const rows = await query<{ id: string; return_mileage: number | null }>(
+    `select b.id, b.return_mileage
+       from bookings b join clients cl on cl.id = b.client_id
+      where b.id::text = $1
+        and regexp_replace(cl.phone, '\\D', '', 'g') = regexp_replace($2, '\\D', '', 'g')
+      limit 1`,
+    [bookingId, phone],
+  );
+  if (!rows.length) return { ok: false, reason: "not_found" };
+  if (rows[0].return_mileage !== null && rows[0].return_mileage !== undefined) {
+    return { ok: false, reason: "already_set" };
+  }
+  await query(
+    `update bookings set return_mileage = $2, return_mileage_source = 'client' where id::text = $1`,
+    [bookingId, mileage],
+  );
+  return { ok: true };
+}
+
+/** Администратор вносит или исправляет пробег. */
+export async function setAdminMileage(bookingId: string, mileage: number): Promise<Booking | null> {
+  if (!hasDatabase()) return null;
+  const rows = await query<{ id: string; car_id: string }>(
+    `update bookings set return_mileage = $2, return_mileage_source = 'admin'
+      where id::text = $1 returning id, car_id`,
+    [bookingId, mileage],
+  );
+  if (!rows.length) return null;
+  await syncCarMileage(String(rows[0].car_id), bookingId);
+  return fetchBookingById(bookingId);
 }
