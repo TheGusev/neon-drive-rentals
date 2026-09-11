@@ -1,6 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
-import { Ban } from "lucide-react";
+import { Ban, UserPlus } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { NewClientDialog } from "@/components/admin/NewClientDialog";
 import { toast } from "sonner";
 import { PageHeader } from "@/components/admin/PageHeader";
 import { AdminClientCard } from "@/components/admin/AdminClientCard";
@@ -53,6 +55,15 @@ function AdminClientsPage() {
       <PageHeader
         title="Клиенты"
         description="CRM: контакты, история и чёрный список"
+        actions={
+          <NewClientDialog
+            trigger={
+              <Button>
+                <UserPlus className="mr-2 h-4 w-4" /> Новый клиент
+              </Button>
+            }
+          />
+        }
       />
 
       <AdminDocumentsPanel />

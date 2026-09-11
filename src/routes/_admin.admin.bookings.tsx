@@ -192,6 +192,8 @@ function AdminBookingsPage() {
               onIssueKeys={() => journeyMutation.mutate({ id: b.id, action: "keys" })}
               onAcceptReturn={() => journeyMutation.mutate({ id: b.id, action: "return" })}
               journeyPending={journeyMutation.isPending}
+              onCashPayment={(amount) => cashMutation.mutate({ bookingId: b.id, amount })}
+              cashPending={cashMutation.isPending}
             />
           ))}
         </EntityGrid>
