@@ -1,6 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
-import { Ban } from "lucide-react";
+import { Ban, UserPlus } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { NewClientDialog } from "@/components/admin/NewClientDialog";
 import { toast } from "sonner";
 import { PageHeader } from "@/components/admin/PageHeader";
 import { AdminClientCard } from "@/components/admin/AdminClientCard";
