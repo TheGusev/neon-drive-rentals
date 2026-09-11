@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useId, useMemo, useState, type ReactNode } from "react";
+import { useEffect, useId, useMemo, useState, type ReactNode } from "react";
 import { Plus, Search } from "lucide-react";
 import { toast } from "sonner";
 import { useMutation, useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
@@ -27,7 +27,8 @@ import type { Car, CarFleetStatus } from "@/types/domain";
 export const Route = createFileRoute("/_admin/admin/cars")({
   head: () => ({ meta: [{ title: "Автопарк — Панель управления" }] }),
   // ?new=1 открывает форму добавления сразу (быстрое действие на дашборде).
-  validateSearch: (search: Record<string, unknown>) => ({ new: search['new'] === true || search['new'] === "true" || search['new'] === "1" }),
+  validateSearch: (search: Record<string, unknown>): { new?: boolean } =>
+    search['new'] === true || search['new'] === "true" || search['new'] === "1" ? { new: true } : {},
   component: AdminCarsPage,
 });
 
