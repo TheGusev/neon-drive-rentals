@@ -53,6 +53,15 @@ function AdminClientsPage() {
       <PageHeader
         title="Клиенты"
         description="CRM: контакты, история и чёрный список"
+        actions={
+          <NewClientDialog
+            trigger={
+              <Button>
+                <UserPlus className="mr-2 h-4 w-4" /> Новый клиент
+              </Button>
+            }
+          />
+        }
       />
 
       <AdminDocumentsPanel />
