@@ -20,6 +20,9 @@ interface Props {
   onIssueKeys?: () => void;
   onAcceptReturn?: () => void;
   journeyPending?: boolean;
+  /** Приём оплаты наличными прямо из списка броней. */
+  onCashPayment?: (amount: number) => void;
+  cashPending?: boolean;
 }
 
 const NEXT_STATUS: Partial<Record<BookingStatus, { label: string; value: BookingStatus }>> = {
@@ -66,6 +69,8 @@ export function AdminBookingCard({
   onIssueKeys,
   onAcceptReturn,
   journeyPending,
+  onCashPayment,
+  cashPending,
 }: Props) {
   const next = NEXT_STATUS[booking.status];
   return (
