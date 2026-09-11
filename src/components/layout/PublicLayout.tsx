@@ -10,6 +10,7 @@ import { ThemeProvider, useTheme } from "./ThemeProvider";
 import { SiteFooter } from "./SiteFooter";
 import { CONTACTS, LEGAL } from "@/lib/contacts";
 import { FavoritesProvider } from "@/state/FavoritesContext";
+import { ProfileThemeProvider, useProfileThemeContext } from "@/hooks/useProfileTheme";
 
 const nav = [
   { to: "/", label: "Главная" },
@@ -31,9 +32,11 @@ const mobileNav = [
 export function PublicLayout() {
   return (
     <ThemeProvider fixed="dark">
-      <FavoritesProvider>
-        <PublicShell />
-      </FavoritesProvider>
+      <ProfileThemeProvider>
+        <FavoritesProvider>
+          <PublicShell />
+        </FavoritesProvider>
+      </ProfileThemeProvider>
     </ThemeProvider>
   );
 }
@@ -41,7 +44,11 @@ export function PublicLayout() {
 function PublicShell() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const [open, setOpen] = useState(false);
-  const { themeClass } = useTheme();
+  const { themeClass: publicThemeClass } = useTheme();
+  const { themeClass: profileThemeClass } = useProfileThemeContext();
+  // В кабинете шапка, подвал и фон красятся выбранной темой кабинета.
+  const isProfile = pathname.startsWith("/profile");
+  const themeClass = isProfile ? profileThemeClass : publicThemeClass;
   const sessionStatus = useServerFn(getClientSessionStatus);
   const { data: me } = useQuery({
     queryKey: ["me"],

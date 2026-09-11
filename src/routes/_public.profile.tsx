@@ -13,7 +13,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { Link } from "@tanstack/react-router";
 import { LogIn, LogOut, Moon, Sun } from "lucide-react";
-import { useProfileTheme } from "@/hooks/useProfileTheme";
+import { useProfileThemeContext } from "@/hooks/useProfileTheme";
 import { Button } from "@/components/ui/button";
 import { myBookingsQueryOptions, myProfileQueryOptions, myReviewsQueryOptions } from "@/lib/queries";
 import { clientLogout } from "@/lib/auth.functions";
@@ -33,7 +33,7 @@ export const Route = createFileRoute("/_public/profile")({
 });
 
 function ProfilePage() {
-  const { theme, toggle, themeClass } = useProfileTheme();
+  const { theme, toggle } = useProfileThemeContext();
   const getCarById = useCarLookup();
   const queryClient = useQueryClient();
   const logout = useServerFn(clientLogout);
