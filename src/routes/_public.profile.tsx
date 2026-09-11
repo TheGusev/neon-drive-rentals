@@ -53,7 +53,7 @@ function ProfilePage() {
 
   if (!isLoading && !authenticated) {
     return (
-      <div className={`${themeClass} min-h-screen bg-background text-foreground`}>
+      <div className="min-h-[60vh]">
         <div className="mx-auto max-w-md px-4 pb-28 pt-16 text-center">
           <h1 className="text-2xl font-semibold tracking-tight">Личный кабинет</h1>
           <p className="mt-2 text-sm text-muted-foreground">
@@ -71,7 +71,7 @@ function ProfilePage() {
   }
 
   return (
-    <div className={`${themeClass} min-h-screen bg-background text-foreground`}>
+    <div className="min-h-[60vh]">
       <div className="mx-auto max-w-md px-4 pb-28 pt-4 md:max-w-2xl md:pb-10">
         <div className="mb-3 flex justify-end">
           <button
