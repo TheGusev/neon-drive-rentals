@@ -1,4 +1,4 @@
-import { Eye, CalendarDays } from "lucide-react";
+import { Eye, CalendarDays, Banknote } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { EntityCard } from "@/components/admin/EntityCard";
 import { PaymentStatusBadge } from "@/components/admin/PaymentStatusBadge";
@@ -196,6 +196,29 @@ export function AdminBookingCard({
               Отменить
             </Button>
           )}
+        </div>
+      )}
+      {onCashPayment && booking.status === "pending" && (
+        <div className="mt-2">
+          <Button
+            size="sm"
+            variant="outline"
+            className="w-full"
+            disabled={cashPending}
+            onClick={(e) => {
+              e.stopPropagation();
+              const raw = window.prompt(
+                "Сумма, полученная наличными (₽)",
+                String(booking.totalPrice),
+              );
+              if (raw === null) return;
+              const amount = Number(raw.replace(/\s/g, "").replace(",", "."));
+              if (!Number.isFinite(amount) || amount <= 0) return;
+              onCashPayment(Math.round(amount));
+            }}
+          >
+            <Banknote className="mr-2 h-4 w-4" /> Принять наличные
+          </Button>
         </div>
       )}
     </EntityCard>
