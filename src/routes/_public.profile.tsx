@@ -8,12 +8,12 @@ import { ReviewsBlock } from "@/components/profile/ReviewsBlock";
 import { RentalJourney } from "@/components/profile/RentalJourney";
 import { ReviewForm } from "@/components/profile/ReviewForm";
 import { BottomNav } from "@/components/profile/BottomNav";
+import { MessagesBlock } from "@/components/profile/MessagesBlock";
 import { SectionCard } from "@/components/checkout/SectionCard";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { Link } from "@tanstack/react-router";
-import { LogIn, LogOut, Moon, Sun } from "lucide-react";
-import { useProfileThemeContext } from "@/hooks/useProfileTheme";
+import { LogIn, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { myBookingsQueryOptions, myProfileQueryOptions, myReviewsQueryOptions } from "@/lib/queries";
 import { clientLogout } from "@/lib/auth.functions";
@@ -33,7 +33,6 @@ export const Route = createFileRoute("/_public/profile")({
 });
 
 function ProfilePage() {
-  const { theme, toggle } = useProfileThemeContext();
   const getCarById = useCarLookup();
   const queryClient = useQueryClient();
   const logout = useServerFn(clientLogout);
@@ -73,16 +72,7 @@ function ProfilePage() {
   return (
     <div className="min-h-[60vh]">
       <div className="mx-auto max-w-md px-4 pb-28 pt-4 md:max-w-2xl md:pb-10">
-        <div className="mb-3 flex justify-end">
-          <button
-            type="button"
-            onClick={toggle}
-            aria-label="Переключить тему кабинета"
-            className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-muted text-muted-foreground transition hover:text-foreground"
-          >
-            {theme === "light" ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
-          </button>
-        </div>
+        <div id="profile-top" className="scroll-mt-24" />
         <ProfileHeader name={profile?.name} rating={profile?.rating ?? 0} reviewsCount={profile?.reviewsCount ?? 0} />
 
         <div className="mt-4 space-y-3">
@@ -108,7 +98,13 @@ function ProfilePage() {
             />
           )}
 
-          <DocumentsBlock documents={profileData?.documents ?? []} />
+          <section id="messages" className="scroll-mt-24">
+            <MessagesBlock />
+          </section>
+
+          <section id="documents" className="scroll-mt-24">
+            <DocumentsBlock documents={profileData?.documents ?? []} />
+          </section>
 
           <FavoritesBlock />
 
