@@ -131,12 +131,12 @@ function CatalogPage() {
       },
     });
   };
-  const { theme, toggle, themeClass } = useProfileTheme("nsk-rent-catalog-theme");
+  const { theme, toggle } = useCatalogTheme();
   const bookingFrom = filters.pickup?.toISOString();
   const bookingTo = filters.ret?.toISOString();
 
   return (
-    <div className={`${themeClass} space-y-6 bg-background text-foreground md:!bg-transparent`}>
+    <div className="space-y-6 text-foreground">
       <Breadcrumbs items={[{ name: "Главная", to: "/" }, { name: "Автопарк" }]} />
       <header className="space-y-4">
         <div>

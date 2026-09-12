@@ -10,7 +10,7 @@ import { ThemeProvider, useTheme } from "./ThemeProvider";
 import { SiteFooter } from "./SiteFooter";
 import { CONTACTS, LEGAL } from "@/lib/contacts";
 import { FavoritesProvider } from "@/state/FavoritesContext";
-import { ProfileThemeProvider, useProfileThemeContext } from "@/hooks/useProfileTheme";
+import { CatalogThemeProvider, useCatalogTheme } from "@/hooks/useProfileTheme";
 
 const nav = [
   { to: "/", label: "Главная" },
@@ -32,11 +32,11 @@ const mobileNav = [
 export function PublicLayout() {
   return (
     <ThemeProvider fixed="dark">
-      <ProfileThemeProvider>
+      <CatalogThemeProvider>
         <FavoritesProvider>
           <PublicShell />
         </FavoritesProvider>
-      </ProfileThemeProvider>
+      </CatalogThemeProvider>
     </ThemeProvider>
   );
 }
@@ -45,10 +45,11 @@ function PublicShell() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const [open, setOpen] = useState(false);
   const { themeClass: publicThemeClass } = useTheme();
-  const { themeClass: profileThemeClass } = useProfileThemeContext();
-  // В кабинете шапка, подвал и фон красятся выбранной темой кабинета.
+  const { themeClass: catalogThemeClass } = useCatalogTheme();
+  // Кабинет всегда светлый, каталог — по выбору, остальное тёмное.
   const isProfile = pathname.startsWith("/profile");
-  const themeClass = isProfile ? profileThemeClass : publicThemeClass;
+  const isCatalog = pathname === "/cars";
+  const themeClass = isProfile ? "clean-light" : isCatalog ? catalogThemeClass : publicThemeClass;
   const sessionStatus = useServerFn(getClientSessionStatus);
   const { data: me } = useQuery({
     queryKey: ["me"],
