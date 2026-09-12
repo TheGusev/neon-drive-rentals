@@ -1,21 +1,21 @@
 import { createContext, createElement, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
 
-export type ProfileTheme = "light" | "dark";
+export type SurfaceTheme = "light" | "dark";
 
-const DEFAULT_KEY = "nsk-rent-profile-theme";
+const CATALOG_KEY = "nsk-rent-catalog-theme";
 
-type ProfileThemeValue = {
-  theme: ProfileTheme;
+type SurfaceThemeValue = {
+  theme: SurfaceTheme;
   toggle: () => void;
   themeClass: string;
 };
 
 /**
- * Тема личного кабинета живёт отдельно от публичной (та всегда тёмная):
- * по умолчанию светлая, как в админке, выбор запоминается в браузере.
+ * Тема отдельной поверхности сайта (каталог). Кабинет всегда светлый,
+ * публичные страницы — тёмные, поэтому переключатель живёт только здесь.
  */
-export function useProfileTheme(storageKey: string = DEFAULT_KEY): ProfileThemeValue {
-  const [theme, setTheme] = useState<ProfileTheme>("light");
+export function useSurfaceTheme(storageKey: string): SurfaceThemeValue {
+  const [theme, setTheme] = useState<SurfaceTheme>("dark");
 
   useEffect(() => {
     const stored = window.localStorage.getItem(storageKey);
@@ -24,7 +24,7 @@ export function useProfileTheme(storageKey: string = DEFAULT_KEY): ProfileThemeV
 
   const toggle = useCallback(() => {
     setTheme((prev) => {
-      const next: ProfileTheme = prev === "light" ? "dark" : "light";
+      const next: SurfaceTheme = prev === "light" ? "dark" : "light";
       window.localStorage.setItem(storageKey, next);
       return next;
     });
@@ -36,17 +36,16 @@ export function useProfileTheme(storageKey: string = DEFAULT_KEY): ProfileThemeV
   );
 }
 
-const ProfileThemeContext = createContext<ProfileThemeValue | null>(null);
+const CatalogThemeContext = createContext<SurfaceThemeValue | null>(null);
 
-/** Общая тема кабинета: шапка, подвал и содержимое красятся одинаково. */
-export function ProfileThemeProvider({ children }: { children: ReactNode }) {
-  const value = useProfileTheme();
-  return createElement(ProfileThemeContext.Provider, { value }, children);
+/** Тема каталога: шапка, подвал и карточки красятся одинаково. */
+export function CatalogThemeProvider({ children }: { children: ReactNode }) {
+  const value = useSurfaceTheme(CATALOG_KEY);
+  return createElement(CatalogThemeContext.Provider, { value }, children);
 }
 
-export function useProfileThemeContext(): ProfileThemeValue {
-  const ctx = useContext(ProfileThemeContext);
+export function useCatalogTheme(): SurfaceThemeValue {
+  const ctx = useContext(CatalogThemeContext);
   if (ctx) return ctx;
-  // Фолбэк для страниц вне провайдера.
-  return { theme: "light", toggle: () => {}, themeClass: "clean-light" };
+  return { theme: "dark", toggle: () => {}, themeClass: "public-dark" };
 }
