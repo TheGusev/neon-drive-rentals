@@ -159,7 +159,8 @@ export type AdminNotificationKind =
   | "booking_cancelled"
   | "payment_refunded"
   | "return_overdue"
-  | "client_registered";
+  | "client_registered"
+  | "message";
 
 export interface AdminNotification {
   id: string;
