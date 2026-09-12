@@ -1,7 +1,7 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { Moon, Search, SlidersHorizontal, Sun } from "lucide-react";
-import { useProfileTheme } from "@/hooks/useProfileTheme";
+import { useCatalogTheme } from "@/hooks/useProfileTheme";
 import type { Booking, Car } from "@/types/domain";
 import { isCarAvailable } from "@/lib/availability";
 import { useBookings, useCars } from "@/state/AppDataContext";
