@@ -49,7 +49,7 @@ export async function fetchThreadMessages(clientId: string, limit = 200): Promis
   if (!(await ready())) return [];
   const rows = await query<Row>(
     `select id, client_id, sender, body, created_at, read_at
-       from messages where client_id = $1::uuid
+       from messages where client_id = $1::integer
        order by created_at asc limit $2`,
     [clientId, Math.min(Math.max(limit, 1), 500)],
   );
@@ -63,7 +63,7 @@ export async function sendMessage(input: {
 }): Promise<ChatMessage | null> {
   if (!(await ready())) return null;
   const rows = await query<Row>(
-    `insert into messages (client_id, sender, body) values ($1::uuid, $2, $3)
+    `insert into messages (client_id, sender, body) values ($1::integer, $2, $3)
      returning id, client_id, sender, body, created_at, read_at`,
     [input.clientId, input.sender, input.body],
   );
@@ -75,7 +75,7 @@ export async function markThreadRead(clientId: string, reader: "client" | "admin
   if (!(await ready())) return;
   const other = reader === "admin" ? "client" : "admin";
   await query(
-    `update messages set read_at = now() where client_id = $1::uuid and sender = $2 and read_at is null`,
+    `update messages set read_at = now() where client_id = $1::integer and sender = $2 and read_at is null`,
     [clientId, other],
   ).catch(() => undefined);
 }
@@ -84,7 +84,7 @@ export async function countUnreadFor(clientId: string, reader: "client" | "admin
   if (!(await ready())) return 0;
   const other = reader === "admin" ? "client" : "admin";
   const rows = await query<{ n: string }>(
-    `select count(*)::text as n from messages where client_id = $1::uuid and sender = $2 and read_at is null`,
+    `select count(*)::text as n from messages where client_id = $1::integer and sender = $2 and read_at is null`,
     [clientId, other],
   );
   return Number(rows[0]?.n ?? 0);

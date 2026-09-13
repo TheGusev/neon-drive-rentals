@@ -2,7 +2,7 @@
 
 create table if not exists messages (
   id uuid primary key default gen_random_uuid(),
-  client_id uuid not null references clients(id) on delete cascade,
+  client_id integer not null references clients(id) on delete cascade,
   sender text not null check (sender in ('client', 'admin')),
   body text not null,
   created_at timestamptz not null default now(),
