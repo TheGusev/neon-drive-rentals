@@ -12,7 +12,7 @@ import {
   SidebarMenuItem,
   SidebarProvider,
 } from "@/components/ui/sidebar";
-import { LayoutDashboard, Car, CalendarCheck, Users, Wallet, Settings, Globe } from "lucide-react";
+import { LayoutDashboard, Car, CalendarCheck, Users, Wallet, Settings, Globe , MessageCircle } from "lucide-react";
 import { AdminHeader } from "@/components/admin/AdminHeader";
 import { AdminTabBar } from "@/components/admin/AdminTabBar";
 import { ThemeProvider, useTheme } from "@/components/layout/ThemeProvider";
@@ -23,6 +23,7 @@ const items = [
   { to: "/admin/bookings", label: "Бронирования", icon: CalendarCheck },
   { to: "/admin/clients", label: "Клиенты", icon: Users },
   { to: "/admin/finance", label: "Финансы", icon: Wallet },
+  { to: "/admin/messages", label: "Сообщения", icon: MessageCircle },
   { to: "/admin/settings", label: "Настройки", icon: Settings },
 ];
 

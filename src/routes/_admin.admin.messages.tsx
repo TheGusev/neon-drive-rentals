@@ -66,7 +66,7 @@ function MessagesPage() {
 
   return (
     <div className="space-y-4 pb-24">
-      <PageHeader title="Сообщения" subtitle="Переписка с клиентами прямо из админки" />
+      <PageHeader title="Сообщения" description="Переписка с клиентами прямо из админки" />
 
       <div className="grid gap-4 lg:grid-cols-[320px_minmax(0,1fr)]">
         <Card className="max-h-[70vh] overflow-y-auto p-2">
