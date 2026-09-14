@@ -274,8 +274,10 @@ export async function fetchPaymentById(id: string): Promise<
     provider: string | null;
     provider_id: string | null;
     created_at: Date | string;
+    purpose: string | null;
+    extension_id: string | null;
   }>(
-    `select id, booking_id, amount, refunded_amount, status, provider, provider_id, created_at
+    `select id, booking_id, amount, refunded_amount, status, provider, provider_id, created_at, purpose, extension_id
        from payments where id = $1::bigint limit 1`,
     [id],
   );
@@ -290,6 +292,8 @@ export async function fetchPaymentById(id: string): Promise<
     provider: String(row.provider ?? "stub"),
     providerId: row.provider_id ? String(row.provider_id) : null,
     createdAt: new Date(row.created_at).toISOString(),
+    purpose: row.purpose === "extension" ? "extension" : "booking",
+    extensionId: row.extension_id ? String(row.extension_id) : null,
   };
 }
 
