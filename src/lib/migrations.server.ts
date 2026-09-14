@@ -53,10 +53,19 @@ const MIGRATIONS: Array<{ name: string; sql: string }> = [
   { name: "024_schema_compatibility", sql: schemaCompatibilityMigration },
 ];
 
-type Holder = { __nskMigrations?: Promise<string[]> };
+type MigrationFailure = { name: string; message: string };
+type Holder = { __nskMigrations?: Promise<string[]>; __nskMigrationFailures?: MigrationFailure[] };
+
+const failures: MigrationFailure[] = [];
+
+/** Миграции, упавшие в текущем процессе (для страницы диагностики). */
+export function migrationFailures(): MigrationFailure[] {
+  return [...failures];
+}
 
 async function apply(): Promise<string[]> {
   const applied: string[] = [];
+  failures.length = 0;
   if (!hasDatabase()) return applied;
 
   await query(`create table if not exists schema_migrations (
