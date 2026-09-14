@@ -1,4 +1,5 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
+import { AdminErrorScreen, AdminPendingScreen } from "@/components/admin/AdminErrorScreen";
 import {
   CalendarCheck,
   Wallet,
@@ -35,7 +36,28 @@ export const Route = createFileRoute("/_admin/admin/")({
     ],
   }),
   component: DashboardPage,
+  pendingComponent: AdminPendingScreen,
+  errorComponent: DashboardError,
 });
+
+function DashboardError({ error, reset }: { error: Error; reset: () => void }) {
+  const router = useRouter();
+  return (
+    <AdminErrorScreen
+      error={error}
+      title="Дашборд не загрузился"
+      onRetry={() => {
+        router.invalidate();
+        reset();
+      }}
+      extra={
+        <Link to="/admin/diagnostics" className="text-sm underline">
+          Открыть диагностику
+        </Link>
+      }
+    />
+  );
+}
 
 const fmtRub = (n: number) => `${n.toLocaleString("ru-RU")} ₽`;
 const dayKey = (value: string | Date) => new Date(value).toISOString().slice(0, 10);

@@ -53,10 +53,19 @@ const MIGRATIONS: Array<{ name: string; sql: string }> = [
   { name: "024_schema_compatibility", sql: schemaCompatibilityMigration },
 ];
 
-type Holder = { __nskMigrations?: Promise<string[]> };
+type MigrationFailure = { name: string; message: string };
+type Holder = { __nskMigrations?: Promise<string[]>; __nskMigrationFailures?: MigrationFailure[] };
+
+const failures: MigrationFailure[] = [];
+
+/** Миграции, упавшие в текущем процессе (для страницы диагностики). */
+export function migrationFailures(): MigrationFailure[] {
+  return [...failures];
+}
 
 async function apply(): Promise<string[]> {
   const applied: string[] = [];
+  failures.length = 0;
   if (!hasDatabase()) return applied;
 
   await query(`create table if not exists schema_migrations (
@@ -79,8 +88,11 @@ async function apply(): Promise<string[]> {
         ]);
         applied.push(migration.name);
       } catch (error) {
-        // Одна упавшая миграция не должна блокировать SSR и остальные миграции.
-        console.error(`[migrations] ${migration.name} failed`, error);
+        // Одна упавшая миграция не должна блокировать SSR и остальные миграции,
+        // но её обязательно видно в журнале и на странице диагностики.
+        const message = error instanceof Error ? error.message : String(error);
+        console.error(`[migrations] ${migration.name} FAILED: ${message}`);
+        failures.push({ name: migration.name, message });
       }
     }
   } finally {
@@ -90,12 +102,23 @@ async function apply(): Promise<string[]> {
   return applied;
 }
 
-/** Применяет недостающие миграции один раз за жизнь процесса. */
+let lastAttemptAt = 0;
+const RETRY_AFTER_MS = 60_000;
+
+/**
+ * Применяет недостающие миграции. Успешный прогон кэшируется на всю жизнь процесса;
+ * после сбоя попытка повторяется не чаще раза в минуту, чтобы схема могла «догнаться».
+ */
 export function ensureMigrations(): Promise<string[]> {
   const holder = globalThis as unknown as Holder;
-  if (!holder.__nskMigrations) {
+  const staleFailure =
+    failures.length > 0 && Date.now() - lastAttemptAt > RETRY_AFTER_MS;
+  if (!holder.__nskMigrations || staleFailure) {
+    lastAttemptAt = Date.now();
     holder.__nskMigrations = apply().catch((error) => {
-      console.error("[migrations] failed", error);
+      const message = error instanceof Error ? error.message : String(error);
+      console.error(`[migrations] прогон не выполнен: ${message}`);
+      failures.push({ name: "ensureMigrations", message });
       return [];
     });
   }

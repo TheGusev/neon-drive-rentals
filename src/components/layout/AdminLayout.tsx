@@ -14,7 +14,7 @@ import {
   SidebarProvider,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { LayoutDashboard, Car, CalendarCheck, Users, Wallet, Settings, Globe, MessageCircle, Star } from "lucide-react";
+import { LayoutDashboard, Car, CalendarCheck, Users, Wallet, Settings, Globe, MessageCircle, Star, Activity } from "lucide-react";
 import { AdminHeader } from "@/components/admin/AdminHeader";
 import { AdminTabBar } from "@/components/admin/AdminTabBar";
 import { ThemeProvider, useTheme } from "@/components/layout/ThemeProvider";
@@ -28,6 +28,7 @@ const items = [
   { to: "/admin/messages", label: "Сообщения", icon: MessageCircle },
   { to: "/admin/reviews", label: "Отзывы", icon: Star },
   { to: "/admin/settings", label: "Настройки", icon: Settings },
+  { to: "/admin/diagnostics", label: "Диагностика", icon: Activity },
 ];
 
 function AdminSidebar() {
