@@ -102,12 +102,23 @@ async function apply(): Promise<string[]> {
   return applied;
 }
 
-/** Применяет недостающие миграции один раз за жизнь процесса. */
+let lastAttemptAt = 0;
+const RETRY_AFTER_MS = 60_000;
+
+/**
+ * Применяет недостающие миграции. Успешный прогон кэшируется на всю жизнь процесса;
+ * после сбоя попытка повторяется не чаще раза в минуту, чтобы схема могла «догнаться».
+ */
 export function ensureMigrations(): Promise<string[]> {
   const holder = globalThis as unknown as Holder;
-  if (!holder.__nskMigrations) {
+  const staleFailure =
+    failures.length > 0 && Date.now() - lastAttemptAt > RETRY_AFTER_MS;
+  if (!holder.__nskMigrations || staleFailure) {
+    lastAttemptAt = Date.now();
     holder.__nskMigrations = apply().catch((error) => {
-      console.error("[migrations] failed", error);
+      const message = error instanceof Error ? error.message : String(error);
+      console.error(`[migrations] прогон не выполнен: ${message}`);
+      failures.push({ name: "ensureMigrations", message });
       return [];
     });
   }
