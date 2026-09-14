@@ -80,9 +80,10 @@ export const syncBookingPayment = createServerFn({ method: "POST" })
 
     if (remote.status !== payment.status) {
       await updatePaymentStatusById(payment.id, remote.status);
-      const { updateBookingStatusInDb } = await import("@/lib/bookingsRepo.server");
-      if (remote.status === "succeeded") await updateBookingStatusInDb(data.bookingId, "active");
-      if (remote.status === "canceled") await updateBookingStatusInDb(data.bookingId, "cancelled");
+      const { updateBookingStatusInDb, applyBookingExtension } = await import("@/lib/bookingsRepo.server");
+      if (remote.status === "succeeded" && payment.purpose === "extension" && payment.extensionId) await applyBookingExtension(payment.extensionId);
+      if (remote.status === "succeeded" && payment.purpose !== "extension") await updateBookingStatusInDb(data.bookingId, "active");
+      if (remote.status === "canceled" && payment.purpose !== "extension") await updateBookingStatusInDb(data.bookingId, "cancelled");
     }
     return { ok: true as const, status: remote.status, amount: remote.amount };
   });

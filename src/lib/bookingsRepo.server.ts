@@ -462,7 +462,7 @@ export async function markReturned(
             return_mileage_source = case when $3::integer is null
                                          then return_mileage_source else 'admin' end,
             status = 'completed'
-      where id::text = $1
+      where id::text = $1 and ($3::integer is null or $3::integer >= coalesce(start_mileage, 0))
       returning id, car_id`,
     [id, manager, mileage ?? null],
   );

@@ -52,6 +52,7 @@ export const Route = createFileRoute("/api/public/yookassa-webhook")({
           fetchLatestPaymentByBooking,
           markPaymentRefunded,
           fetchPaymentById,
+          fetchPaymentRecordById,
         } = await import("@/lib/paymentsRepo.server");
 
         const fresh = await logPaymentEvent({
@@ -94,7 +95,7 @@ export const Route = createFileRoute("/api/public/yookassa-webhook")({
           const { updateBookingStatusInDb } = await import("@/lib/bookingsRepo.server");
           if (status === "succeeded") {
             // Сверяем сумму уведомления с суммой сохранённого платежа.
-            const payment = await fetchLatestPaymentByBooking(bookingId);
+            const payment = updated?.paymentId ? await fetchPaymentRecordById(updated.paymentId) : await fetchLatestPaymentByBooking(bookingId);
             const stored = payment ? await fetchPaymentById(payment.id) : null;
             const expected = stored?.amount ?? payment?.amount ?? 0;
             if (amount && expected && Math.abs(amount - expected) > 1) {
@@ -117,7 +118,7 @@ export const Route = createFileRoute("/api/public/yookassa-webhook")({
               dedupeKey: `paid:${providerId}`,
             });
           }
-          if (status === "canceled") {
+          if (status === "canceled" && updated?.purpose !== "extension") {
             await updateBookingStatusInDb(bookingId, "cancelled");
             const { notifyAdmins } = await import("@/lib/notificationsRepo.server");
             await notifyAdmins({

@@ -91,7 +91,8 @@ export function AdminBookingDetailSheet({
   const cashValue = Number((cash || String(booking.totalPrice)).replace(/\D/g, ""));
   const cashValid = Number.isFinite(cashValue) && cashValue > 0;
   const mileageValue = Number(mileage.replace(/\D/g, ""));
-  const mileageValid = Number.isFinite(mileageValue) && mileageValue > 0;
+  const mileageMinimum = booking.startMileage ?? 0;
+  const mileageValid = Number.isFinite(mileageValue) && mileageValue > 0 && mileageValue >= mileageMinimum;
   const journey = [
     { label: "Оплата", at: ["paid", "active", "completed"].includes(booking.status) ? "Подтверждена" : "Ожидается" },
     { label: "Договор", at: booking.signedAt ? fmtDateTime(booking.signedAt) : "Не подписан" },
@@ -190,6 +191,10 @@ export function AdminBookingDetailSheet({
             <Gauge className="h-4 w-4 text-muted-foreground" /> Пробег
           </h3>
           <Row
+            label="Пробег при выдаче"
+            value={booking.startMileage !== undefined ? `${booking.startMileage.toLocaleString("ru-RU")} км` : "Не зафиксирован"}
+          />
+          <Row
             label="Показания одометра"
             value={
               booking.returnMileage !== undefined && booking.returnMileage !== null
@@ -218,6 +223,9 @@ export function AdminBookingDetailSheet({
               Сохранить
             </Button>
           </div>
+          {mileage.length > 0 && !mileageValid && mileageMinimum > 0 && (
+            <p className="mt-1 text-xs text-destructive">Значение не может быть меньше {mileageMinimum.toLocaleString("ru-RU")} км</p>
+          )}
         </section>
 
         {booking.status !== "cancelled" && (
