@@ -65,6 +65,33 @@ pm2 restart nsk-rent --update-env || pm2 start dist/server/index.mjs --name nsk-
 pm2 save
 ```
 
+### PM2: ecosystem.config.cjs
+
+Если на сервере уже есть `ecosystem.config.cjs`, убедитесь, что в нём указан
+новый путь к серверному бандлу:
+
+```cjs
+module.exports = {
+  apps: [{
+    name: 'nsk-rent',
+    script: './dist/server/index.mjs',
+    cwd: '/var/www/nsk-rent',
+    env_file: '/var/www/nsk-rent/.env',
+    // ... остальные настройки
+  }]
+};
+```
+
+Если старый файл указывает на `.output/server/index.mjs`, замените путь на
+`dist/server/index.mjs` и перезапустите приложение:
+
+```bash
+pm2 restart nsk-rent --update-env
+pm2 save
+```
+
+Шаблон актуального файла лежит в репозитории: `deploy/ecosystem.config.cjs`.
+
 ## 3. Миграции базы
 
 Отдельная команда не нужна: при старте сервера `src/lib/migrations.server.ts`
