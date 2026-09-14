@@ -1,5 +1,5 @@
 import type { Payment } from "@/types/domain";
-import { hasDatabase, query } from "@/lib/db.server";
+import { hasDatabase, query, withTransaction } from "@/lib/db.server";
 import { payments as mockPayments } from "@/mocks/payments";
 
 export type AdminPayment = Payment & { clientName: string; clientPhone: string; carName: string };
@@ -100,6 +100,58 @@ export async function insertPayment(input: {
     [input.bookingId, input.provider, input.providerId ?? null, input.amount, input.status ?? "pending", input.purpose ?? "booking", input.extensionId ?? null],
   );
   return rows.length ? String(rows[0].id) : null;
+}
+
+export type CashPaymentResult =
+  | { ok: true; paymentId: string; duplicate: boolean }
+  | { ok: false; reason: "database_unavailable" | "booking_not_found" };
+
+/** Фиксирует наличный платёж и оплату брони одной транзакцией. */
+export async function recordCashPaymentInDb(input: {
+  bookingId: string;
+  amount: number;
+}): Promise<CashPaymentResult> {
+  if (!(await ready())) return { ok: false, reason: "database_unavailable" };
+
+  return withTransaction(async (run) => {
+    const bookings = await run<{ id: string; car_id: string }>(
+      `select id, car_id from bookings where id::text = $1 for update`,
+      [input.bookingId],
+    );
+    if (!bookings.length) return { ok: false, reason: "booking_not_found" };
+
+    const existing = await run<{ id: string }>(
+      `select id from payments
+        where booking_id = $1::uuid and provider = 'cash'
+          and status in ('succeeded', 'success', 'paid')
+        order by created_at desc limit 1`,
+      [input.bookingId],
+    );
+    if (existing.length) {
+      await run(`update bookings set status = 'confirmed' where id = $1::uuid`, [input.bookingId]);
+      return { ok: true, paymentId: String(existing[0].id), duplicate: true };
+    }
+
+    // Наличные используют базовые поля payments и не зависят от колонок продлений.
+    const payments = await run<{ id: string }>(
+      `insert into payments (booking_id, provider, amount, status)
+       values ($1::uuid, 'cash', $2, 'succeeded') returning id`,
+      [input.bookingId, input.amount],
+    );
+    await run(`update bookings set status = 'confirmed' where id = $1::uuid`, [input.bookingId]);
+
+    const carId = String(bookings[0].car_id);
+    const active = await run<{ id: string }>(
+      `select id from bookings where car_id = $1 and status in ('confirmed','active') limit 1`,
+      [carId],
+    );
+    await run(`update cars set status = $2 where id = $1 and status in ('available','busy')`, [
+      carId,
+      active.length ? "busy" : "available",
+    ]);
+
+    return { ok: true, paymentId: String(payments[0].id), duplicate: false };
+  });
 }
 
 export async function updatePaymentByProviderId(

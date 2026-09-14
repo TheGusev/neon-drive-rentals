@@ -93,10 +93,14 @@ function AdminBookingsPage() {
       }
       await queryClient.invalidateQueries({ queryKey: ["bookings"] });
       await queryClient.invalidateQueries({ queryKey: ["admin"] });
+      await queryClient.invalidateQueries({ queryKey: ["cars"] });
       await queryClient.invalidateQueries({ queryKey: ["me"] });
       toast.success("Оплата наличными зафиксирована");
     },
-    onError: () => toast.error("Сервис временно недоступен"),
+    onError: (error) => {
+      console.error("[admin] cash payment request failed", error);
+      toast.error("Не удалось связаться с сервером. Повторите попытку.");
+    },
   });
 
   const runDelete = useServerFn(deleteBooking);
