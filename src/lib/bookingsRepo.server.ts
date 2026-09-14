@@ -1,4 +1,4 @@
-import type { Booking, BookingStatus } from "@/types/domain";
+import type { Booking, BookingStatus, ClientDocument } from "@/types/domain";
 import { hasDatabase, query, withTransaction } from "@/lib/db.server";
 import { mockBookings } from "@/data/mockBookings";
 import { PICKUP_POINT } from "@/mocks/pickupPoints";
@@ -24,6 +24,13 @@ type BookingRow = {
   extension_end_date?: Date | string | null;
   extension_amount?: number | string | null;
 };
+
+async function ready(): Promise<boolean> {
+  if (!hasDatabase()) return false;
+  const { ensureMigrations } = await import("@/lib/migrations.server");
+  await ensureMigrations();
+  return true;
+}
 
 const BOOKING_STATUSES: BookingStatus[] = ["paid", "pending", "active", "completed", "cancelled"];
 const BOOKING_SYNONYMS: Record<string, BookingStatus> = {
@@ -92,6 +99,7 @@ const SELECT_BOOKINGS = `
 /** Availability-only view: no client ids, no amounts. Safe for public pages. */
 export async function fetchPublicBookings(): Promise<Booking[]> {
   if (!hasDatabase()) return [];
+  await ready();
   let timer: ReturnType<typeof setTimeout> | undefined;
   try {
     const timeout = new Promise<Booking[]>((resolve) => {
@@ -118,6 +126,7 @@ export async function fetchPublicBookings(): Promise<Booking[]> {
  */
 export async function autoAdvanceBookings(): Promise<void> {
   if (!hasDatabase()) return;
+  await ready();
   try {
     await query(
       `update bookings set status = 'active'
@@ -171,18 +180,21 @@ export async function autoAdvanceBookings(): Promise<void> {
 
 export async function fetchBookings(): Promise<Booking[]> {
   if (!hasDatabase()) return mockBookings;
+  await ready();
   const rows = await query<BookingRow>(`${SELECT_BOOKINGS} order by b.date_from desc`);
   return rows.map(mapBookingRow);
 }
 
 export async function fetchBookingById(id: string): Promise<Booking | null> {
   if (!hasDatabase()) return mockBookings.find((b) => b.id === id) ?? null;
+  await ready();
   const rows = await query<BookingRow>(`${SELECT_BOOKINGS} where b.id::text = $1 limit 1`, [id]);
   return rows.length ? mapBookingRow(rows[0]) : null;
 }
 
 export async function fetchBookingsByPhone(phone: string): Promise<Booking[]> {
   if (!hasDatabase()) return mockBookings;
+  await ready();
   await autoAdvanceBookings();
   const rows = await query<BookingRow>(
     `${SELECT_BOOKINGS} join clients cl on cl.id = b.client_id
@@ -214,6 +226,7 @@ export async function fetchBookingsAdmin(filters?: {
       clientPhone: "",
       carName: b.carId,
       carPlate: "",
+      documents: [],
     }));
   }
 
@@ -241,6 +254,7 @@ export async function fetchBookingsAdmin(filters?: {
       model: string | null;
       plate: string | null;
       signed_at: Date | string | null;
+      documents: ClientDocument[] | null;
     }
   >(
     `select b.id, b.car_id, c.slug as car_slug, b.client_id, b.date_from, b.date_to, b.total, b.status,
@@ -248,10 +262,21 @@ export async function fetchBookingsAdmin(filters?: {
             b.return_mileage, b.return_mileage_source,
             cl.name as client_name, cl.phone as client_phone,
             cl.email as client_email, c.brand, c.model, c.plate,
-            b.start_mileage, b.tariff, b.extension_status, b.extension_end_date, b.extension_amount
+            b.start_mileage, b.tariff, b.extension_status, b.extension_end_date, b.extension_amount,
+            coalesce(d.documents, '[]'::jsonb) as documents
      from bookings b
      left join cars c on c.id = b.car_id
      left join clients cl on cl.id = b.client_id
+     left join lateral (
+       select jsonb_agg(jsonb_build_object(
+         'id', cd.id::text, 'type', cd.type, 'number', coalesce(cd.number, ''),
+         'status', cd.status, 'uploadedAt', cd.uploaded_at,
+         'birthDate', cd.birth_date, 'issuedBy', cd.issued_by, 'issueDate', cd.issue_date,
+         'departmentCode', cd.department_code, 'registrationAddress', cd.registration_address,
+         'expiryDate', cd.expiry_date
+       ) order by cd.uploaded_at desc) as documents
+       from client_documents cd where cd.client_id::text = b.client_id::text
+     ) d on true
      ${where.length ? `where ${where.join(" and ")}` : ""}
      order by b.date_from desc`,
     params,
@@ -265,6 +290,7 @@ export async function fetchBookingsAdmin(filters?: {
     carName: [row.brand, row.model].filter(Boolean).join(" ") || String(row.car_slug ?? ""),
     carPlate: row.plate ?? "",
     signedAt: row.signed_at ? new Date(row.signed_at).toISOString() : undefined,
+    documents: Array.isArray(row.documents) ? row.documents : [],
   }));
 }
 
@@ -289,6 +315,7 @@ export async function updateBookingStatusInDb(
     const found = mockBookings.find((b) => b.id === id);
     return found ? { ...found, status } : null;
   }
+  await ready();
   const rows = await query<{ id: string; car_id: string }>(
     `update bookings set status = $2 where id::text = $1 returning id, car_id`,
     [id, toDbBookingStatus(status)],
@@ -301,6 +328,7 @@ export async function updateBookingStatusInDb(
 /** Полное удаление брони: исчезает из админки, кабинета клиента и календаря авто. */
 export async function deleteBookingInDb(id: string): Promise<boolean> {
   if (!hasDatabase()) return false;
+  await ready();
   const found = await query<{ id: string; car_id: string }>(
     `select id, car_id from bookings where id::text = $1`,
     [id],
@@ -318,6 +346,7 @@ export async function deleteBookingInDb(id: string): Promise<boolean> {
 
 export async function markBookingSigned(id: string, ip: string): Promise<Booking | null> {
   if (!hasDatabase()) return fetchBookingById(id);
+  await ready();
   const rows = await query<{ id: string; car_id: string }>(
     `update bookings set status = 'confirmed', signed_at = now(), signature_ip = $2
      where id::text = $1 returning id, car_id`,
@@ -374,6 +403,7 @@ export async function insertBooking(input: CreateBookingInput): Promise<CreateBo
       },
     };
   }
+  await ready();
 
   return withTransaction(async (run) => {
     const conflicts = await run<{ id: string }>(
@@ -431,6 +461,7 @@ export async function insertBooking(input: CreateBookingInput): Promise<CreateBo
  */
 export async function markKeysIssued(id: string, manager: string): Promise<Booking | null> {
   if (!hasDatabase()) return fetchBookingById(id);
+  await ready();
   const rows = await query<{ id: string; car_id: string }>(
     `update bookings
         set keys_issued_at = coalesce(keys_issued_at, now()),
@@ -455,6 +486,7 @@ export async function markReturned(
   mileage?: number,
 ): Promise<Booking | null> {
   if (!hasDatabase()) return fetchBookingById(id);
+  await ready();
   const rows = await query<{ id: string; car_id: string }>(
     `update bookings
         set returned_at = coalesce(returned_at, now()),
@@ -493,6 +525,7 @@ export async function submitClientMileage(
   mileage: number,
 ): Promise<{ ok: boolean; reason?: "not_found" | "locked" | "below_start" }> {
   if (!hasDatabase()) return { ok: false, reason: "not_found" };
+  await ready();
   const rows = await query<{ id: string; returned_at: Date | null; status: string; start_mileage: number | null }>(
     `select b.id, b.returned_at, b.status, b.start_mileage
        from bookings b join clients cl on cl.id = b.client_id
@@ -514,6 +547,7 @@ export async function submitClientMileage(
 /** Администратор вносит или исправляет пробег. */
 export async function setAdminMileage(bookingId: string, mileage: number): Promise<Booking | null> {
   if (!hasDatabase()) return null;
+  await ready();
   const rows = await query<{ id: string; car_id: string }>(
     `update bookings set return_mileage = $2, return_mileage_source = 'admin'
       where id::text = $1 and $2 >= coalesce(start_mileage, 0) returning id, car_id`,
@@ -530,6 +564,7 @@ const mapExtension = (row: ExtensionRow): BookingExtension => ({ id: String(row.
 
 export async function createPendingExtension(bookingId: string, phone: string, newEndDate: string): Promise<{ ok: true; extension: BookingExtension } | { ok: false; reason: "not_found" | "invalid_date" | "conflict" }> {
   if (!hasDatabase()) return { ok: false, reason: "not_found" };
+  await ready();
   return withTransaction(async (run) => {
     const bookingRows = await run<{ id: string; car_id: string; date_to: Date | string; price_city: string | number; tariff: string }>(
       `select b.id, b.car_id, b.date_to, c.price_city, b.tariff
@@ -558,11 +593,13 @@ export async function createPendingExtension(bookingId: string, phone: string, n
 
 export async function linkExtensionPayment(extensionId: string, paymentId: string): Promise<void> {
   if (!hasDatabase()) return;
+  await ready();
   await query(`update booking_extensions set payment_id = $2::bigint where id = $1::uuid`, [extensionId, paymentId]);
 }
 
 export async function applyBookingExtension(extensionId: string): Promise<{ ok: boolean; bookingId?: string; conflict?: boolean }> {
   if (!hasDatabase()) return { ok: false };
+  await ready();
   return withTransaction(async (run) => {
     const rows = await run<ExtensionRow & { car_id: string }>(`select e.*, b.car_id from booking_extensions e join bookings b on b.id = e.booking_id where e.id = $1::uuid for update`, [extensionId]);
     if (!rows.length) return { ok: false };

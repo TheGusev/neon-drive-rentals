@@ -1,6 +1,13 @@
 import type { CarReview } from "@/types/domain";
 import { hasDatabase, query } from "@/lib/db.server";
 
+async function ready(): Promise<boolean> {
+  if (!hasDatabase()) return false;
+  const { ensureMigrations } = await import("@/lib/migrations.server");
+  await ensureMigrations();
+  return true;
+}
+
 type ReviewRow = {
   id: string;
   booking_id: string;
@@ -40,7 +47,7 @@ const SELECT = `
 
 /** Публичные отзывы по автомобилю (по slug или id). */
 export async function fetchCarReviews(carSlug: string): Promise<CarReview[]> {
-  if (!hasDatabase()) return [];
+  if (!(await ready())) return [];
   try {
     const rows = await query<ReviewRow>(
       `${SELECT} where r.hidden = false and (c.slug = $1 or r.car_id::text = $1)
@@ -58,7 +65,7 @@ export async function fetchCarReviews(carSlug: string): Promise<CarReview[]> {
 export async function fetchReviewAggregates(): Promise<
   Record<string, { rating: number; count: number }>
 > {
-  if (!hasDatabase()) return {};
+  if (!(await ready())) return {};
   try {
     const rows = await query<{ slug: string | null; avg: string; cnt: string }>(
       `select c.slug, avg(r.rating)::numeric(3,2) as avg, count(*) as cnt
@@ -79,7 +86,7 @@ export async function fetchReviewAggregates(): Promise<
 }
 
 export async function fetchMyReviews(clientId: string): Promise<CarReview[]> {
-  if (!hasDatabase()) return [];
+  if (!(await ready())) return [];
   const rows = await query<ReviewRow>(
     `${SELECT} where r.client_id = $1 order by r.created_at desc`,
     [clientId],
@@ -88,7 +95,7 @@ export async function fetchMyReviews(clientId: string): Promise<CarReview[]> {
 }
 
 export async function fetchAllReviews(): Promise<CarReview[]> {
-  if (!hasDatabase()) return [];
+  if (!(await ready())) return [];
   const rows = await query<ReviewRow>(`${SELECT} order by r.created_at desc limit 300`);
   return rows.map(map);
 }
@@ -107,7 +114,7 @@ export async function insertReview(input: {
   text: string;
   serviceComment: string;
 }): Promise<SubmitReviewResult> {
-  if (!hasDatabase()) return { ok: false, reason: "not_found" };
+  if (!(await ready())) return { ok: false, reason: "not_found" };
 
   const booking = await query<{ car_id: string; status: string; returned_at: Date | null }>(
     `select car_id, status, returned_at from bookings
@@ -146,7 +153,7 @@ export async function insertReview(input: {
 }
 
 export async function setReviewHidden(id: string, hidden: boolean): Promise<boolean> {
-  if (!hasDatabase()) return false;
+  if (!(await ready())) return false;
   const rows = await query<{ id: string }>(
     `update car_reviews set hidden = $2 where id::text = $1 returning id`,
     [id, hidden],
@@ -155,7 +162,7 @@ export async function setReviewHidden(id: string, hidden: boolean): Promise<bool
 }
 
 export async function updateReviewAdmin(id: string, input: { rating: number; text: string; serviceComment: string }): Promise<boolean> {
-  if (!hasDatabase()) return false;
+  if (!(await ready())) return false;
   const rows = await query<{ id: string }>(
     `update car_reviews set rating = $2, text = $3, service_comment = $4 where id::text = $1 returning id`,
     [id, input.rating, input.text, input.serviceComment],
@@ -164,7 +171,7 @@ export async function updateReviewAdmin(id: string, input: { rating: number; tex
 }
 
 export async function deleteReviewAdmin(id: string): Promise<boolean> {
-  if (!hasDatabase()) return false;
+  if (!(await ready())) return false;
   const rows = await query<{ id: string }>(`delete from car_reviews where id::text = $1 returning id`, [id]);
   return rows.length > 0;
 }

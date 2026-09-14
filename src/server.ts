@@ -8,6 +8,14 @@ type ServerEntry = {
 };
 
 let serverEntryPromise: Promise<ServerEntry> | undefined;
+let migrationsPromise: Promise<unknown> | undefined;
+
+async function prepareDatabase(): Promise<void> {
+  if (!migrationsPromise) {
+    migrationsPromise = import("./lib/migrations.server").then(({ ensureMigrations }) => ensureMigrations());
+  }
+  await migrationsPromise;
+}
 
 async function getServerEntry(): Promise<ServerEntry> {
   if (!serverEntryPromise) {
@@ -47,6 +55,7 @@ function isH3SwallowedErrorBody(body: string): boolean {
 export default {
   async fetch(request: Request, env: unknown, ctx: unknown) {
     try {
+      await prepareDatabase();
       const handler = await getServerEntry();
       const response = await handler.fetch(request, env, ctx);
       return await normalizeCatastrophicSsrResponse(response);

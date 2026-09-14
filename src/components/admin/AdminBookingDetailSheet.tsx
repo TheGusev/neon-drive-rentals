@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Banknote, CalendarDays, Gauge, KeyRound, Phone, Mail, MapPin, Trash2, User } from "lucide-react";
+import { Banknote, CalendarDays, FileText, Gauge, IdCard, KeyRound, Phone, Mail, MapPin, Trash2, User } from "lucide-react";
 import {
   Sheet,
   SheetContent,
@@ -58,6 +58,29 @@ function Row({ label, value }: { label: string; value: React.ReactNode }) {
   );
 }
 
+const documentStatus = { pending: "Ожидает проверки", verified: "Проверен", rejected: "Отклонён" } as const;
+
+function DocumentDetails({ type, booking }: { type: "passport" | "license"; booking: AdminBookingRow }) {
+  const document = booking.documents.find((item) => item.type === type);
+  const Icon = type === "passport" ? IdCard : FileText;
+  return (
+    <div className="mt-3 rounded-lg border border-border/70 bg-muted/30 p-3">
+      <h4 className="mb-1 flex items-center gap-2 text-sm font-semibold text-foreground">
+        <Icon className="h-4 w-4 text-muted-foreground" />
+        {type === "passport" ? "Паспорт" : "Водительское удостоверение"}
+      </h4>
+      <Row label="Номер" value={document?.number || "Не заполнено"} />
+      {type === "passport" && <Row label="Дата рождения" value={document?.birthDate || "Не заполнено"} />}
+      <Row label="Дата выдачи" value={document?.issueDate || "Не заполнено"} />
+      <Row label="Кем выдан" value={document?.issuedBy || "Не заполнено"} />
+      {type === "passport" && <Row label="Код подразделения" value={document?.departmentCode || "Не заполнено"} />}
+      {type === "passport" && <Row label="Адрес регистрации" value={document?.registrationAddress || "Не заполнено"} />}
+      {type === "license" && <Row label="Действует до" value={document?.expiryDate || "Не заполнено"} />}
+      <Row label="Статус" value={document ? documentStatus[document.status] : "Не заполнено"} />
+    </div>
+  );
+}
+
 interface Props {
   booking: AdminBookingRow | null;
   car?: Car | undefined;
@@ -102,7 +125,10 @@ export function AdminBookingDetailSheet({
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent side="right" className="w-full overflow-y-auto sm:max-w-md">
+      <SheetContent
+        side="right"
+        className="inset-y-auto bottom-0 top-[max(env(safe-area-inset-top),0.75rem)] h-[calc(100dvh-max(env(safe-area-inset-top),0.75rem))] w-full overflow-y-auto rounded-t-2xl pb-[calc(env(safe-area-inset-bottom)+1rem)] pt-12 sm:inset-y-0 sm:top-0 sm:h-full sm:max-w-md sm:rounded-none sm:pt-6 [&>button]:right-4 [&>button]:top-4"
+      >
         <SheetHeader className="text-left">
           <SheetTitle>Бронь № {booking.id}</SheetTitle>
           <SheetDescription>{STATUS_LABEL[booking.status]}</SheetDescription>
@@ -155,6 +181,12 @@ export function AdminBookingDetailSheet({
               )
             }
           />
+        </section>
+
+        <section className="mt-5">
+          <h3 className="mb-1 text-sm font-semibold">Документы клиента</h3>
+          <DocumentDetails type="passport" booking={booking} />
+          <DocumentDetails type="license" booking={booking} />
         </section>
 
         <section className="mt-5">

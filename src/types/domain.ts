@@ -210,4 +210,5 @@ export interface AdminBookingRow extends Booking {
   carName: string;
   carPlate: string;
   signedAt?: string;
+  documents: ClientDocument[];
 }
