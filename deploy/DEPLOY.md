@@ -61,7 +61,7 @@ cd /var/www/nsk-rent
 git pull origin main
 bun install --frozen-lockfile
 bun run build
-pm2 restart nsk-rent --update-env || pm2 start .output/server/index.mjs --name nsk-rent
+pm2 restart nsk-rent --update-env || pm2 start dist/server/index.mjs --name nsk-rent
 pm2 save
 ```
 
