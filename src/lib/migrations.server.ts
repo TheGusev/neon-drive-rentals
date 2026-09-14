@@ -79,8 +79,11 @@ async function apply(): Promise<string[]> {
         ]);
         applied.push(migration.name);
       } catch (error) {
-        // Одна упавшая миграция не должна блокировать SSR и остальные миграции.
-        console.error(`[migrations] ${migration.name} failed`, error);
+        // Одна упавшая миграция не должна блокировать SSR и остальные миграции,
+        // но её обязательно видно в журнале и на странице диагностики.
+        const message = error instanceof Error ? error.message : String(error);
+        console.error(`[migrations] ${migration.name} FAILED: ${message}`);
+        failures.push({ name: migration.name, message });
       }
     }
   } finally {
