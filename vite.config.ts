@@ -1,20 +1,34 @@
-// @lovable.dev/vite-tanstack-config already includes the following — do NOT add them manually
-// or the app will break with duplicate plugins:
-//   - TanStack devtools (dev-only, first), tanstackStart, viteReact, tailwindcss, tsConfigPaths,
-//     nitro (build-only using cloudflare as a default target), VITE_* env injection, @ path alias,
-//     React/TanStack dedupe, error logger plugins, and sandbox detection (port/host/strictPort).
-// You can pass additional config via defineConfig({ vite: { ... }, etc... }) if needed.
-import { defineConfig } from "@lovable.dev/vite-tanstack-config";
+import tailwindcss from "@tailwindcss/vite";
+import { tanstackStart } from "@tanstack/react-start/plugin/vite";
+import react from "@vitejs/plugin-react";
+import { nitro } from "nitro/vite";
+import { defineConfig } from "vite";
+import tsconfigPaths from "vite-tsconfig-paths";
 
 export default defineConfig({
-  nitro: {
-    preset: "node-server",
+  server: {
+    host: "::",
+    port: 8080,
   },
-  tanstackStart: {
-    // Redirect TanStack Start's bundled server entry to src/server.ts (our SSR error wrapper).
-    server: { entry: "server" },
+  css: { transformer: "lightningcss" },
+  resolve: {
+    alias: { "@": new URL("./src", import.meta.url).pathname },
+    dedupe: ["react", "react-dom", "@tanstack/react-query", "@tanstack/query-core"],
   },
-  vite: {
+  plugins: [
+    tailwindcss(),
+    tsconfigPaths({ projects: ["./tsconfig.json"] }),
+    tanstackStart({
+      importProtection: {
+        behavior: "error",
+        client: { files: ["**/server/**"], specifiers: ["server-only"] },
+      },
+      server: { entry: "server" },
+    }),
+    nitro({ preset: "node-server" }),
+    react(),
+  ],
+  build: {
     build: {
       // Сайт отдаётся по HTTP/1.1: десятки мелких чанков = очередь из запросов
       // на мобильной сети. Склеиваем всё, что меньше 24 КБ.
@@ -23,7 +37,5 @@ export default defineConfig({
           experimentalMinChunkSize: 24_000,
         } as Record<string, unknown>,
       },
-    },
   },
-
 });
