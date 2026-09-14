@@ -1,5 +1,12 @@
 import { Link } from "@tanstack/react-router";
 import { Camera } from "lucide-react";
+import hondaNWgnSilverAsset from "@/assets/cars/fleet-uploads/IMG_0690.jpeg.asset.json";
+import mitsubishiEkBlackAsset from "@/assets/cars/fleet-uploads/IMG_0691.jpeg.asset.json";
+import hondaNBoxPairAsset from "@/assets/cars/fleet-uploads/IMG_0693.jpeg.asset.json";
+import mitsubishiEkSilverAsset from "@/assets/cars/fleet-uploads/IMG_0695.jpeg.asset.json";
+import hondaNBoxLineAsset from "@/assets/cars/fleet-uploads/IMG_0696.jpeg.asset.json";
+import mitsubishiEkBrownAsset from "@/assets/cars/fleet-uploads/IMG_0698.jpeg.asset.json";
+import toyotaRoomyAsset from "@/assets/cars/fleet-uploads/IMG_0699.jpeg.asset.json";
 
 /** Публичные пути: рядом лежат WebP-версии, отдаём их через <picture>. */
 const nBoxBlack = "/assets/cars/real/honda-n-box-black-real-3.jpg";
@@ -13,6 +20,41 @@ const fleetYard = "/assets/cars/real/fleet-yard-real.jpg";
 const dashboard = "/assets/cars/real/kei-dashboard-real.jpg";
 
 const PHOTOS = [
+  {
+    src: hondaNWgnSilverAsset.url,
+    alt: "Серебристый Honda N-WGN из автопарка NSK-RENT, вид спереди",
+    caption: "Honda N-WGN",
+  },
+  {
+    src: mitsubishiEkBlackAsset.url,
+    alt: "Чёрный Mitsubishi eK Wagon из автопарка NSK-RENT",
+    caption: "Mitsubishi eK Wagon",
+  },
+  {
+    src: hondaNBoxPairAsset.url,
+    alt: "Два серебристых Honda N-BOX на площадке NSK-RENT",
+    caption: "Honda N-BOX",
+  },
+  {
+    src: hondaNBoxLineAsset.url,
+    alt: "Линия серебристых Honda N-BOX на площадке автопроката",
+    caption: "Honda N-BOX",
+  },
+  {
+    src: mitsubishiEkSilverAsset.url,
+    alt: "Серебристый Mitsubishi eK Wagon, крупный план передней части",
+    caption: "Mitsubishi eK Wagon",
+  },
+  {
+    src: mitsubishiEkBrownAsset.url,
+    alt: "Коричневый Mitsubishi eK Wagon из живого автопарка NSK-RENT",
+    caption: "Mitsubishi eK Wagon",
+  },
+  {
+    src: toyotaRoomyAsset.url,
+    alt: "Серебристый Toyota Roomy на площадке автопарка NSK-RENT",
+    caption: "Toyota Roomy",
+  },
   {
     src: nBoxBlack,
     alt: "Honda N-BOX чёрный на площадке NSK-RENT в Новосибирске",
@@ -82,7 +124,9 @@ export function RealPhotoStrip() {
               className="group relative overflow-hidden rounded-xl border border-border/60 bg-card"
             >
               <picture>
-                <source srcSet={photo.src.replace(/\.jpg$/, ".webp")} type="image/webp" />
+                {!photo.src.startsWith("/__l5e/") && (
+                  <source srcSet={photo.src.replace(/\.jpg$/, ".webp")} type="image/webp" />
+                )}
                 <img
                   src={photo.src}
                   alt={photo.alt}
