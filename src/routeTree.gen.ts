@@ -55,6 +55,7 @@ import { Route as AdminAdminSettingsRouteImport } from './routes/_admin.admin.se
 import { Route as AdminAdminReviewsRouteImport } from './routes/_admin.admin.reviews'
 import { Route as AdminAdminMessagesRouteImport } from './routes/_admin.admin.messages'
 import { Route as AdminAdminFinanceRouteImport } from './routes/_admin.admin.finance'
+import { Route as AdminAdminDiagnosticsRouteImport } from './routes/_admin.admin.diagnostics'
 import { Route as AdminAdminClientsRouteImport } from './routes/_admin.admin.clients'
 import { Route as AdminAdminCarsRouteImport } from './routes/_admin.admin.cars'
 import { Route as AdminAdminBookingsRouteImport } from './routes/_admin.admin.bookings'
@@ -299,6 +300,11 @@ const AdminAdminFinanceRoute = AdminAdminFinanceRouteImport.update({
   path: '/admin/finance',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminAdminDiagnosticsRoute = AdminAdminDiagnosticsRouteImport.update({
+  id: '/admin/diagnostics',
+  path: '/admin/diagnostics',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminAdminClientsRoute = AdminAdminClientsRouteImport.update({
   id: '/admin/clients',
   path: '/admin/clients',
@@ -352,6 +358,7 @@ export interface FileRoutesByFullPath {
   '/admin/bookings': typeof AdminAdminBookingsRoute
   '/admin/cars': typeof AdminAdminCarsRoute
   '/admin/clients': typeof AdminAdminClientsRoute
+  '/admin/diagnostics': typeof AdminAdminDiagnosticsRoute
   '/admin/finance': typeof AdminAdminFinanceRoute
   '/admin/messages': typeof AdminAdminMessagesRoute
   '/admin/reviews': typeof AdminAdminReviewsRoute
@@ -402,6 +409,7 @@ export interface FileRoutesByTo {
   '/admin/bookings': typeof AdminAdminBookingsRoute
   '/admin/cars': typeof AdminAdminCarsRoute
   '/admin/clients': typeof AdminAdminClientsRoute
+  '/admin/diagnostics': typeof AdminAdminDiagnosticsRoute
   '/admin/finance': typeof AdminAdminFinanceRoute
   '/admin/messages': typeof AdminAdminMessagesRoute
   '/admin/reviews': typeof AdminAdminReviewsRoute
@@ -456,6 +464,7 @@ export interface FileRoutesById {
   '/_admin/admin/bookings': typeof AdminAdminBookingsRoute
   '/_admin/admin/cars': typeof AdminAdminCarsRoute
   '/_admin/admin/clients': typeof AdminAdminClientsRoute
+  '/_admin/admin/diagnostics': typeof AdminAdminDiagnosticsRoute
   '/_admin/admin/finance': typeof AdminAdminFinanceRoute
   '/_admin/admin/messages': typeof AdminAdminMessagesRoute
   '/_admin/admin/reviews': typeof AdminAdminReviewsRoute
@@ -509,6 +518,7 @@ export interface FileRouteTypes {
     | '/admin/bookings'
     | '/admin/cars'
     | '/admin/clients'
+    | '/admin/diagnostics'
     | '/admin/finance'
     | '/admin/messages'
     | '/admin/reviews'
@@ -559,6 +569,7 @@ export interface FileRouteTypes {
     | '/admin/bookings'
     | '/admin/cars'
     | '/admin/clients'
+    | '/admin/diagnostics'
     | '/admin/finance'
     | '/admin/messages'
     | '/admin/reviews'
@@ -612,6 +623,7 @@ export interface FileRouteTypes {
     | '/_admin/admin/bookings'
     | '/_admin/admin/cars'
     | '/_admin/admin/clients'
+    | '/_admin/admin/diagnostics'
     | '/_admin/admin/finance'
     | '/_admin/admin/messages'
     | '/_admin/admin/reviews'
@@ -975,6 +987,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminAdminFinanceRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/_admin/admin/diagnostics': {
+      id: '/_admin/admin/diagnostics'
+      path: '/admin/diagnostics'
+      fullPath: '/admin/diagnostics'
+      preLoaderRoute: typeof AdminAdminDiagnosticsRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/_admin/admin/clients': {
       id: '/_admin/admin/clients'
       path: '/admin/clients'
@@ -1017,6 +1036,7 @@ interface AdminRouteChildren {
   AdminAdminBookingsRoute: typeof AdminAdminBookingsRoute
   AdminAdminCarsRoute: typeof AdminAdminCarsRoute
   AdminAdminClientsRoute: typeof AdminAdminClientsRoute
+  AdminAdminDiagnosticsRoute: typeof AdminAdminDiagnosticsRoute
   AdminAdminFinanceRoute: typeof AdminAdminFinanceRoute
   AdminAdminMessagesRoute: typeof AdminAdminMessagesRoute
   AdminAdminReviewsRoute: typeof AdminAdminReviewsRoute
@@ -1029,6 +1049,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminAdminBookingsRoute: AdminAdminBookingsRoute,
   AdminAdminCarsRoute: AdminAdminCarsRoute,
   AdminAdminClientsRoute: AdminAdminClientsRoute,
+  AdminAdminDiagnosticsRoute: AdminAdminDiagnosticsRoute,
   AdminAdminFinanceRoute: AdminAdminFinanceRoute,
   AdminAdminMessagesRoute: AdminAdminMessagesRoute,
   AdminAdminReviewsRoute: AdminAdminReviewsRoute,
