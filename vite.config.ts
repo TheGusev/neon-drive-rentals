@@ -24,7 +24,7 @@ export default defineConfig({
       },
       server: { entry: "server" },
     }),
-    nitro({ preset: "node-server" }),
+    nitro({ preset: "node-server", output: { dir: "dist" } }),
     react(),
   ],
 });
