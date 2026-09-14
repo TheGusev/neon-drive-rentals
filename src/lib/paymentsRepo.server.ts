@@ -41,9 +41,9 @@ function mapPayment(row: PaymentRow): AdminPayment {
     method: String(row.provider ?? "").toLowerCase() === "cash" ? "cash" : "card",
     status: mapStatus(row.status),
     clientName: row.client_name?.trim() || "Клиент",
+    clientPhone: row.client_phone ?? "",
     purpose: row.purpose === "extension" ? "extension" : "booking",
     extensionId: row.extension_id ?? undefined,
-    clientPhone: row.client_phone ?? "",
     carName: [row.brand, row.model].filter(Boolean).join(" ") || "—",
   };
 }
