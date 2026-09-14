@@ -62,6 +62,11 @@ export const adminDiagnostics = createServerFn({ method: "GET" }).handler(
         column,
         present: present.has(`${table}.${column}`),
       }));
+      const tbls = await query<{ table_name: string }>(
+        `select table_name from information_schema.tables where table_schema = 'public'`,
+      );
+      const tablesPresent = new Set(tbls.map((t) => t.table_name));
+      report.tables = REQUIRED_TABLES.map((table) => ({ table, present: tablesPresent.has(table) }));
       report.databaseReachable = true;
     } catch (error) {
       report.databaseError = error instanceof Error ? error.message : String(error);
