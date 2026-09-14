@@ -29,13 +29,12 @@ export default defineConfig({
     react(),
   ],
   build: {
-    build: {
-      // Сайт отдаётся по HTTP/1.1: десятки мелких чанков = очередь из запросов
-      // на мобильной сети. Склеиваем всё, что меньше 24 КБ.
-      rollupOptions: {
-        output: {
-          experimentalMinChunkSize: 24_000,
-        } as Record<string, unknown>,
-      },
+    // Сайт отдаётся по HTTP/1.1: десятки мелких чанков = очередь из запросов
+    // на мобильной сети. Склеиваем всё, что меньше 24 КБ.
+    rollupOptions: {
+      output: {
+        experimentalMinChunkSize: 24_000,
+      } as Record<string, unknown>,
+    },
   },
 });
