@@ -18,6 +18,11 @@ type BookingRow = {
   handled_by?: string | null;
   return_mileage?: number | string | null;
   return_mileage_source?: string | null;
+  start_mileage?: number | string | null;
+  tariff?: string | null;
+  extension_status?: string | null;
+  extension_end_date?: Date | string | null;
+  extension_amount?: number | string | null;
 };
 
 const BOOKING_STATUSES: BookingStatus[] = ["paid", "pending", "active", "completed", "cancelled"];
@@ -65,6 +70,12 @@ function mapBookingRow(row: BookingRow): Booking {
     ...(row.return_mileage_source === "client" || row.return_mileage_source === "admin"
       ? { returnMileageSource: row.return_mileage_source }
       : {}),
+    ...(row.start_mileage === null || row.start_mileage === undefined ? {} : { startMileage: Number(row.start_mileage) }),
+    tariff: row.tariff === "region" || row.tariff === "outside" ? row.tariff : "city",
+    extensionStatus: (["pending", "paid", "conflict"].includes(String(row.extension_status))
+      ? row.extension_status : "none") as Booking["extensionStatus"],
+    ...(row.extension_end_date ? { extensionEndDate: iso(row.extension_end_date) } : {}),
+    ...(row.extension_amount === null || row.extension_amount === undefined ? {} : { extensionAmount: Number(row.extension_amount) }),
   };
 }
 
@@ -72,7 +83,8 @@ const SELECT_BOOKINGS = `
   select b.id, b.car_id, c.slug as car_slug, b.client_id,
          b.date_from, b.date_to, b.total, b.status, b.signed_at,
          b.keys_issued_at, b.returned_at, b.handled_by,
-         b.return_mileage, b.return_mileage_source
+         b.return_mileage, b.return_mileage_source, b.start_mileage, b.tariff,
+         b.extension_status, b.extension_end_date, b.extension_amount
   from bookings b
   left join cars c on c.id = b.car_id
 `;
@@ -327,6 +339,7 @@ export type CreateBookingInput = {
   /** Договор подписан кодом из SMS прямо в чекауте. */
   signed?: boolean;
   signatureIp?: string;
+  tariff?: "city" | "region" | "outside";
 };
 
 export type CreateBookingResult =
@@ -387,9 +400,9 @@ export async function insertBooking(input: CreateBookingInput): Promise<CreateBo
         )[0].id;
 
     const inserted = await run<BookingRow>(
-      `insert into bookings (car_id, client_id, date_from, date_to, total, status, signed_at, signature_ip)
+      `insert into bookings (car_id, client_id, date_from, date_to, total, status, signed_at, signature_ip, tariff)
        values ($1, $2, $3::timestamptz, $4::timestamptz, $5, $6,
-               case when $7::boolean then now() else null end, $8)
+                case when $7::boolean then now() else null end, $8, $9)
        returning id, car_id, client_id, date_from, date_to, total, status, signed_at`,
       [
         input.carDbId,
@@ -400,6 +413,7 @@ export async function insertBooking(input: CreateBookingInput): Promise<CreateBo
         input.signed ? "confirmed" : "pending",
         Boolean(input.signed),
         input.signatureIp ?? null,
+        input.tariff ?? "city",
       ],
     );
 
@@ -419,10 +433,13 @@ export async function markKeysIssued(id: string, manager: string): Promise<Booki
   const rows = await query<{ id: string; car_id: string }>(
     `update bookings
         set keys_issued_at = coalesce(keys_issued_at, now()),
+            start_mileage = coalesce(start_mileage, c.mileage, 0),
             handled_by = $2,
             status = 'active'
-      where id::text = $1 and status in ('confirmed', 'active', 'pending')
-      returning id, car_id`,
+       from cars c
+      where bookings.id::text = $1 and bookings.status in ('confirmed', 'active', 'pending')
+        and c.id = bookings.car_id
+      returning bookings.id, bookings.car_id`,
     [id, manager],
   );
   if (!rows.length) return null;
@@ -455,29 +472,28 @@ export async function markReturned(
   return fetchBookingById(id);
 }
 
-/** Переносит зафиксированный пробег брони в карточку авто (только вверх). */
+/** Пересчитывает текущий пробег авто по всем принятым возвратам. */
 async function syncCarMileage(carDbId: string, bookingId: string): Promise<void> {
   await query(
     `update cars c
-        set mileage = b.return_mileage
-       from bookings b
-      where b.id::text = $2
-        and c.id = $1
-        and b.return_mileage is not null
-        and (c.mileage is null or c.mileage < b.return_mileage)`,
+        set mileage = greatest(coalesce((
+          select max(b.return_mileage) from bookings b
+           where b.car_id = $1 and b.returned_at is not null and b.return_mileage is not null
+        ), 0), coalesce((select b.start_mileage from bookings b where b.id::text = $2), 0))
+      where c.id = $1`,
     [carDbId, bookingId],
   ).catch(() => undefined);
 }
 
-/** Клиент вносит показания одометра — один раз, только для своей брони. */
+/** Клиент вносит и исправляет показания до приёмки возврата. */
 export async function submitClientMileage(
   bookingId: string,
   phone: string,
   mileage: number,
-): Promise<{ ok: boolean; reason?: "not_found" | "already_set" }> {
+): Promise<{ ok: boolean; reason?: "not_found" | "locked" | "below_start" }> {
   if (!hasDatabase()) return { ok: false, reason: "not_found" };
-  const rows = await query<{ id: string; return_mileage: number | null }>(
-    `select b.id, b.return_mileage
+  const rows = await query<{ id: string; returned_at: Date | null; status: string; start_mileage: number | null }>(
+    `select b.id, b.returned_at, b.status, b.start_mileage
        from bookings b join clients cl on cl.id = b.client_id
       where b.id::text = $1
         and regexp_replace(cl.phone, '\\D', '', 'g') = regexp_replace($2, '\\D', '', 'g')
@@ -485,9 +501,8 @@ export async function submitClientMileage(
     [bookingId, phone],
   );
   if (!rows.length) return { ok: false, reason: "not_found" };
-  if (rows[0].return_mileage !== null && rows[0].return_mileage !== undefined) {
-    return { ok: false, reason: "already_set" };
-  }
+  if (rows[0].returned_at || rows[0].status === "completed") return { ok: false, reason: "locked" };
+  if (mileage < Number(rows[0].start_mileage ?? 0)) return { ok: false, reason: "below_start" };
   await query(
     `update bookings set return_mileage = $2, return_mileage_source = 'client' where id::text = $1`,
     [bookingId, mileage],
@@ -500,7 +515,7 @@ export async function setAdminMileage(bookingId: string, mileage: number): Promi
   if (!hasDatabase()) return null;
   const rows = await query<{ id: string; car_id: string }>(
     `update bookings set return_mileage = $2, return_mileage_source = 'admin'
-      where id::text = $1 returning id, car_id`,
+      where id::text = $1 and $2 >= coalesce(start_mileage, 0) returning id, car_id`,
     [bookingId, mileage],
   );
   if (!rows.length) return null;

@@ -1,5 +1,4 @@
 import { CalendarDays, Gauge, MapPin, Navigation, ShieldCheck } from "lucide-react";
-import { toast } from "sonner";
 import { SectionCard } from "@/components/checkout/SectionCard";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -96,27 +95,12 @@ export function CurrentRentalCard({ booking, car }: { booking: Booking; car: Car
         </div>
       </div>
 
-      {booking.returnMileage !== undefined && booking.returnMileage !== null ? (
-        <div className="mt-3 flex items-center justify-between rounded-2xl bg-muted px-3 py-2 text-xs text-foreground/80">
-          <span className="flex items-center gap-1.5">
-            <Gauge className="h-3.5 w-3.5 text-muted-foreground" /> Пробег при возврате
-          </span>
-          <span className="font-semibold text-foreground">
-            {booking.returnMileage.toLocaleString("ru-RU")} км
-          </span>
-        </div>
-      ) : (
-        booking.keysIssuedAt && <MileageForm bookingId={booking.id} />
+      {booking.keysIssuedAt && !booking.returnedAt && (
+        <MileageForm bookingId={booking.id} current={booking.returnMileage} minimum={booking.startMileage ?? 0} />
       )}
-
-      <Button
-        variant="accent"
-        size="lg"
-        className="mt-3 w-full"
-        onClick={() => toast("Продление аренды скоро появится")}
-      >
-        Продлить аренду
-      </Button>
+      {booking.returnedAt && booking.returnMileage !== undefined && (
+        <div className="mt-3 flex items-center justify-between rounded-2xl bg-muted px-3 py-2 text-xs text-foreground/80"><span className="flex items-center gap-1.5"><Gauge className="h-3.5 w-3.5" />Пробег при возврате</span><strong>{booking.returnMileage.toLocaleString("ru-RU")} км</strong></div>
+      )}
     </SectionCard>
   );
 }
