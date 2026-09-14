@@ -27,7 +27,7 @@ echo "==> Перезапуск приложения"
 if pm2 describe "$APP_NAME" >/dev/null 2>&1; then
   pm2 restart "$APP_NAME" --update-env
 else
-  pm2 start .output/server/index.mjs --name "$APP_NAME" --update-env
+  pm2 start dist/server/index.mjs --name "$APP_NAME" --update-env
 fi
 pm2 save
 

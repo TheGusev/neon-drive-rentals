@@ -10,11 +10,11 @@ const IMAGE_SIGNATURES: Array<{ ext: string[]; matches: (buffer: Buffer) => bool
   { ext: [".webp"], matches: (b) => b.length > 12 && b.toString("ascii", 0, 4) === "RIFF" && b.toString("ascii", 8, 12) === "WEBP" },
 ];
 
-/** Каталог статики: в проде — рядом с .output/public, локально — public/. */
+/** Каталог статики: в проде — рядом с dist/public, локально — public/. */
 function publicDir(): string {
   const custom = process.env["PUBLIC_ASSETS_DIR"];
   if (custom) return custom;
-  return path.join(process.cwd(), ".output", "public");
+  return path.join(process.cwd(), "dist", "public");
 }
 
 export function carUploadsDir(): string {
