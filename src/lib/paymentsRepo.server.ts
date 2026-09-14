@@ -55,8 +55,20 @@ async function ready(): Promise<boolean> {
   return true;
 }
 
-const SELECT_PAYMENTS = `
-  select p.id, p.created_at, p.booking_id, p.amount, p.status, p.provider, p.purpose, p.extension_id,
+/** Некоторые колонки появляются только после миграции 022 — проверяем фактическую схему. */
+async function paymentColumns(): Promise<Set<string>> {
+  const rows = await query<{ column_name: string }>(
+    `select column_name from information_schema.columns
+       where table_schema = 'public' and table_name = 'payments'`,
+  );
+  return new Set(rows.map((r) => r.column_name));
+}
+
+function selectPayments(cols: Set<string>): string {
+  const purpose = cols.has("purpose") ? "p.purpose" : `'booking'::text as purpose`;
+  const extension = cols.has("extension_id") ? "p.extension_id" : `null::text as extension_id`;
+  return `
+  select p.id, p.created_at, p.booking_id, p.amount, p.status, p.provider, ${purpose}, ${extension},
          b.client_id, cl.name as client_name, cl.phone as client_phone,
          c.slug as car_slug, c.brand, c.model, c.plate
   from payments p
@@ -64,6 +76,7 @@ const SELECT_PAYMENTS = `
   left join clients cl on cl.id = b.client_id
   left join cars c on c.id = b.car_id
 `;
+}
 
 export async function fetchPaymentsAdmin(range?: { from?: string; to?: string }): Promise<AdminPayment[]> {
   if (!(await ready())) {

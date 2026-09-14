@@ -44,12 +44,12 @@ jobs:
             "mkdir -p '${{ secrets.DEPLOY_PATH }}/shared/car-uploads'"
           rsync -az --delete \
             -e "ssh -i ~/.ssh/id_deploy -p ${{ secrets.SSH_PORT || 22 }}" \
-            .output/ \
-            "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ secrets.DEPLOY_PATH }}/.output/"
+            dist/ \
+            "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ secrets.DEPLOY_PATH }}/dist/"
 
           ssh -i ~/.ssh/id_deploy -p "${{ secrets.SSH_PORT || 22 }}" \
             "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}" \
-            "mkdir -p '${{ secrets.DEPLOY_PATH }}/.output/public/assets/cars' && rm -rf '${{ secrets.DEPLOY_PATH }}/.output/public/assets/cars/uploads' && ln -s '${{ secrets.DEPLOY_PATH }}/shared/car-uploads' '${{ secrets.DEPLOY_PATH }}/.output/public/assets/cars/uploads'"
+            "mkdir -p '${{ secrets.DEPLOY_PATH }}/dist/public/assets/cars' && rm -rf '${{ secrets.DEPLOY_PATH }}/dist/public/assets/cars/uploads' && ln -s '${{ secrets.DEPLOY_PATH }}/shared/car-uploads' '${{ secrets.DEPLOY_PATH }}/dist/public/assets/cars/uploads'"
 
       - name: Restart app
         run: |
