@@ -240,3 +240,25 @@ export async function toggleFavoriteInDb(clientId: string, carId: string): Promi
   }
   return fetchFavorites(clientId);
 }
+
+export async function fetchContractData(bookingId: string, clientId: string) {
+  if (!(await ready())) return null;
+  const bookings = await query<{
+    id: string; date_from: Date | string; date_to: Date | string; total: string | number;
+    tariff: string; signed_at: Date | string | null; name: string | null; phone: string | null;
+    email: string | null; brand: string; model: string; year: number; color: string | null; plate: string | null;
+  }>(
+    `select b.id, b.date_from, b.date_to, b.total, b.tariff, b.signed_at,
+            cl.name, cl.phone, cl.email, c.brand, c.model, c.year, c.plate, c.specs->>'color' as color
+       from bookings b join clients cl on cl.id = b.client_id join cars c on c.id = b.car_id
+      where b.id = $1::uuid and b.client_id::text = $2 limit 1`, [bookingId, clientId],
+  );
+  if (!bookings.length) return null;
+  const documents = await fetchDocuments(clientId);
+  const row = bookings[0];
+  return {
+    id: String(row.id), startDate: iso(row.date_from), endDate: iso(row.date_to), totalPrice: Number(row.total), tariff: row.tariff,
+    signed: Boolean(row.signed_at), client: { name: row.name ?? "Клиент", phone: row.phone ?? "", email: row.email ?? "" },
+    car: { brand: row.brand, model: row.model, year: Number(row.year), color: row.color ?? "—", plate: row.plate ?? "—" }, documents,
+  };
+}

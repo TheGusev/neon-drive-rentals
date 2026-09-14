@@ -34,7 +34,7 @@ function ProfileOverview() {
   return <div className="space-y-3"><ProfileHeader name={profileData?.profile?.name} rating={0} reviewsCount={0} />
     {active && car ? <CurrentRentalCard booking={active} car={car} /> : <SectionCard title="Текущая аренда" className="bg-card ring-1 ring-border"><p className="text-sm text-muted-foreground">Нет активных аренд.</p><Button asChild className="mt-3"><Link to="/cars">Выбрать автомобиль</Link></Button></SectionCard>}
     {awaiting && <ReviewForm bookingId={awaiting.id} carTitle={awaitingCar ? `${awaitingCar.brand} ${awaitingCar.model}` : "Завершённая аренда"} />}
-    <FavoritesBlock /><ReviewsBlock reviews={[]} rating={0} />
+    <FavoritesBlock /><ReviewsBlock reviews={myReviews} rating={myReviews.length ? myReviews.reduce((sum, review) => sum + review.rating, 0) / myReviews.length : 0} />
     <Button variant="soft" className="w-full" onClick={async () => { await logout({}); await queryClient.invalidateQueries({ queryKey: ["me"] }); }}><LogOut className="mr-2 h-4 w-4" />Выйти</Button>
   </div>;
 }

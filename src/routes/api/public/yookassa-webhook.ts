@@ -68,7 +68,7 @@ export const Route = createFileRoute("/api/public/yookassa-webhook")({
         if (isRefund) {
           const updated = await updatePaymentByProviderId(providerId, "refunded");
           const bookingId = updated?.bookingId ?? payload.object?.metadata?.bookingId ?? null;
-          if (bookingId) {
+          if (bookingId && updated?.purpose !== "extension") {
             const payment = await fetchLatestPaymentByBooking(bookingId);
             if (payment && amount) await markPaymentRefunded(payment.id, amount);
             const { updateBookingStatusInDb } = await import("@/lib/bookingsRepo.server");

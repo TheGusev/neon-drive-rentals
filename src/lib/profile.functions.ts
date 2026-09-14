@@ -117,3 +117,13 @@ export const reviewClientDocument = createServerFn({ method: "POST" })
     const { setDocumentStatus } = await import("@/lib/profileRepo.server");
     return { ok: await setDocumentStatus(data.id, data.status, data.comment) };
   });
+
+export const getMyContractData = createServerFn({ method: "GET" })
+  .inputValidator((data: unknown) => z.object({ bookingId: z.string().uuid() }).parse(data))
+  .handler(async ({ data }) => {
+    const { getClientSession } = await import("@/lib/clientSession.server");
+    const session = await getClientSession();
+    if (!session.clientId) return null;
+    const { fetchContractData } = await import("@/lib/profileRepo.server");
+    return fetchContractData(data.bookingId, session.clientId);
+  });
