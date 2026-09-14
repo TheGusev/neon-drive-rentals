@@ -5,7 +5,7 @@ import type { ClientDocument, ClientProfile, ClientReview } from "@/types/domain
 export type MyProfileResult = {
   authenticated: boolean;
   profile: (ClientProfile & { ordersCount: number; createdAt?: string }) | null;
-  documents: Array<ClientDocument & { fileUrl?: string; comment?: string }>;
+  documents: Array<ClientDocument & { comment?: string }>;
   reviews: ClientReview[];
   favorites: string[];
 };
@@ -47,32 +47,35 @@ export const updateMyProfile = createServerFn({ method: "POST" })
     return { ok: await updateProfileName(clientId, data.name.trim(), data.email?.trim()) };
   });
 
-export const uploadMyDocument = createServerFn({ method: "POST" })
+const documentSchema = z.discriminatedUnion("type", [
+  z.object({
+    type: z.literal("passport"),
+    number: z.string().trim().regex(/^\d{4}\s?\d{6}$/, "Укажите 10 цифр паспорта"),
+    birthDate: z.string().date(),
+    issuedBy: z.string().trim().min(3).max(300),
+    issueDate: z.string().date(),
+    departmentCode: z.string().trim().regex(/^\d{3}-\d{3}$/),
+    registrationAddress: z.string().trim().min(5).max(400),
+  }),
+  z.object({
+    type: z.literal("license"),
+    number: z.string().trim().min(6).max(30),
+    issueDate: z.string().date(),
+    expiryDate: z.string().date(),
+  }),
+]);
+
+export const saveMyDocument = createServerFn({ method: "POST" })
   .inputValidator((data: unknown) =>
-    z
-      .object({
-        type: z.enum(["passport", "license"]),
-        number: z.string().max(60).optional(),
-        fileName: z.string().max(200).optional(),
-        contentBase64: z.string().max(9_000_000).optional(),
-      })
-      .parse(data),
+    documentSchema.parse(data),
   )
   .handler(async ({ data }) => {
     const { getClientSession } = await import("@/lib/clientSession.server");
     const { clientId } = await getClientSession();
     if (!clientId) return { ok: false as const, error: "Требуется вход" };
 
-    let fileUrl: string | undefined;
-    if (data.fileName && data.contentBase64) {
-      const { saveCarPhoto } = await import("@/lib/uploads.server");
-      const saved = await saveCarPhoto(data.fileName, data.contentBase64);
-      if (!saved.ok) return { ok: false as const, error: saved.error ?? "Не удалось сохранить файл" };
-      fileUrl = saved.url;
-    }
-
-    const { insertDocument } = await import("@/lib/profileRepo.server");
-    const ok = await insertDocument({ clientId, type: data.type, number: data.number, fileUrl });
+    const { upsertIdentityDocument } = await import("@/lib/profileRepo.server");
+    const ok = await upsertIdentityDocument({ clientId, ...data });
     return ok ? { ok: true as const } : { ok: false as const, error: "База данных недоступна" };
   });
 
