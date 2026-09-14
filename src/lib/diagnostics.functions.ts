@@ -38,6 +38,7 @@ export const adminDiagnostics = createServerFn({ method: "GET" }).handler(
       appliedMigrations: [],
       failedMigrations: [],
       columns: REQUIRED_COLUMNS.map(([table, column]) => ({ table, column, present: false })),
+      tables: REQUIRED_TABLES.map((table) => ({ table, present: false })),
       buildTime: process.env["VITE_BUILD_TIME"] ?? null,
     };
 
