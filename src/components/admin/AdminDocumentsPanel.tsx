@@ -14,7 +14,7 @@ const statusTone = {
 
 const statusLabel = { verified: "Проверен", pending: "Ожидает", rejected: "Отклонён" } as const;
 
-/** Проверка документов клиентов: фото, статус, решение менеджера. */
+/** Проверка введённых клиентами реквизитов документов. */
 export function AdminDocumentsPanel() {
   const { data: docs = [], isLoading } = useQuery(adminDocumentsQueryOptions());
   const queryClient = useQueryClient();
@@ -43,20 +43,15 @@ export function AdminDocumentsPanel() {
           const Icon = doc.type === "passport" ? IdCard : FileText;
           return (
             <li key={doc.id} className="flex items-center gap-3 rounded-xl border border-border/70 p-2">
-              <div className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-muted text-muted-foreground">
-                {doc.fileUrl ? (
-                  <a href={doc.fileUrl} target="_blank" rel="noreferrer" className="h-full w-full">
-                    <img src={doc.fileUrl} alt="" loading="lazy" className="h-full w-full object-cover" />
-                  </a>
-                ) : (
-                  <Icon className="h-5 w-5" />
-                )}
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-muted text-muted-foreground">
+                <Icon className="h-5 w-5" />
               </div>
               <div className="min-w-0 flex-1">
                 <div className="truncate text-sm font-medium text-foreground">{doc.clientName}</div>
                 <div className="truncate text-xs text-muted-foreground">
-                  {doc.type === "passport" ? "Паспорт" : "Права"} · {doc.clientPhone}
+                  {doc.type === "passport" ? "Паспорт" : "Права"} · {doc.number || "без номера"}
                 </div>
+                <div className="truncate text-[11px] text-muted-foreground">{doc.clientPhone}</div>
               </div>
               <span className={`flex shrink-0 items-center gap-1 rounded-full px-2 py-1 text-[11px] ${statusTone[doc.status]}`}>
                 <Clock className="h-3 w-3" /> {statusLabel[doc.status]}
