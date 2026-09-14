@@ -7,6 +7,7 @@ export type DiagnosticsReport = {
   appliedMigrations: string[];
   failedMigrations: Array<{ name: string; message: string }>;
   columns: Array<{ table: string; column: string; present: boolean }>;
+  tables: Array<{ table: string; present: boolean }>;
   buildTime: string | null;
 };
 
@@ -16,9 +17,11 @@ const REQUIRED_COLUMNS: Array<[string, string]> = [
   ["bookings", "start_mileage"],
   ["bookings", "return_mileage"],
   ["bookings", "extension_status"],
-  ["clients", "passport_series"],
-  ["clients", "license_number"],
+  ["client_documents", "birth_date"],
+  ["client_documents", "issued_by"],
 ];
+
+const REQUIRED_TABLES = ["booking_extensions", "car_reviews", "messages", "client_documents"];
 
 export const adminDiagnostics = createServerFn({ method: "GET" }).handler(
   async (): Promise<DiagnosticsReport> => {
