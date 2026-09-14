@@ -52,6 +52,7 @@ const MIGRATIONS: Array<{ name: string; sql: string }> = [
   { name: "022_profile_extensions", sql: profileExtensionsMigration },
   { name: "023_reviews_rating", sql: reviewsRatingMigration },
   { name: "024_schema_compatibility", sql: schemaCompatibilityMigration },
+  { name: "025_booking_extensions_compat", sql: bookingExtensionsCompatMigration },
 ];
 
 type MigrationFailure = { name: string; message: string };
