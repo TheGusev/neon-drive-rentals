@@ -2,7 +2,8 @@ import { Link, useRouterState } from "@tanstack/react-router";
 import { CalendarCheck, FileText, MessageCircle, User } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-const items = [
+type NavItem = { to: "/profile" | "/profile/rentals" | "/profile/messages" | "/profile/documents"; label: string; Icon: typeof User; exact?: boolean };
+const items: NavItem[] = [
   { to: "/profile", label: "Кабинет", Icon: User, exact: true },
   { to: "/profile/rentals", label: "Аренды", Icon: CalendarCheck },
   { to: "/profile/messages", label: "Сообщения", Icon: MessageCircle },

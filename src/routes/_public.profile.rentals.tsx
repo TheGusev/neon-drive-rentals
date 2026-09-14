@@ -1,0 +1,11 @@
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
+import { CurrentRentalCard } from "@/components/profile/CurrentRentalCard";
+import { RentalJourney } from "@/components/profile/RentalJourney";
+import { BookingHistoryList } from "@/components/profile/BookingHistoryList";
+import { SectionCard } from "@/components/checkout/SectionCard";
+import { Button } from "@/components/ui/button";
+import { myBookingsQueryOptions, myReviewsQueryOptions } from "@/lib/queries";
+import { useCarLookup } from "@/state/AppDataContext";
+export const Route = createFileRoute("/_public/profile/rentals")({ head: () => ({ meta: [{ title: "Мои аренды — NSK-RENT" }, { name: "description", content: "Текущая аренда и история поездок NSK-RENT." }, { property: "og:title", content: "Мои аренды — NSK-RENT" }, { property: "og:description", content: "Сроки, статусы и история аренд." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }, { name: "robots", content: "noindex, nofollow" }] }), component: RentalsPage });
+function RentalsPage() { const getCar = useCarLookup(); const { data } = useQuery(myBookingsQueryOptions()); const { data: reviews = [] } = useQuery(myReviewsQueryOptions()); const bookings = data?.bookings ?? []; const active = bookings.find((b) => b.status === "active" || b.status === "paid"); const car = active ? getCar(active.carId) : undefined; return <div className="space-y-3"><h1 className="text-2xl font-semibold">Мои аренды</h1>{active && car ? <><CurrentRentalCard booking={active} car={car} /><SectionCard title="Маршрут аренды" className="bg-card ring-1 ring-border"><RentalJourney booking={active} hasReview={reviews.some((r) => r.bookingId === active.id)} /></SectionCard></> : <SectionCard title="Активная аренда"><p className="text-sm text-muted-foreground">Активных аренд нет.</p><Button asChild className="mt-3"><Link to="/cars">Выбрать автомобиль</Link></Button></SectionCard>}<BookingHistoryList items={bookings} /></div>; }

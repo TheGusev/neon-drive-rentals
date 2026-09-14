@@ -1,0 +1,6 @@
+import { createFileRoute } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
+import { DocumentsBlock } from "@/components/profile/DocumentsBlock";
+import { myProfileQueryOptions } from "@/lib/queries";
+export const Route = createFileRoute("/_public/profile/documents")({ head: () => ({ meta: [{ title: "Документы — NSK-RENT" }, { name: "description", content: "Паспортные данные и водительское удостоверение для договора аренды." }, { property: "og:title", content: "Документы — NSK-RENT" }, { property: "og:description", content: "Реквизиты документов для договора аренды." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }, { name: "robots", content: "noindex, nofollow" }] }), component: DocumentsPage });
+function DocumentsPage() { const { data } = useQuery(myProfileQueryOptions()); return <div className="space-y-3"><div><h1 className="text-2xl font-semibold">Документы</h1><p className="mt-1 text-sm text-muted-foreground">Введите реквизиты — они автоматически попадут в договор.</p></div><DocumentsBlock documents={data?.documents ?? []} /></div>; }
