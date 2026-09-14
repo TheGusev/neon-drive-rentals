@@ -106,6 +106,13 @@ function DiagnosticsPage() {
           </Card>
 
           <Card className="p-4">
+            <div className="mb-2 text-sm font-semibold">Ключевые таблицы</div>
+            {data.tables.map((t) => (
+              <Row key={t.table} ok={t.present} label={t.table} />
+            ))}
+          </Card>
+
+          <Card className="p-4">
             <div className="mb-2 text-sm font-semibold">Ключевые поля</div>
             {data.columns.map((c) => (
               <Row key={`${c.table}.${c.column}`} ok={c.present} label={`${c.table}.${c.column}`} />
