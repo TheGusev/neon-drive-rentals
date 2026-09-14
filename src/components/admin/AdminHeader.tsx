@@ -26,7 +26,7 @@ export function AdminHeader() {
   }
 
   return (
-    <header className="sticky top-0 z-30 flex h-16 items-center gap-3 border-b bg-background/95 px-4 backdrop-blur md:px-6 [box-sizing:content-box] pt-[env(safe-area-inset-top)]">
+    <header className="sticky top-0 z-30 flex min-h-[calc(4rem+env(safe-area-inset-top))] items-center gap-3 border-b bg-background/95 px-4 pb-2 pt-[calc(env(safe-area-inset-top)+0.5rem)] backdrop-blur md:h-16 md:min-h-16 md:px-6 md:py-0">
       <SidebarTrigger />
       <div className="hidden md:block">
         <div className="text-[10px] font-semibold uppercase tracking-[0.25em] text-muted-foreground">

@@ -1,4 +1,5 @@
 import { Link, Outlet, useRouterState } from "@tanstack/react-router";
+import { useEffect } from "react";
 import {
   Sidebar,
   SidebarContent,
@@ -11,8 +12,9 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarProvider,
+  useSidebar,
 } from "@/components/ui/sidebar";
-import { LayoutDashboard, Car, CalendarCheck, Users, Wallet, Settings, Globe , MessageCircle } from "lucide-react";
+import { LayoutDashboard, Car, CalendarCheck, Users, Wallet, Settings, Globe, MessageCircle, Star } from "lucide-react";
 import { AdminHeader } from "@/components/admin/AdminHeader";
 import { AdminTabBar } from "@/components/admin/AdminTabBar";
 import { ThemeProvider, useTheme } from "@/components/layout/ThemeProvider";
@@ -24,11 +26,16 @@ const items = [
   { to: "/admin/clients", label: "Клиенты", icon: Users },
   { to: "/admin/finance", label: "Финансы", icon: Wallet },
   { to: "/admin/messages", label: "Сообщения", icon: MessageCircle },
+  { to: "/admin/reviews", label: "Отзывы", icon: Star },
   { to: "/admin/settings", label: "Настройки", icon: Settings },
 ];
 
 function AdminSidebar() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const { isMobile, setOpenMobile } = useSidebar();
+  useEffect(() => {
+    if (isMobile) setOpenMobile(false);
+  }, [isMobile, pathname, setOpenMobile]);
   const isActive = (to: string, exact?: boolean) =>
     exact ? pathname === to : pathname === to || pathname.startsWith(to + "/");
 
@@ -55,7 +62,7 @@ function AdminSidebar() {
               {items.map((it) => (
                 <SidebarMenuItem key={it.to}>
                   <SidebarMenuButton asChild isActive={isActive(it.to, it.exact)}>
-                    <Link to={it.to} className="flex items-center gap-2">
+                    <Link to={it.to} onClick={() => setOpenMobile(false)} className="flex items-center gap-2">
                       <it.icon className="h-4 w-4" />
                       <span>{it.label}</span>
                     </Link>
@@ -70,7 +77,7 @@ function AdminSidebar() {
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton asChild>
-              <Link to="/" className="flex items-center gap-2">
+              <Link to="/" onClick={() => setOpenMobile(false)} className="flex items-center gap-2">
                 <Globe className="h-4 w-4" />
                 <span>Вернуться на сайт</span>
               </Link>
