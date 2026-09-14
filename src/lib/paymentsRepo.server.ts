@@ -18,6 +18,8 @@ type PaymentRow = {
   amount: string | number | null;
   status: string | null;
   provider: string | null;
+  purpose?: string | null;
+  extension_id?: string | null;
 };
 
 function mapStatus(value: string | null): Payment["status"] {
@@ -40,6 +42,8 @@ function mapPayment(row: PaymentRow): AdminPayment {
     status: mapStatus(row.status),
     clientName: row.client_name?.trim() || "Клиент",
     clientPhone: row.client_phone ?? "",
+    purpose: row.purpose === "extension" ? "extension" : "booking",
+    extensionId: row.extension_id ?? undefined,
     carName: [row.brand, row.model].filter(Boolean).join(" ") || "—",
   };
 }
@@ -52,7 +56,7 @@ async function ready(): Promise<boolean> {
 }
 
 const SELECT_PAYMENTS = `
-  select p.id, p.created_at, p.booking_id, p.amount, p.status, p.provider,
+  select p.id, p.created_at, p.booking_id, p.amount, p.status, p.provider, p.purpose, p.extension_id,
          b.client_id, cl.name as client_name, cl.phone as client_phone,
          c.slug as car_slug, c.brand, c.model, c.plate
   from payments p
