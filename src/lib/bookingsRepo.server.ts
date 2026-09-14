@@ -522,3 +522,55 @@ export async function setAdminMileage(bookingId: string, mileage: number): Promi
   await syncCarMileage(String(rows[0].car_id), bookingId);
   return fetchBookingById(bookingId);
 }
+
+export type BookingExtension = { id: string; bookingId: string; previousEndDate: string; newEndDate: string; amount: number; status: string; appliedAt?: string };
+type ExtensionRow = { id: string; booking_id: string; previous_date_to: Date | string; new_date_to: Date | string; amount: number | string; status: string; applied_at: Date | string | null };
+const mapExtension = (row: ExtensionRow): BookingExtension => ({ id: String(row.id), bookingId: String(row.booking_id), previousEndDate: iso(row.previous_date_to), newEndDate: iso(row.new_date_to), amount: Number(row.amount), status: row.status, ...(row.applied_at ? { appliedAt: iso(row.applied_at) } : {}) });
+
+export async function createPendingExtension(bookingId: string, phone: string, newEndDate: string): Promise<{ ok: true; extension: BookingExtension } | { ok: false; reason: "not_found" | "invalid_date" | "conflict" }> {
+  if (!hasDatabase()) return { ok: false, reason: "not_found" };
+  return withTransaction(async (run) => {
+    const bookingRows = await run<{ id: string; car_id: string; date_to: Date | string; price_city: string | number; tariff: string }>(
+      `select b.id, b.car_id, b.date_to, c.price_city, b.tariff
+         from bookings b join cars c on c.id = b.car_id join clients cl on cl.id = b.client_id
+        where b.id::text = $1 and regexp_replace(cl.phone, '\\D', '', 'g') = regexp_replace($2, '\\D', '', 'g')
+          and b.status in ('confirmed','active') and b.returned_at is null for update`, [bookingId, phone],
+    );
+    if (!bookingRows.length) return { ok: false as const, reason: "not_found" as const };
+    const booking = bookingRows[0]; const currentEnd = new Date(booking.date_to); const requestedEnd = new Date(newEndDate);
+    if (!Number.isFinite(requestedEnd.getTime()) || requestedEnd <= currentEnd) return { ok: false as const, reason: "invalid_date" as const };
+    const conflicts = await run<{ id: string }>(
+      `select id from bookings where car_id = $1 and id <> $2::uuid and status = any($5::text[])
+         and date_from < $4::timestamptz and $3::timestamptz < date_to for update`,
+      [booking.car_id, bookingId, currentEnd.toISOString(), requestedEnd.toISOString(), BLOCKING_DB],
+    );
+    if (conflicts.length) return { ok: false as const, reason: "conflict" as const };
+    const days = Math.ceil((requestedEnd.getTime() - currentEnd.getTime()) / 86_400_000);
+    const multiplier = booking.tariff === "outside" ? 1.25 : booking.tariff === "region" ? 1.12 : 1;
+    const amount = Math.round(days * Number(booking.price_city) * multiplier);
+    await run(`update booking_extensions set status = 'cancelled' where booking_id = $1::uuid and status = 'pending'`, [bookingId]);
+    const rows = await run<ExtensionRow>(`insert into booking_extensions (booking_id, previous_date_to, new_date_to, amount) values ($1::uuid, $2::timestamptz, $3::timestamptz, $4) returning *`, [bookingId, currentEnd.toISOString(), requestedEnd.toISOString(), amount]);
+    await run(`update bookings set extension_status = 'pending', extension_end_date = $2::timestamptz, extension_amount = $3 where id = $1::uuid`, [bookingId, requestedEnd.toISOString(), amount]);
+    return { ok: true as const, extension: mapExtension(rows[0]) };
+  });
+}
+
+export async function linkExtensionPayment(extensionId: string, paymentId: string): Promise<void> {
+  if (!hasDatabase()) return;
+  await query(`update booking_extensions set payment_id = $2::bigint where id = $1::uuid`, [extensionId, paymentId]);
+}
+
+export async function applyBookingExtension(extensionId: string): Promise<{ ok: boolean; bookingId?: string; conflict?: boolean }> {
+  if (!hasDatabase()) return { ok: false };
+  return withTransaction(async (run) => {
+    const rows = await run<ExtensionRow & { car_id: string }>(`select e.*, b.car_id from booking_extensions e join bookings b on b.id = e.booking_id where e.id = $1::uuid for update`, [extensionId]);
+    if (!rows.length) return { ok: false };
+    const extension = rows[0];
+    if (extension.applied_at) return { ok: true, bookingId: extension.booking_id };
+    const conflicts = await run<{ id: string }>(`select id from bookings where car_id = $1 and id <> $2::uuid and status = any($5::text[]) and date_from < $4::timestamptz and $3::timestamptz < date_to for update`, [extension.car_id, extension.booking_id, extension.previous_date_to, extension.new_date_to, BLOCKING_DB]);
+    if (conflicts.length) { await run(`update booking_extensions set status = 'conflict' where id = $1::uuid`, [extensionId]); await run(`update bookings set extension_status = 'conflict' where id = $1::uuid`, [extension.booking_id]); return { ok: false, bookingId: extension.booking_id, conflict: true }; }
+    await run(`update booking_extensions set status = 'paid', applied_at = now() where id = $1::uuid and applied_at is null`, [extensionId]);
+    await run(`update bookings set date_to = $2::timestamptz, total = total + $3, extension_status = 'paid', extension_end_date = $2::timestamptz, extension_amount = $3 where id = $1::uuid`, [extension.booking_id, extension.new_date_to, extension.amount]);
+    return { ok: true, bookingId: extension.booking_id };
+  });
+}
