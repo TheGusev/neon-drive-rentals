@@ -1,5 +1,42 @@
 -- 023_reviews_rating.sql — рейтинг автомобилей из опубликованных отзывов.
 
+create table if not exists car_reviews (
+  id uuid primary key default gen_random_uuid(),
+  booking_id uuid not null references bookings(id) on delete cascade,
+  car_id uuid not null references cars(id) on delete cascade,
+  client_id uuid not null references clients(id) on delete cascade,
+  rating integer not null check (rating between 1 and 5),
+  text text not null default '',
+  service_comment text,
+  hidden boolean not null default false,
+  created_at timestamptz not null default now(),
+  unique (booking_id)
+);
+
+-- Ранние установки могли получить ошибочные integer-поля до перехода бронирований на UUID.
+-- Такие строки не могли ссылаться на действующие UUID-записи, поэтому безопасно исправляем пустую таблицу.
+do $$
+declare booking_type text;
+begin
+  select data_type into booking_type from information_schema.columns
+   where table_schema = 'public' and table_name = 'car_reviews' and column_name = 'booking_id';
+  if booking_type <> 'uuid' then
+    delete from car_reviews;
+    alter table car_reviews drop constraint if exists car_reviews_booking_id_fkey;
+    alter table car_reviews drop constraint if exists car_reviews_car_id_fkey;
+    alter table car_reviews drop constraint if exists car_reviews_client_id_fkey;
+    alter table car_reviews alter column booking_id type uuid using null::uuid;
+    alter table car_reviews alter column car_id type uuid using null::uuid;
+    alter table car_reviews alter column client_id type uuid using null::uuid;
+    alter table car_reviews add constraint car_reviews_booking_id_fkey foreign key (booking_id) references bookings(id) on delete cascade;
+    alter table car_reviews add constraint car_reviews_car_id_fkey foreign key (car_id) references cars(id) on delete cascade;
+    alter table car_reviews add constraint car_reviews_client_id_fkey foreign key (client_id) references clients(id) on delete cascade;
+  end if;
+end $$;
+
+create unique index if not exists car_reviews_booking_idx on car_reviews (booking_id);
+create index if not exists car_reviews_car_idx on car_reviews (car_id, created_at desc);
+
 alter table cars add column if not exists rating numeric(3,2) not null default 5.0;
 alter table cars add column if not exists reviews_count integer not null default 0;
 

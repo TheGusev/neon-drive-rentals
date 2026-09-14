@@ -117,6 +117,8 @@ export type BookingPaymentRow = {
   provider: string;
   providerId: string | null;
   createdAt: string;
+  purpose: "booking" | "extension";
+  extensionId: string | null;
 };
 
 /** Последний платёж по брони — для страницы счёта. */
@@ -131,9 +133,11 @@ export async function fetchLatestPaymentByBooking(
     provider: string | null;
     provider_id: string | null;
     created_at: Date | string;
+    purpose: string | null;
+    extension_id: string | null;
   }>(
-    `select id, amount, status, provider, provider_id, created_at
-       from payments where booking_id = $1::uuid
+    `select id, amount, status, provider, provider_id, created_at, purpose, extension_id
+       from payments where booking_id = $1::uuid and purpose = 'booking'
       order by created_at desc limit 1`,
     [bookingId],
   );
@@ -146,12 +150,24 @@ export async function fetchLatestPaymentByBooking(
     provider: String(row.provider ?? "stub"),
     providerId: row.provider_id ? String(row.provider_id) : null,
     createdAt: new Date(row.created_at).toISOString(),
+    purpose: row.purpose === "extension" ? "extension" : "booking",
+    extensionId: row.extension_id ? String(row.extension_id) : null,
   };
+}
+
+export async function fetchPaymentRecordById(id: string): Promise<BookingPaymentRow | null> {
+  if (!(await ready())) return null;
+  const rows = await query<{ id: string; amount: string | number | null; status: string | null; provider: string | null; provider_id: string | null; created_at: Date | string; purpose: string | null; extension_id: string | null }>(
+    `select id, amount, status, provider, provider_id, created_at, purpose, extension_id from payments where id = $1::bigint limit 1`, [id],
+  );
+  if (!rows.length) return null;
+  const row = rows[0];
+  return { id: String(row.id), amount: Number(row.amount ?? 0), status: String(row.status ?? "pending"), provider: String(row.provider ?? "stub"), providerId: row.provider_id ? String(row.provider_id) : null, createdAt: new Date(row.created_at).toISOString(), purpose: row.purpose === "extension" ? "extension" : "booking", extensionId: row.extension_id ? String(row.extension_id) : null };
 }
 
 export async function updatePaymentStatusById(id: string, status: string): Promise<void> {
   if (!(await ready())) return;
-  await query(`update payments set status = $2, updated_at = now() where id = $1::uuid`, [id, status]);
+  await query(`update payments set status = $2, updated_at = now() where id = $1::bigint`, [id, status]);
 }
 
 /** Сохраняет контакты покупателя для чека 54-ФЗ. */
