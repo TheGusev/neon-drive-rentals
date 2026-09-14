@@ -93,6 +93,7 @@ function AdminBookingsPage() {
       }
       await queryClient.invalidateQueries({ queryKey: ["bookings"] });
       await queryClient.invalidateQueries({ queryKey: ["admin"] });
+      await queryClient.invalidateQueries({ queryKey: ["cars"] });
       await queryClient.invalidateQueries({ queryKey: ["me"] });
       toast.success("Оплата наличными зафиксирована");
     },
