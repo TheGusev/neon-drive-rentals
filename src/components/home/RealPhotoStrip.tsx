@@ -185,9 +185,9 @@ export function RealPhotoStrip() {
           <Carousel
             setApi={setApi}
             opts={{ loop: true, startIndex: selected ?? 0 }}
-            className="flex h-full min-h-0 items-center"
+            className="h-full w-full min-w-0 overflow-hidden"
           >
-            <CarouselContent className="ml-0 h-full items-center">
+            <CarouselContent className="ml-0 h-full">
               {PHOTOS.map((photo) => (
                 <CarouselItem key={photo.src} className="flex h-full items-center justify-center pl-0">
                   <figure className="flex h-full w-full flex-col items-center justify-center px-3 pb-[calc(env(safe-area-inset-bottom)+4rem)] pt-[calc(env(safe-area-inset-top)+4rem)] sm:px-16 sm:py-10">
@@ -195,7 +195,7 @@ export function RealPhotoStrip() {
                       src={photo.src}
                       alt={photo.alt}
                       decoding="async"
-                      className="max-h-[calc(100dvh-9rem)] w-full object-contain sm:max-h-[calc(96dvh-7rem)]"
+                      className="h-auto max-h-[calc(100dvh-9rem)] w-auto max-w-full object-contain sm:max-h-[calc(96dvh-7rem)]"
                     />
                     <figcaption className="mt-3 text-center text-sm font-medium text-foreground">
                       {photo.caption}
