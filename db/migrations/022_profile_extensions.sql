@@ -24,23 +24,8 @@ alter table payments add column if not exists purpose text not null default 'boo
 alter table payments add column if not exists extension_end_date timestamptz;
 alter table payments add column if not exists extension_id uuid;
 
-create table if not exists booking_extensions (
-  id uuid primary key default gen_random_uuid(),
-  booking_id uuid not null references bookings(id) on delete cascade,
-  previous_date_to timestamptz not null,
-  new_date_to timestamptz not null,
-  amount numeric(12,2) not null,
-  status text not null default 'pending',
-  payment_id bigint references payments(id) on delete set null,
-  created_at timestamptz not null default now(),
-  applied_at timestamptz,
-  constraint booking_extensions_dates check (new_date_to > previous_date_to)
-);
-
-create index if not exists booking_extensions_booking_idx
-  on booking_extensions (booking_id, created_at desc);
-create unique index if not exists booking_extensions_payment_idx
-  on booking_extensions (payment_id) where payment_id is not null;
+-- Таблица booking_extensions и её индексы создаются в 025_booking_extensions_compat.sql:
+-- типы связей там подбираются под реальную схему базы.
 
 create index if not exists payments_extension_idx
   on payments (booking_id, purpose, status, created_at desc);
