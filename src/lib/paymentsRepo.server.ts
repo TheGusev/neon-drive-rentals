@@ -92,7 +92,11 @@ export async function fetchPaymentsAdmin(range?: { from?: string; to?: string })
     params.push(range.to);
     where.push(`p.created_at <= $${params.length}::timestamptz`);
   }
-  const sql = `${SELECT_PAYMENTS} ${where.length ? `where ${where.join(" and ")}` : ""} order by p.created_at desc`;
+  const cols = await paymentColumns();
+  if (!cols.has("purpose") || !cols.has("extension_id")) {
+    console.warn("[payments] схема без колонок purpose/extension_id — выборка в режиме совместимости");
+  }
+  const sql = `${selectPayments(cols)} ${where.length ? `where ${where.join(" and ")}` : ""} order by p.created_at desc`;
   const rows = await query<PaymentRow>(sql, params);
   return rows.map(mapPayment);
 }
