@@ -43,10 +43,7 @@ function AdminBookingsPage() {
       await queryClient.invalidateQueries({ queryKey: ["admin"] });
       toast.success("Статус обновлён");
     },
-    onError: (error) => {
-      console.error("[admin] cash payment request failed", error);
-      toast.error("Не удалось связаться с сервером. Повторите попытку.");
-    },
+    onError: () => toast.error("Сервис временно недоступен"),
   });
   const runIssueKeys = useServerFn(issueKeys);
   const runAcceptReturn = useServerFn(acceptReturn);
@@ -67,7 +64,10 @@ function AdminBookingsPage() {
       await queryClient.invalidateQueries({ queryKey: ["cars"] });
       toast.success(vars.action === "keys" ? "Ключи выданы" : "Возврат принят");
     },
-    onError: () => toast.error("Сервис временно недоступен"),
+    onError: (error) => {
+      console.error("[admin] cash payment request failed", error);
+      toast.error("Не удалось связаться с сервером. Повторите попытку.");
+    },
   });
 
   const runMileage = useServerFn(setBookingMileage);
