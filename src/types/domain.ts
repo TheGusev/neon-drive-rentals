@@ -155,6 +155,8 @@ export interface Payment {
   amount: number;
   method: PaymentMethod;
   status: "success" | "pending" | "refunded" | "failed";
+  purpose?: "booking" | "extension";
+  extensionId?: string;
 }
 
 export interface NotificationItem {

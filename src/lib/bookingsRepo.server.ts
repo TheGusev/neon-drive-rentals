@@ -248,6 +248,8 @@ export async function fetchBookingsAdmin(filters?: {
             b.return_mileage, b.return_mileage_source,
             cl.name as client_name, cl.phone as client_phone,
             cl.email as client_email, c.brand, c.model, c.plate
+            b.return_mileage, b.return_mileage_source, b.start_mileage, b.tariff,
+            b.extension_status, b.extension_end_date, b.extension_amount,
      from bookings b
      left join cars c on c.id = b.car_id
      left join clients cl on cl.id = b.client_id
@@ -403,7 +405,7 @@ export async function insertBooking(input: CreateBookingInput): Promise<CreateBo
       `insert into bookings (car_id, client_id, date_from, date_to, total, status, signed_at, signature_ip, tariff)
        values ($1, $2, $3::timestamptz, $4::timestamptz, $5, $6,
                 case when $7::boolean then now() else null end, $8, $9)
-       returning id, car_id, client_id, date_from, date_to, total, status, signed_at`,
+       returning id, car_id, client_id, date_from, date_to, total, status, signed_at, tariff, start_mileage, extension_status, extension_end_date, extension_amount`,
       [
         input.carDbId,
         clientId,
