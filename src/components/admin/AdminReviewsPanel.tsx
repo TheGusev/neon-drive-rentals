@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card } from "@/components/ui/card";
+import type { CarReview } from "@/types/domain";
 
 export function AdminReviewsPanel() {
   const { data: reviews } = useSuspenseQuery(adminReviewsQueryOptions());
@@ -23,7 +24,7 @@ export function AdminReviewsPanel() {
   </div>;
 }
 
-function ReviewEditor({ review }: { review: ReturnType<typeof adminReviewsQueryOptions>["queryFn"] extends () => Promise<infer T> ? T[number] : never }) {
+function ReviewEditor({ review }: { review: CarReview }) {
   const [rating, setRating] = useState(review.rating); const [text, setText] = useState(review.text); const [serviceComment, setServiceComment] = useState(review.serviceComment ?? "");
   const update = useServerFn(updateReviewAdmin); const visibility = useServerFn(setReviewVisibility); const remove = useServerFn(deleteReviewAdmin); const queryClient = useQueryClient();
   const refresh = () => Promise.all([queryClient.invalidateQueries({ queryKey: ["admin", "reviews"] }), queryClient.invalidateQueries({ queryKey: ["cars"] })]);

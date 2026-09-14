@@ -76,6 +76,7 @@ export async function createYookassaPayment(input: {
   idempotenceKey: string;
   customer?: ReceiptCustomer;
   itemName?: string;
+  extensionId?: string;
 }): Promise<CreatePaymentResult> {
   const receipt = buildReceipt({
     amount: input.amount,
@@ -88,7 +89,7 @@ export async function createYookassaPayment(input: {
     capture: true,
     confirmation: { type: "redirect", return_url: input.returnUrl },
     description: input.description.slice(0, 128),
-    metadata: { bookingId: input.bookingId },
+    metadata: { bookingId: input.bookingId, ...(input.extensionId ? { extensionId: input.extensionId } : {}) },
     ...(receipt ? { receipt } : {}),
   };
 

@@ -52,6 +52,7 @@ import { Route as PublicCarsCarIdRouteImport } from './routes/_public.cars.$carI
 import { Route as PublicBookingCarIdRouteImport } from './routes/_public.booking.$carId'
 import { Route as PublicBlogSlugRouteImport } from './routes/_public.blog.$slug'
 import { Route as AdminAdminSettingsRouteImport } from './routes/_admin.admin.settings'
+import { Route as AdminAdminReviewsRouteImport } from './routes/_admin.admin.reviews'
 import { Route as AdminAdminMessagesRouteImport } from './routes/_admin.admin.messages'
 import { Route as AdminAdminFinanceRouteImport } from './routes/_admin.admin.finance'
 import { Route as AdminAdminClientsRouteImport } from './routes/_admin.admin.clients'
@@ -283,6 +284,11 @@ const AdminAdminSettingsRoute = AdminAdminSettingsRouteImport.update({
   path: '/admin/settings',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminAdminReviewsRoute = AdminAdminReviewsRouteImport.update({
+  id: '/admin/reviews',
+  path: '/admin/reviews',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminAdminMessagesRoute = AdminAdminMessagesRouteImport.update({
   id: '/admin/messages',
   path: '/admin/messages',
@@ -348,6 +354,7 @@ export interface FileRoutesByFullPath {
   '/admin/clients': typeof AdminAdminClientsRoute
   '/admin/finance': typeof AdminAdminFinanceRoute
   '/admin/messages': typeof AdminAdminMessagesRoute
+  '/admin/reviews': typeof AdminAdminReviewsRoute
   '/admin/settings': typeof AdminAdminSettingsRoute
   '/blog/$slug': typeof PublicBlogSlugRoute
   '/booking/$carId': typeof PublicBookingCarIdRoute
@@ -397,6 +404,7 @@ export interface FileRoutesByTo {
   '/admin/clients': typeof AdminAdminClientsRoute
   '/admin/finance': typeof AdminAdminFinanceRoute
   '/admin/messages': typeof AdminAdminMessagesRoute
+  '/admin/reviews': typeof AdminAdminReviewsRoute
   '/admin/settings': typeof AdminAdminSettingsRoute
   '/blog/$slug': typeof PublicBlogSlugRoute
   '/booking/$carId': typeof PublicBookingCarIdRoute
@@ -450,6 +458,7 @@ export interface FileRoutesById {
   '/_admin/admin/clients': typeof AdminAdminClientsRoute
   '/_admin/admin/finance': typeof AdminAdminFinanceRoute
   '/_admin/admin/messages': typeof AdminAdminMessagesRoute
+  '/_admin/admin/reviews': typeof AdminAdminReviewsRoute
   '/_admin/admin/settings': typeof AdminAdminSettingsRoute
   '/_public/blog/$slug': typeof PublicBlogSlugRoute
   '/_public/booking/$carId': typeof PublicBookingCarIdRoute
@@ -502,6 +511,7 @@ export interface FileRouteTypes {
     | '/admin/clients'
     | '/admin/finance'
     | '/admin/messages'
+    | '/admin/reviews'
     | '/admin/settings'
     | '/blog/$slug'
     | '/booking/$carId'
@@ -551,6 +561,7 @@ export interface FileRouteTypes {
     | '/admin/clients'
     | '/admin/finance'
     | '/admin/messages'
+    | '/admin/reviews'
     | '/admin/settings'
     | '/blog/$slug'
     | '/booking/$carId'
@@ -603,6 +614,7 @@ export interface FileRouteTypes {
     | '/_admin/admin/clients'
     | '/_admin/admin/finance'
     | '/_admin/admin/messages'
+    | '/_admin/admin/reviews'
     | '/_admin/admin/settings'
     | '/_public/blog/$slug'
     | '/_public/booking/$carId'
@@ -942,6 +954,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminAdminSettingsRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/_admin/admin/reviews': {
+      id: '/_admin/admin/reviews'
+      path: '/admin/reviews'
+      fullPath: '/admin/reviews'
+      preLoaderRoute: typeof AdminAdminReviewsRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/_admin/admin/messages': {
       id: '/_admin/admin/messages'
       path: '/admin/messages'
@@ -1000,6 +1019,7 @@ interface AdminRouteChildren {
   AdminAdminClientsRoute: typeof AdminAdminClientsRoute
   AdminAdminFinanceRoute: typeof AdminAdminFinanceRoute
   AdminAdminMessagesRoute: typeof AdminAdminMessagesRoute
+  AdminAdminReviewsRoute: typeof AdminAdminReviewsRoute
   AdminAdminSettingsRoute: typeof AdminAdminSettingsRoute
   AdminAdminIndexRoute: typeof AdminAdminIndexRoute
   AdminAdminCarPhotosCarIdRoute: typeof AdminAdminCarPhotosCarIdRoute
@@ -1011,6 +1031,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminAdminClientsRoute: AdminAdminClientsRoute,
   AdminAdminFinanceRoute: AdminAdminFinanceRoute,
   AdminAdminMessagesRoute: AdminAdminMessagesRoute,
+  AdminAdminReviewsRoute: AdminAdminReviewsRoute,
   AdminAdminSettingsRoute: AdminAdminSettingsRoute,
   AdminAdminIndexRoute: AdminAdminIndexRoute,
   AdminAdminCarPhotosCarIdRoute: AdminAdminCarPhotosCarIdRoute,
