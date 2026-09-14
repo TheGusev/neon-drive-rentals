@@ -13,26 +13,7 @@ create table if not exists car_reviews (
   unique (booking_id)
 );
 
--- Ранние установки могли получить ошибочные integer-поля до перехода бронирований на UUID.
--- Такие строки не могли ссылаться на действующие UUID-записи, поэтому безопасно исправляем пустую таблицу.
-do $$
-declare booking_type text;
-begin
-  select data_type into booking_type from information_schema.columns
-   where table_schema = 'public' and table_name = 'car_reviews' and column_name = 'booking_id';
-  if booking_type <> 'uuid' then
-    delete from car_reviews;
-    alter table car_reviews drop constraint if exists car_reviews_booking_id_fkey;
-    alter table car_reviews drop constraint if exists car_reviews_car_id_fkey;
-    alter table car_reviews drop constraint if exists car_reviews_client_id_fkey;
-    alter table car_reviews alter column booking_id type uuid using null::uuid;
-    alter table car_reviews alter column car_id type uuid using null::uuid;
-    alter table car_reviews alter column client_id type uuid using null::uuid;
-    alter table car_reviews add constraint car_reviews_booking_id_fkey foreign key (booking_id) references bookings(id) on delete cascade;
-    alter table car_reviews add constraint car_reviews_car_id_fkey foreign key (car_id) references cars(id) on delete cascade;
-    alter table car_reviews add constraint car_reviews_client_id_fkey foreign key (client_id) references clients(id) on delete cascade;
-  end if;
-end $$;
+-- Типы внешних ключей исправляются без удаления данных отдельной migration 024.
 
 create unique index if not exists car_reviews_booking_idx on car_reviews (booking_id);
 create index if not exists car_reviews_car_idx on car_reviews (car_id, created_at desc);

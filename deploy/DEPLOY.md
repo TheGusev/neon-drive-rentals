@@ -70,12 +70,13 @@ pm2 save
 Отдельная команда не нужна: при старте сервера `src/lib/migrations.server.ts`
 применяет недостающие миграции из `db/migrations/` по порядку, фиксируя их в
 таблице `schema_migrations`. Все миграции идемпотентны. Последняя —
-`016_rental_journey.sql` (выдача ключей, возврат, таблица `car_reviews`).
+`024_schema_compatibility.sql` (безопасное выравнивание типов связей без удаления данных).
 
 Проверить, что применилось:
 
 ```bash
 psql "$DATABASE_URL" -c "select name, applied_at from schema_migrations order by name"
+psql "$DATABASE_URL" -c "select column_name, data_type from information_schema.columns where table_name='bookings' and column_name in ('start_mileage','extension_status')"
 ```
 
 ## 4. Проверка после деплоя

@@ -40,7 +40,7 @@ export function CookieConsentBanner() {
     <div
       role="dialog"
       aria-label="Согласие на использование cookie"
-      className={`fixed bottom-4 left-3 z-[60] w-[min(21rem,calc(100vw-1.5rem))] rounded-xl border border-border bg-card/95 p-3 shadow-xl backdrop-blur transition-all duration-300 ease-out sm:left-4 ${
+      className={`fixed bottom-4 left-3 z-40 w-[min(21rem,calc(100vw-1.5rem))] rounded-xl border border-border bg-card/95 p-3 shadow-xl backdrop-blur transition-all duration-300 ease-out sm:left-4 ${
         leaving ? "-translate-x-6 opacity-0" : "translate-x-0 opacity-100 animate-in slide-in-from-left-8 fade-in"
       }`}
       style={{ marginBottom: "env(safe-area-inset-bottom)" }}
