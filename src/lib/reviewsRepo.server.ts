@@ -153,3 +153,18 @@ export async function setReviewHidden(id: string, hidden: boolean): Promise<bool
   );
   return rows.length > 0;
 }
+
+export async function updateReviewAdmin(id: string, input: { rating: number; text: string; serviceComment: string }): Promise<boolean> {
+  if (!hasDatabase()) return false;
+  const rows = await query<{ id: string }>(
+    `update car_reviews set rating = $2, text = $3, service_comment = $4 where id::text = $1 returning id`,
+    [id, input.rating, input.text, input.serviceComment],
+  );
+  return rows.length > 0;
+}
+
+export async function deleteReviewAdmin(id: string): Promise<boolean> {
+  if (!hasDatabase()) return false;
+  const rows = await query<{ id: string }>(`delete from car_reviews where id::text = $1 returning id`, [id]);
+  return rows.length > 0;
+}

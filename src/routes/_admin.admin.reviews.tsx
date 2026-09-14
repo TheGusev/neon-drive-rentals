@@ -1,0 +1,5 @@
+import { createFileRoute } from "@tanstack/react-router";
+import { PageHeader } from "@/components/admin/PageHeader";
+import { AdminReviewsPanel } from "@/components/admin/AdminReviewsPanel";
+export const Route = createFileRoute("/_admin/admin/reviews")({ head: () => ({ meta: [{ title: "Отзывы — Админ NSK-RENT" }, { name: "description", content: "Управление отзывами и оценками автомобилей." }, { property: "og:title", content: "Отзывы — Админ NSK-RENT" }, { property: "og:description", content: "Модерация отзывов клиентов." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }, { name: "robots", content: "noindex, nofollow" }] }), component: ReviewsPage });
+function ReviewsPage() { return <div className="pb-24"><PageHeader title="Отзывы" description="Оценки автомобилей и внутренние комментарии" /><AdminReviewsPanel /></div>; }

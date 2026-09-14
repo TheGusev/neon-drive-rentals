@@ -36,7 +36,7 @@ export function BookingHistoryList({ items }: { items?: Booking[] }) {
                   <div className="text-xs text-muted-foreground">
                     {fmt(b.startDate)} — {fmt(b.endDate)}
                   </div>
-                  {b.returnMileage ? (
+                   {b.returnMileage !== undefined && b.returnMileage !== null ? (
                     <div className="text-xs text-muted-foreground">
                       Пробег при возврате: {b.returnMileage.toLocaleString("ru-RU")} км
                     </div>

@@ -51,6 +51,12 @@ export interface ClientDocument {
   number: string;
   status: DocumentStatus;
   uploadedAt: string;
+  birthDate?: string;
+  issuedBy?: string;
+  issueDate?: string;
+  departmentCode?: string;
+  registrationAddress?: string;
+  expiryDate?: string;
 }
 
 export interface ClientReview {
@@ -89,6 +95,12 @@ export interface Booking {
   returnMileage?: number;
   /** Кто внёс пробег: клиент или администратор. */
   returnMileageSource?: "client" | "admin";
+  /** Пробег автомобиля при выдаче, ниже него возвратное значение быть не может. */
+  startMileage?: number;
+  tariff?: BookingTariff;
+  extensionStatus?: "none" | "pending" | "paid" | "conflict";
+  extensionEndDate?: string;
+  extensionAmount?: number;
 }
 
 /** Публичный отзыв об автомобиле, оставленный после завершённой аренды. */

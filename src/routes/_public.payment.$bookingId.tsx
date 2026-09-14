@@ -161,6 +161,7 @@ function PaymentPage() {
           endDate: draft.endDate ?? "",
           totalPrice: total,
           signed: true,
+           tariff: draft.tariff,
         },
       });
 

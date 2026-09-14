@@ -21,6 +21,8 @@ import paymentEvents from "../../db/migrations/018_payment_events.sql?raw";
 import notificationsMigration from "../../db/migrations/019_notifications.sql?raw";
 import mileageMigration from "../../db/migrations/020_mileage.sql?raw";
 import messagesMigration from "../../db/migrations/021_messages.sql?raw";
+import profileExtensionsMigration from "../../db/migrations/022_profile_extensions.sql?raw";
+import reviewsRatingMigration from "../../db/migrations/023_reviews_rating.sql?raw";
 
 /** Порядок применения важен; все миграции идемпотентны для существующей базы. */
 const MIGRATIONS: Array<{ name: string; sql: string }> = [
@@ -45,6 +47,8 @@ const MIGRATIONS: Array<{ name: string; sql: string }> = [
   { name: "019_notifications", sql: notificationsMigration },
   { name: "020_mileage", sql: mileageMigration },
   { name: "021_messages", sql: messagesMigration },
+  { name: "022_profile_extensions", sql: profileExtensionsMigration },
+  { name: "023_reviews_rating", sql: reviewsRatingMigration },
 ];
 
 type Holder = { __nskMigrations?: Promise<string[]> };

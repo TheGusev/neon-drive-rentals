@@ -86,12 +86,14 @@ export async function insertPayment(input: {
   provider: string;
   providerId?: string;
   status?: string;
+  purpose?: "booking" | "extension";
+  extensionId?: string;
 }): Promise<string | null> {
   if (!(await ready())) return null;
   const rows = await query<{ id: string }>(
-    `insert into payments (booking_id, provider, provider_id, amount, status)
-     values ($1::uuid, $2, $3, $4, $5) returning id`,
-    [input.bookingId, input.provider, input.providerId ?? null, input.amount, input.status ?? "pending"],
+    `insert into payments (booking_id, provider, provider_id, amount, status, purpose, extension_id)
+     values ($1::uuid, $2, $3, $4, $5, $6, $7::uuid) returning id`,
+    [input.bookingId, input.provider, input.providerId ?? null, input.amount, input.status ?? "pending", input.purpose ?? "booking", input.extensionId ?? null],
   );
   return rows.length ? String(rows[0].id) : null;
 }
@@ -99,13 +101,13 @@ export async function insertPayment(input: {
 export async function updatePaymentByProviderId(
   providerId: string,
   status: string,
-): Promise<{ bookingId: string | null } | null> {
+): Promise<{ bookingId: string | null; purpose: string; extensionId: string | null; paymentId: string } | null> {
   if (!(await ready())) return null;
-  const rows = await query<{ booking_id: string | null }>(
-    `update payments set status = $2, updated_at = now() where provider_id = $1 returning booking_id`,
+  const rows = await query<{ id: string; booking_id: string | null; purpose: string; extension_id: string | null }>(
+    `update payments set status = $2, updated_at = now() where provider_id = $1 returning id, booking_id, purpose, extension_id`,
     [providerId, status],
   );
-  return rows.length ? { bookingId: rows[0].booking_id ? String(rows[0].booking_id) : null } : null;
+  return rows.length ? { paymentId: String(rows[0].id), bookingId: rows[0].booking_id ? String(rows[0].booking_id) : null, purpose: rows[0].purpose, extensionId: rows[0].extension_id ? String(rows[0].extension_id) : null } : null;
 }
 
 export type BookingPaymentRow = {

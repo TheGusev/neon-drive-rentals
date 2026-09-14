@@ -1,122 +1,89 @@
-import { useRef, useState } from "react";
-import { FileText, IdCard, Upload, Check, Clock, X, Loader2 } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Check, Clock, IdCard, Loader2, Save, X } from "lucide-react";
 import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { SectionCard } from "@/components/checkout/SectionCard";
 import { Button } from "@/components/ui/button";
-import { prepareImage } from "@/lib/imageCompress";
-import { uploadMyDocument } from "@/lib/profile.functions";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { saveMyDocument } from "@/lib/profile.functions";
 import type { ClientDocument } from "@/types/domain";
 
-const typeLabel: Record<ClientDocument["type"], string> = {
-  passport: "Паспорт РФ",
-  license: "Водительское удостоверение",
-};
-
+type Doc = ClientDocument & { comment?: string };
 const statusMap = {
-  verified: { label: "Проверено", tone: "bg-emerald-500/15 text-emerald-600 public-dark:text-emerald-400", Icon: Check },
-  pending: { label: "На проверке", tone: "bg-amber-500/15 text-amber-600 public-dark:text-amber-400", Icon: Clock },
-  rejected: { label: "Отклонено", tone: "bg-rose-500/15 text-rose-600 public-dark:text-rose-400", Icon: X },
+  verified: { label: "Проверено", tone: "text-emerald-600", Icon: Check },
+  pending: { label: "Ожидает проверки", tone: "text-amber-600", Icon: Clock },
+  rejected: { label: "Нужно исправить", tone: "text-destructive", Icon: X },
 } as const;
 
-type Doc = ClientDocument & { fileUrl?: string; comment?: string };
-
 export function DocumentsBlock({ documents = [] }: { documents?: Doc[] }) {
-  const inputRef = useRef<HTMLInputElement>(null);
-  const [busy, setBusy] = useState(false);
-  const [type, setType] = useState<ClientDocument["type"]>("passport");
-  const upload = useServerFn(uploadMyDocument);
-  const queryClient = useQueryClient();
+  const passport = documents.find((d) => d.type === "passport");
+  const license = documents.find((d) => d.type === "license");
+  return (
+    <div className="space-y-3">
+      <DocumentForm type="passport" document={passport} />
+      <DocumentForm type="license" document={license} />
+    </div>
+  );
+}
 
-  const handleFile = async (file: File | undefined) => {
-    if (!file) return;
+function DocumentForm({ type, document }: { type: "passport" | "license"; document?: Doc }) {
+  const [values, setValues] = useState({ number: "", birthDate: "", issuedBy: "", issueDate: "", departmentCode: "", registrationAddress: "", expiryDate: "" });
+  const save = useServerFn(saveMyDocument);
+  const queryClient = useQueryClient();
+  useEffect(() => {
+    setValues({
+      number: document?.number ?? "", birthDate: document?.birthDate ?? "", issuedBy: document?.issuedBy ?? "",
+      issueDate: document?.issueDate ?? "", departmentCode: document?.departmentCode ?? "",
+      registrationAddress: document?.registrationAddress ?? "", expiryDate: document?.expiryDate ?? "",
+    });
+  }, [document]);
+  const [busy, setBusy] = useState(false);
+  const patch = (key: keyof typeof values, value: string) => setValues((current) => ({ ...current, [key]: value }));
+  const complete = type === "passport"
+    ? /^\d{4}\s?\d{6}$/.test(values.number) && Boolean(values.birthDate && values.issuedBy.trim().length >= 3 && values.issueDate && /^\d{3}-\d{3}$/.test(values.departmentCode) && values.registrationAddress.trim().length >= 5)
+    : Boolean(values.number.trim().length >= 6 && values.issueDate && values.expiryDate);
+  const submit = async () => {
+    if (!complete) return toast.error("Заполните все обязательные поля");
     setBusy(true);
     try {
-      const prepared = await prepareImage(file);
-      const result = await upload({
-        data: { type, fileName: prepared.fileName, contentBase64: prepared.contentBase64 },
-      });
-      if (!result.ok) {
-        toast.error(("error" in result && result.error) || "Не удалось загрузить документ");
-        return;
-      }
-      toast.success("Документ отправлен на проверку");
+      const data = type === "passport"
+        ? { type, number: values.number, birthDate: values.birthDate, issuedBy: values.issuedBy, issueDate: values.issueDate, departmentCode: values.departmentCode, registrationAddress: values.registrationAddress }
+        : { type, number: values.number, issueDate: values.issueDate, expiryDate: values.expiryDate };
+      const result = await save({ data });
+      if (!result.ok) return toast.error(result.error);
       await queryClient.invalidateQueries({ queryKey: ["me", "profile"] });
-    } catch {
-      toast.error("Не удалось обработать файл");
-    } finally {
-      setBusy(false);
-      if (inputRef.current) inputRef.current.value = "";
-    }
+      toast.success("Данные сохранены и будут подставлены в договор");
+    } catch { toast.error("Проверьте правильность заполнения"); }
+    finally { setBusy(false); }
   };
-
+  const state = document ? statusMap[document.status] : null;
   return (
-    <SectionCard
-      title="Документы"
-      action={
-        <div className="flex items-center gap-1.5">
-          <select
-            value={type}
-            onChange={(e) => setType(e.target.value as ClientDocument["type"])}
-            aria-label="Тип документа"
-            className="h-8 rounded-full border border-border bg-card px-2 text-xs text-foreground"
-          >
-            <option value="passport">Паспорт</option>
-            <option value="license">Права</option>
-          </select>
-          <Button
-            size="sm"
-            variant="ghost"
-            disabled={busy}
-            className="h-8 gap-1.5 rounded-full text-accent hover:bg-accent/10 hover:text-accent"
-            onClick={() => inputRef.current?.click()}
-          >
-            {busy ? <Loader2 className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />} Загрузить
-          </Button>
-        </div>
-      }
-    >
-      <input
-        ref={inputRef}
-        type="file"
-        accept="image/jpeg,image/png,image/webp"
-        className="hidden"
-        onChange={(e) => void handleFile(e.target.files?.[0])}
-      />
-
-      {documents.length === 0 ? (
-        <p className="text-sm text-muted-foreground">
-          Загрузите фото паспорта и водительского удостоверения — менеджер проверит их до выдачи авто.
-        </p>
-      ) : (
-        <ul className="space-y-2">
-          {documents.map((doc) => {
-            const s = statusMap[doc.status];
-            const Icon = doc.type === "passport" ? IdCard : FileText;
-            return (
-              <li key={doc.id} className="flex items-center gap-3 rounded-2xl bg-card p-3 ring-1 ring-border">
-                <div className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-xl bg-muted text-muted-foreground">
-                  {doc.fileUrl ? (
-                    <img src={doc.fileUrl} alt="" loading="lazy" className="h-full w-full object-cover" />
-                  ) : (
-                    <Icon className="h-5 w-5" />
-                  )}
-                </div>
-                <div className="min-w-0 flex-1">
-                  <div className="truncate text-sm font-medium text-foreground">{typeLabel[doc.type]}</div>
-                  <div className="truncate text-xs text-muted-foreground">
-                    {doc.comment || (doc.number ? `№ ${doc.number}` : "Фото документа")}
-                  </div>
-                </div>
-                <span className={`flex shrink-0 items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-medium ${s.tone}`}>
-                  <s.Icon className="h-3.5 w-3.5 shrink-0" /> {s.label}
-                </span>
-              </li>
-            );
-          })}
-        </ul>
-      )}
+    <SectionCard title={type === "passport" ? "Паспорт РФ" : "Водительское удостоверение"} className="bg-card ring-1 ring-border">
+      {state && <p className={`mb-3 flex items-center gap-1.5 text-xs font-medium ${state.tone}`}><state.Icon className="h-4 w-4" />{state.label}{document?.comment ? `: ${document.comment}` : ""}</p>}
+      <div className="grid gap-3 sm:grid-cols-2">
+        <Field label={type === "passport" ? "Серия и номер" : "Серия и номер прав"} value={values.number} onChange={(v) => patch("number", v)} placeholder={type === "passport" ? "5400 123456" : "54 00 123456"} />
+        {type === "passport" && <Field label="Дата рождения" type="date" value={values.birthDate} onChange={(v) => patch("birthDate", v)} />}
+        <Field label="Дата выдачи" type="date" value={values.issueDate} onChange={(v) => patch("issueDate", v)} />
+        {type === "license" && <Field label="Действительно до" type="date" value={values.expiryDate} onChange={(v) => patch("expiryDate", v)} />}
+        {type === "passport" && <Field label="Код подразделения" value={values.departmentCode} onChange={(v) => patch("departmentCode", v)} placeholder="540-001" />}
+      </div>
+      {type === "passport" && <div className="mt-3 space-y-3"><Area label="Кем выдан" value={values.issuedBy} onChange={(v) => patch("issuedBy", v)} /><Area label="Адрес регистрации" value={values.registrationAddress} onChange={(v) => patch("registrationAddress", v)} /></div>}
+      <Button className="mt-4 w-full" disabled={!complete || busy} onClick={() => void submit()}>
+        {busy ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}{busy ? "Сохраняем…" : "Сохранить данные"}
+      </Button>
+      <p className="mt-2 flex items-start gap-1.5 text-[11px] text-muted-foreground"><IdCard className="mt-0.5 h-3.5 w-3.5 shrink-0" />Фотографии не нужны. Данные доступны только для оформления аренды.</p>
     </SectionCard>
   );
+}
+
+function Field({ label, value, onChange, type = "text", placeholder }: { label: string; value: string; onChange: (value: string) => void; type?: string; placeholder?: string }) {
+  const id = `${label}-${type}`;
+  return <div className="space-y-1.5"><Label htmlFor={id}>{label}</Label><Input id={id} type={type} value={value} placeholder={placeholder} onChange={(e) => onChange(e.target.value)} /></div>;
+}
+function Area({ label, value, onChange }: { label: string; value: string; onChange: (value: string) => void }) {
+  const id = `area-${label}`;
+  return <div className="space-y-1.5"><Label htmlFor={id}>{label}</Label><Textarea id={id} value={value} maxLength={400} onChange={(e) => onChange(e.target.value)} /></div>;
 }

@@ -24,7 +24,7 @@ function mapClient(row: ClientRow): Client & { paidTotal: number } {
     phone: row.phone ?? "",
     email: row.email ?? undefined,
     ordersCount: Number(row.orders_count ?? 0),
-    rating: 5,
+    rating: 0,
     blacklisted: Boolean(row.blocked),
     createdAt: iso(row.created_at),
     lastBookingAt: iso(row.last_booking_at),

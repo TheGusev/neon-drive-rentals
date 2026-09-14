@@ -66,3 +66,19 @@ export const setReviewVisibility = createServerFn({ method: "POST" })
     const { setReviewHidden } = await import("@/lib/reviewsRepo.server");
     return { ok: await setReviewHidden(data.id, data.hidden) };
   });
+
+export const updateReviewAdmin = createServerFn({ method: "POST" })
+  .inputValidator((data: unknown) => z.object({ id: z.string().min(1).max(100), rating: z.number().int().min(1).max(5), text: z.string().trim().max(2000), serviceComment: z.string().trim().max(2000) }).parse(data))
+  .handler(async ({ data }) => {
+    const { requireAdmin } = await import("@/lib/adminGuard.server"); await requireAdmin();
+    const repo = await import("@/lib/reviewsRepo.server");
+    return { ok: await repo.updateReviewAdmin(data.id, data) };
+  });
+
+export const deleteReviewAdmin = createServerFn({ method: "POST" })
+  .inputValidator((data: unknown) => z.object({ id: z.string().min(1).max(100) }).parse(data))
+  .handler(async ({ data }) => {
+    const { requireAdmin } = await import("@/lib/adminGuard.server"); await requireAdmin();
+    const repo = await import("@/lib/reviewsRepo.server");
+    return { ok: await repo.deleteReviewAdmin(data.id) };
+  });

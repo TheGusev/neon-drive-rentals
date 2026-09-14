@@ -11,6 +11,7 @@ const createBookingSchema = z.object({
   endDate: z.string().min(4).max(40),
   totalPrice: z.number().int().nonnegative().max(10_000_000),
   signed: z.boolean().optional(),
+  tariff: z.enum(["city", "region", "outside"]).optional(),
 });
 
 const statusSchema = z.object({
@@ -134,7 +135,7 @@ const mileageSchema = z.object({
   mileage: z.number().int().min(0).max(3_000_000),
 });
 
-/** Клиент вносит показания одометра при завершении аренды (один раз). */
+/** Клиент вносит или исправляет показания до подтверждения возврата администратором. */
 export const submitReturnMileage = createServerFn({ method: "POST" })
   .inputValidator((data: unknown) => mileageSchema.parse(data))
   .handler(async ({ data }) => {

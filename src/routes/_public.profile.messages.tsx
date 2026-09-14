@@ -1,0 +1,3 @@
+import { createFileRoute } from "@tanstack/react-router";
+import { MessagesBlock } from "@/components/profile/MessagesBlock";
+export const Route = createFileRoute("/_public/profile/messages")({ head: () => ({ meta: [{ title: "Сообщения — NSK-RENT" }, { name: "description", content: "Переписка клиента с администратором NSK-RENT." }, { property: "og:title", content: "Сообщения — NSK-RENT" }, { property: "og:description", content: "Чат с администратором проката." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }, { name: "robots", content: "noindex, nofollow" }] }), component: () => <div className="space-y-3"><h1 className="text-2xl font-semibold">Сообщения</h1><MessagesBlock /></div> });

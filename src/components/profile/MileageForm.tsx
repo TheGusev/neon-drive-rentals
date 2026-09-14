@@ -8,11 +8,10 @@ import { Input } from "@/components/ui/input";
 import { submitReturnMileage } from "@/lib/bookings.functions";
 
 /**
- * Показания одометра при завершении аренды. Клиент вносит значение один раз —
- * дальше его меняет только администратор.
+ * Показания одометра можно исправлять до подтверждения возврата менеджером.
  */
-export function MileageForm({ bookingId }: { bookingId: string }) {
-  const [value, setValue] = useState("");
+export function MileageForm({ bookingId, current, minimum = 0 }: { bookingId: string; current?: number; minimum?: number }) {
+  const [value, setValue] = useState(current?.toString() ?? "");
   const queryClient = useQueryClient();
   const submit = useServerFn(submitReturnMileage);
 
@@ -21,19 +20,19 @@ export function MileageForm({ bookingId }: { bookingId: string }) {
     onSuccess: async (res) => {
       if (!res.ok) {
         toast.error(
-          res.reason === "already_set" ? "Пробег уже зафиксирован" : "Не удалось сохранить пробег",
+          res.reason === "locked" ? "Возврат уже принят — изменить пробег может администратор" :
+            res.reason === "below_start" ? `Пробег не может быть меньше ${minimum.toLocaleString("ru-RU")} км` : "Не удалось сохранить пробег",
         );
         return;
       }
-      toast.success("Пробег отправлен менеджеру");
-      setValue("");
+      toast.success(current === undefined ? "Пробег отправлен менеджеру" : "Пробег исправлен");
       await queryClient.invalidateQueries({ queryKey: ["me"] });
     },
     onError: () => toast.error("Сервис временно недоступен"),
   });
 
   const numeric = Number(value.replace(/\D/g, ""));
-  const valid = Number.isFinite(numeric) && numeric > 0;
+  const valid = Number.isFinite(numeric) && numeric >= minimum && numeric > 0;
 
   return (
     <div className="mt-3 rounded-2xl bg-muted p-3">
@@ -57,7 +56,7 @@ export function MileageForm({ bookingId }: { bookingId: string }) {
           disabled={!valid || mutation.isPending}
           onClick={() => mutation.mutate(numeric)}
         >
-          Отправить
+          {current === undefined ? "Отправить" : "Исправить"}
         </Button>
       </div>
     </div>

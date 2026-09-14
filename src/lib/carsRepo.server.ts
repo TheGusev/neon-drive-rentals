@@ -20,6 +20,8 @@ type CarRow = {
   specs: unknown;
   plate: string | null;
   mileage?: number | string | null;
+  rating?: number | string | null;
+  reviews_count?: number | string | null;
 };
 
 const num = (value: unknown, fallback: number): number => {
@@ -193,8 +195,8 @@ export function mapCarRow(row: CarRow, useStableFallback = true): Car {
     pricePerDay: num(row.price_city, num(specs["pricePerDay"], 0)),
     image: images[0],
     gallery: images.length ? images : undefined,
-    rating: num(specs["rating"], 5),
-    reviewsCount: num(specs["reviewsCount"], 0),
+    rating: num(row.rating, num(specs["rating"], 5)),
+    reviewsCount: num(row.reviews_count, num(specs["reviewsCount"], 0)),
     engineVolume: num(specs["engineVolume"], 0.66),
     bodyType: str(specs["bodyType"], "хэтчбек"),
     seats: num(row.seats, num(specs["seats"], 4)),
@@ -211,7 +213,7 @@ export function mapCarRow(row: CarRow, useStableFallback = true): Car {
 
 const SELECT_CARS = `
   select id, slug, brand, model, year, class, transmission, seats,
-         price_city, price_out, status, images, specs, plate, mileage
+         price_city, price_out, status, images, specs, plate, mileage, rating, reviews_count
   from cars
 `;
 

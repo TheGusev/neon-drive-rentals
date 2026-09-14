@@ -1,5 +1,5 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { LayoutDashboard, Car, CalendarCheck, Users, Wallet, MessageCircle } from "lucide-react";
+import { LayoutDashboard, Car, CalendarCheck, Users, Wallet, MessageCircle, Star } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const tabs = [
@@ -9,6 +9,7 @@ const tabs = [
   { to: "/admin/clients", label: "Клиенты", icon: Users },
   { to: "/admin/finance", label: "Финансы", icon: Wallet },
   { to: "/admin/messages", label: "Чат", icon: MessageCircle },
+  { to: "/admin/reviews", label: "Отзывы", icon: Star },
 ];
 
 export function AdminTabBar() {
@@ -18,13 +19,13 @@ export function AdminTabBar() {
 
   return (
     <nav className="fixed inset-x-0 bottom-0 z-40 border-t bg-background/95 backdrop-blur md:hidden">
-      <ul className="grid grid-cols-6">
+      <ul className="grid grid-cols-7 overflow-x-auto">
         {tabs.map((t) => (
           <li key={t.to}>
             <Link
               to={t.to}
               className={cn(
-                "flex flex-col items-center gap-0.5 px-1 py-2 text-[10px] font-medium transition-colors",
+                "flex min-w-14 flex-col items-center gap-0.5 px-1 py-2 text-[10px] font-medium transition-colors",
                 isActive(t.to, t.exact) ? "text-primary" : "text-muted-foreground",
               )}
             >
