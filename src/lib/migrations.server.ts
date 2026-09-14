@@ -24,6 +24,7 @@ import messagesMigration from "../../db/migrations/021_messages.sql?raw";
 import profileExtensionsMigration from "../../db/migrations/022_profile_extensions.sql?raw";
 import reviewsRatingMigration from "../../db/migrations/023_reviews_rating.sql?raw";
 import schemaCompatibilityMigration from "../../db/migrations/024_schema_compatibility.sql?raw";
+import bookingExtensionsCompatMigration from "../../db/migrations/025_booking_extensions_compat.sql?raw";
 
 /** Порядок применения важен; все миграции идемпотентны для существующей базы. */
 const MIGRATIONS: Array<{ name: string; sql: string }> = [
