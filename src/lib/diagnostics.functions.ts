@@ -7,6 +7,7 @@ export type DiagnosticsReport = {
   appliedMigrations: string[];
   failedMigrations: Array<{ name: string; message: string }>;
   columns: Array<{ table: string; column: string; present: boolean }>;
+  tables: Array<{ table: string; present: boolean }>;
   buildTime: string | null;
 };
 
@@ -16,9 +17,11 @@ const REQUIRED_COLUMNS: Array<[string, string]> = [
   ["bookings", "start_mileage"],
   ["bookings", "return_mileage"],
   ["bookings", "extension_status"],
-  ["clients", "passport_series"],
-  ["clients", "license_number"],
+  ["client_documents", "birth_date"],
+  ["client_documents", "issued_by"],
 ];
+
+const REQUIRED_TABLES = ["booking_extensions", "car_reviews", "messages", "client_documents"];
 
 export const adminDiagnostics = createServerFn({ method: "GET" }).handler(
   async (): Promise<DiagnosticsReport> => {
@@ -35,6 +38,7 @@ export const adminDiagnostics = createServerFn({ method: "GET" }).handler(
       appliedMigrations: [],
       failedMigrations: [],
       columns: REQUIRED_COLUMNS.map(([table, column]) => ({ table, column, present: false })),
+      tables: REQUIRED_TABLES.map((table) => ({ table, present: false })),
       buildTime: process.env["VITE_BUILD_TIME"] ?? null,
     };
 
@@ -58,6 +62,11 @@ export const adminDiagnostics = createServerFn({ method: "GET" }).handler(
         column,
         present: present.has(`${table}.${column}`),
       }));
+      const tbls = await query<{ table_name: string }>(
+        `select table_name from information_schema.tables where table_schema = 'public'`,
+      );
+      const tablesPresent = new Set(tbls.map((t) => t.table_name));
+      report.tables = REQUIRED_TABLES.map((table) => ({ table, present: tablesPresent.has(table) }));
       report.databaseReachable = true;
     } catch (error) {
       report.databaseError = error instanceof Error ? error.message : String(error);
