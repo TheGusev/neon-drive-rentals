@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Banknote, CreditCard, FileSpreadsheet, Wallet, TrendingUp } from "lucide-react";
+import { Banknote, CreditCard, FileSpreadsheet, Gauge, Wallet, TrendingUp } from "lucide-react";
 import { PageHeader } from "@/components/admin/PageHeader";
 import { StatCard } from "@/components/admin/StatCard";
 import { AdminPaymentCard } from "@/components/admin/AdminPaymentCard";
@@ -10,7 +10,7 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useMemo, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { adminPaymentsQueryOptions } from "@/lib/queries";
+import { adminBookingRowsQueryOptions, adminPaymentsQueryOptions } from "@/lib/queries";
 import { refundPayment } from "@/lib/payments.functions";
 import { useCarLookup } from "@/state/AppDataContext";
 import { exportPaymentsToExcel } from "@/lib/exportExcel";
@@ -26,6 +26,7 @@ const fmtRub = (n: number) => `${n.toLocaleString("ru-RU")} ₽`;
 function AdminFinancePage() {
   const getCarById = useCarLookup();
   const { data: payments } = useSuspenseQuery(adminPaymentsQueryOptions());
+  const { data: bookings } = useSuspenseQuery(adminBookingRowsQueryOptions());
   const queryClient = useQueryClient();
   const doRefund = useServerFn(refundPayment);
   const [refundingId, setRefundingId] = useState<string | null>(null);
@@ -57,6 +58,10 @@ function AdminFinancePage() {
   const online = success.filter((p) => p.method !== "cash");
   const cashRevenue = cash.reduce((s, p) => s + p.amount, 0);
   const onlineRevenue = online.reduce((s, p) => s + p.amount, 0);
+  const returnedMileage = bookings.reduce((sum, booking) => {
+    if (!booking.returnedAt || booking.returnMileage === undefined) return sum;
+    return sum + Math.max(0, booking.returnMileage - (booking.startMileage ?? booking.returnMileage));
+  }, 0);
 
   const visible = useMemo(() => {
     if (tab === "cash") return payments.filter((p) => p.method === "cash");
@@ -85,7 +90,7 @@ function AdminFinancePage() {
         }
       />
 
-      <div className="mb-4 grid w-full grid-cols-2 gap-3 lg:grid-cols-4">
+      <div className="mb-4 grid w-full grid-cols-2 gap-3 lg:grid-cols-5">
         <StatCard
           label="Оборот"
           value={fmtRub(revenue)}
@@ -109,6 +114,12 @@ function AdminFinancePage() {
           value={fmtRub(avg)}
           icon={TrendingUp}
           iconTone="bg-violet-500/15 text-violet-600 public-dark:text-violet-400"
+        />
+        <StatCard
+          label="Пробег возвратов"
+          value={`${returnedMileage.toLocaleString("ru-RU")} км`}
+          icon={Gauge}
+          iconTone="bg-teal-500/15 text-teal-600 public-dark:text-teal-400"
         />
       </div>
 

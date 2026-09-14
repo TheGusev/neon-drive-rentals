@@ -160,17 +160,21 @@ export const recordCashPayment = createServerFn({ method: "POST" })
   .handler(async ({ data }) => {
     const { requireAdmin } = await import("@/lib/adminGuard.server");
     await requireAdmin();
-    const { insertPayment } = await import("@/lib/paymentsRepo.server");
-    const paymentId = await insertPayment({
-      bookingId: data.bookingId,
-      amount: data.amount,
-      provider: "cash",
-      status: "succeeded",
-    });
-    if (!paymentId) return { ok: false as const, error: "Не удалось записать платёж" };
-
-    const { updateBookingStatusInDb } = await import("@/lib/bookingsRepo.server");
-    await updateBookingStatusInDb(data.bookingId, "paid");
+    const { recordCashPaymentInDb } = await import("@/lib/paymentsRepo.server");
+    let result: Awaited<ReturnType<typeof recordCashPaymentInDb>>;
+    try {
+      result = await recordCashPaymentInDb({ bookingId: data.bookingId, amount: data.amount });
+    } catch (error) {
+      console.error("[payments] cash payment failed", error);
+      return { ok: false as const, error: "Не удалось сохранить оплату. Проверьте подключение к базе и повторите." };
+    }
+    if (!result.ok) {
+      return {
+        ok: false as const,
+        error: result.reason === "booking_not_found" ? "Бронь не найдена" : "База данных недоступна",
+      };
+    }
+    const paymentId = result.paymentId;
 
     const { notifyAdmins } = await import("@/lib/notificationsRepo.server");
     await notifyAdmins({
@@ -185,5 +189,5 @@ export const recordCashPayment = createServerFn({ method: "POST" })
       push: false,
     });
 
-    return { ok: true as const, paymentId };
+    return { ok: true as const, paymentId, duplicate: result.duplicate };
   });
