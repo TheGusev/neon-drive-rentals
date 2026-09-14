@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import type { Booking, Car } from "@/types/domain";
 import { CarImage } from "@/components/car/CarImage";
 import { MileageForm } from "./MileageForm";
+import { ExtendRentalDialog } from "./ExtendRentalDialog";
 
 const fmt = (iso: string) =>
   new Date(iso).toLocaleDateString("ru-RU", {
@@ -101,6 +102,7 @@ export function CurrentRentalCard({ booking, car }: { booking: Booking; car: Car
       {booking.returnedAt && booking.returnMileage !== undefined && (
         <div className="mt-3 flex items-center justify-between rounded-2xl bg-muted px-3 py-2 text-xs text-foreground/80"><span className="flex items-center gap-1.5"><Gauge className="h-3.5 w-3.5" />Пробег при возврате</span><strong>{booking.returnMileage.toLocaleString("ru-RU")} км</strong></div>
       )}
+      {!booking.returnedAt && <ExtendRentalDialog booking={booking} />}
     </SectionCard>
   );
 }

@@ -9,7 +9,7 @@ type Notification = {
     paid?: boolean;
     amount?: { value?: string };
     payment_id?: string;
-    metadata?: { bookingId?: string };
+    metadata?: { bookingId?: string; extensionId?: string };
   };
 };
 
@@ -88,6 +88,7 @@ export const Route = createFileRoute("/api/public/yookassa-webhook")({
 
         const updated = await updatePaymentByProviderId(providerId, status);
         const bookingId = updated?.bookingId ?? payload.object?.metadata?.bookingId ?? null;
+        const extensionId = updated?.extensionId ?? payload.object?.metadata?.extensionId ?? null;
 
         if (bookingId) {
           const { updateBookingStatusInDb } = await import("@/lib/bookingsRepo.server");
@@ -100,7 +101,12 @@ export const Route = createFileRoute("/api/public/yookassa-webhook")({
               console.error("[yookassa] amount mismatch", { providerId, amount, expected });
               return new Response("ok");
             }
-            await updateBookingStatusInDb(bookingId, "active");
+            if (extensionId) {
+              const { applyBookingExtension } = await import("@/lib/bookingsRepo.server");
+              await applyBookingExtension(extensionId);
+            } else {
+              await updateBookingStatusInDb(bookingId, "active");
+            }
             const { notifyAdmins } = await import("@/lib/notificationsRepo.server");
             await notifyAdmins({
               kind: "payment_succeeded",
