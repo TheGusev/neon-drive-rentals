@@ -33,6 +33,7 @@ import { Route as PublicArendaAvtoNaMesyacRouteImport } from './routes/_public.a
 import { Route as PublicArendaAvtoBezZalogaRouteImport } from './routes/_public.arenda-avto-bez-zaloga'
 import { Route as PublicArendaAvtoBezVoditelyaRouteImport } from './routes/_public.arenda-avto-bez-voditelya'
 import { Route as PublicArendaAvtoBezStazhaRouteImport } from './routes/_public.arenda-avto-bez-stazha'
+import { Route as PublicProfileIndexRouteImport } from './routes/_public.profile.index'
 import { Route as PublicCarsIndexRouteImport } from './routes/_public.cars.index'
 import { Route as PublicBlogIndexRouteImport } from './routes/_public.blog.index'
 import { Route as AdminAdminIndexRouteImport } from './routes/_admin.admin.index'
@@ -41,6 +42,9 @@ import { Route as ApiPublicVersionRouteImport } from './routes/api/public/versio
 import { Route as ApiPublicHealthRouteImport } from './routes/api/public/health'
 import { Route as PublicRentNovosibirskRouteImport } from './routes/_public.rent.novosibirsk'
 import { Route as PublicRentBezZalogaRouteImport } from './routes/_public.rent.bez-zaloga'
+import { Route as PublicProfileRentalsRouteImport } from './routes/_public.profile.rentals'
+import { Route as PublicProfileMessagesRouteImport } from './routes/_public.profile.messages'
+import { Route as PublicProfileDocumentsRouteImport } from './routes/_public.profile.documents'
 import { Route as PublicPaymentBookingIdRouteImport } from './routes/_public.payment.$bookingId'
 import { Route as PublicInvoiceBookingIdRouteImport } from './routes/_public.invoice.$bookingId'
 import { Route as PublicContractBookingIdRouteImport } from './routes/_public.contract.$bookingId'
@@ -183,6 +187,11 @@ const PublicArendaAvtoBezStazhaRoute =
     path: '/arenda-avto-bez-stazha',
     getParentRoute: () => PublicRoute,
   } as any)
+const PublicProfileIndexRoute = PublicProfileIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => PublicProfileRoute,
+} as any)
 const PublicCarsIndexRoute = PublicCarsIndexRouteImport.update({
   id: '/cars/',
   path: '/cars/',
@@ -223,6 +232,21 @@ const PublicRentBezZalogaRoute = PublicRentBezZalogaRouteImport.update({
   id: '/rent/bez-zaloga',
   path: '/rent/bez-zaloga',
   getParentRoute: () => PublicRoute,
+} as any)
+const PublicProfileRentalsRoute = PublicProfileRentalsRouteImport.update({
+  id: '/rentals',
+  path: '/rentals',
+  getParentRoute: () => PublicProfileRoute,
+} as any)
+const PublicProfileMessagesRoute = PublicProfileMessagesRouteImport.update({
+  id: '/messages',
+  path: '/messages',
+  getParentRoute: () => PublicProfileRoute,
+} as any)
+const PublicProfileDocumentsRoute = PublicProfileDocumentsRouteImport.update({
+  id: '/documents',
+  path: '/documents',
+  getParentRoute: () => PublicProfileRoute,
 } as any)
 const PublicPaymentBookingIdRoute = PublicPaymentBookingIdRouteImport.update({
   id: '/payment/$bookingId',
@@ -315,7 +339,7 @@ export interface FileRoutesByFullPath {
   '/kei-cars': typeof PublicKeiCarsRoute
   '/login': typeof PublicLoginRoute
   '/privacy': typeof PublicPrivacyRoute
-  '/profile': typeof PublicProfileRoute
+  '/profile': typeof PublicProfileRouteWithChildren
   '/register': typeof PublicRegisterRoute
   '/terms': typeof PublicTermsRoute
   '/admin/login': typeof AdminLoginRoute
@@ -331,6 +355,9 @@ export interface FileRoutesByFullPath {
   '/contract/$bookingId': typeof PublicContractBookingIdRoute
   '/invoice/$bookingId': typeof PublicInvoiceBookingIdRoute
   '/payment/$bookingId': typeof PublicPaymentBookingIdRoute
+  '/profile/documents': typeof PublicProfileDocumentsRoute
+  '/profile/messages': typeof PublicProfileMessagesRoute
+  '/profile/rentals': typeof PublicProfileRentalsRoute
   '/rent/bez-zaloga': typeof PublicRentBezZalogaRoute
   '/rent/novosibirsk': typeof PublicRentNovosibirskRoute
   '/api/public/health': typeof ApiPublicHealthRoute
@@ -339,6 +366,7 @@ export interface FileRoutesByFullPath {
   '/admin/': typeof AdminAdminIndexRoute
   '/blog/': typeof PublicBlogIndexRoute
   '/cars/': typeof PublicCarsIndexRoute
+  '/profile/': typeof PublicProfileIndexRoute
   '/admin/car-photos/$carId': typeof AdminAdminCarPhotosCarIdRoute
   '/api/public/car-photo/$id': typeof ApiPublicCarPhotoIdRoute
 }
@@ -361,7 +389,6 @@ export interface FileRoutesByTo {
   '/kei-cars': typeof PublicKeiCarsRoute
   '/login': typeof PublicLoginRoute
   '/privacy': typeof PublicPrivacyRoute
-  '/profile': typeof PublicProfileRoute
   '/register': typeof PublicRegisterRoute
   '/terms': typeof PublicTermsRoute
   '/admin/login': typeof AdminLoginRoute
@@ -377,6 +404,9 @@ export interface FileRoutesByTo {
   '/contract/$bookingId': typeof PublicContractBookingIdRoute
   '/invoice/$bookingId': typeof PublicInvoiceBookingIdRoute
   '/payment/$bookingId': typeof PublicPaymentBookingIdRoute
+  '/profile/documents': typeof PublicProfileDocumentsRoute
+  '/profile/messages': typeof PublicProfileMessagesRoute
+  '/profile/rentals': typeof PublicProfileRentalsRoute
   '/rent/bez-zaloga': typeof PublicRentBezZalogaRoute
   '/rent/novosibirsk': typeof PublicRentNovosibirskRoute
   '/api/public/health': typeof ApiPublicHealthRoute
@@ -385,6 +415,7 @@ export interface FileRoutesByTo {
   '/admin': typeof AdminAdminIndexRoute
   '/blog': typeof PublicBlogIndexRoute
   '/cars': typeof PublicCarsIndexRoute
+  '/profile': typeof PublicProfileIndexRoute
   '/admin/car-photos/$carId': typeof AdminAdminCarPhotosCarIdRoute
   '/api/public/car-photo/$id': typeof ApiPublicCarPhotoIdRoute
 }
@@ -410,7 +441,7 @@ export interface FileRoutesById {
   '/_public/kei-cars': typeof PublicKeiCarsRoute
   '/_public/login': typeof PublicLoginRoute
   '/_public/privacy': typeof PublicPrivacyRoute
-  '/_public/profile': typeof PublicProfileRoute
+  '/_public/profile': typeof PublicProfileRouteWithChildren
   '/_public/register': typeof PublicRegisterRoute
   '/_public/terms': typeof PublicTermsRoute
   '/admin/login': typeof AdminLoginRoute
@@ -426,6 +457,9 @@ export interface FileRoutesById {
   '/_public/contract/$bookingId': typeof PublicContractBookingIdRoute
   '/_public/invoice/$bookingId': typeof PublicInvoiceBookingIdRoute
   '/_public/payment/$bookingId': typeof PublicPaymentBookingIdRoute
+  '/_public/profile/documents': typeof PublicProfileDocumentsRoute
+  '/_public/profile/messages': typeof PublicProfileMessagesRoute
+  '/_public/profile/rentals': typeof PublicProfileRentalsRoute
   '/_public/rent/bez-zaloga': typeof PublicRentBezZalogaRoute
   '/_public/rent/novosibirsk': typeof PublicRentNovosibirskRoute
   '/api/public/health': typeof ApiPublicHealthRoute
@@ -434,6 +468,7 @@ export interface FileRoutesById {
   '/_admin/admin/': typeof AdminAdminIndexRoute
   '/_public/blog/': typeof PublicBlogIndexRoute
   '/_public/cars/': typeof PublicCarsIndexRoute
+  '/_public/profile/': typeof PublicProfileIndexRoute
   '/_admin/admin/car-photos/$carId': typeof AdminAdminCarPhotosCarIdRoute
   '/api/public/car-photo/$id': typeof ApiPublicCarPhotoIdRoute
 }
@@ -474,6 +509,9 @@ export interface FileRouteTypes {
     | '/contract/$bookingId'
     | '/invoice/$bookingId'
     | '/payment/$bookingId'
+    | '/profile/documents'
+    | '/profile/messages'
+    | '/profile/rentals'
     | '/rent/bez-zaloga'
     | '/rent/novosibirsk'
     | '/api/public/health'
@@ -482,6 +520,7 @@ export interface FileRouteTypes {
     | '/admin/'
     | '/blog/'
     | '/cars/'
+    | '/profile/'
     | '/admin/car-photos/$carId'
     | '/api/public/car-photo/$id'
   fileRoutesByTo: FileRoutesByTo
@@ -504,7 +543,6 @@ export interface FileRouteTypes {
     | '/kei-cars'
     | '/login'
     | '/privacy'
-    | '/profile'
     | '/register'
     | '/terms'
     | '/admin/login'
@@ -520,6 +558,9 @@ export interface FileRouteTypes {
     | '/contract/$bookingId'
     | '/invoice/$bookingId'
     | '/payment/$bookingId'
+    | '/profile/documents'
+    | '/profile/messages'
+    | '/profile/rentals'
     | '/rent/bez-zaloga'
     | '/rent/novosibirsk'
     | '/api/public/health'
@@ -528,6 +569,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/blog'
     | '/cars'
+    | '/profile'
     | '/admin/car-photos/$carId'
     | '/api/public/car-photo/$id'
   id:
@@ -568,6 +610,9 @@ export interface FileRouteTypes {
     | '/_public/contract/$bookingId'
     | '/_public/invoice/$bookingId'
     | '/_public/payment/$bookingId'
+    | '/_public/profile/documents'
+    | '/_public/profile/messages'
+    | '/_public/profile/rentals'
     | '/_public/rent/bez-zaloga'
     | '/_public/rent/novosibirsk'
     | '/api/public/health'
@@ -576,6 +621,7 @@ export interface FileRouteTypes {
     | '/_admin/admin/'
     | '/_public/blog/'
     | '/_public/cars/'
+    | '/_public/profile/'
     | '/_admin/admin/car-photos/$carId'
     | '/api/public/car-photo/$id'
   fileRoutesById: FileRoutesById
@@ -763,6 +809,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PublicArendaAvtoBezStazhaRouteImport
       parentRoute: typeof PublicRoute
     }
+    '/_public/profile/': {
+      id: '/_public/profile/'
+      path: '/'
+      fullPath: '/profile/'
+      preLoaderRoute: typeof PublicProfileIndexRouteImport
+      parentRoute: typeof PublicProfileRoute
+    }
     '/_public/cars/': {
       id: '/_public/cars/'
       path: '/cars'
@@ -818,6 +871,27 @@ declare module '@tanstack/react-router' {
       fullPath: '/rent/bez-zaloga'
       preLoaderRoute: typeof PublicRentBezZalogaRouteImport
       parentRoute: typeof PublicRoute
+    }
+    '/_public/profile/rentals': {
+      id: '/_public/profile/rentals'
+      path: '/rentals'
+      fullPath: '/profile/rentals'
+      preLoaderRoute: typeof PublicProfileRentalsRouteImport
+      parentRoute: typeof PublicProfileRoute
+    }
+    '/_public/profile/messages': {
+      id: '/_public/profile/messages'
+      path: '/messages'
+      fullPath: '/profile/messages'
+      preLoaderRoute: typeof PublicProfileMessagesRouteImport
+      parentRoute: typeof PublicProfileRoute
+    }
+    '/_public/profile/documents': {
+      id: '/_public/profile/documents'
+      path: '/documents'
+      fullPath: '/profile/documents'
+      preLoaderRoute: typeof PublicProfileDocumentsRouteImport
+      parentRoute: typeof PublicProfileRoute
     }
     '/_public/payment/$bookingId': {
       id: '/_public/payment/$bookingId'
@@ -944,6 +1018,24 @@ const AdminRouteChildren: AdminRouteChildren = {
 
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
+interface PublicProfileRouteChildren {
+  PublicProfileDocumentsRoute: typeof PublicProfileDocumentsRoute
+  PublicProfileMessagesRoute: typeof PublicProfileMessagesRoute
+  PublicProfileRentalsRoute: typeof PublicProfileRentalsRoute
+  PublicProfileIndexRoute: typeof PublicProfileIndexRoute
+}
+
+const PublicProfileRouteChildren: PublicProfileRouteChildren = {
+  PublicProfileDocumentsRoute: PublicProfileDocumentsRoute,
+  PublicProfileMessagesRoute: PublicProfileMessagesRoute,
+  PublicProfileRentalsRoute: PublicProfileRentalsRoute,
+  PublicProfileIndexRoute: PublicProfileIndexRoute,
+}
+
+const PublicProfileRouteWithChildren = PublicProfileRoute._addFileChildren(
+  PublicProfileRouteChildren,
+)
+
 interface PublicRouteChildren {
   PublicArendaAvtoBezStazhaRoute: typeof PublicArendaAvtoBezStazhaRoute
   PublicArendaAvtoBezVoditelyaRoute: typeof PublicArendaAvtoBezVoditelyaRoute
@@ -960,7 +1052,7 @@ interface PublicRouteChildren {
   PublicKeiCarsRoute: typeof PublicKeiCarsRoute
   PublicLoginRoute: typeof PublicLoginRoute
   PublicPrivacyRoute: typeof PublicPrivacyRoute
-  PublicProfileRoute: typeof PublicProfileRoute
+  PublicProfileRoute: typeof PublicProfileRouteWithChildren
   PublicRegisterRoute: typeof PublicRegisterRoute
   PublicTermsRoute: typeof PublicTermsRoute
   PublicBlogSlugRoute: typeof PublicBlogSlugRoute
@@ -991,7 +1083,7 @@ const PublicRouteChildren: PublicRouteChildren = {
   PublicKeiCarsRoute: PublicKeiCarsRoute,
   PublicLoginRoute: PublicLoginRoute,
   PublicPrivacyRoute: PublicPrivacyRoute,
-  PublicProfileRoute: PublicProfileRoute,
+  PublicProfileRoute: PublicProfileRouteWithChildren,
   PublicRegisterRoute: PublicRegisterRoute,
   PublicTermsRoute: PublicTermsRoute,
   PublicBlogSlugRoute: PublicBlogSlugRoute,

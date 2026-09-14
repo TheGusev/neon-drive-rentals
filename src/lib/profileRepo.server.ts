@@ -27,8 +27,8 @@ export async function fetchProfileByClientId(clientId: string): Promise<ProfileS
   }>(
     `select cl.id, cl.name, cl.phone, cl.email, cl.created_at,
             (select count(*) from bookings b where b.client_id = cl.id) as orders_count,
-            (select avg(r.rating) from client_reviews r where r.client_id = cl.id) as rating,
-            (select count(*) from client_reviews r where r.client_id = cl.id) as reviews_count
+            0 as rating,
+            (select count(*) from car_reviews r where r.client_id = cl.id) as reviews_count
      from clients cl where cl.id::text = $1 limit 1`,
     [clientId],
   );
@@ -198,8 +198,9 @@ export async function fetchReviews(clientId: string): Promise<ClientReview[]> {
     text: string;
     created_at: Date | string;
   }>(
-    `select id, author, rating, text, created_at from client_reviews
-     where client_id::text = $1 order by created_at desc limit 20`,
+    `select r.id, coalesce(cl.name, 'Вы') as author, r.rating, r.text, r.created_at
+       from car_reviews r left join clients cl on cl.id = r.client_id
+      where r.client_id::text = $1 order by r.created_at desc limit 20`,
     [clientId],
   );
   return rows.map((r) => ({
