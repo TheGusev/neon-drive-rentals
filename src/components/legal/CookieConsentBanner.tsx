@@ -52,17 +52,15 @@ export function CookieConsentBanner() {
         <div className="min-w-0">
           <p className="text-xs font-semibold text-foreground">Мы используем cookie</p>
           <p className="mt-0.5 text-[11px] leading-snug text-muted-foreground">
-            Технические — для работы сайта, аналитические — для статистики.{" "}
+            Мы используем cookie для работы сайта и сбора обезличенной статистики. Продолжая
+            пользоваться сайтом, вы соглашаетесь с этим.{" "}
             <Link to="/cookies" className="link-text">
               Подробнее
             </Link>
           </p>
           <div className="mt-2.5 flex gap-2">
             <Button size="sm" variant="accent" className="h-7 flex-1 px-2 text-[11px]" onClick={() => decide(true)}>
-              Принять все
-            </Button>
-            <Button size="sm" variant="outline" className="h-7 flex-1 px-2 text-[11px]" onClick={() => decide(false)}>
-              Только нужные
+              Понятно
             </Button>
           </div>
         </div>
