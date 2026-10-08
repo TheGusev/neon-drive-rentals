@@ -9,62 +9,70 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
-import { Route as RobotsDottxtRouteImport } from './routes/robots[.]txt'
-import { Route as PublicRouteImport } from './routes/_public'
-import { Route as AdminRouteImport } from './routes/_admin'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as AdminLoginRouteImport } from './routes/admin.login'
-import { Route as PublicTermsRouteImport } from './routes/_public.terms'
-import { Route as PublicRegisterRouteImport } from './routes/_public.register'
-import { Route as PublicProfileRouteImport } from './routes/_public.profile'
-import { Route as PublicPrivacyRouteImport } from './routes/_public.privacy'
-import { Route as PublicLoginRouteImport } from './routes/_public.login'
-import { Route as PublicKeiCarsRouteImport } from './routes/_public.kei-cars'
-import { Route as PublicCookiesRouteImport } from './routes/_public.cookies'
-import { Route as PublicConsentRouteImport } from './routes/_public.consent'
-import { Route as PublicArendaProbegIPlatezhiRouteImport } from './routes/_public.arenda-probeg-i-platezhi'
-import { Route as PublicArendaAvtoVyhodnyeRouteImport } from './routes/_public.arenda-avto-vyhodnye'
-import { Route as PublicArendaAvtoSPravymRulemRouteImport } from './routes/_public.arenda-avto-s-pravym-rulem'
-import { Route as PublicArendaAvtoPoezdkaAltayRouteImport } from './routes/_public.arenda-avto-poezdka-altay'
-import { Route as PublicArendaAvtoNaSutkiRouteImport } from './routes/_public.arenda-avto-na-sutki'
-import { Route as PublicArendaAvtoNaNedelyuRouteImport } from './routes/_public.arenda-avto-na-nedelyu'
-import { Route as PublicArendaAvtoNaMesyacRouteImport } from './routes/_public.arenda-avto-na-mesyac'
-import { Route as PublicArendaAvtoBezZalogaRouteImport } from './routes/_public.arenda-avto-bez-zaloga'
-import { Route as PublicArendaAvtoBezVoditelyaRouteImport } from './routes/_public.arenda-avto-bez-voditelya'
+import { Route as AdminRouteImport } from './routes/_admin'
+import { Route as PublicRouteImport } from './routes/_public'
+import { Route as RobotsDottxtRouteImport } from './routes/robots[.]txt'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as PublicArendaAvtoBezStazhaRouteImport } from './routes/_public.arenda-avto-bez-stazha'
-import { Route as PublicProfileIndexRouteImport } from './routes/_public.profile.index'
-import { Route as PublicCarsIndexRouteImport } from './routes/_public.cars.index'
-import { Route as PublicBlogIndexRouteImport } from './routes/_public.blog.index'
+import { Route as PublicArendaAvtoBezVoditelyaRouteImport } from './routes/_public.arenda-avto-bez-voditelya'
+import { Route as PublicArendaAvtoBezZalogaRouteImport } from './routes/_public.arenda-avto-bez-zaloga'
+import { Route as PublicArendaAvtoNaMesyacRouteImport } from './routes/_public.arenda-avto-na-mesyac'
+import { Route as PublicArendaAvtoNaNedelyuRouteImport } from './routes/_public.arenda-avto-na-nedelyu'
+import { Route as PublicArendaAvtoNaSutkiRouteImport } from './routes/_public.arenda-avto-na-sutki'
+import { Route as PublicArendaAvtoPoezdkaAltayRouteImport } from './routes/_public.arenda-avto-poezdka-altay'
+import { Route as PublicArendaAvtoSPravymRulemRouteImport } from './routes/_public.arenda-avto-s-pravym-rulem'
+import { Route as PublicArendaAvtoVyhodnyeRouteImport } from './routes/_public.arenda-avto-vyhodnye'
+import { Route as PublicArendaProbegIPlatezhiRouteImport } from './routes/_public.arenda-probeg-i-platezhi'
+import { Route as PublicConsentRouteImport } from './routes/_public.consent'
+import { Route as PublicCookiesRouteImport } from './routes/_public.cookies'
+import { Route as PublicKeiCarsRouteImport } from './routes/_public.kei-cars'
+import { Route as PublicLoginRouteImport } from './routes/_public.login'
+import { Route as PublicPrivacyRouteImport } from './routes/_public.privacy'
+import { Route as PublicProfileRouteImport } from './routes/_public.profile'
+import { Route as PublicRegisterRouteImport } from './routes/_public.register'
+import { Route as PublicTermsRouteImport } from './routes/_public.terms'
+import { Route as AdminLoginRouteImport } from './routes/admin.login'
 import { Route as AdminAdminIndexRouteImport } from './routes/_admin.admin.index'
-import { Route as ApiPublicYookassaWebhookRouteImport } from './routes/api/public/yookassa-webhook'
-import { Route as ApiPublicVersionRouteImport } from './routes/api/public/version'
-import { Route as ApiPublicHealthRouteImport } from './routes/api/public/health'
-import { Route as PublicRentNovosibirskRouteImport } from './routes/_public.rent.novosibirsk'
-import { Route as PublicRentBezZalogaRouteImport } from './routes/_public.rent.bez-zaloga'
-import { Route as PublicProfileRentalsRouteImport } from './routes/_public.profile.rentals'
-import { Route as PublicProfileMessagesRouteImport } from './routes/_public.profile.messages'
-import { Route as PublicProfileDocumentsRouteImport } from './routes/_public.profile.documents'
-import { Route as PublicPaymentBookingIdRouteImport } from './routes/_public.payment.$bookingId'
-import { Route as PublicInvoiceBookingIdRouteImport } from './routes/_public.invoice.$bookingId'
-import { Route as PublicContractBookingIdRouteImport } from './routes/_public.contract.$bookingId'
-import { Route as PublicCarsCarIdRouteImport } from './routes/_public.cars.$carId'
-import { Route as PublicBookingCarIdRouteImport } from './routes/_public.booking.$carId'
-import { Route as PublicBlogSlugRouteImport } from './routes/_public.blog.$slug'
-import { Route as AdminAdminSettingsRouteImport } from './routes/_admin.admin.settings'
-import { Route as AdminAdminReviewsRouteImport } from './routes/_admin.admin.reviews'
-import { Route as AdminAdminMessagesRouteImport } from './routes/_admin.admin.messages'
-import { Route as AdminAdminFinanceRouteImport } from './routes/_admin.admin.finance'
-import { Route as AdminAdminDiagnosticsRouteImport } from './routes/_admin.admin.diagnostics'
-import { Route as AdminAdminClientsRouteImport } from './routes/_admin.admin.clients'
-import { Route as AdminAdminCarsRouteImport } from './routes/_admin.admin.cars'
 import { Route as AdminAdminBookingsRouteImport } from './routes/_admin.admin.bookings'
-import { Route as ApiPublicCarPhotoIdRouteImport } from './routes/api/public/car-photo.$id'
+import { Route as AdminAdminCarsRouteImport } from './routes/_admin.admin.cars'
+import { Route as AdminAdminClientsRouteImport } from './routes/_admin.admin.clients'
+import { Route as AdminAdminDiagnosticsRouteImport } from './routes/_admin.admin.diagnostics'
+import { Route as AdminAdminFinanceRouteImport } from './routes/_admin.admin.finance'
+import { Route as AdminAdminMessagesRouteImport } from './routes/_admin.admin.messages'
+import { Route as AdminAdminReviewsRouteImport } from './routes/_admin.admin.reviews'
+import { Route as AdminAdminSettingsRouteImport } from './routes/_admin.admin.settings'
+import { Route as PublicBlogIndexRouteImport } from './routes/_public.blog.index'
+import { Route as PublicBlogSlugRouteImport } from './routes/_public.blog.$slug'
+import { Route as PublicBookingCarIdRouteImport } from './routes/_public.booking.$carId'
+import { Route as PublicCarsIndexRouteImport } from './routes/_public.cars.index'
+import { Route as PublicCarsCarIdRouteImport } from './routes/_public.cars.$carId'
+import { Route as PublicContractBookingIdRouteImport } from './routes/_public.contract.$bookingId'
+import { Route as PublicInvoiceBookingIdRouteImport } from './routes/_public.invoice.$bookingId'
+import { Route as PublicPaymentBookingIdRouteImport } from './routes/_public.payment.$bookingId'
+import { Route as PublicProfileIndexRouteImport } from './routes/_public.profile.index'
+import { Route as PublicProfileDocumentsRouteImport } from './routes/_public.profile.documents'
+import { Route as PublicProfileMessagesRouteImport } from './routes/_public.profile.messages'
+import { Route as PublicProfileRentalsRouteImport } from './routes/_public.profile.rentals'
+import { Route as PublicRentBezZalogaRouteImport } from './routes/_public.rent.bez-zaloga'
+import { Route as PublicRentNovosibirskRouteImport } from './routes/_public.rent.novosibirsk'
+import { Route as ApiPublicHealthRouteImport } from './routes/api/public/health'
+import { Route as ApiPublicVersionRouteImport } from './routes/api/public/version'
+import { Route as ApiPublicYookassaWebhookRouteImport } from './routes/api/public/yookassa-webhook'
 import { Route as AdminAdminCarPhotosCarIdRouteImport } from './routes/_admin.admin.car-photos.$carId'
+import { Route as ApiPublicCarPhotoIdRouteImport } from './routes/api/public/car-photo.$id'
 
-const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
-  id: '/sitemap.xml',
-  path: '/sitemap.xml',
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/_admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PublicRoute = PublicRouteImport.update({
+  id: '/_public',
   getParentRoute: () => rootRouteImport,
 } as any)
 const RobotsDottxtRoute = RobotsDottxtRouteImport.update({
@@ -72,109 +80,15 @@ const RobotsDottxtRoute = RobotsDottxtRouteImport.update({
   path: '/robots.txt',
   getParentRoute: () => rootRouteImport,
 } as any)
-const PublicRoute = PublicRouteImport.update({
-  id: '/_public',
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AdminRoute = AdminRouteImport.update({
-  id: '/_admin',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AdminLoginRoute = AdminLoginRouteImport.update({
-  id: '/admin/login',
-  path: '/admin/login',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PublicTermsRoute = PublicTermsRouteImport.update({
-  id: '/terms',
-  path: '/terms',
-  getParentRoute: () => PublicRoute,
-} as any)
-const PublicRegisterRoute = PublicRegisterRouteImport.update({
-  id: '/register',
-  path: '/register',
-  getParentRoute: () => PublicRoute,
-} as any)
-const PublicProfileRoute = PublicProfileRouteImport.update({
-  id: '/profile',
-  path: '/profile',
-  getParentRoute: () => PublicRoute,
-} as any)
-const PublicPrivacyRoute = PublicPrivacyRouteImport.update({
-  id: '/privacy',
-  path: '/privacy',
-  getParentRoute: () => PublicRoute,
-} as any)
-const PublicLoginRoute = PublicLoginRouteImport.update({
-  id: '/login',
-  path: '/login',
-  getParentRoute: () => PublicRoute,
-} as any)
-const PublicKeiCarsRoute = PublicKeiCarsRouteImport.update({
-  id: '/kei-cars',
-  path: '/kei-cars',
-  getParentRoute: () => PublicRoute,
-} as any)
-const PublicCookiesRoute = PublicCookiesRouteImport.update({
-  id: '/cookies',
-  path: '/cookies',
-  getParentRoute: () => PublicRoute,
-} as any)
-const PublicConsentRoute = PublicConsentRouteImport.update({
-  id: '/consent',
-  path: '/consent',
-  getParentRoute: () => PublicRoute,
-} as any)
-const PublicArendaProbegIPlatezhiRoute =
-  PublicArendaProbegIPlatezhiRouteImport.update({
-    id: '/arenda-probeg-i-platezhi',
-    path: '/arenda-probeg-i-platezhi',
-    getParentRoute: () => PublicRoute,
-  } as any)
-const PublicArendaAvtoVyhodnyeRoute =
-  PublicArendaAvtoVyhodnyeRouteImport.update({
-    id: '/arenda-avto-vyhodnye',
-    path: '/arenda-avto-vyhodnye',
-    getParentRoute: () => PublicRoute,
-  } as any)
-const PublicArendaAvtoSPravymRulemRoute =
-  PublicArendaAvtoSPravymRulemRouteImport.update({
-    id: '/arenda-avto-s-pravym-rulem',
-    path: '/arenda-avto-s-pravym-rulem',
-    getParentRoute: () => PublicRoute,
-  } as any)
-const PublicArendaAvtoPoezdkaAltayRoute =
-  PublicArendaAvtoPoezdkaAltayRouteImport.update({
-    id: '/arenda-avto-poezdka-altay',
-    path: '/arenda-avto-poezdka-altay',
-    getParentRoute: () => PublicRoute,
-  } as any)
-const PublicArendaAvtoNaSutkiRoute = PublicArendaAvtoNaSutkiRouteImport.update({
-  id: '/arenda-avto-na-sutki',
-  path: '/arenda-avto-na-sutki',
-  getParentRoute: () => PublicRoute,
-} as any)
-const PublicArendaAvtoNaNedelyuRoute =
-  PublicArendaAvtoNaNedelyuRouteImport.update({
-    id: '/arenda-avto-na-nedelyu',
-    path: '/arenda-avto-na-nedelyu',
-    getParentRoute: () => PublicRoute,
-  } as any)
-const PublicArendaAvtoNaMesyacRoute =
-  PublicArendaAvtoNaMesyacRouteImport.update({
-    id: '/arenda-avto-na-mesyac',
-    path: '/arenda-avto-na-mesyac',
-    getParentRoute: () => PublicRoute,
-  } as any)
-const PublicArendaAvtoBezZalogaRoute =
-  PublicArendaAvtoBezZalogaRouteImport.update({
-    id: '/arenda-avto-bez-zaloga',
-    path: '/arenda-avto-bez-zaloga',
+const PublicArendaAvtoBezStazhaRoute =
+  PublicArendaAvtoBezStazhaRouteImport.update({
+    id: '/arenda-avto-bez-stazha',
+    path: '/arenda-avto-bez-stazha',
     getParentRoute: () => PublicRoute,
   } as any)
 const PublicArendaAvtoBezVoditelyaRoute =
@@ -183,136 +97,101 @@ const PublicArendaAvtoBezVoditelyaRoute =
     path: '/arenda-avto-bez-voditelya',
     getParentRoute: () => PublicRoute,
   } as any)
-const PublicArendaAvtoBezStazhaRoute =
-  PublicArendaAvtoBezStazhaRouteImport.update({
-    id: '/arenda-avto-bez-stazha',
-    path: '/arenda-avto-bez-stazha',
+const PublicArendaAvtoBezZalogaRoute =
+  PublicArendaAvtoBezZalogaRouteImport.update({
+    id: '/arenda-avto-bez-zaloga',
+    path: '/arenda-avto-bez-zaloga',
     getParentRoute: () => PublicRoute,
   } as any)
-const PublicProfileIndexRoute = PublicProfileIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => PublicProfileRoute,
-} as any)
-const PublicCarsIndexRoute = PublicCarsIndexRouteImport.update({
-  id: '/cars/',
-  path: '/cars/',
+const PublicArendaAvtoNaMesyacRoute =
+  PublicArendaAvtoNaMesyacRouteImport.update({
+    id: '/arenda-avto-na-mesyac',
+    path: '/arenda-avto-na-mesyac',
+    getParentRoute: () => PublicRoute,
+  } as any)
+const PublicArendaAvtoNaNedelyuRoute =
+  PublicArendaAvtoNaNedelyuRouteImport.update({
+    id: '/arenda-avto-na-nedelyu',
+    path: '/arenda-avto-na-nedelyu',
+    getParentRoute: () => PublicRoute,
+  } as any)
+const PublicArendaAvtoNaSutkiRoute = PublicArendaAvtoNaSutkiRouteImport.update({
+  id: '/arenda-avto-na-sutki',
+  path: '/arenda-avto-na-sutki',
   getParentRoute: () => PublicRoute,
 } as any)
-const PublicBlogIndexRoute = PublicBlogIndexRouteImport.update({
-  id: '/blog/',
-  path: '/blog/',
+const PublicArendaAvtoPoezdkaAltayRoute =
+  PublicArendaAvtoPoezdkaAltayRouteImport.update({
+    id: '/arenda-avto-poezdka-altay',
+    path: '/arenda-avto-poezdka-altay',
+    getParentRoute: () => PublicRoute,
+  } as any)
+const PublicArendaAvtoSPravymRulemRoute =
+  PublicArendaAvtoSPravymRulemRouteImport.update({
+    id: '/arenda-avto-s-pravym-rulem',
+    path: '/arenda-avto-s-pravym-rulem',
+    getParentRoute: () => PublicRoute,
+  } as any)
+const PublicArendaAvtoVyhodnyeRoute =
+  PublicArendaAvtoVyhodnyeRouteImport.update({
+    id: '/arenda-avto-vyhodnye',
+    path: '/arenda-avto-vyhodnye',
+    getParentRoute: () => PublicRoute,
+  } as any)
+const PublicArendaProbegIPlatezhiRoute =
+  PublicArendaProbegIPlatezhiRouteImport.update({
+    id: '/arenda-probeg-i-platezhi',
+    path: '/arenda-probeg-i-platezhi',
+    getParentRoute: () => PublicRoute,
+  } as any)
+const PublicConsentRoute = PublicConsentRouteImport.update({
+  id: '/consent',
+  path: '/consent',
   getParentRoute: () => PublicRoute,
+} as any)
+const PublicCookiesRoute = PublicCookiesRouteImport.update({
+  id: '/cookies',
+  path: '/cookies',
+  getParentRoute: () => PublicRoute,
+} as any)
+const PublicKeiCarsRoute = PublicKeiCarsRouteImport.update({
+  id: '/kei-cars',
+  path: '/kei-cars',
+  getParentRoute: () => PublicRoute,
+} as any)
+const PublicLoginRoute = PublicLoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => PublicRoute,
+} as any)
+const PublicPrivacyRoute = PublicPrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
+  getParentRoute: () => PublicRoute,
+} as any)
+const PublicProfileRoute = PublicProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => PublicRoute,
+} as any)
+const PublicRegisterRoute = PublicRegisterRouteImport.update({
+  id: '/register',
+  path: '/register',
+  getParentRoute: () => PublicRoute,
+} as any)
+const PublicTermsRoute = PublicTermsRouteImport.update({
+  id: '/terms',
+  path: '/terms',
+  getParentRoute: () => PublicRoute,
+} as any)
+const AdminLoginRoute = AdminLoginRouteImport.update({
+  id: '/admin/login',
+  path: '/admin/login',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AdminAdminIndexRoute = AdminAdminIndexRouteImport.update({
   id: '/admin/',
   path: '/admin/',
-  getParentRoute: () => AdminRoute,
-} as any)
-const ApiPublicYookassaWebhookRoute =
-  ApiPublicYookassaWebhookRouteImport.update({
-    id: '/api/public/yookassa-webhook',
-    path: '/api/public/yookassa-webhook',
-    getParentRoute: () => rootRouteImport,
-  } as any)
-const ApiPublicVersionRoute = ApiPublicVersionRouteImport.update({
-  id: '/api/public/version',
-  path: '/api/public/version',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiPublicHealthRoute = ApiPublicHealthRouteImport.update({
-  id: '/api/public/health',
-  path: '/api/public/health',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PublicRentNovosibirskRoute = PublicRentNovosibirskRouteImport.update({
-  id: '/rent/novosibirsk',
-  path: '/rent/novosibirsk',
-  getParentRoute: () => PublicRoute,
-} as any)
-const PublicRentBezZalogaRoute = PublicRentBezZalogaRouteImport.update({
-  id: '/rent/bez-zaloga',
-  path: '/rent/bez-zaloga',
-  getParentRoute: () => PublicRoute,
-} as any)
-const PublicProfileRentalsRoute = PublicProfileRentalsRouteImport.update({
-  id: '/rentals',
-  path: '/rentals',
-  getParentRoute: () => PublicProfileRoute,
-} as any)
-const PublicProfileMessagesRoute = PublicProfileMessagesRouteImport.update({
-  id: '/messages',
-  path: '/messages',
-  getParentRoute: () => PublicProfileRoute,
-} as any)
-const PublicProfileDocumentsRoute = PublicProfileDocumentsRouteImport.update({
-  id: '/documents',
-  path: '/documents',
-  getParentRoute: () => PublicProfileRoute,
-} as any)
-const PublicPaymentBookingIdRoute = PublicPaymentBookingIdRouteImport.update({
-  id: '/payment/$bookingId',
-  path: '/payment/$bookingId',
-  getParentRoute: () => PublicRoute,
-} as any)
-const PublicInvoiceBookingIdRoute = PublicInvoiceBookingIdRouteImport.update({
-  id: '/invoice/$bookingId',
-  path: '/invoice/$bookingId',
-  getParentRoute: () => PublicRoute,
-} as any)
-const PublicContractBookingIdRoute = PublicContractBookingIdRouteImport.update({
-  id: '/contract/$bookingId',
-  path: '/contract/$bookingId',
-  getParentRoute: () => PublicRoute,
-} as any)
-const PublicCarsCarIdRoute = PublicCarsCarIdRouteImport.update({
-  id: '/cars/$carId',
-  path: '/cars/$carId',
-  getParentRoute: () => PublicRoute,
-} as any)
-const PublicBookingCarIdRoute = PublicBookingCarIdRouteImport.update({
-  id: '/booking/$carId',
-  path: '/booking/$carId',
-  getParentRoute: () => PublicRoute,
-} as any)
-const PublicBlogSlugRoute = PublicBlogSlugRouteImport.update({
-  id: '/blog/$slug',
-  path: '/blog/$slug',
-  getParentRoute: () => PublicRoute,
-} as any)
-const AdminAdminSettingsRoute = AdminAdminSettingsRouteImport.update({
-  id: '/admin/settings',
-  path: '/admin/settings',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminAdminReviewsRoute = AdminAdminReviewsRouteImport.update({
-  id: '/admin/reviews',
-  path: '/admin/reviews',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminAdminMessagesRoute = AdminAdminMessagesRouteImport.update({
-  id: '/admin/messages',
-  path: '/admin/messages',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminAdminFinanceRoute = AdminAdminFinanceRouteImport.update({
-  id: '/admin/finance',
-  path: '/admin/finance',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminAdminDiagnosticsRoute = AdminAdminDiagnosticsRouteImport.update({
-  id: '/admin/diagnostics',
-  path: '/admin/diagnostics',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminAdminClientsRoute = AdminAdminClientsRouteImport.update({
-  id: '/admin/clients',
-  path: '/admin/clients',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminAdminCarsRoute = AdminAdminCarsRouteImport.update({
-  id: '/admin/cars',
-  path: '/admin/cars',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminAdminBookingsRoute = AdminAdminBookingsRouteImport.update({
@@ -320,17 +199,138 @@ const AdminAdminBookingsRoute = AdminAdminBookingsRouteImport.update({
   path: '/admin/bookings',
   getParentRoute: () => AdminRoute,
 } as any)
-const ApiPublicCarPhotoIdRoute = ApiPublicCarPhotoIdRouteImport.update({
-  id: '/api/public/car-photo/$id',
-  path: '/api/public/car-photo/$id',
+const AdminAdminCarsRoute = AdminAdminCarsRouteImport.update({
+  id: '/admin/cars',
+  path: '/admin/cars',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminAdminClientsRoute = AdminAdminClientsRouteImport.update({
+  id: '/admin/clients',
+  path: '/admin/clients',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminAdminDiagnosticsRoute = AdminAdminDiagnosticsRouteImport.update({
+  id: '/admin/diagnostics',
+  path: '/admin/diagnostics',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminAdminFinanceRoute = AdminAdminFinanceRouteImport.update({
+  id: '/admin/finance',
+  path: '/admin/finance',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminAdminMessagesRoute = AdminAdminMessagesRouteImport.update({
+  id: '/admin/messages',
+  path: '/admin/messages',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminAdminReviewsRoute = AdminAdminReviewsRouteImport.update({
+  id: '/admin/reviews',
+  path: '/admin/reviews',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminAdminSettingsRoute = AdminAdminSettingsRouteImport.update({
+  id: '/admin/settings',
+  path: '/admin/settings',
+  getParentRoute: () => AdminRoute,
+} as any)
+const PublicBlogIndexRoute = PublicBlogIndexRouteImport.update({
+  id: '/blog/',
+  path: '/blog/',
+  getParentRoute: () => PublicRoute,
+} as any)
+const PublicBlogSlugRoute = PublicBlogSlugRouteImport.update({
+  id: '/blog/$slug',
+  path: '/blog/$slug',
+  getParentRoute: () => PublicRoute,
+} as any)
+const PublicBookingCarIdRoute = PublicBookingCarIdRouteImport.update({
+  id: '/booking/$carId',
+  path: '/booking/$carId',
+  getParentRoute: () => PublicRoute,
+} as any)
+const PublicCarsIndexRoute = PublicCarsIndexRouteImport.update({
+  id: '/cars/',
+  path: '/cars/',
+  getParentRoute: () => PublicRoute,
+} as any)
+const PublicCarsCarIdRoute = PublicCarsCarIdRouteImport.update({
+  id: '/cars/$carId',
+  path: '/cars/$carId',
+  getParentRoute: () => PublicRoute,
+} as any)
+const PublicContractBookingIdRoute = PublicContractBookingIdRouteImport.update({
+  id: '/contract/$bookingId',
+  path: '/contract/$bookingId',
+  getParentRoute: () => PublicRoute,
+} as any)
+const PublicInvoiceBookingIdRoute = PublicInvoiceBookingIdRouteImport.update({
+  id: '/invoice/$bookingId',
+  path: '/invoice/$bookingId',
+  getParentRoute: () => PublicRoute,
+} as any)
+const PublicPaymentBookingIdRoute = PublicPaymentBookingIdRouteImport.update({
+  id: '/payment/$bookingId',
+  path: '/payment/$bookingId',
+  getParentRoute: () => PublicRoute,
+} as any)
+const PublicProfileIndexRoute = PublicProfileIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => PublicProfileRoute,
+} as any)
+const PublicProfileDocumentsRoute = PublicProfileDocumentsRouteImport.update({
+  id: '/documents',
+  path: '/documents',
+  getParentRoute: () => PublicProfileRoute,
+} as any)
+const PublicProfileMessagesRoute = PublicProfileMessagesRouteImport.update({
+  id: '/messages',
+  path: '/messages',
+  getParentRoute: () => PublicProfileRoute,
+} as any)
+const PublicProfileRentalsRoute = PublicProfileRentalsRouteImport.update({
+  id: '/rentals',
+  path: '/rentals',
+  getParentRoute: () => PublicProfileRoute,
+} as any)
+const PublicRentBezZalogaRoute = PublicRentBezZalogaRouteImport.update({
+  id: '/rent/bez-zaloga',
+  path: '/rent/bez-zaloga',
+  getParentRoute: () => PublicRoute,
+} as any)
+const PublicRentNovosibirskRoute = PublicRentNovosibirskRouteImport.update({
+  id: '/rent/novosibirsk',
+  path: '/rent/novosibirsk',
+  getParentRoute: () => PublicRoute,
+} as any)
+const ApiPublicHealthRoute = ApiPublicHealthRouteImport.update({
+  id: '/api/public/health',
+  path: '/api/public/health',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicVersionRoute = ApiPublicVersionRouteImport.update({
+  id: '/api/public/version',
+  path: '/api/public/version',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicYookassaWebhookRoute =
+  ApiPublicYookassaWebhookRouteImport.update({
+    id: '/api/public/yookassa-webhook',
+    path: '/api/public/yookassa-webhook',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const AdminAdminCarPhotosCarIdRoute =
   AdminAdminCarPhotosCarIdRouteImport.update({
     id: '/admin/car-photos/$carId',
     path: '/admin/car-photos/$carId',
     getParentRoute: () => AdminRoute,
   } as any)
+const ApiPublicCarPhotoIdRoute = ApiPublicCarPhotoIdRouteImport.update({
+  id: '/api/public/car-photo/$id',
+  path: '/api/public/car-photo/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -665,25 +665,11 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/sitemap.xml': {
-      id: '/sitemap.xml'
-      path: '/sitemap.xml'
-      fullPath: '/sitemap.xml'
-      preLoaderRoute: typeof SitemapDotxmlRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/robots.txt': {
-      id: '/robots.txt'
-      path: '/robots.txt'
-      fullPath: '/robots.txt'
-      preLoaderRoute: typeof RobotsDottxtRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/_public': {
-      id: '/_public'
-      path: ''
+    '/': {
+      id: '/'
+      path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof PublicRouteImport
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_admin': {
@@ -693,130 +679,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
-      path: '/'
+    '/_public': {
+      id: '/_public'
+      path: ''
       fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+      preLoaderRoute: typeof PublicRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/admin/login': {
-      id: '/admin/login'
-      path: '/admin/login'
-      fullPath: '/admin/login'
-      preLoaderRoute: typeof AdminLoginRouteImport
+    '/robots.txt': {
+      id: '/robots.txt'
+      path: '/robots.txt'
+      fullPath: '/robots.txt'
+      preLoaderRoute: typeof RobotsDottxtRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_public/terms': {
-      id: '/_public/terms'
-      path: '/terms'
-      fullPath: '/terms'
-      preLoaderRoute: typeof PublicTermsRouteImport
-      parentRoute: typeof PublicRoute
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
     }
-    '/_public/register': {
-      id: '/_public/register'
-      path: '/register'
-      fullPath: '/register'
-      preLoaderRoute: typeof PublicRegisterRouteImport
-      parentRoute: typeof PublicRoute
-    }
-    '/_public/profile': {
-      id: '/_public/profile'
-      path: '/profile'
-      fullPath: '/profile'
-      preLoaderRoute: typeof PublicProfileRouteImport
-      parentRoute: typeof PublicRoute
-    }
-    '/_public/privacy': {
-      id: '/_public/privacy'
-      path: '/privacy'
-      fullPath: '/privacy'
-      preLoaderRoute: typeof PublicPrivacyRouteImport
-      parentRoute: typeof PublicRoute
-    }
-    '/_public/login': {
-      id: '/_public/login'
-      path: '/login'
-      fullPath: '/login'
-      preLoaderRoute: typeof PublicLoginRouteImport
-      parentRoute: typeof PublicRoute
-    }
-    '/_public/kei-cars': {
-      id: '/_public/kei-cars'
-      path: '/kei-cars'
-      fullPath: '/kei-cars'
-      preLoaderRoute: typeof PublicKeiCarsRouteImport
-      parentRoute: typeof PublicRoute
-    }
-    '/_public/cookies': {
-      id: '/_public/cookies'
-      path: '/cookies'
-      fullPath: '/cookies'
-      preLoaderRoute: typeof PublicCookiesRouteImport
-      parentRoute: typeof PublicRoute
-    }
-    '/_public/consent': {
-      id: '/_public/consent'
-      path: '/consent'
-      fullPath: '/consent'
-      preLoaderRoute: typeof PublicConsentRouteImport
-      parentRoute: typeof PublicRoute
-    }
-    '/_public/arenda-probeg-i-platezhi': {
-      id: '/_public/arenda-probeg-i-platezhi'
-      path: '/arenda-probeg-i-platezhi'
-      fullPath: '/arenda-probeg-i-platezhi'
-      preLoaderRoute: typeof PublicArendaProbegIPlatezhiRouteImport
-      parentRoute: typeof PublicRoute
-    }
-    '/_public/arenda-avto-vyhodnye': {
-      id: '/_public/arenda-avto-vyhodnye'
-      path: '/arenda-avto-vyhodnye'
-      fullPath: '/arenda-avto-vyhodnye'
-      preLoaderRoute: typeof PublicArendaAvtoVyhodnyeRouteImport
-      parentRoute: typeof PublicRoute
-    }
-    '/_public/arenda-avto-s-pravym-rulem': {
-      id: '/_public/arenda-avto-s-pravym-rulem'
-      path: '/arenda-avto-s-pravym-rulem'
-      fullPath: '/arenda-avto-s-pravym-rulem'
-      preLoaderRoute: typeof PublicArendaAvtoSPravymRulemRouteImport
-      parentRoute: typeof PublicRoute
-    }
-    '/_public/arenda-avto-poezdka-altay': {
-      id: '/_public/arenda-avto-poezdka-altay'
-      path: '/arenda-avto-poezdka-altay'
-      fullPath: '/arenda-avto-poezdka-altay'
-      preLoaderRoute: typeof PublicArendaAvtoPoezdkaAltayRouteImport
-      parentRoute: typeof PublicRoute
-    }
-    '/_public/arenda-avto-na-sutki': {
-      id: '/_public/arenda-avto-na-sutki'
-      path: '/arenda-avto-na-sutki'
-      fullPath: '/arenda-avto-na-sutki'
-      preLoaderRoute: typeof PublicArendaAvtoNaSutkiRouteImport
-      parentRoute: typeof PublicRoute
-    }
-    '/_public/arenda-avto-na-nedelyu': {
-      id: '/_public/arenda-avto-na-nedelyu'
-      path: '/arenda-avto-na-nedelyu'
-      fullPath: '/arenda-avto-na-nedelyu'
-      preLoaderRoute: typeof PublicArendaAvtoNaNedelyuRouteImport
-      parentRoute: typeof PublicRoute
-    }
-    '/_public/arenda-avto-na-mesyac': {
-      id: '/_public/arenda-avto-na-mesyac'
-      path: '/arenda-avto-na-mesyac'
-      fullPath: '/arenda-avto-na-mesyac'
-      preLoaderRoute: typeof PublicArendaAvtoNaMesyacRouteImport
-      parentRoute: typeof PublicRoute
-    }
-    '/_public/arenda-avto-bez-zaloga': {
-      id: '/_public/arenda-avto-bez-zaloga'
-      path: '/arenda-avto-bez-zaloga'
-      fullPath: '/arenda-avto-bez-zaloga'
-      preLoaderRoute: typeof PublicArendaAvtoBezZalogaRouteImport
+    '/_public/arenda-avto-bez-stazha': {
+      id: '/_public/arenda-avto-bez-stazha'
+      path: '/arenda-avto-bez-stazha'
+      fullPath: '/arenda-avto-bez-stazha'
+      preLoaderRoute: typeof PublicArendaAvtoBezStazhaRouteImport
       parentRoute: typeof PublicRoute
     }
     '/_public/arenda-avto-bez-voditelya': {
@@ -826,186 +714,130 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PublicArendaAvtoBezVoditelyaRouteImport
       parentRoute: typeof PublicRoute
     }
-    '/_public/arenda-avto-bez-stazha': {
-      id: '/_public/arenda-avto-bez-stazha'
-      path: '/arenda-avto-bez-stazha'
-      fullPath: '/arenda-avto-bez-stazha'
-      preLoaderRoute: typeof PublicArendaAvtoBezStazhaRouteImport
+    '/_public/arenda-avto-bez-zaloga': {
+      id: '/_public/arenda-avto-bez-zaloga'
+      path: '/arenda-avto-bez-zaloga'
+      fullPath: '/arenda-avto-bez-zaloga'
+      preLoaderRoute: typeof PublicArendaAvtoBezZalogaRouteImport
       parentRoute: typeof PublicRoute
     }
-    '/_public/profile/': {
-      id: '/_public/profile/'
-      path: '/'
-      fullPath: '/profile/'
-      preLoaderRoute: typeof PublicProfileIndexRouteImport
-      parentRoute: typeof PublicProfileRoute
-    }
-    '/_public/cars/': {
-      id: '/_public/cars/'
-      path: '/cars'
-      fullPath: '/cars/'
-      preLoaderRoute: typeof PublicCarsIndexRouteImport
+    '/_public/arenda-avto-na-mesyac': {
+      id: '/_public/arenda-avto-na-mesyac'
+      path: '/arenda-avto-na-mesyac'
+      fullPath: '/arenda-avto-na-mesyac'
+      preLoaderRoute: typeof PublicArendaAvtoNaMesyacRouteImport
       parentRoute: typeof PublicRoute
     }
-    '/_public/blog/': {
-      id: '/_public/blog/'
-      path: '/blog'
-      fullPath: '/blog/'
-      preLoaderRoute: typeof PublicBlogIndexRouteImport
+    '/_public/arenda-avto-na-nedelyu': {
+      id: '/_public/arenda-avto-na-nedelyu'
+      path: '/arenda-avto-na-nedelyu'
+      fullPath: '/arenda-avto-na-nedelyu'
+      preLoaderRoute: typeof PublicArendaAvtoNaNedelyuRouteImport
       parentRoute: typeof PublicRoute
+    }
+    '/_public/arenda-avto-na-sutki': {
+      id: '/_public/arenda-avto-na-sutki'
+      path: '/arenda-avto-na-sutki'
+      fullPath: '/arenda-avto-na-sutki'
+      preLoaderRoute: typeof PublicArendaAvtoNaSutkiRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/arenda-avto-poezdka-altay': {
+      id: '/_public/arenda-avto-poezdka-altay'
+      path: '/arenda-avto-poezdka-altay'
+      fullPath: '/arenda-avto-poezdka-altay'
+      preLoaderRoute: typeof PublicArendaAvtoPoezdkaAltayRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/arenda-avto-s-pravym-rulem': {
+      id: '/_public/arenda-avto-s-pravym-rulem'
+      path: '/arenda-avto-s-pravym-rulem'
+      fullPath: '/arenda-avto-s-pravym-rulem'
+      preLoaderRoute: typeof PublicArendaAvtoSPravymRulemRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/arenda-avto-vyhodnye': {
+      id: '/_public/arenda-avto-vyhodnye'
+      path: '/arenda-avto-vyhodnye'
+      fullPath: '/arenda-avto-vyhodnye'
+      preLoaderRoute: typeof PublicArendaAvtoVyhodnyeRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/arenda-probeg-i-platezhi': {
+      id: '/_public/arenda-probeg-i-platezhi'
+      path: '/arenda-probeg-i-platezhi'
+      fullPath: '/arenda-probeg-i-platezhi'
+      preLoaderRoute: typeof PublicArendaProbegIPlatezhiRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/consent': {
+      id: '/_public/consent'
+      path: '/consent'
+      fullPath: '/consent'
+      preLoaderRoute: typeof PublicConsentRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/cookies': {
+      id: '/_public/cookies'
+      path: '/cookies'
+      fullPath: '/cookies'
+      preLoaderRoute: typeof PublicCookiesRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/kei-cars': {
+      id: '/_public/kei-cars'
+      path: '/kei-cars'
+      fullPath: '/kei-cars'
+      preLoaderRoute: typeof PublicKeiCarsRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/login': {
+      id: '/_public/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof PublicLoginRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/privacy': {
+      id: '/_public/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PublicPrivacyRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/profile': {
+      id: '/_public/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof PublicProfileRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/register': {
+      id: '/_public/register'
+      path: '/register'
+      fullPath: '/register'
+      preLoaderRoute: typeof PublicRegisterRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/terms': {
+      id: '/_public/terms'
+      path: '/terms'
+      fullPath: '/terms'
+      preLoaderRoute: typeof PublicTermsRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/admin/login': {
+      id: '/admin/login'
+      path: '/admin/login'
+      fullPath: '/admin/login'
+      preLoaderRoute: typeof AdminLoginRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/_admin/admin/': {
       id: '/_admin/admin/'
       path: '/admin'
       fullPath: '/admin/'
       preLoaderRoute: typeof AdminAdminIndexRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/api/public/yookassa-webhook': {
-      id: '/api/public/yookassa-webhook'
-      path: '/api/public/yookassa-webhook'
-      fullPath: '/api/public/yookassa-webhook'
-      preLoaderRoute: typeof ApiPublicYookassaWebhookRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/public/version': {
-      id: '/api/public/version'
-      path: '/api/public/version'
-      fullPath: '/api/public/version'
-      preLoaderRoute: typeof ApiPublicVersionRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/public/health': {
-      id: '/api/public/health'
-      path: '/api/public/health'
-      fullPath: '/api/public/health'
-      preLoaderRoute: typeof ApiPublicHealthRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/_public/rent/novosibirsk': {
-      id: '/_public/rent/novosibirsk'
-      path: '/rent/novosibirsk'
-      fullPath: '/rent/novosibirsk'
-      preLoaderRoute: typeof PublicRentNovosibirskRouteImport
-      parentRoute: typeof PublicRoute
-    }
-    '/_public/rent/bez-zaloga': {
-      id: '/_public/rent/bez-zaloga'
-      path: '/rent/bez-zaloga'
-      fullPath: '/rent/bez-zaloga'
-      preLoaderRoute: typeof PublicRentBezZalogaRouteImport
-      parentRoute: typeof PublicRoute
-    }
-    '/_public/profile/rentals': {
-      id: '/_public/profile/rentals'
-      path: '/rentals'
-      fullPath: '/profile/rentals'
-      preLoaderRoute: typeof PublicProfileRentalsRouteImport
-      parentRoute: typeof PublicProfileRoute
-    }
-    '/_public/profile/messages': {
-      id: '/_public/profile/messages'
-      path: '/messages'
-      fullPath: '/profile/messages'
-      preLoaderRoute: typeof PublicProfileMessagesRouteImport
-      parentRoute: typeof PublicProfileRoute
-    }
-    '/_public/profile/documents': {
-      id: '/_public/profile/documents'
-      path: '/documents'
-      fullPath: '/profile/documents'
-      preLoaderRoute: typeof PublicProfileDocumentsRouteImport
-      parentRoute: typeof PublicProfileRoute
-    }
-    '/_public/payment/$bookingId': {
-      id: '/_public/payment/$bookingId'
-      path: '/payment/$bookingId'
-      fullPath: '/payment/$bookingId'
-      preLoaderRoute: typeof PublicPaymentBookingIdRouteImport
-      parentRoute: typeof PublicRoute
-    }
-    '/_public/invoice/$bookingId': {
-      id: '/_public/invoice/$bookingId'
-      path: '/invoice/$bookingId'
-      fullPath: '/invoice/$bookingId'
-      preLoaderRoute: typeof PublicInvoiceBookingIdRouteImport
-      parentRoute: typeof PublicRoute
-    }
-    '/_public/contract/$bookingId': {
-      id: '/_public/contract/$bookingId'
-      path: '/contract/$bookingId'
-      fullPath: '/contract/$bookingId'
-      preLoaderRoute: typeof PublicContractBookingIdRouteImport
-      parentRoute: typeof PublicRoute
-    }
-    '/_public/cars/$carId': {
-      id: '/_public/cars/$carId'
-      path: '/cars/$carId'
-      fullPath: '/cars/$carId'
-      preLoaderRoute: typeof PublicCarsCarIdRouteImport
-      parentRoute: typeof PublicRoute
-    }
-    '/_public/booking/$carId': {
-      id: '/_public/booking/$carId'
-      path: '/booking/$carId'
-      fullPath: '/booking/$carId'
-      preLoaderRoute: typeof PublicBookingCarIdRouteImport
-      parentRoute: typeof PublicRoute
-    }
-    '/_public/blog/$slug': {
-      id: '/_public/blog/$slug'
-      path: '/blog/$slug'
-      fullPath: '/blog/$slug'
-      preLoaderRoute: typeof PublicBlogSlugRouteImport
-      parentRoute: typeof PublicRoute
-    }
-    '/_admin/admin/settings': {
-      id: '/_admin/admin/settings'
-      path: '/admin/settings'
-      fullPath: '/admin/settings'
-      preLoaderRoute: typeof AdminAdminSettingsRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/_admin/admin/reviews': {
-      id: '/_admin/admin/reviews'
-      path: '/admin/reviews'
-      fullPath: '/admin/reviews'
-      preLoaderRoute: typeof AdminAdminReviewsRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/_admin/admin/messages': {
-      id: '/_admin/admin/messages'
-      path: '/admin/messages'
-      fullPath: '/admin/messages'
-      preLoaderRoute: typeof AdminAdminMessagesRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/_admin/admin/finance': {
-      id: '/_admin/admin/finance'
-      path: '/admin/finance'
-      fullPath: '/admin/finance'
-      preLoaderRoute: typeof AdminAdminFinanceRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/_admin/admin/diagnostics': {
-      id: '/_admin/admin/diagnostics'
-      path: '/admin/diagnostics'
-      fullPath: '/admin/diagnostics'
-      preLoaderRoute: typeof AdminAdminDiagnosticsRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/_admin/admin/clients': {
-      id: '/_admin/admin/clients'
-      path: '/admin/clients'
-      fullPath: '/admin/clients'
-      preLoaderRoute: typeof AdminAdminClientsRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/_admin/admin/cars': {
-      id: '/_admin/admin/cars'
-      path: '/admin/cars'
-      fullPath: '/admin/cars'
-      preLoaderRoute: typeof AdminAdminCarsRouteImport
       parentRoute: typeof AdminRoute
     }
     '/_admin/admin/bookings': {
@@ -1015,11 +847,172 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminAdminBookingsRouteImport
       parentRoute: typeof AdminRoute
     }
-    '/api/public/car-photo/$id': {
-      id: '/api/public/car-photo/$id'
-      path: '/api/public/car-photo/$id'
-      fullPath: '/api/public/car-photo/$id'
-      preLoaderRoute: typeof ApiPublicCarPhotoIdRouteImport
+    '/_admin/admin/cars': {
+      id: '/_admin/admin/cars'
+      path: '/admin/cars'
+      fullPath: '/admin/cars'
+      preLoaderRoute: typeof AdminAdminCarsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/_admin/admin/clients': {
+      id: '/_admin/admin/clients'
+      path: '/admin/clients'
+      fullPath: '/admin/clients'
+      preLoaderRoute: typeof AdminAdminClientsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/_admin/admin/diagnostics': {
+      id: '/_admin/admin/diagnostics'
+      path: '/admin/diagnostics'
+      fullPath: '/admin/diagnostics'
+      preLoaderRoute: typeof AdminAdminDiagnosticsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/_admin/admin/finance': {
+      id: '/_admin/admin/finance'
+      path: '/admin/finance'
+      fullPath: '/admin/finance'
+      preLoaderRoute: typeof AdminAdminFinanceRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/_admin/admin/messages': {
+      id: '/_admin/admin/messages'
+      path: '/admin/messages'
+      fullPath: '/admin/messages'
+      preLoaderRoute: typeof AdminAdminMessagesRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/_admin/admin/reviews': {
+      id: '/_admin/admin/reviews'
+      path: '/admin/reviews'
+      fullPath: '/admin/reviews'
+      preLoaderRoute: typeof AdminAdminReviewsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/_admin/admin/settings': {
+      id: '/_admin/admin/settings'
+      path: '/admin/settings'
+      fullPath: '/admin/settings'
+      preLoaderRoute: typeof AdminAdminSettingsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/_public/blog/': {
+      id: '/_public/blog/'
+      path: '/blog'
+      fullPath: '/blog/'
+      preLoaderRoute: typeof PublicBlogIndexRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/blog/$slug': {
+      id: '/_public/blog/$slug'
+      path: '/blog/$slug'
+      fullPath: '/blog/$slug'
+      preLoaderRoute: typeof PublicBlogSlugRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/booking/$carId': {
+      id: '/_public/booking/$carId'
+      path: '/booking/$carId'
+      fullPath: '/booking/$carId'
+      preLoaderRoute: typeof PublicBookingCarIdRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/cars/': {
+      id: '/_public/cars/'
+      path: '/cars'
+      fullPath: '/cars/'
+      preLoaderRoute: typeof PublicCarsIndexRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/cars/$carId': {
+      id: '/_public/cars/$carId'
+      path: '/cars/$carId'
+      fullPath: '/cars/$carId'
+      preLoaderRoute: typeof PublicCarsCarIdRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/contract/$bookingId': {
+      id: '/_public/contract/$bookingId'
+      path: '/contract/$bookingId'
+      fullPath: '/contract/$bookingId'
+      preLoaderRoute: typeof PublicContractBookingIdRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/invoice/$bookingId': {
+      id: '/_public/invoice/$bookingId'
+      path: '/invoice/$bookingId'
+      fullPath: '/invoice/$bookingId'
+      preLoaderRoute: typeof PublicInvoiceBookingIdRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/payment/$bookingId': {
+      id: '/_public/payment/$bookingId'
+      path: '/payment/$bookingId'
+      fullPath: '/payment/$bookingId'
+      preLoaderRoute: typeof PublicPaymentBookingIdRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/profile/': {
+      id: '/_public/profile/'
+      path: '/'
+      fullPath: '/profile/'
+      preLoaderRoute: typeof PublicProfileIndexRouteImport
+      parentRoute: typeof PublicProfileRoute
+    }
+    '/_public/profile/documents': {
+      id: '/_public/profile/documents'
+      path: '/documents'
+      fullPath: '/profile/documents'
+      preLoaderRoute: typeof PublicProfileDocumentsRouteImport
+      parentRoute: typeof PublicProfileRoute
+    }
+    '/_public/profile/messages': {
+      id: '/_public/profile/messages'
+      path: '/messages'
+      fullPath: '/profile/messages'
+      preLoaderRoute: typeof PublicProfileMessagesRouteImport
+      parentRoute: typeof PublicProfileRoute
+    }
+    '/_public/profile/rentals': {
+      id: '/_public/profile/rentals'
+      path: '/rentals'
+      fullPath: '/profile/rentals'
+      preLoaderRoute: typeof PublicProfileRentalsRouteImport
+      parentRoute: typeof PublicProfileRoute
+    }
+    '/_public/rent/bez-zaloga': {
+      id: '/_public/rent/bez-zaloga'
+      path: '/rent/bez-zaloga'
+      fullPath: '/rent/bez-zaloga'
+      preLoaderRoute: typeof PublicRentBezZalogaRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/rent/novosibirsk': {
+      id: '/_public/rent/novosibirsk'
+      path: '/rent/novosibirsk'
+      fullPath: '/rent/novosibirsk'
+      preLoaderRoute: typeof PublicRentNovosibirskRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/api/public/health': {
+      id: '/api/public/health'
+      path: '/api/public/health'
+      fullPath: '/api/public/health'
+      preLoaderRoute: typeof ApiPublicHealthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/version': {
+      id: '/api/public/version'
+      path: '/api/public/version'
+      fullPath: '/api/public/version'
+      preLoaderRoute: typeof ApiPublicVersionRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/yookassa-webhook': {
+      id: '/api/public/yookassa-webhook'
+      path: '/api/public/yookassa-webhook'
+      fullPath: '/api/public/yookassa-webhook'
+      preLoaderRoute: typeof ApiPublicYookassaWebhookRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_admin/admin/car-photos/$carId': {
@@ -1028,6 +1021,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin/car-photos/$carId'
       preLoaderRoute: typeof AdminAdminCarPhotosCarIdRouteImport
       parentRoute: typeof AdminRoute
+    }
+    '/api/public/car-photo/$id': {
+      id: '/api/public/car-photo/$id'
+      path: '/api/public/car-photo/$id'
+      fullPath: '/api/public/car-photo/$id'
+      preLoaderRoute: typeof ApiPublicCarPhotoIdRouteImport
+      parentRoute: typeof rootRouteImport
     }
   }
 }

@@ -40,7 +40,7 @@ export const Route = createFileRoute("/_admin/admin/")({
   errorComponent: DashboardError,
 });
 
-function DashboardError({ error, reset }: { error: Error; reset: () => void }) {
+function DashboardError({ error, reset }: import("@tanstack/react-router").ErrorComponentProps) {
   const router = useRouter();
   return (
     <AdminErrorScreen

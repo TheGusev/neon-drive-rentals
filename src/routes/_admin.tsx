@@ -15,7 +15,7 @@ export const Route = createFileRoute("/_admin")({
   errorComponent: AdminRouteError,
 });
 
-function AdminRouteError({ error, reset }: { error: Error; reset: () => void }) {
+function AdminRouteError({ error, reset }: import("@tanstack/react-router").ErrorComponentProps) {
   const router = useRouter();
   return (
     <AdminErrorScreen
