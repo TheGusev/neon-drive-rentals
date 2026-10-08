@@ -25,6 +25,7 @@ import profileExtensionsMigration from "../../db/migrations/022_profile_extensio
 import reviewsRatingMigration from "../../db/migrations/023_reviews_rating.sql?raw";
 import schemaCompatibilityMigration from "../../db/migrations/024_schema_compatibility.sql?raw";
 import bookingExtensionsCompatMigration from "../../db/migrations/025_booking_extensions_compat.sql?raw";
+import carArchiveMigration from "../../db/migrations/026_car_archive.sql?raw";
 
 /** Порядок применения важен; все миграции идемпотентны для существующей базы. */
 const MIGRATIONS: Array<{ name: string; sql: string }> = [
@@ -53,6 +54,7 @@ const MIGRATIONS: Array<{ name: string; sql: string }> = [
   { name: "023_reviews_rating", sql: reviewsRatingMigration },
   { name: "024_schema_compatibility", sql: schemaCompatibilityMigration },
   { name: "025_booking_extensions_compat", sql: bookingExtensionsCompatMigration },
+  { name: "026_car_archive", sql: carArchiveMigration },
 ];
 
 type MigrationFailure = { name: string; message: string };

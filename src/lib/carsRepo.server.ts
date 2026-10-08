@@ -215,6 +215,7 @@ const SELECT_CARS = `
   select id, slug, brand, model, year, class, transmission, seats,
          price_city, price_out, status, images, specs, plate, mileage, rating, reviews_count
   from cars
+  where archived_at is null
 `;
 
 /** Госномер — служебные данные, наружу не отдаём. */
@@ -255,7 +256,7 @@ export async function fetchCarBySlug(slug: string): Promise<Car | null> {
     `car:${slug}`,
     (async () => {
       if (!(await ready())) return fallback;
-      const rows = await query<CarRow>(`${SELECT_CARS} where slug = $1 or id::text = $1 limit 1`, [
+      const rows = await query<CarRow>(`${SELECT_CARS} and (slug = $1 or id::text = $1) limit 1`, [
         slug,
       ]);
       return rows.length ? withoutPlate(mapCarRow(rows[0])) : null;
@@ -273,7 +274,7 @@ export async function fetchCarsAdmin(): Promise<Car[]> {
 
 export async function fetchCarAdminBySlug(slug: string): Promise<Car | null> {
   if (!(await ready())) return mockCars.find((c) => c.id === slug) ?? null;
-  const rows = await query<CarRow>(`${SELECT_CARS} where slug = $1 or id::text = $1 limit 1`, [
+  const rows = await query<CarRow>(`${SELECT_CARS} and (slug = $1 or id::text = $1) limit 1`, [
     slug,
   ]);
   return rows.length ? mapCarRow(rows[0], false) : null;
@@ -477,11 +478,22 @@ export async function deleteCarInDb(slug: string): Promise<DeleteCarResult> {
   );
   if (blocking.length) return { ok: false, reason: "has_bookings" };
 
-  const rows = await query<{ id: string }>(
-    `delete from cars where slug = $1 or id::text = $1 returning id`,
-    [slug],
-  );
-  return rows.length > 0 ? { ok: true } : { ok: false, reason: "not_found" };
+  try {
+    const rows = await query<{ id: string }>(
+      `delete from cars where (slug = $1 or id::text = $1) and archived_at is null returning id`,
+      [slug],
+    );
+    return rows.length > 0 ? { ok: true } : { ok: false, reason: "not_found" };
+  } catch (err) {
+    // 23503 — на авто ссылаются завершённые брони/платежи/отзывы: архивируем, история сохраняется.
+    if ((err as { code?: string }).code !== "23503") throw err;
+    const archived = await query<{ id: string }>(
+      `update cars set archived_at = now(), status = 'maintenance'
+       where (slug = $1 or id::text = $1) and archived_at is null returning id`,
+      [slug],
+    );
+    return archived.length > 0 ? { ok: true } : { ok: false, reason: "not_found" };
+  }
 }
 
 /** Internal id (primary key) for a public slug — needed when writing bookings. */
