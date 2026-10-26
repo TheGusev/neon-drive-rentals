@@ -100,7 +100,7 @@ export async function upsertIdentityDocument(input: {
   number: string;
   birthDate?: string;
   issuedBy?: string;
-  issueDate: string;
+  issueDate?: string;
   departmentCode?: string;
   registrationAddress?: string;
   expiryDate?: string;
@@ -118,7 +118,7 @@ export async function upsertIdentityDocument(input: {
        file_url = null, status = 'pending', comment = null, reviewed_at = null, uploaded_at = now()
      returning id`,
     [input.clientId, input.type, input.number, input.birthDate ?? null, input.issuedBy ?? null,
-      input.issueDate, input.departmentCode ?? null, input.registrationAddress ?? null,
+      input.issueDate ?? null, input.departmentCode ?? null, input.registrationAddress ?? null,
       input.expiryDate ?? null],
   );
   return rows.length > 0;

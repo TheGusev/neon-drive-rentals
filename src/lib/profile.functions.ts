@@ -51,17 +51,10 @@ const documentSchema = z.discriminatedUnion("type", [
   z.object({
     type: z.literal("passport"),
     number: z.string().trim().regex(/^\d{4}\s?\d{6}$/, "Укажите 10 цифр паспорта"),
-    birthDate: z.string().date(),
-    issuedBy: z.string().trim().min(3).max(300),
-    issueDate: z.string().date(),
-    departmentCode: z.string().trim().regex(/^\d{3}-\d{3}$/),
-    registrationAddress: z.string().trim().min(5).max(400),
   }),
   z.object({
     type: z.literal("license"),
     number: z.string().trim().min(6).max(30),
-    issueDate: z.string().date(),
-    expiryDate: z.string().date(),
   }),
 ]);
 

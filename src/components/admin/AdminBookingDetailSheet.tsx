@@ -69,13 +69,7 @@ function DocumentDetails({ type, booking }: { type: "passport" | "license"; book
         <Icon className="h-4 w-4 text-muted-foreground" />
         {type === "passport" ? "Паспорт" : "Водительское удостоверение"}
       </h4>
-      <Row label="Номер" value={document?.number || "Не заполнено"} />
-      {type === "passport" && <Row label="Дата рождения" value={document?.birthDate || "Не заполнено"} />}
-      <Row label="Дата выдачи" value={document?.issueDate || "Не заполнено"} />
-      <Row label="Кем выдан" value={document?.issuedBy || "Не заполнено"} />
-      {type === "passport" && <Row label="Код подразделения" value={document?.departmentCode || "Не заполнено"} />}
-      {type === "passport" && <Row label="Адрес регистрации" value={document?.registrationAddress || "Не заполнено"} />}
-      {type === "license" && <Row label="Действует до" value={document?.expiryDate || "Не заполнено"} />}
+      <Row label="Серия и номер" value={document?.number || "Не заполнено"} />
       <Row label="Статус" value={document ? documentStatus[document.status] : "Не заполнено"} />
     </div>
   );
