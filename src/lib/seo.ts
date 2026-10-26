@@ -2,7 +2,7 @@ import { faqItems } from "@/mocks/faq";
 
 export const SITE_URL = "https://nsk-rent.ru";
 export const SITE_NAME = "NSK-RENT";
-export const SITE_PHONE = "+7 (800) 555-72-13";
+export const SITE_PHONE = "+7 913 912-23-63";
 
 export const faqJsonLd = () => ({
   "@context": "https://schema.org",

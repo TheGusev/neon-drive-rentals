@@ -295,7 +295,7 @@ function PaymentPage() {
             </div>
             <div className="space-y-1.5">
               <Label htmlFor="cust-phone">Телефон</Label>
-              <Input id="cust-phone" value={phone} inputMode="tel" autoComplete="tel" onChange={(e) => setPhone(e.target.value)} placeholder="+7 913 015-85-55" />
+              <Input id="cust-phone" value={phone} inputMode="tel" autoComplete="tel" onChange={(e) => setPhone(e.target.value)} placeholder="+7 913 912-23-63" />
             </div>
             <div className="space-y-1.5">
               <Label htmlFor="cust-email">E-mail для чека и договора</Label>

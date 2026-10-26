@@ -320,7 +320,7 @@ function PhoneField({ phone, onChange }: { phone: string; onChange: (v: string) 
           className="pl-9"
           value={phone}
           onChange={(e) => onChange(e.target.value)}
-          placeholder="+7 913 015-85-55"
+          placeholder="+7 913 912-23-63"
         />
       </div>
     </div>
