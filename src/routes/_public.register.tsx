@@ -93,7 +93,7 @@ function RegisterPage() {
             <div className="space-y-4">
               <Field id="name" label="Имя и фамилия" value={name} onChange={setName} placeholder="Иван Иванов" autoComplete="name" />
               <Field id="email" label="E-mail" value={email} onChange={setEmail} placeholder="you@example.com" type="email" autoComplete="email" />
-              <Field id="phone" label="Телефон" value={phone} onChange={setPhone} placeholder="+7 913 015-85-55" inputMode="tel" autoComplete="tel" />
+              <Field id="phone" label="Телефон" value={phone} onChange={setPhone} placeholder="+7 913 912-23-63" inputMode="tel" autoComplete="tel" />
               <Field id="password" label="Пароль" value={password} onChange={setPassword} placeholder="минимум 8 символов" type="password" autoComplete="new-password" />
               <Field id="repeat" label="Повторите пароль" value={repeat} onChange={setRepeat} placeholder="ещё раз" type="password" autoComplete="new-password" />
 

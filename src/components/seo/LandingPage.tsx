@@ -66,7 +66,7 @@ export function LandingPage({
             </Link>
           </Button>
           <Button asChild size="lg" variant="outline">
-            <a href="tel:+78005557213">Позвонить</a>
+            <a href="tel:+79139122363">Позвонить</a>
           </Button>
         </div>
 
