@@ -1,7 +1,10 @@
 export const METRIKA_COUNTER_ID = 112667049;
 
 export type MetrikaGoal = "call" | "booking" | "login";
-type Ym = ((id: number, action: string, ...args: unknown[]) => void) & { a?: unknown[]; l?: number };
+type Ym = ((id: number, action: string, ...args: unknown[]) => void) & {
+  a?: unknown[];
+  l?: number;
+};
 
 declare global {
   interface Window {
@@ -11,8 +14,9 @@ declare global {
 }
 
 export function trackingAllowed(hostname: string, pathname: string): boolean {
-  return !pathname.startsWith("/admin") &&
-    (hostname === "nsk-rent.ru" || hostname === "www.nsk-rent.ru");
+  return (
+    !pathname.startsWith("/admin") && (hostname === "nsk-rent.ru" || hostname === "www.nsk-rent.ru")
+  );
 }
 
 /** No contact details, document data or booking contents are sent to analytics. */

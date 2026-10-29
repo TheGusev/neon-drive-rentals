@@ -13,16 +13,16 @@ export function YandexMetrika() {
 
     if (window.nskMetrikaInitialized !== COUNTER_ID) {
       if (!window.ym) {
-      const ym: NonNullable<Window["ym"]> = ((...args: unknown[]) => {
-        (ym.a = ym.a || []).push(args);
-      }) as NonNullable<Window["ym"]>;
-      ym.l = Date.now();
-      window.ym = ym;
+        const ym: NonNullable<Window["ym"]> = ((...args: unknown[]) => {
+          (ym.a = ym.a || []).push(args);
+        }) as NonNullable<Window["ym"]>;
+        ym.l = Date.now();
+        window.ym = ym;
 
-      const script = document.createElement("script");
-      script.async = true;
-      script.src = `https://mc.yandex.ru/metrika/tag.js?id=${COUNTER_ID}`;
-      document.head.appendChild(script);
+        const script = document.createElement("script");
+        script.async = true;
+        script.src = `https://mc.yandex.ru/metrika/tag.js?id=${COUNTER_ID}`;
+        document.head.appendChild(script);
       }
 
       window.ym?.(COUNTER_ID, "init", {
