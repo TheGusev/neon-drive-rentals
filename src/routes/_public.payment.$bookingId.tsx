@@ -17,6 +17,7 @@ import { getClientSessionStatus, loginWithOtp, requestOtp } from "@/lib/auth.fun
 import { startPayment } from "@/lib/payments.functions";
 import { recordConsent } from "@/lib/consent.functions";
 import { LEGAL } from "@/lib/contacts";
+import { reachGoal } from "@/lib/analytics";
 
 import { SectionCard } from "@/components/checkout/SectionCard";
 import { StickyBottomBar } from "@/components/checkout/StickyBottomBar";
@@ -36,6 +37,8 @@ export const Route = createFileRoute("/_public/payment/$bookingId")({
       { property: "og:title", content: "Оформление и оплата — NSK-RENT" },
       { property: "og:description", content: "Оплата аренды авто картой или через СБП." },
       { name: "robots", content: "noindex, nofollow" },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
   }),
   component: PaymentPage,
@@ -151,6 +154,7 @@ function PaymentPage() {
       }
 
       const total = Math.round(breakdown.total);
+      if (!me?.authenticated) reachGoal("login");
       const res = await submitBooking({
         data: {
           carId: draft.carId,
@@ -175,6 +179,7 @@ function PaymentPage() {
       }
 
       const saved: BookingDraft = {
+        // The booking goal is dispatched below only after successful persistence.
         ...draft,
         phone,
         name: name.trim(),
@@ -183,6 +188,7 @@ function PaymentPage() {
         signed: true,
         bookingId: res.booking.id,
       };
+      reachGoal("booking");
       saveDraft(saved);
       setDraft(saved);
       await queryClient.invalidateQueries({ queryKey: ["bookings"] });
