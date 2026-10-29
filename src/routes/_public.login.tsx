@@ -15,6 +15,7 @@ import {
   resetPasswordWithOtp,
 } from "@/lib/auth.functions";
 import { cn } from "@/lib/utils";
+import { reachGoal } from "@/lib/analytics";
 
 export const Route = createFileRoute("/_public/login")({
   head: () => ({
@@ -24,6 +25,8 @@ export const Route = createFileRoute("/_public/login")({
       { property: "og:title", content: "Вход в личный кабинет — NSK-RENT" },
       { property: "og:description", content: "Авторизация по e-mail или SMS-коду для клиентов NSK-RENT." },
       { name: "robots", content: "noindex, nofollow" },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
     links: [{ rel: "canonical", href: "https://nsk-rent.ru/login" }],
   }),
@@ -50,6 +53,7 @@ function LoginPage() {
   const resetPass = useServerFn(resetPasswordWithOtp);
 
   const enter = async () => {
+    reachGoal("login");
     await queryClient.invalidateQueries({ queryKey: ["me"] });
     await queryClient.invalidateQueries({ queryKey: ["profile"] });
     toast.success("Вы вошли в личный кабинет");

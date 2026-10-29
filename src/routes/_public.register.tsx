@@ -13,6 +13,7 @@ import { registerWithPassword } from "@/lib/auth.functions";
 import { recordConsent } from "@/lib/consent.functions";
 import { Checkbox } from "@/components/ui/checkbox";
 import { LEGAL } from "@/lib/contacts";
+import { reachGoal } from "@/lib/analytics";
 
 export const Route = createFileRoute("/_public/register")({
   head: () => ({
@@ -22,6 +23,8 @@ export const Route = createFileRoute("/_public/register")({
       { property: "og:title", content: "Регистрация — NSK-RENT" },
       { property: "og:description", content: "Аккаунт клиента проката авто в Новосибирске: аренды, документы, бронирования." },
       { name: "robots", content: "noindex, nofollow" },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
     links: [{ rel: "canonical", href: "https://nsk-rent.ru/register" }],
   }),
@@ -61,6 +64,7 @@ function RegisterPage() {
         return;
       }
       // Фиксируем согласие с указанием версии документов.
+      reachGoal("login");
       void saveConsent({
         data: {
           kind: "pdn_registration",
